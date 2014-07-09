@@ -29,6 +29,11 @@ activate :blog do |blog|
   # blog.page_link = "page/{num}"
 end
 
+activate :deploy do |deploy|
+  deploy.build_before = true
+  deploy.method = :git
+end
+
 activate :alias
 
 page "/feed.xml", layout: false

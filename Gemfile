@@ -13,3 +13,6 @@ gem "asciidoctor", "~> 0.1.4"
 
 # Allow aliasing of old post URLs
 gem "middleman-alias"
+
+# Deploy to GitHub pages
+gem "middleman-deploy"

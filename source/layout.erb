@@ -21,11 +21,11 @@
       </ol>
 
       <h2>Tags</h2>
-      <ol>
-        <% blog.tags.each do |tag, articles| %>
+      <ul>
+        <% blog.tags.sort().each do |tag, articles| %>
           <li><%= link_to "#{tag} (#{articles.size})", tag_path(tag) %></li>
         <% end %>
-      </ol>
+      </ul>
 
       <h2>By Year</h2>
       <ol>

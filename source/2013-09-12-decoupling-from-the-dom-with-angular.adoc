@@ -101,7 +101,7 @@ $scope.save = function() {
   $scope.product.$save(function() {
     delete($scope.product);
   }, function() {
-    # display an error message
+    // display an error message
   });
 };
 -----------------------------------

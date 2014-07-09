@@ -4,8 +4,6 @@ date: 2014-07-08
 tags: groovy, compilestatic
 ---
 
-= @CompileStatic and polymorphic method dispatch
-
 I'm a big fan of Groovy's +@CompileStatic+ feature – so much so that I've updated the _Groovy class_ template in IntelliJ IDEA to use it by default. I should stress I don't do this because I believe non-statically compiled Groovy to be slow – it isn't.
 
 Recently https://twitter.com/pledbrook/status/475986668840050688[Peter Ledbrook reminded me of one drawback] which is that method dispatch is statically bound when using +@CompileStatic+ like it is in Java. This means that the behavior of calling polymorphic methods can change when argument types are not known at compile time.

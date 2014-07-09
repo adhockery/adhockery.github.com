@@ -1,0 +1,49 @@
+---
+title: 'Grails and REST URL mappings'
+date: 2013-04-15T14:12:00+0100
+tags: grails, rest
+alias: ["post/48038157692/grails-and-rest-url-mappings/"]
+---
+
+When building a REST-style API with Grails there's http://grails.org/doc/1.3.7/guide/13.%20Web%20Services.html#13.1%20REST[a very handy way of configuring URL mappings]. For example:
+
+----------------------------------
+"/person/$id?"(resource: "person")
+----------------------------------
+
+will map requests to `/myApp/person` to the different actions of `PersonController` according to the HTTP request method. The mappings are `GET`->_show_, `PUT`->_save_, `POST`->_update_, `DELETE`->_delete_.
+
+The astute amongst you may notice that the _list_ action isn't mapped. Ideally I'd want a request to `/myApp/person` with no _id_ parameter to be mapped to the _list_ action and `/myApp/person/1` to be mapped to _show_. The resource mapping doesn't handle this automatically, though. A request to `/myApp/person` will get forwarded to the _show_ action with an _id_ parameter of the empty string (or zero if the _id_ parameter is typed on the _show_ action's prototype).
+
+It would be possible to detect this in the _show_ action itself and forward to _list_ if the _id_ parameter is empty. However, that's an inappropriate coupling between the two actions.
+
+A cleaner way would be to do this in the URL mappings:
+
+-----------------------------------------------
+"/person"(controller: "person", action: "list")
+"/person/$id?"(resource: "person")
+-----------------------------------------------
+
+The mapping for the _list_ action will only trigger if there is no _id_ on the end of the URL, otherwise the standard resource URL mapping is used (note: the order of declaration is important).
+
+Unfortunately there's a problem here – _list_ isn't the only action that doesn't take an _id_ parameter. This URL scheme will break the _save_ action as a `PUT` request to `/myApp/person` will now go to the _list_ action instead. It's possible to restrict the HTTP method for the _list_ action using `allowedMethods` but that will just mean that the `PUT` request will be blocked and return a http://httpstatus.es/405[_405_] HTTP status.
+
+It's possible to get things to work by mapping the _save_ action explicitly like this:
+
+-----------------------------------------------------
+"/person"(controller: "person", parseRequest: true) {
+    action = [GET: "list", PUT: "save"]
+}
+"/person/$id"(resource: "person")
+-----------------------------------------------------
+
+But I'm not very happy about explicitly mapping something the resource URL mapping could handle for me.
+
+Alternatively a _Rails_ style plural form like this will work:
+
+-----------------------------------------------
+"/people"(controller: "person", action: "list")
+"/person/$id?"(resource: "person")
+-----------------------------------------------
+
+I find that gets confusing, though: Do you use "people" or "persons"? How do you handle non-standard plurals when automatically crawling REST endpoints?

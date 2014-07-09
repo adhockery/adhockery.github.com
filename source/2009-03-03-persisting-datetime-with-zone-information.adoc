@@ -1,0 +1,37 @@
+---
+title: 'Persisting DateTime with zone information'
+date: 2009-03-03T13:31:00+0000
+tags: hibernate, gorm, joda time
+alias: ["post/42902330676/persisting-datetime-with-zone-information/"]
+---
+
+I was stuck a while ago trying to figure out how to map http://joda-time.sourceforge.net/contrib/hibernate/apidocs/org/joda/time/contrib/hibernate/PersistentDateTimeTZ.html[`PersistentDateTimeTZ`] in a GORM class. It's an implementation of Hibernate's http://www.hibernate.org/hib_docs/v3/api/org/hibernate/usertype/UserType.html[`UserType`] interface that persists a Joda http://joda-time.sourceforge.net/api-release/org/joda/time/DateTime.html[`DateTime`] value using 2 columns - one for the actual timestamp and one for the time zone. The `DateTime` class contains time zone information but a SQL timestamp column is time zone agnostic so you can lose data when the value is saved (the same exact problem exists when persisting `java.util.Date` values).
+
+I could never figure out how to map the user type to my domain class property correctly. Just doing:
+
+-----------------------------------------------
+static mapping = {
+    dateTimeProperty type: PersistentDateTimeTZ
+}
+-----------------------------------------------
+
+Failed with:
+
+-----------------------------------------------------------------------------
+org.hibernate.MappingException: property mapping has wrong number of columns.
+-----------------------------------------------------------------------------
+
+I seem to remember someone on the Grails mailing list suggesting I tried treating the value as an http://grails.org/doc/1.1.x/guide/single.html#5.2.2%20Composition%20in%20GORM[embedded type]. That also didn't work as http://jira.codehaus.org/browse/GRAILS-3328[GORM embedded types have to be Groovy classes in `grails-app/domain`] and `PersistentDateTimeTZ` is written in Java and lives in a library jar.
+
+I finally found the solution in the http://www.amazon.co.uk/Definitive-Guide-Grails-Experts-Development/dp/1590599950[2nd Edition of The Definitive Guide to Grails] (which I can't recommend enough, by the way). The trick is to pass a closure specifying the two columns to the property definition in the mapping builder. The working code looks like this:
+
+---------------------------------------------------
+static mapping = {
+    dateTimeProperty type: PersistentDateTimeTZ, {
+        column name: "date_time_property_timestamp"
+        column name: "date_time_property_zone"
+    }
+}
+---------------------------------------------------
+
+The order of the columns corresponds to the order of the values returned by http://www.hibernate.org/hib_docs/v3/api/org/hibernate/usertype/UserType.html#sqlTypes()[the `sqlTypes()` method] of whatever `UserType` implementation you're using.

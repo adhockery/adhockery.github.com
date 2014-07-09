@@ -1,0 +1,36 @@
+---
+title: 'Defaulting Joda Time Hibernate Types with Grails'
+date: 2010-06-24T06:57:00+0100
+tags: joda time, gorm
+alias: ["post/42903000331/defaulting-joda-time-hibernate-types-with-grails/"]
+---
+
+Grails 1.2 added the ability to define default Hibernate mappings that apply to all GORM classes. It turns out this is incredibly useful if you're using Joda-Time types instead of _java.util.Date_ in your domain objects. Previously you had to specify the Hibernate user type for every single field, like this:
+
+----------------------------------------
+import org.joda.time.*
+import org.joda.time.contrib.hibernate.*
+
+DateTime dateCreated
+DateTime lastUpdated
+LocalDate birthday
+
+static mapping = {
+    dateCreated type: PersistentDateTime
+    lastUpdated type: PersistentDateTime
+    birthday type: PersistentLocalDate
+}
+----------------------------------------
+
+Now you can just add this to your _Config.groovy_ once and do away with the type mappings in the individual classes:
+
+-----------------------------------------------------------
+grails.gorm.default.mapping = {
+    "user-type" type: PersistentDateTime, class: DateTime
+    "user-type" type: PersistentLocalDate, class: LocalDate
+}
+-----------------------------------------------------------
+
+*Correction:* I had previously posted that the method call in the default mapping DSL could be anything, but on further investigation it turns out it has to be _user-type_. Apologies for the error.
+
+I'll look into the possibility of the Joda-Time plugin doing this itself to make things even easier.

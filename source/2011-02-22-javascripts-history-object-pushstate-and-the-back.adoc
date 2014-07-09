@@ -1,0 +1,60 @@
+---
+title: 'JavaScript''s history object, pushState and the back button'
+date: 2011-02-22T22:31:00+0000
+tags: chrome, html5, safari, webkit, javascript
+alias: ["post/42903159156/javascripts-history-object-pushstate-and-the-back/"]
+---
+
+I'm not sure if it's the immaturity of the browser support or my general uselessness but I've been having some trouble with the JavaScript _history_ API.
+
+I won't try to explain the _history_ API here, it's pretty well covered at https://developer.mozilla.org/en/DOM/Manipulating_the_browser_history[Mozilla Developer Network] and http://dev.w3.org/html5/spec-author-view/history.html[W3]. The basics are simple enough:
+
+* The API provides two methods; http://dev.w3.org/html5/spec/history.html#dom-history-pushstate[`pushState`] which allows you to add a new entry to the browser history and http://dev.w3.org/html5/spec/history.html#dom-history-replacestate[`replaceState`] which modifies the current history entry.
+* New entries added to history using `pushState` can be navigated via the browser's _back_ and _forward_ buttons and a `popstate` event is fired on the `window` object when this happens.
+* Both methods allow you to attach arbitrary data to the history entry that you can use to reconstruct the appropriate page state when the user uses the _back_ or _forward_ buttons.
+
+I imagine a pretty typical use-case is what I've been trying to do with the pagination and sorting on the list pages of _Grails_ scaffolding. Instead of pagination links and column headers causing a full page reload when clicked I intercept the click event and send an AJAX request getting back a page fragment I can use to update the list in the page. Easy enough, however without the _history_ API it will break the back and forward buttons and make deep linking impossible. This isn't an acceptable option so in true http://en.wikipedia.org/wiki/Progressive_enhancement[progressive enhancement] style I've used http://www.modernizr.com/[Modernizr] and only apply the AJAX behaviour if the browser supports the _history_ API.
+
+The essence of the script involved is this:
+
+--------------------------------------------------------------------------------
+var links =     //... pagination and sorting links
+var container = //... the region of the page that will be updated with AJAX
+
+// override clicks on the links
+links.live('click', function() {
+    // grab the link's URL
+    var url = $(this).attr('href');
+    // add a new history entry
+    history.pushState({ path: url }, '', url);
+    // load the page fragment into the container with AJAX
+    container.load(url);
+    // prevent the link click bubbling
+    return false;
+});
+
+// handle the back and forward buttons
+$(window).bind('popstate', function(event) {
+    // if the event has our history data on it, load the page fragment with AJAX
+    var state = event.originalEvent.state;
+    if (state) {
+        container.load(state.path);
+    }
+});
+
+// when the page first loads update the history entry with the URL
+// needed to recreate the 'first' page with AJAX
+history.replaceState({ path: window.location.href }, '');
+--------------------------------------------------------------------------------
+
+At first glance this works pretty nicely. In browsers that support _history_ (right now that's just Chrome, Safari and its mobile variants) paginating and sorting the list does not refresh the entire page but the browser's location bar _is_ updated so copy-pasting or bookmarking the URL will give a valid link to the current page. What's more, the back and forward buttons can be used to step back through the list pages just as if we reloaded the whole page. In non-_history_-compliant browsers the list page behaves just like it always did; the links reload the entire page.
+
+Unfortunately there's a problem that was https://github.com/robfletcher/grails-scaffolding/issues#issue/2[reported to me on GitHub] shortly after I uploaded a demo of my scaffolding work. Where everything falls down is when you paginate the list, follow a link off the page (or just use a bookmark or type in a URL), then use the _back_ button to return to it. In Chrome and iPad/iPhone variants of Safari the browser displays just the page fragment from the last AJAX call, losing all the surrounding page along with styling, scripts, etc.
+
+Where things get very odd is that adding a `Cache-Control: no-cache` header to the AJAX responses makes the problem disappear, presumably because the browser then doesn't cache the AJAX response and has to use the historical URL to reload the entire page. Remember, in good progressive enhancement style the URL for the full page or the fragment is the same. The server uses the `X-Requested-With` header to decide whether to return a fragment or the whole page. Obviously, forgoing caching is hardly an acceptable compromise but it's interesting in that it reveals what the browser is doing. It can't, surely, be right for the browser to treat a page fragment the same as a full document!
+
+Curiously in _desktop_ Safari this doesn't happen and the full page is loaded as you would hope. Looking at the _User-Agent_ header it looks like Safari is using an older version of WebKit (_533.19.4_ rather than _534.13_).
+
+You can see the behaviour in my http://scaffolding.elasticbeanstalk.com/[scaffolding sample app]. I also ran into the exact same issue today at work whilst trying to add history navigation to http://skyliving.sky.com/celebrity/find-a-celebrity[this page] (which is a good example of why you'd want to use _history_ in the first place). I don't think it's just me, either. The same problem can be seen with the demo linked from http://js-html5.com/post/3014620142/history-api[this post] about the _history_ API.
+
+If there are any JavaScript experts out there who can point out my obvious incompetence here, that would be great. Otherwise I guess I'll have to wait for updates to WebKit to hopefully fix the issue before I can start applying this technique with confidence.

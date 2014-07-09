@@ -1,0 +1,52 @@
+---
+title: 'Semi-RESTful Scaffolded Controllers'
+date: 2012-02-07T10:56:00+0000
+tags: grails, rest
+alias: ["post/41774629876/semi-restful-scaffolded-controllers/", "semi-restful-scaffolded-controllers/"]
+---
+
+The default Grails scaffolded controllers use a _create_ action to render a form and a _save_ action as the target the form will _POST_ to. If the _save_ action succeeds it redirects to _show_ and if it fails due to constraint violations it re-renders the form. The same applies to editing with the _edit_ and _update_ actions.
+
+There's a slight quirk here in that a failed _save_ will cause the URL to change from _/controllerName/create_ to _/controllerName/save_. Not a particularly huge issue, after all it's not something a search spider will see and users will be very unlikely to care. One thing I have found problematic though is when rendering a navigation element that highlights an item based on the current action.
+
+Imagine a bit of GSP code like this:
+
+-------------------------------------------------------------------------------------------------------
+#!html
+<nav>
+    <g:link action="list" class="${actionName == 'list' ? 'active' : ''}">List Cocktails</g:link>
+    <g:link action="create" class="${actionName == 'create' ? 'active' : ''}">Create Cocktail</g:link>
+    <g:link action="search" class="${actionName == 'search' ? 'active' : ''}">Search Cocktails</g:link>
+</nav>
+-------------------------------------------------------------------------------------------------------
+
+This creates a navigation element with links to the various controller actions & highlights the current action. However, if we've submitted bad data from the _create_ form no navigation element will be highlighted. With scaffolding this is easy to fix by changing the test to `actionName in ['create', 'save']` but with custom controllers the relationship between actions might not always be so predictable and the navigation template will need frequent tweaking to stay up to date as the code evolves.
+
+With the http://grails-twitter-bootstrap.cloudfoundry.com[Twitter Bootstrap scaffolding example] I created recently I used a different pattern in the scaffolded controller template:
+
+---------------------------------------
+#!groovy
+def create() {
+    switch (request.method) {
+    case 'GET':
+        // render the form
+    case 'POST':
+        // save the object
+        // if successful redirect
+        // otherwise re-render the form
+    }
+}
+---------------------------------------
+
+Effectively I've merged the _create_ and _save_ actions. The form posts back to the _create_ action instead of _save_. This means the URL only changes when we successfully redirect away from creating our object & the _create_ navigation entry stays highlighted if we screw up creating our object.
+
+I've done the same with the _edit_ and _update_ actions. Have a look at https://github.com/robfletcher/twitter-bootstrap-scaffolding/blob/master/src/templates/scaffolding/Controller.groovy#L16[the full source on GitHub] if you're interested.
+
+It feels like a step closer to a RESTful interface. I'm using the HTTP verbs to determine what to do with requests to the same URL. Full RESTful mapping isn't possible as forms will only _GET_ or _POST_ not _PUT_ or _DELETE_. Also using http://grails.org/doc/latest/guide/theWebLayer.html#mappingHTTP[Grails' RESTful URL mappings] would defeat the point as the action name in the GSP would be different.
+
+This is neat enough but a couple of objections occur:
+
+* I don't particularly like the switch statement, but controller actions should be kept trivial anyway (controllers are for routing requests around, not performing complex logic).
+* Unit testing becomes marginally more awkward as we have to set `request.method` rather than just invoking a different action.
+* This is a sledgehammer to crack a nut & only a pedant would care. Yeah, fair enough.
+

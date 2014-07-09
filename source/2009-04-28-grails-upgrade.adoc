@@ -1,0 +1,38 @@
+---
+title: 'Grails Upgrade'
+date: 2009-04-28T14:55:00+0100
+tags: testing, grails upgrade, grails plugins, hibernate
+alias: ["post/42902424105/grails-upgrade/"]
+---
+
+We've just finished upgrading our sites to http://www.grails.org/1.1+Release+Notes[Grails 1.1] and I thought it would be worth sharing some of the http://omfg.biz/[fun] we had with the process.
+
+First and foremost was a call site caching bug in Groovy 1.6.0 that caused chaos with our unit and integration tests. Basically any time we mocked a class then demanded behaviour on a static method or any time we used the metaClass to override a static method (among other things that's pretty much any unit test that goes anywhere near a domain class) the behaviour wouldn't get torn down again. This caused symptoms such as stubbed dynamic finders leaking from unit tests and breaking integration tests that would pass when re-run in isolation. We got as far as refactoring a whole bunch of test code that mocked static methods before http://burtbeckwith.com/blog/[Burt Beckwith] http://jira.codehaus.org/browse/GRAILS-4448[pointed out to me] that simply replacing $GRAILS_HOME/lib/groovy-all-1.6.0.jar with the newer version from the Groovy 1.6.1 or 1.6.2 release would fix the problem.
+
+Unfortunately the same bug has another effect that was quite catastrophic for us. Any Hibernate proxy of an instance of a domain class involved in an inheritance hierarchy will throw _ClassCastException_ when you try to access a subclass property or do an _instanceof_ check. I http://blog.freeside.co/post/42902409632/when-is-a-pirate-not-a-pirate-when-its-a[blogged already] about the _instanceof_ issue but it's actually wider ranging than I realised at the time. It can cause very unpredictable behaviour because complex relationships between objects and the way they are loaded by a controller before a page is rendered can cause this error to pop up under obscure conditions that are very hard to nail down with test coverage. To solve the problem we've had to use eager fetching in places where associations are typed as the base class of an inheritance hierarchy and to use explicit checks for proxies such as:
+
+------------------------------------------
+if (o instanceof HibernateProxy) {
+    o = GrailsHibernateUtil.unwrapProxy(o)
+}
+------------------------------------------
+
+Hopefully this bug will be fixed in Grails 1.1.1 and we will be able to use the default lazy loading behaviour in all relationships.
+
+Other problems we encountered included:
+
+* The `onLoad` Hibernate event handler on domain classes now seems to run at a slightly different time in the object life cycle: _before_ any eager fetched collections are loaded. We had one domain class that was doing some initialisation (calculating the percentage of votes each answer to a poll had received and storing it in a transient property) that no longer worked as the persistent collection it was trying to iterate over was always empty. This was simple to refactor out and in fairness was pretty horrible anyway.
+* `Config.groovy` and related external config files are no longer loaded when running unit tests so any unit test that excercises code doing `ConfigurationHolder.config.some.value.or.other` blew up. We solved this by simply adding the following to `_Events.groovy` to load up config prior to the unit tests running:
++
+eventTestPhaseStart = \{ phase -> if (phase == 'unit') \{ ConfigSlurper slurper = new ConfigSlurper(GrailsUtil.environment) def configClass = getClass().classLoader.loadClass("Config") def config = slurper.parse(configClass) ConfigurationHelper.initConfig config // this step loads the external environment config file(s) ConfigurationHolder.config = config } }
+* Logger configuration has completely changed (for the better) in Grails 1.1
+* Some of our tests were explicitly setting the level of particular loggers to 'OFF' because the test is deliberately causing an error condition and we didn't want the console polluted with a huge stack trace. This no longer works as the http://www.bileblog.org/2003/08/the-evils-of-commons-loggingjar-and-its-ilk/[logging abstraction] has changed to http://www.slf4j.org/[SLF4J] which does not allow you to directly set the level on http://www.slf4j.org/apidocs/org/slf4j/Logger.html[its Logger class]. Having better things to do than unwrapping logging abstractions I just turned logging off altogether in the test Grails environment.
++
+log4j = \{ root \{ off() } }
+* It looks like binding errors don't get reported on nullable properties when using `DomainClass.properties = params` in a controller. I've http://jira.codehaus.org/browse/GRAILS-4485[raised a bug].
+* There's been a minor change to the <g:select> tag. Previously the _disabled_ attribute followed the HTML convention (`disabled="disabled"`) but now the attribute value needs to be a boolean. I guess this actually makes more sense than the goofy HTML convention but I really expect most of the attributes on those sorts of tags to be pure pass-through.
+* The mockDomain method used by unit tests seems to be a little inconsistent when dealing with inheritance heirarchies. If you do `mockDomain(BaseClass)` then try to use `subClassInstance.subClassProperty` it fails with a MissingPropertyException. I've http://jira.codehaus.org/browse/GRAILS-4495[raised a bug].
+* We had customised `Package.groovy` to deploy our app at the root context. It seems this is now directly supported as an option in Grails 1.1 by setting `grails.app.context = '/'` in `Config.groovy`. I think this option was already available in Grails 1.0.3 but our patch pre-dated us upgrading to 1.0.3. One of the things I was trying to achieve while upgrading was to ensure we were patching Grails and any plugins as little as possible.
+* I'd upgraded our selenium plugin (not the one in http://plugins.grails.org/[the Grails plugin repository]) a while back to cope with Grails 1.1 and upgraded the selenium server it contained at the same time. It turns out the new selenium server will time out attempting to click any anchor that uses the `javascript:` protocol in its href. Luckily this was only being done in 2 places in our app and was easily fixed by using href="#" instead.
+
+One other thing we decided to do was to replace our existing suite of http://grails.org/Functional+Testing[webtests] with http://www.grails.org/Grails%20Functional%20Testing[functional tests]. Webtest has never been popular with the developers on our team and we had made a number of modifications to version 0.4 of the plugin in order to support issues like config loading and running the app at the context root of the server. These modifications caused some headaches when trying to upgrade the plugin so we decided to drop it and port the tests over to the functional test plugin. Generally I'd still rather be writing Selenium tests than using either webtest or functional tests but the functional test syntax is a little nicer and less "pseudo-XML" than webtest's.

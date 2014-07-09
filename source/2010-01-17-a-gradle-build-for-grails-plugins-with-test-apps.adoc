@@ -1,0 +1,27 @@
+---
+title: 'A Gradle build for Grails plugins with test apps'
+date: 2010-01-17T20:35:00+0000
+tags: testing, gradle, grails plugins
+alias: ["post/42902799910/a-gradle-build-for-grails-plugins-with-test-apps/"]
+---
+
+There's a fairly popular technique in Grails plugin development where the plugin has 'test apps' stored in `test/projects/*`, each of which references the plugin by including `grails.plugin.location."my-plugin" = "../../.."` in its _BuildConfig.groovy_. Doing this allows you as a plugin developer to:
+
+* Automate tests for sample projects using the plugin with significantly different configurations.
+* Test using domain classes, controllers, etc. that shouldn't be packaged with the plugin.
+* Test drive, changing code in both the test app and the plugin without the need to use `grails package-plugin` or `grails install-plugin` to pick up changes.
+
+The downside is that to run all the plugin project's tests it's necessary to run the plugin's own tests, then change directory into each of the test apps and run their tests. Continuous integration config is also fiddlier for the same reason.
+
+I wanted to find a way to automate this so I could run all my plugins' tests with a single command. I could write a _bash_ script or an _Ant_ build I guess, or even use _maven <shudder>_. However keeping things in Groovy-land I decided to try using _http://www.gradle.org/[Gradle]_ which I've been meaning to look into for a while now. I saw http://skillsmatter.com/podcast/java-jee/gradle-deep-dive[Hans Dockter's presentation] on _Gradle_ at the http://skillsmatter.com/event/java-jee/groovy-grails-exchange-2009/wd-184[London Groovy & Grails Exchange] back in December and was impressed with how terse and expressive the syntax is, especially compared to XML based formats. Unfortunately one thing _Gradle_ doesn't grok yet is Grails.
+
+The solution I've come up with is based on http://www.mail-archive.com/user@gradle.codehaus.org/msg01871.html[a post by Helmut Denk] on the _gradle-user_ list. Gradle just uses http://ant.apache.org/manual/CoreTasks/exec.html[Ant's exec task] to shell out and execute the appropriate Grails command. Combining this with Gradle's multi-project build support I now have plugin builds that can be run with `gradle test` that will automatically descend into the test apps under _test/projects/*_.
+
+The _build.gradle_ file at the root of the project defines _clean_ and _test_ tasks:
+The _test_ task will run the plugin's unit tests. The _clean_ task is defined just once for all projects as there's no difference in how it is done - a nice examply of Gradle's http://en.wikipedia.org/wiki/Don't_repeat_yourself[DRY]-ness.
+
+Then in _settings.gradle_ I tell Gradle where to find the various sub-projects:
+Finally each test app has it's own _build.gradle_ that defines its _test_ task:
+This is only necessary if the test apps run tests differently to the plugin - here my app is running integration rather than unit tests - otherwise I could have defined _test_ in the same DRY manner as _clean_.
+
+The process is not as fast as it could be if Grails were wired in to Gradle properly. `gradle clean test` for the Springcache plugin and its two test apps takes just over 2 minutes on my MBP. Also, my Gradle-fu leaves a lot to be desired right now so I'm sure there are improvements that could be made with the way I'm handling the sub-projects. But, for the purposes of a pre-commit test run or Hudson build this works pretty well.

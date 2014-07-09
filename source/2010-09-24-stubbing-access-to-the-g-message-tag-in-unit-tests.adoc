@@ -1,0 +1,76 @@
+---
+title: 'Stubbing access to the g:message tag in unit tests'
+date: 2010-09-24T13:48:00+0100
+tags: i18n, testing
+alias: ["post/42903086163/stubbing-access-to-the-g-message-tag-in-unit-tests/"]
+---
+
+Grails controllers and tag libs can access any tag as though it were a method. The most common use for this is probably accessing i18n messages via the `[g:message][1]` tag. However, because tag access is magic wired up by Grails it's not available in unit tests without some effort.
+
+This is a perennial nuisance. Not exactly difficult to solve and yet something I find myself solving over and over in different tests and different projects.
+
+I've come up with what I think is a pretty good and re-usable solution. It allows you to specify messages if you want to, or just use the message code if it's not something you care about in a particular test. As an aside, at a unit test level, I think testing that the correct message _code_ is being used is probably the right thing to do; I'd leave testing actual message text to end-to-end tests.
+
+Here's an example. Imagine we're testing the following controller that displays a simple greeting:
+
+-------------------------------------------------------------------------
+class GreetingController {
+    def index = {
+        [message: message(code: "greeting.message", args: [params.name])]
+    }
+}
+-------------------------------------------------------------------------
+
+Here's a spec that shows the behaviour both when a message is specified and when it isn't:
+
+-------------------------------------------------------------------------------------------------
+import grails.plugin.spock.*
+import org.springframework.context.*
+import org.springframework.context.support.*
+import spock.lang.*
+
+class GreetingControllerSpec extends ControllerSpec {
+
+    @Shared def messageSource = new StaticMessageSource()
+    @Shared def pirateEnglish = new Locale("en", "BV")
+
+    def setupSpec() {
+        messageSource.useCodeAsDefaultMessage = true
+        messageSource.addMessage "greeting.message", pirateEnglish, "Ahoy there {0}!"
+    }
+
+    def setup() {
+        mockMessageTag(controller, messageSource)
+    }
+
+    @Unroll
+    def "greeting is rendered by index action"() {
+        given:
+        if (name) controller.params.name = name
+        if (locale) controller.request.addPreferredLocale(locale)
+
+        expect:
+        controller.index() == [message: message]
+
+        where:
+        name  | locale        | message
+        null  | null          | "greeting.message"
+        "Rob" | null          | "greeting.message"
+        "Rob" | pirateEnglish | "Ahoy there Rob!"
+    }
+
+    // in reality this would be static imported from a helper class
+    static void mockMessageTag(artefact, MessageSource messageSource) {
+        artefact.metaClass.message = { attrs ->
+            messageSource.getMessage(attrs.code, attrs.args as Object[], delegate.request.locale)
+        }
+    }
+}
+-------------------------------------------------------------------------------------------------
+
+A few things to note:
+
+1.  The stubbed message tag returns the code if there is no message defined
+2.  message arguments are ignored unless there is a message defined
+
+Although in the example I've used http://spockframework.org/[Spock], this technique would work equally well with http://grails.org/doc/latest/guide/9.%20Testing.html#9.1%20Unit%20Testing[JUnit tests extending _ControllerUnitTestCase_]. It will also work just as well for tag libs tests extending _TagLibUnitTestCase_ or _TagLibSpec_.

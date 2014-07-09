@@ -1,0 +1,10 @@
+---
+title: 'Selenium RC tests with a running Grails app'
+date: 2010-01-02T12:23:00+0000
+tags: selenium, testing, grails plugins
+alias: ["post/42902767386/selenium-rc-tests-with-a-running-grails-app/"]
+---
+
+I http://blog.freeside.co/post/42902733548/selenium-rc-tests-with-a-remote-app[posted recently] about the new remote mode feature of the http://grails.org/plugin/selenium-rc[Selenium RC plugin]. One thing I forgot to mention is that this feature can also be used to run your Selenium tests interactively against a running app instance. You can start your app as normal using `grails run-app` then either open a second terminal or background the process (_Ctrl-Z_ in a _bash_ shell) then use `grails -Dselenium.remote=true test-app other:selenium _<test name>_` to run individual tests without stopping or re-starting the app. With the app running _development_ mode you can effectively test-drive using Selenium tests and Grails' artefact reloading capabilities.
+
+One thing I should clarify is that direct domain class access will _not_ work in remote mode. I'm thinking about ways to add http://grails.org/plugin/fixtures[fixtures] support to the Selenium RC plugin so there's a good alternative approach that will work in remote mode.

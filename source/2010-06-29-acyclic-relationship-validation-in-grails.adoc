@@ -1,0 +1,76 @@
+---
+title: 'Acyclic relationship validation in Grails'
+date: 2010-06-29T16:27:00+0100
+tags: gorm
+alias: ["post/42903020788/acyclic-relationship-validation-in-grails/"]
+---
+
+A common domain class use-case is for a self-referential relationship that must not be circular (a http://en.wikipedia.org/wiki/Directed_acyclic_graph[directed acyclic graph]). For example, a _Person_ class may have a _parent_ property that is a many-to-one relationship with another _Person_ instance. However a given _Person_ cannot be his own _parent_ or ancestor.
+
+We're using just such a relationship for trees of pages that inherit certain characteristics from their ancestors. In order to validate that our users aren't setting up circular references I implemented the following constraint:
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+import org.codehaus.groovy.grails.validation.AbstractConstraint
+import org.springframework.validation.Errors
+
+class AcyclicConstraint extends AbstractConstraint {
+
+ static final String DEFAULT_MESSAGE_CODE = "default.acyclic.violation.message"
+ static final String NAME = "acyclic"
+
+ private boolean validateConstraint
+
+ protected void processValidate(Object target, Object propertyValue, Errors errors) {
+  if (validateConstraint && propertyValue) {
+   if (isCyclic(target, propertyValue)) {
+    def args = [constraintPropertyName, constraintOwningClass, propertyValue] as Object[]
+    rejectValue(target, errors, DEFAULT_MESSAGE_CODE, "${NAME}.violation", args)
+   }
+  }
+ }
+
+ void setParameter(Object constraintParameter) {
+  if (!(constraintParameter instanceof Boolean)) {
+   throw new IllegalArgumentException("Parameter for constraint [$NAME] of property [$constraintPropertyName] of class [$constraintOwningClass] must be a boolean value")
+  }
+  validateConstraint = constraintParameter
+  super.setParameter(constraintParameter)
+ }
+
+ boolean supports(Class type) { true }
+
+ String getName() { NAME }
+
+ private boolean isCyclic(original, node) {
+  boolean cyclic = false
+  while (node != null) {
+   if (node.id == original.id) {
+    cyclic = true
+    break
+   }
+   node = node."$propertyName"
+  }
+  return cyclic
+ }
+}
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+This is also http://gist.github.com/457351.js?file=AcyclicConstraint.groovy[available as a Gist].
+
+Then I just needed to register my new constraint by adding `ConstrainedProperty.registerNewConstraint(AcyclicConstraint.NAME, AcyclicConstraint)` to _grails-app/conf/spring/resources.groovy_. Using the constraint is as simple as this:
+
+----------------------------
+class Person {
+
+    String name
+    Person parent
+
+    static constraints = {
+        parent acyclic: true
+    }
+}
+----------------------------
+
+The constraint can be mixed with others such as `nullable: true`. The really nice thing is that the constraint implementation doesn't reference any of my domain classes directly, meaning it can be re-used in any other domain class.
+
+When you're using similar validation logic in multiple classes defining a constraint like this is a much better option than using a _validator_ closure and like many things in Grails it turns out to be pretty easy to implement.

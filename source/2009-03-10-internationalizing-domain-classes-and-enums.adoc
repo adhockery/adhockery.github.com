@@ -1,0 +1,130 @@
+---
+title: 'Internationalizing Domain Classes and Enums'
+date: 2009-03-10T09:30:00+0000
+tags: i18n, spring
+alias: ["post/42902346489/internationalizing-domain-classes-and-enums/"]
+---
+
+It's common to provide a `toString` implementation on a domain object that may well end up being used in the view. However, this doesn't allow for internationalization in the view. A good solution that I've used a number of times is to have classes implement Spring's http://static.springframework.org/spring/docs/2.5.x/api/org/springframework/context/MessageSourceResolvable.html[MessageSourceResolvable] interface. Consider this domain class that represents an image file:
+
+[[grails-appdomainimage.groovy]]
+grails-app/domain/Image.groovy
+++++++++++++++++++++++++++++++
+
+---------------------------------------------------------------------------------------
+class Image {
+    String name
+    String path
+    User uploadedBy
+    org.joda.time.DateTime dateCreated
+
+    static transients = ['file']
+    File getFile() {
+        new File(ConfigurationHolder.config.image.base.dir, path)
+    }
+
+    String toString() {
+        "$name uploaded by $uploadedBy.username on $dateCreated - ${file.size()} bytes"
+    }
+}
+---------------------------------------------------------------------------------------
+
+The `toString` implementation is all well and good if we're targeting an English-speaking audience but with some simple changes we can make it i18n compliant:
+
+[[grails-appdomainimage.groovy-1]]
+grails-app/domain/Image.groovy
+++++++++++++++++++++++++++++++
+
+---------------------------------------------------------------------------------------
+class Image implements org.springframework.context.MessageSourceResolvable {
+
+    // properties as above
+
+    static transients = ["codes", "arguments", "defaultMessage"]
+
+    Object[] getArguments() {
+        [name, uploadedBy.username, dateCreated.toDate(), file.size()] as Object[]
+    }
+
+    String[] getCodes() {
+        ['image.info'] as String[]
+    }
+
+    String getDefaultMessage() {
+        "$name uploaded by $uploadedBy.username on $dateCreated - ${file.size()} bytes"
+    }
+}
+---------------------------------------------------------------------------------------
+
+In our message properties file we can add:
+
+[[grails-appi18nmessages.properties]]
+grails-app/i18n/messages.properties
++++++++++++++++++++++++++++++++++++
+
+----------------------------------------------------------------------
+image.info={0} uploaded by {1} on {2,date} - ${3,number,integer} bytes
+----------------------------------------------------------------------
+
+In the view we can display our object like this:
+
+-------------------------------------
+<g:message error="${imageInstance}"/>
+-------------------------------------
+
+Yes, that is the `error` attribute we're passing to the message tag! Grails intends the attribute to be used for outputting validation errors but the underlying mechanism is the same - Spring's http://static.springframework.org/spring/docs/2.5.x/api/org/springframework/validation/ObjectError.html[`ObjectError`] implements `MessageSourceResolvable` and that's how Grails' message tag resolves the displayed error message. Rather than passing separate `code`, `args` and `default` attributes to the tag we can pass the single `MessageSourceResolvable` instance and its implementation will take care of supplying those values.
+
+_Note: I added a `message` attribute to the message tag to avoid the confusion caused by using `error`. This is in Grails from version 1.2-M1 onwards._
+
+We can now add translations of our object description. For example:
+
+[[grails-appi18nmessages_af.properties]]
+grails-app/i18n/messages_af.properties
+++++++++++++++++++++++++++++++++++++++
+
+------------------------------------------------------------------------
+image.info={0} opgelaai deur {1} op {2,date} - ${3,number,integer} grepe
+------------------------------------------------------------------------
+
+It's worth noting that the format of the `dateCreated` property will be automatically determined by the request locale so the value will be formatted correctly for the user.
+
+I've found this technique can also be very useful on enum classes. For example:
+
+[[srcgroovycommycompanyseason.groovy]]
+src/groovy/com/mycompany/Season.groovy
+++++++++++++++++++++++++++++++++++++++
+
+----------------------------------------------------------------------------
+package com.mycompany
+
+enum Season implements org.springframework.context.MessageSourceResolvable {
+    SPRING, SUMMER, AUTUMN, WINTER
+
+    Object[] getArguments() { [] as Object[] }
+
+    String[] getCodes() {
+        ["${getClass().name}.${name()}"] as String[]
+    }
+
+    String getDefaultMessage() { name() }
+}
+----------------------------------------------------------------------------
+
+[[grails-appi18nmessages.properties-1]]
+grails-app/i18n/messages.properties
++++++++++++++++++++++++++++++++++++
+
+----------------------------------
+com.mycompany.Season.SPRING=Spring
+com.mycompany.Season.SUMMER=Summer
+com.mycompany.Season.AUTUMN=Autumn
+com.mycompany.Season.WINTER=Winter
+----------------------------------
+
+[[grails-appi18nmessages_en_us.properties]]
+grails-app/i18n/messages_en_US.properties
++++++++++++++++++++++++++++++++++++++++++
+
+--------------------------------
+com.mycompany.Season.AUTUMN=Fall
+--------------------------------

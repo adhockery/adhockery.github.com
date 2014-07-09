@@ -1,0 +1,41 @@
+---
+title: 'Auditing data with the Acegi plugin and Grails upgrade pain'
+date: 2009-07-10T09:02:00+0100
+tags: acegi, events, grails upgrade, hibernate
+alias: ["post/42902527650/auditing-data-with-the-acegi-plugin-and-grails-upgrade/"]
+---
+
+I'm in the middle of trying to upgrade our app (again). We're running on Grails 1.1 now and I'm attempting to get us to 1.1.1 and from there to 1.2-M1. As Marc Palmer http://www.anyware.co.uk/2005/2009/07/03/grails-12m1-and-why-you-need-to-download-it-now/[points out] the more people using it the more likely it is that 1.2 final will be rock solid.
+
+The problem that's biting us right now is http://jira.codehaus.org/browse/GRAILS-4453[GRAILS-4453] (or, more accurately, http://opensource.atlassian.com/projects/hibernate/browse/HHH-2763[HHH-2763]). We're using http://grails.org/doc/1.1.x/guide/5.%20Object%20Relational%20Mapping%20(GORM).html#5.5.1%20Events%20and%20Auto%20Timestamping[Grails' Hibernate events support] to track the user that created and last updated assets in our system. This isn't just us being anal, the site editors frequently search the data using those criteria so it's an essential feature.
+
+In Grails 1.1 this is simplicity itself. The following code goes in the domain class and that's all there is to it:
+
+----------------------------------------------
+ User createdBy
+ User updatedBy
+
+ def authenticateService
+
+ def beforeInsert = {
+  createdBy = authenticateService.userDomain()
+ }
+
+ def beforeUpdate = {
+  updatedBy = authenticateService.userDomain()
+ }
+----------------------------------------------
+
+Yes, it is quite 'exciting' that you're able to inject a service into a domain class instance. GORM only maps explicitly typed properties to the database so anything declared using `def` is effectively transient.
+
+Unfortunately Grails 1.1.1 includes a newer version of Hibernate that introduces a particularly horrible problem. When saving any update to our domain object now we're faced with the error: `collection [User.authorities] was not processed by flush()`. The problem appears to be that the `User` instance attached to `createdBy` cannot be flushed when the `beforeUpdate` closure executes because it has a lazy-loaded collection of authorities. Even declaring the authorities collection as `lazy: false` doesn't help as the relationship is a bi-directional many-to-many - each `Authority` also has a collection of all the `User`s who have been granted that role. Given that for the purposes of displaying data to the audience of our site this audit data doesn't matter a damn I really don't want to be eager fetching it. Also, given the nature of the User-Authority relationship, casual eager fetching could result in rather a lot of data being loaded in to memory (the `User`, his roles, all the other users with that role, all _their_ roles...)
+
+Our options seem to be:
+
+1.  Explicitly eager fetch the `User` data in places where the owning object will get updated. Since the domain class in question is the root of a heirarchy of 13 sub-classes (things this project has taught me #63: never do this) and varieties get updated by a service or two, at least one controller and one Quartz and several hundred Selenium test fixtures, it's going to be a massive PITA and just as bad to remove if/when HHH-2763 ever gets fixed.
+2.  Break referential integrity and store username or id rather than an actual domain object relationship. This feels horribly wrong and is likely to cause problems down the line.
+3.  Store the created/updated information as a domain object of its own. This would make the query to find data by who created or updated it more complex (although not impossibly so) and might actually be prone to the same original bug
+
+I don't know if anyone might have come across this problem and has some kind of workaround (preferably one that isn't an evil hack). I'd really appreciate any pointers.
+
+_*Update:*_ This is fixed in Grails 1.2-M2

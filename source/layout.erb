@@ -8,11 +8,11 @@
   </head>
   <body>
 
-    <div id="main" role="main">
+    <main>
       <%= yield %>
-    </div>
+    </main>
 
-    <aside>
+    <nav>
       <h2>Recent Articles</h2>
       <ol>
         <% blog.articles[0...10].each do |article| %>
@@ -33,6 +33,6 @@
           <li><%= link_to "#{year} (#{articles.size})", blog_year_path(year) %></li>
         <% end %>
       </ol>
-    </aside>
+    </nav>
   </body>
 </html>

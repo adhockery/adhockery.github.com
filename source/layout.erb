@@ -5,6 +5,7 @@
     <meta http-equiv='X-UA-Compatible' content='IE=edge;chrome=1' />
     <title>Ad-Hockery<%= ' - ' + current_article.title unless current_article.nil? %></title>
     <%= feed_tag :atom, "#{blog.options.prefix.to_s}/feed.xml", title: "Atom Feed" %>
+    <link rel="stylesheet" href="/stylesheets/prism.css">
   </head>
   <body>
 
@@ -34,5 +35,7 @@
         <% end %>
       </ul>
     </nav>
+
+    <script src="/javascripts/prism.js"></script>
   </body>
 </html>

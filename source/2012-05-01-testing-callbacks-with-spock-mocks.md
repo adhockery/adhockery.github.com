@@ -2,7 +2,7 @@
 title: 'Testing callbacks with Spock mocks'
 date: 2012-05-01T12:50:00+0100
 tags: spock, vertx, testing
-alias: post/41774661851/testing-callbacks-with-spock-mocks/
+alias: ["post/41774661851/testing-callbacks-with-spock-mocks/", "testing-callbacks-with-spock-mocks/"]
 ---
 
 I've been doing some work with [vert.x][vertx] over the last few days and trying to develop components that are test-driven. Like any asynchronous framework rather than having methods that return a value you pass a callback Closure that gets invoked at some point in the future with the result. This makes it tricky to write unit tests that mock out collaborators as you might in a traditional app.
@@ -92,4 +92,3 @@ For more helpful output you can use a Closure to trap the arguments passed to th
 
 [vertx]:http://vertx.io/
 [spockmocks]:http://code.google.com/p/spock/wiki/Interactions
-

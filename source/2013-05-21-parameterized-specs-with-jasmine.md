@@ -2,7 +2,7 @@
 title: 'Parameterized specs with Jasmine'
 date: 2013-05-21T13:49:01+0100
 tags: javascript, jasmine, testing
-alias: post/50986014902/parameterized-specs-with-jasmine/
+alias: ["post/50986014902/parameterized-specs-with-jasmine/"]
 ---
 
 Spock's *where* block makes testing similar conditions for a bunch of inputs very straightforward. Recently I was working on the Groovy language definition for the [Prism syntax highlighter][7] and wanted something similar.

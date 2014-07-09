@@ -2,7 +2,7 @@
 title: 'Joda-Time and Grails Auto-Timestamping'
 date: 2009-03-31T14:55:00+0100
 tags: gorm, joda time, testing
-alias: post/42902363843/joda-time-and-grails-auto-timestamping/
+alias: ["post/42902363843/joda-time-and-grails-auto-timestamping/"]
 ---
 
 The [Joda-Time Plugin docs][1] state that [Grails' auto-timestamping][2] works with Joda-Time properties which is the case. However, when testing it can be useful to take advantage of Joda Time's [`DateTimeUtils`][3] class to mock the current time. This enables you to have new `DateTime` objects, for example, use a predictable timestamp. Unfortunately it doesn't play nicely with Grails' auto-timestamping which under the covers uses `System.currentTimeMillis()`.

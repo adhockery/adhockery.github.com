@@ -2,7 +2,7 @@
 title: 'Talk on Selenium RC Testing In Grails'
 date: 2009-11-02T17:24:00+0000
 tags: selenium, testing, grails plugins
-alias: post/42902630990/talk-on-selenium-rc-testing-in-grails/
+alias: ["post/42902630990/talk-on-selenium-rc-testing-in-grails/"]
 ---
 
 I'll be delivering a short talk about testing Grails apps with the [Selenium RC plugin][1] I'm [working on][2] at the [London Groovy and Grails User Group][3] on 20th November. Details are [here][4].

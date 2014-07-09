@@ -2,7 +2,7 @@
 title: 'Spock Killer Features: The ''old'' method'
 date: 2012-02-15T06:46:00+0000
 tags: groovy, spock, testing
-alias: post/41774646403/spock-killer-features-the-old-method/
+alias: ["post/41774646403/spock-killer-features-the-old-method/", "spock-killer-features-the-old-method/"]
 ---
 
 I use Spock almost exclusively to test Groovy or Java code these days. It's got some fantastic features that other test frameworks don't have. Some of them aren't that well known or documented, though.
@@ -65,4 +65,3 @@ There's no limit to what you can do with `old`. I've used it in _Geb_ specs to d
 
 	and:
 	cocktailList.names == old(cocktailList.names) + ['Dirty Martini']
-

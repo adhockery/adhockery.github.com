@@ -2,7 +2,7 @@
 title: 'Auto-generate Spock specs for Grails artifacts'
 date: 2010-08-12T22:46:00+0100
 tags: events, spock, scaffolding, grails scripts
-alias: post/42903069805/auto-generate-spock-specs-for-grails-artifacts/
+alias: ["post/42903069805/auto-generate-spock-specs-for-grails-artifacts/"]
 ---
 
 When creating artifacts such as domain classes, controllers and tag libs Grails generates a _JUnit_ test case. If, like me, you're digging writing specifications with [Spock][1] you'd probably rather have Grails generate one of those. The last thing I want is to manually transform every generated test case into a specification for every artifact I create.

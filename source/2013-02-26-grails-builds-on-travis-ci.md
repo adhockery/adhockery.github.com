@@ -2,7 +2,7 @@
 title: 'Grails builds on Travis CI'
 date: 2013-02-26T14:08:20+0000
 tags: grails, ci
-alias: post/44061616547/grails-builds-on-travis-ci/
+alias: ["post/44061616547/grails-builds-on-travis-ci/"]
 ---
 
 [Travis CI][1] is a cloud based continuous integration service. It's a great way to automate test runs for projects hosted on GitHub. Since the Grails wrapper was added to Grails in version 2.1 you can use Travis to build Grails apps.

@@ -2,7 +2,7 @@
 title: 'Resources plugin and modular web components for Grails apps'
 date: 2011-05-21T21:59:00+0100
 tags: progressive enhancement, resources, css
-alias: post/42903231998/resources-plugin-and-modular-web-components-for-grails/
+alias: ["post/42903231998/resources-plugin-and-modular-web-components-for-grails/"]
 ---
 
 I recently gave a talk on ['Building progressive UIs with Grails'][1] at [gr8conf][2] in Copenhagen and was really pleased with the feedback &amp; comments I received afterwards. There was a question asked at the end that I felt in retrospect I could have answered better, though. I had mentioned that the Grails [AJAX tags][3] were something that should be avoided as they write script blocks directly into the page and event handlers directly onto HTML elements. I was pitching an approach based on a clean separation of clean semantic markup and script enhancements and inline script violates that separation.

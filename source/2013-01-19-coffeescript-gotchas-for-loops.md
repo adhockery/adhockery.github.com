@@ -2,7 +2,7 @@
 title: 'CoffeeScript Gotchas: for loops'
 date: 2013-01-19T17:20:00+0000
 tags: coffeescript
-alias: post/41774818353/coffeescript-gotchas-for-loops/
+alias: ["post/41774818353/coffeescript-gotchas-for-loops/", "coffeescript-gotchas-for-loops/"]
 ---
 
 Title: CoffeeScript Gotchas: for loops
@@ -60,4 +60,3 @@ Of course, for even more idiomatic CoffeeScript we can have multiple loop variab
 
     #!coffeescript
     console.log "#{prop} '#{value}" for prop, value of language
-

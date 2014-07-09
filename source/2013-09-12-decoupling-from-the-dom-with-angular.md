@@ -2,7 +2,7 @@
 title: 'Decoupling from the DOM with Angular'
 date: 2013-09-12T01:13:00+0100
 tags: angular, angularjs
-alias: post/60977491011/decoupling-from-the-dom-with-angular/
+alias: ["post/60977491011/decoupling-from-the-dom-with-angular/"]
 ---
 
 One piece of advice you'll run into pretty soon when working with Angular is that you should never touch the DOM outside of a directive. Especially when test-driving your components this is pretty wise. The great strength of Angular is the declarative way in which the view (HTML) works with the view model (Angular controllers). It's almost absurd how easy it is to unit test Angular controllers. Controller functions tend to act on `$scope` properties, trigger or respond to events and all those things are straightforward to replicate in unit tests.

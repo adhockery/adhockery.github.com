@@ -2,7 +2,7 @@
 title: 'Fear & loathing in functional testing land'
 date: 2011-11-24T00:59:00+0000
 tags: geb, selenium, testing, functional testing, spock
-alias: post/42903299940/fear-loathing-in-functional-testing-land/
+alias: ["post/42903299940/fear-loathing-in-functional-testing-land/"]
 ---
 
 As projects grow the two things I've repeatedly found to be particularly painful have been functional testing and data fixtures. I might write up some thoughts on data fixtures another time but what follows is a brain-dump of my troubled relationship with functional testing.

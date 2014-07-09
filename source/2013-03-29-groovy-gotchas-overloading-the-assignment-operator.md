@@ -2,7 +2,7 @@
 title: 'Groovy gotchas: overloading the assignment operator'
 date: 2013-03-29T15:42:07+0000
 tags: groovy
-alias: post/46597838031/groovy-gotchas-overloading-the-assignment-operator/
+alias: ["post/46597838031/groovy-gotchas-overloading-the-assignment-operator/"]
 ---
 
 When assigning to a property of an object in Groovy using the assignment operator `=`  Groovy will look for a bean property style setter method. For example `x.foo = y` is equivalent to `x.setFoo(y)`. Or is it?

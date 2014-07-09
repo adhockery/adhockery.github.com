@@ -2,7 +2,7 @@
 title: 'Building your app on Hudson with Multiple Grails versions'
 date: 2010-05-03T06:35:00+0100
 tags: hudson
-alias: post/42902915689/building-your-app-on-hudson-with-multiple-grails/
+alias: ["post/42902915689/building-your-app-on-hudson-with-multiple-grails/"]
 ---
 
 For my Grails plugins I generally write a test project (or more than one). I thought it would be useful to be able to run these against multiple versions of Grails on my build server so I can spot any incompatibilities with the versions the plugin is supposed to support.

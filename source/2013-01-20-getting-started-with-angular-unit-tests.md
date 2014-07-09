@@ -2,7 +2,7 @@
 title: 'Getting started with Angular unit tests'
 date: 2013-01-20T05:54:00+0000
 tags: testing, angularjs, jasmine, coffeescript
-alias: post/41774841006/getting-started-with-angular-unit-tests/
+alias: ["post/41774841006/getting-started-with-angular-unit-tests/", "getting-started-with-angular-unit-tests/"]
 ---
 
 I've been pretty enthusiastic about [Angular](http://angularjs.org/) for a while now but although I was encouraged by the consideration given to testing hadn't really tried unit testing my Angular components. I've been using [Casper](http://casperjs.org/) to test end-to-end which has been good enough for the experimental stuff I'd been doing with Angular. When I recently started working on a _real_ app with a fairly complex Angular controller it felt like I needed to define the logic with some fine-grained unit tests.
@@ -88,4 +88,3 @@ As you can see I'm writing the tests in CoffeeScript which I find makes for very
 Testem automatically compiles the CoffeeScript tests in the `before_tests` step and destroys the generated JavaScript in the `on_exit` step.
 
 Once over the initial confusion about how to initialize things I'm now off & running with writing unit tests.
-

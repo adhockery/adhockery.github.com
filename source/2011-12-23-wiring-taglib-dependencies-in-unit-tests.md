@@ -2,7 +2,7 @@
 title: 'Wiring taglib dependencies in Grails 2 unit tests'
 date: 2011-12-23T10:24:00+0000
 tags: grails, testing
-alias: post/41774569512/wiring-taglib-dependencies-in-unit-tests/
+alias: ["post/41774569512/wiring-taglib-dependencies-in-unit-tests/", "wiring-taglib-dependencies-in-unit-tests/"]
 ---
 
 Grails 2 has made a lot of improvements in unit testing support. One of the things I always used to find particularly painful was unit testing taglibs. Now when your test class is annotated with `@TestFor(MyTagLib)` you can use the `applyTemplate` method like this:
@@ -92,4 +92,3 @@ Eventually I figured out that instead of registering your mock dependency in the
 	}
 
 Hopefully this is something that will get ironed out in a future Grails release but in the meantime hopefully this will be helpful for anyone who gets as stumped as I did.
-

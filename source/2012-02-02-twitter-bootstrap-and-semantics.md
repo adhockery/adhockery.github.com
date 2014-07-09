@@ -2,7 +2,7 @@
 title: 'Twitter Bootstrap & Semantics'
 date: 2012-02-02T11:07:00+0000
 tags: html, semantics, bootstrap, css
-alias: post/41774610097/twitter-bootstrap-and-semantics/
+alias: ["post/41774610097/twitter-bootstrap-and-semantics/", "twitter-bootstrap-and-semantics/"]
 ---
 
 There's a lot to like about [Twitter Bootstrap][twbootstrap]; it's a fantastic resource for getting off the ground, particularly for getting a slick-looking admin interface up and running quickly. The recent changes to accommodate responsive layouts are really impressive. I'm particularly impressed with the way [horizontal forms][hforms] stack on smaller screens (failure to accommodate small screens in form design is something I've [complained about before][tweet]). However, there are some things I'm less keen on…
@@ -50,4 +50,3 @@ Wait a minute… Isn't that dangerously close to the separation of semantics and
 [sass]:http://sass-lang.com/
 [stylus]:http://learnboost.github.com/stylus/
 [semanticgs]:http://semantic.gs/
-

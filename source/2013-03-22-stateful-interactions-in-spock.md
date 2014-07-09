@@ -2,7 +2,7 @@
 title: 'Stateful interactions in Spock'
 date: 2013-03-22T00:16:00+0000
 tags: spock, testing
-alias: post/45951535567/stateful-interactions-in-spock/
+alias: ["post/45951535567/stateful-interactions-in-spock/"]
 ---
 
 The Java mocking library [jMock][jmock] has [a nice feature for dealing with verifying mock interactions in stateful circumstances][jmock-states]. I first came across it when reading [Growing Object-Oriented Software Guided By Tests][goos] (_GOOS_) by Steve Freeman & Nat Pryce.

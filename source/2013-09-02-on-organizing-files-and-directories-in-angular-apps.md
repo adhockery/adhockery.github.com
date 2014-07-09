@@ -2,7 +2,7 @@
 title: 'On organizing files and directories in Angular apps'
 date: 2013-09-02T10:07:00+0100
 tags: angular, js
-alias: post/60062381788/on-organizing-files-and-directories-in-angular-apps/
+alias: ["post/60062381788/on-organizing-files-and-directories-in-angular-apps/"]
 ---
 
 I've been working on an [Angular JS][3] project for the past few weeks. It's not the first time I've used Angular but it is the first time I've used the [*generator-angular*][1] package for [Yeoman][2]. Having the ability to quickly generate skeletons for new components is really nice but there's one thing that rubs me up the wrong way – the way the genenerated code is organized on the file system.

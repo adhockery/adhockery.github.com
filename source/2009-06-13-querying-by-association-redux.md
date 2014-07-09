@@ -2,7 +2,7 @@
 title: 'Querying by Association Redux'
 date: 2009-06-13T06:25:00+0100
 tags: criteria queries, gorm, hibernate
-alias: post/42902466687/querying-by-association-redux/
+alias: ["post/42902466687/querying-by-association-redux/"]
 ---
 
 A couple of months back I [posted][1] about the problems with criteria queries where you want results with a collection property that _contains_ some value.

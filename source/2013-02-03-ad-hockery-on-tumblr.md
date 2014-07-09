@@ -2,7 +2,7 @@
 title: 'Ad-Hockery on Tumblr'
 date: 2013-02-03T07:53:00+0000
 tags: grunt
-alias: post/42172874088/ad-hockery-on-tumblr/
+alias: ["post/42172874088/ad-hockery-on-tumblr/"]
 ---
 
 There's nothing more boring than an _"I moved my blog"_ post but a couple of people have actually asked me to write up something about why I chose Tumblr & how I used [Grunt](http://gruntjs.com/) to help me build the theme. So – sorry – here's my _"I moved my blog"_ post…

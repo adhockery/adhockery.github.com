@@ -2,7 +2,7 @@
 title: 'Grails Selenium RC Plugin Released'
 date: 2009-11-05T20:58:00+0000
 tags: selenium, testing, grails plugins
-alias: post/42902648976/grails-selenium-rc-plugin-released/
+alias: ["post/42902648976/grails-selenium-rc-plugin-released/"]
 ---
 
 I've finally got the first release of the Selenium RC plugin out of the door. Just run `grails install-plugin selenium-rc` to install.

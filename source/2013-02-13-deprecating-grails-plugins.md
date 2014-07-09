@@ -2,7 +2,7 @@
 title: 'Deprecating Grails plugins'
 date: 2013-02-13T16:21:30+0000
 tags: grails plugins
-alias: post/43006835840/deprecating-grails-plugins/
+alias: ["post/43006835840/deprecating-grails-plugins/"]
 ---
 
 I've written a number of Grails plugins and the fact is that some of them are effectively unsupported. I've only got so much time & I'm juggling work, family, conference speaking, my own projects and open source. Any plugin development I do is going to be driven by the requirements of work or other projects, so even those plugins I still consider as supported might not get updated as often as some people would like.

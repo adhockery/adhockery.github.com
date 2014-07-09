@@ -2,7 +2,7 @@
 title: 'Derived values in Spock where tables'
 date: 2012-08-29T17:29:00+0100
 tags: spock, groovy, testing
-alias: post/41774699277/derived-values-in-spock-where-tables/
+alias: ["post/41774699277/derived-values-in-spock-where-tables/", "derived-values-in-spock-where-tables/"]
 ---
 
 When using `where` blocks in Spock there are two forms; assigning iterable values to a variable, e.g. `crew << ['Mal', 'Kaylee', 'Jayne']` or using a datatable. In the first form I always knew you could use assigned values, for example:
@@ -51,4 +51,3 @@ Here the `where` block variable _status_ is probably not used in the body of the
 * `Kaylee is the current Mechanic on the ship`
 * `Jayne is the current PR officer on the ship`
 * `Wash is the former pilot on the ship`
-

@@ -2,7 +2,7 @@
 title: 'Organizing functional tests'
 date: 2011-11-30T23:27:00+0000
 tags: testing
-alias: post/41774546011/organizing-functional-tests/
+alias: ["post/41774546011/organizing-functional-tests/", "organizing-functional-tests/"]
 ---
 
 I posted a few days ago [about functional testing & some of my frustrations][2], focusing mainly on the technical issues. I did touch on test organization in terms of modelling behaviour rather than page structure. As [Luke Daley has pointed out][3] the two aren't fundamentally in opposition and I've been giving this some further thought.
@@ -76,4 +76,3 @@ I should probably start using [Cucumber][5].
 [3]:http://ldaley.com/post/13251886270/in-response-to-robs-post-on-functional-testing
 [5]:http://cukes.info/
 [6]:http://blog.james-carr.org/2006/11/03/tdd-anti-patterns/ "James Carr: TDD Anti-Patterns"
-

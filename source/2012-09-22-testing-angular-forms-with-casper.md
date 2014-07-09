@@ -2,7 +2,7 @@
 title: 'Testing Angular forms with Casper'
 date: 2012-09-22T14:27:00+0100
 tags: casperjs, angularjs, testing
-alias: post/41774715101/testing-angular-forms-with-casper/
+alias: ["post/41774715101/testing-angular-forms-with-casper/", "testing-angular-forms-with-casper/"]
 ---
 
 When testing an [Angular](http://angularjs.org) application using [Casper](http://casperjs.org/) I found that the binding between inputs and model didn't seem to be happening when I filled in form fields. I used Casper's [`fill`](http://casperjs.org/api.html#casper.fill) method but found that the Angular form validation was rejecting any required fields as though they were still blank. With some debugging I was able to see that the `$scope` variables indeed weren't getting updated.
@@ -26,4 +26,3 @@ Now everything works just fine.
 If you want to see this code in context it's part of my [Grails Angular Scaffolding plugin](http://grails-ng.cloudfoundry.com/). The `fill` override is in a [Coffeescript extension file](https://github.com/robfletcher/grails-angular-scaffolding/blob/master/test/apps/grails-ng/test/casper/includes/casper-angular.coffee#L2).
 
 This technique should also be applicable to any other [Phantom](http://phantomjs.org/) based tool such as [Webspecter](https://github.com/jgonera/webspecter).
-

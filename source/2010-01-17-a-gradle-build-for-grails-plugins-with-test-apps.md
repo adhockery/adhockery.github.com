@@ -2,7 +2,7 @@
 title: 'A Gradle build for Grails plugins with test apps'
 date: 2010-01-17T20:35:00+0000
 tags: testing, gradle, grails plugins
-alias: post/42902799910/a-gradle-build-for-grails-plugins-with-test-apps/
+alias: ["post/42902799910/a-gradle-build-for-grails-plugins-with-test-apps/"]
 ---
 
 There's a fairly popular technique in Grails plugin development where the plugin has 'test apps' stored in `test/projects/*`, each of which references the plugin by including `grails.plugin.location."my-plugin" = "../../.."` in its _BuildConfig.groovy_. Doing this allows you as a plugin developer to:

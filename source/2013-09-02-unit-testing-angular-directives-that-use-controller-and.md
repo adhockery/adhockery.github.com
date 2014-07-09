@@ -2,7 +2,7 @@
 title: 'Unit testing Angular directives that use controller and templateUrl'
 date: 2013-09-02T14:48:00+0100
 tags: angular, js, testing
-alias: post/60074672413/unit-testing-angular-directives-that-use-controller-and/
+alias: ["post/60074672413/unit-testing-angular-directives-that-use-controller-and/"]
 ---
 
 I spent an hour or so this morning figuring out how to unit test an Angular directive that uses a controller and a template loaded from a file (as opposed to inline). There's a useful example in the [ng-directive-testing](https://github.com/vojtajina/ng-directive-testing) repository but I thought a quick summary would be useful (as much to remind me the next time I have to do it as anything). Also the examples there test by interacting with DOM elements rather than directly with the directive's scope.

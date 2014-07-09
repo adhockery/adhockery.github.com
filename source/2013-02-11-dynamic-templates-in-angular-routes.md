@@ -2,7 +2,7 @@
 title: 'Dynamic templates in Angular routes'
 date: 2013-02-11T22:37:00+0000
 tags: angular
-alias: post/42872615955/dynamic-templates-in-angular-routes/
+alias: ["post/42872615955/dynamic-templates-in-angular-routes/"]
 ---
 
 We're building an application where content can be published using different layouts selected by an editor. In Angular this translates to a situation where the same route & controller will need to display content from the same `$http` endpoint using a range of different templates. The name of the template is included in the JSON data returned by the `$http` endpoint so it's not known at the time the route is triggered.

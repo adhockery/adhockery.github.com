@@ -2,7 +2,7 @@
 title: 'Is this a Dagger I see before me?'
 date: 2012-10-11T21:18:00+0100
 tags: dagger, dependency injection, java
-alias: post/41774730401/is-this-a-dagger-i-see-before-me/
+alias: ["post/41774730401/is-this-a-dagger-i-see-before-me/", "is-this-a-dagger-i-see-before-me/"]
 ---
 
 Recently [Marcin Erdmann](https://twitter.com/marcinerdmann) and I decided to experiment with using [Dagger][dagger] for dependency injection in a project at work. It's a super-lightweight DI framework built by [Square](http://squareup.com).
@@ -32,4 +32,3 @@ Best of all Dagger is only 81K and has a single dependency on the `javax.inject`
 
 [dagger]:https://github.com/square/dagger
 [guice]:http://code.google.com/p/google-guice/
-

@@ -2,7 +2,7 @@
 title: 'Grails Upgrade'
 date: 2009-04-28T14:55:00+0100
 tags: testing, grails upgrade, grails plugins, hibernate
-alias: post/42902424105/grails-upgrade/
+alias: ["post/42902424105/grails-upgrade/"]
 ---
 
 We've just finished upgrading our sites to [Grails 1.1][1] and I thought it would be worth sharing some of the [fun][2] we had with the process.

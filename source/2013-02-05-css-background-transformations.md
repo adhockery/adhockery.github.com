@@ -2,7 +2,7 @@
 title: 'CSS background transformations'
 date: 2013-02-05T16:13:00+0000
 tags: css
-alias: post/42357804660/css-background-transformations/
+alias: ["post/42357804660/css-background-transformations/"]
 ---
 
 CSS3 includes a bunch of `transform` options allowing things like rotation & distortion of element boxes. I wanted to apply that to achieve an effect inspired by [mid 20th Century _Googie_ signage][googie].

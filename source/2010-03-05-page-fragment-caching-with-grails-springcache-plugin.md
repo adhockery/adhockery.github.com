@@ -2,7 +2,7 @@
 title: 'Page fragment caching with Grails Springcache plugin'
 date: 2010-03-05T06:42:00+0000
 tags: grails plugins, caching
-alias: post/42902846737/page-fragment-caching-with-grails-springcache-plugin/
+alias: ["post/42902846737/page-fragment-caching-with-grails-springcache-plugin/"]
 ---
 
 Yesterday I released the new version of the Springcache plugin for Grails. The new feature this brings to the table is page fragment caching driven by annotations on controller actions. The feature is based on [EhCache Web][1] and is even simpler and more powerful than the full page caching [I blogged about recently][2]. With the page fragment caching feature you can:

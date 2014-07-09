@@ -2,7 +2,7 @@
 title: 'Defaulting Joda Time Hibernate Types with Grails'
 date: 2010-06-24T06:57:00+0100
 tags: joda time, gorm
-alias: post/42903000331/defaulting-joda-time-hibernate-types-with-grails/
+alias: ["post/42903000331/defaulting-joda-time-hibernate-types-with-grails/"]
 ---
 
 Grails 1.2 added the ability to define default Hibernate mappings that apply to all GORM classes. It turns out this is incredibly useful if you're using Joda-Time types instead of _java.util.Date_ in your domain objects. Previously you had to specify the Hibernate user type for every single field, like this:

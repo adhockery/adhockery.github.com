@@ -2,7 +2,7 @@
 title: 'Internationalizing Domain Classes and Enums'
 date: 2009-03-10T09:30:00+0000
 tags: i18n, spring
-alias: post/42902346489/internationalizing-domain-classes-and-enums/
+alias: ["post/42902346489/internationalizing-domain-classes-and-enums/"]
 ---
 
 It's common to provide a `toString` implementation on a domain object that may well end up being used in the view. However, this doesn't allow for internationalization in the view. A good solution that I've used a number of times is to have classes implement Spring's [MessageSourceResolvable][1] interface. Consider this domain class that represents an image file:

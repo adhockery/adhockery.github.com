@@ -2,7 +2,7 @@
 title: 'Joda Time Auto-Timestamping Issue on Grails 1.1.1'
 date: 2009-06-18T05:54:00+0100
 tags: joda time, gorm
-alias: post/42902495229/joda-time-auto-timestamping-issue-on-grails-1-1-1/
+alias: ["post/42902495229/joda-time-auto-timestamping-issue-on-grails-1-1-1/"]
 ---
 
 I've not upgraded most of my code to Grails 1.1.1 yet so I hadn't noticed this problem until it was [brought to my attention][1] by Manuel Vio on the [grails-user][2] mailing list.

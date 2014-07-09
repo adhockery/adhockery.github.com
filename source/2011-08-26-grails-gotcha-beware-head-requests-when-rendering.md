@@ -2,7 +2,7 @@
 title: 'Grails Gotcha: Beware HEAD requests when rendering binary output in controllers'
 date: 2011-08-26T17:19:00+0100
 tags: grails controllers, css, progressive enhancement, resources, i18n, spring, spock
-alias: post/42903282817/grails-gotcha-beware-head-requests-when-rendering/
+alias: ["post/42903282817/grails-gotcha-beware-head-requests-when-rendering/"]
 ---
 
 Although most Grails controllers render HTML, JSON or XML output it is possible to use them to render binary data as well. We use a controller to render images uploaded by editors into our content management interface. The theory is simple enough, instead of using the `render` dynamic method or returning a _model_ the controller action just writes bytes directly to the HTTP response stream. Our action looked something like this:

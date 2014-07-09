@@ -2,7 +2,7 @@
 title: 'A Grails JUnit 4 test template'
 date: 2010-04-21T14:26:00+0100
 tags: junit4, testing
-alias: post/42902899372/a-grails-junit-4-test-template/
+alias: ["post/42902899372/a-grails-junit-4-test-template/"]
 ---
 
 Grails 1.3 upgrades the bundles JUnit to the newer JUnit 4 API. However, the test template used to generate classes by the Grails _create-*_ scripts is still very JUnit 3-ish. Here's a replacement that will generate a skeleton test using JUnit 4 conventions:

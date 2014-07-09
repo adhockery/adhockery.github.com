@@ -2,7 +2,7 @@
 title: 'New Springcache Plugin Version'
 date: 2009-12-12T16:49:00+0000
 tags: grails plugins, caching
-alias: post/42902718093/new-springcache-plugin-version/
+alias: ["post/42902718093/new-springcache-plugin-version/"]
 ---
 
 After [saying it might take me a while][1] I got stuck in and rewrote the Springcache plugin from scratch. The new version is up now. The plugin now requires Grails 1.2.0-M3 or greater as it's reliant on Spring 3.0.

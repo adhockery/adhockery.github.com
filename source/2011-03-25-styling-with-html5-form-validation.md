@@ -2,7 +2,7 @@
 title: 'Styling with HTML5 form validation'
 date: 2011-03-25T00:10:00+0000
 tags: css, opera, chrome, html5, safari, firefox, webkit
-alias: post/42903194254/styling-with-html5-form-validation/
+alias: ["post/42903194254/styling-with-html5-form-validation/"]
 ---
 
 HTML5 specifies a number of enhancements to form inputs that are gradually being implemented by newer browsers. Among the enhancements is support for some level of automatic form validation. When inputs have invalid values the browser may refuse to submit the form. Currently Opera, Safari, Chrome and Firefox 4 have some support for this. IE8 does not. I haven't experimented with IE9 yet.

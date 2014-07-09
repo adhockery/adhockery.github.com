@@ -2,7 +2,7 @@
 title: 'GR8Conf US debrief'
 date: 2013-07-26T13:57:00+0100
 tags: 
-alias: post/56513755063/gr8conf-us-debrief/
+alias: ["post/56513755063/gr8conf-us-debrief/"]
 ---
 
 I just got back from my second GR8Conf US in Minneapolis. Despite the jet-lag it was well worth it.

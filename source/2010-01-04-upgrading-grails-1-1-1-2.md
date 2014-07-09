@@ -2,7 +2,7 @@
 title: 'Upgrading Grails 1.1 -> 1.2'
 date: 2010-01-04T21:22:00+0000
 tags: gorm, grails upgrade
-alias: post/42902784310/upgrading-grails-1-1-1-2/
+alias: ["post/42902784310/upgrading-grails-1-1-1-2/"]
 ---
 
 We've just successfully upgraded our app from Grails 1.1 to [1.2][1] and pushed it to our QA environment. I thought I'd write up some of the issues we encountered in case anyone is bashing their heads against them.

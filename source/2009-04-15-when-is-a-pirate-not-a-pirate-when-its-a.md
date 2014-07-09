@@ -2,7 +2,7 @@
 title: 'When is a Pirate not a Pirate? When it''s a HibernateProxy'
 date: 2009-04-15T02:49:00+0100
 tags: gorm, hibernate
-alias: post/42902409632/when-is-a-pirate-not-a-pirate-when-its-a/
+alias: ["post/42902409632/when-is-a-pirate-not-a-pirate-when-its-a/"]
 ---
 
 At work we're in the middle of upgrading [the][1] [Sky][2] [Entertainment][3] [sites][4] from Grails 1.0.3 to Grails 1.1 - a long blog post will follow with a tale of our woes! One of the changes in Grails 1.1 is that one-to-one domain associations are now lazy by default. This raised an interesting problem for us as it meant we were now sometimes dealing with [HibernateProxy][5] instances where before we weren't.

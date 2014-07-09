@@ -2,7 +2,7 @@
 title: 'Full page caching in Grails with Ehcache-Web'
 date: 2010-02-23T12:47:00+0000
 tags: caching
-alias: post/42902815893/full-page-caching-in-grails-with-ehcache-web/
+alias: ["post/42902815893/full-page-caching-in-grails-with-ehcache-web/"]
 ---
 
 I'm on the verge of releasing a new version of the [Springcache plugin][1] that will feature a pretty cool new annotation-driven page fragment caching feature based on [Ehcache-web][2]. However one of the things that came up during discussions on the mailing list was full page caching. I mentioned that it was pretty straightforward and promised to blog about how to do it, so…

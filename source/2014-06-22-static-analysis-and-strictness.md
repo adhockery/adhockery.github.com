@@ -2,7 +2,7 @@
 title: 'Static analysis and strictness'
 date: 2014-06-22T08:27:00+0100
 tags: 
-alias: post/89533810726/static-analysis-and-strictness/
+alias: ["post/89533810726/static-analysis-and-strictness/"]
 ---
 
 Let me be clear – static analysis tools like Checkstyle and Codenarc are useful tools. But…

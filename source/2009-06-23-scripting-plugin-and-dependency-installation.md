@@ -2,7 +2,7 @@
 title: 'Scripting Plugin and Dependency Installation'
 date: 2009-06-23T18:17:00+0100
 tags: ivy, grails scripts, grails plugins
-alias: post/42902509169/scripting-plugin-and-dependency-installation/
+alias: ["post/42902509169/scripting-plugin-and-dependency-installation/"]
 ---
 
 Another quick script that I find quite useful, particularly on continuous integration servers is my [Prepare.groovy][1] script. It solves a couple of problems

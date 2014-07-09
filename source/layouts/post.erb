@@ -8,7 +8,7 @@ pageable: false
     </header>
     <%= yield %>
     <footer>
-      <time datetime="<%= current_article.date.strftime('%Y-%m-%d') %>"><%= current_article.date.strftime('%b %e %Y') %></time>
+      <time datetime="<%= current_article.date.strftime('%Y-%m-%dT%H:%M:%S') %>"><%= current_article.date.strftime('%b %e %Y') %></time>
     </footer>
   </article>
 <% end %>

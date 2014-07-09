@@ -1,6 +1,6 @@
 ---
 title: Gradle and Groovy's Invoke Dynamic support
-date: 2014-06-24
+date: 2014-06-24T15:32+0100
 tags: groovy, invokedynamic, gradle
 ---
 

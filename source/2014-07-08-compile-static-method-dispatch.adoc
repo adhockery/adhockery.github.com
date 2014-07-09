@@ -1,6 +1,6 @@
 ---
 title: '@CompileStatic and polymorphic method dispatch'
-date: 2014-07-08
+date: 2014-07-08T07:11+01:00
 tags: groovy, compilestatic
 ---
 

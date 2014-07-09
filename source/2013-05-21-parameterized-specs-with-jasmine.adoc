@@ -97,9 +97,7 @@ Now we have a closure for each iteration of the loop with the variables `name` a
 
 There's nothing special about the parameter object itself, I've used a plain object because I just need two parameters. You could use the same technique with any number of parameters by using an array or some other construct. The parameters just need to be declared on and passed to the anonymous function that creates the closure.
 
-[[more]]
-More…
-~~~~~
+=== More…
 
 You can see the Prism Groovy language definition http://freeside.co/prism-groovy/[here]. The Jasmine tests are executed right in the page. The https://github.com/robfletcher/prism-groovy/blob/gh-pages/test/prism-groovy.spec.js[specification code itself] is found in the GitHub repository.
 

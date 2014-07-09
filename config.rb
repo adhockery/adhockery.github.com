@@ -29,6 +29,8 @@ activate :blog do |blog|
   # blog.page_link = "page/{num}"
 end
 
+activate :autoprefixer
+
 activate :deploy do |deploy|
   deploy.build_before = true
   deploy.method = :git
@@ -42,10 +44,12 @@ page "/feed.xml", layout: false
 # Compass
 ###
 
+require "susy"
+
 # Change Compass configuration
-# compass_config do |config|
-#   config.output_style = :compact
-# end
+compass_config do |config|
+  config.add_import_path "/Users/rfletcher/.rvm/gems/ruby-1.9.3-p547/gems/susy-1.0.9/sass"
+end
 
 ###
 # Page options, layouts, aliases and proxies

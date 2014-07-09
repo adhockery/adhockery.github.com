@@ -16,3 +16,7 @@ gem "middleman-alias"
 
 # Deploy to GitHub pages
 gem "middleman-deploy"
+
+gem "middleman-autoprefixer"
+gem "susy"
+gem "normalize-scss"

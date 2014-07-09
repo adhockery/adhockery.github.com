@@ -1,5 +1,5 @@
 WebFontConfig = {
-  google: { families: [ 'Maiden+Orange::latin', 'Oswald::latin' ] }
+  google: { families: [ 'Maiden+Orange::latin', 'Oswald::latin', 'Francois+One::latin' ] }
 };
 (function() {
   var wf = document.createElement('script');

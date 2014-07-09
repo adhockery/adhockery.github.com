@@ -7,10 +7,15 @@
     <%= feed_tag :atom, "#{blog.options.prefix.to_s}/feed.xml", title: "Atom Feed" %>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
     <link rel="stylesheet" href="/stylesheets/prism.css">
     <script src="/javascripts/modernizr.custom.js"></script>
   </head>
   <body>
+
+    <header id="site-header">
+      <h1 class="logo">Ad-Hockery</h1>
+    </header>
 
     <main>
       <%= yield %>

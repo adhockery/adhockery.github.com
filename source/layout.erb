@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Ad-Hockery<%= ' - ' + current_article.title unless current_article.nil? %></title>
     <%= feed_tag :atom, "#{blog.options.prefix.to_s}/feed.xml", title: "Atom Feed" %>
-    <meta name="description" content="<%= current_article.summary unless current_article.nil? %>">
+    <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="/stylesheets/prism.css">
     <script src="/javascripts/modernizr.custom.js"></script>
@@ -16,27 +16,33 @@
       <%= yield %>
     </main>
 
-    <nav>
-      <h2>Recent posts</h2>
-      <ol>
-        <% blog.articles[0...10].each do |article| %>
-          <li><%= link_to article.title, article %> <time datetime="<%= article.date.strftime('%Y-%m-%d') %>"><%= article.date.strftime('%b %e %Y') %></time></li>
-        <% end %>
-      </ol>
+    <nav id="site-nav">
+      <section class="recent">
+        <h2>Recent posts</h2>
+        <ol>
+          <% blog.articles[0...10].each do |article| %>
+            <li><%= link_to article.title, article %> <time datetime="<%= article.date.strftime('%Y-%m-%d') %>"><%= article.date.strftime('%b %e %Y') %></time></li>
+          <% end %>
+        </ol>
+      </section>
 
-      <h2>By Year</h2>
-      <ol>
-        <% blog.articles.group_by {|a| a.date.year }.each do |year, articles| %>
-          <li><%= link_to "<time>#{year}</time> (#{articles.size})", blog_year_path(year) %></li>
-        <% end %>
-      </ol>
+      <section class="archive">
+        <h2>By Year</h2>
+        <ol>
+          <% blog.articles.group_by {|a| a.date.year }.each do |year, articles| %>
+            <li><%= link_to "<time>#{year}</time> (#{articles.size})", blog_year_path(year) %></li>
+          <% end %>
+        </ol>
+      </section>
 
-      <h2>Tags</h2>
-      <ul>
-        <% blog.tags.sort().each do |tag, articles| %>
-          <li><%= link_to "#{tag} (#{articles.size})", tag_path(tag) %></li>
-        <% end %>
-      </ul>
+      <section class="tags">
+        <h2>Tags</h2>
+        <ul class="tag-list">
+          <% blog.tags.sort().each do |tag, articles| %>
+            <li><%= link_to "#{tag} (#{articles.size})", tag_path(tag) %></li>
+          <% end %>
+        </ul>
+      </section>
     </nav>
 
     <script src="/javascripts/adhockery.js"></script>

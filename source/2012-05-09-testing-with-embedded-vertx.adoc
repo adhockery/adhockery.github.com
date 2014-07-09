@@ -13,8 +13,8 @@ The embedded API doesn't allow you to deploy _verticles_ or start http://vertx.i
 
 For example consider the following component that handles event bus messages and looks up documents using Vert.x's http://vertx.io/mods_manual.html#mongodb-persistor[Mongo DB persistor]:
 
+[source,groovy]
 ---------------------------------------------------------------------------------------------------------
-#!groovy
 class MyComponent {
     EventBus eventBus
 
@@ -33,8 +33,8 @@ class MyComponent {
 
 To test this first I initialized the Vert.x instance and registered my component as a handler on the event bus. I'm waiting until Vert.x calls back to indicate that the handler is registered successfully then storing the handler's _id_ so that I can easily clean it up after the test:
 
+[source,groovy]
 --------------------------------------------------------------------
-#!groovy
 @Shared def vertx = Vertx.newVertx()
 def component = new MyComponent(eventBus: vertx.eventBus)
 def handlerIds = new Stack()
@@ -62,8 +62,8 @@ Vert.x's Groovy API uses closures for all handlers on the event bus so I've used
 
 Then I added a https://code.google.com/p/spock/wiki/Interactions[Spock Mock] to represent the Mongo DB persistor that my component will send messages to. This also needs to be registered on the event bus:
 
+[source,groovy]
 --------------------------------------------------------
-#!groovy
 def persistor = Mock(Handler)
 
 void setup() {
@@ -74,8 +74,8 @@ void setup() {
 
 Finally, a feature method to test what happens when the requested document does not exist in the Mongo DB datastore:
 
+[source,groovy]
 ------------------------------------------------------------------------------------
-#!groovy
 void 'read calls back with not-found status if there is nothing in the database'() {
     given:
     persistor.handle(_) >> { Message message ->

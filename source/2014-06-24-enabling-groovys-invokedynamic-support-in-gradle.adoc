@@ -9,6 +9,7 @@ I posted link:/post/89759686171/gradle-and-groovys-invoke-dynamic-support[previo
 
 In addition to including the right version of the jar you need to configure Gradle's `GroovyCompile` task like this:
 
+[source,groovy]
 -----------------------------------------------
 tasks.withType(GroovyCompile) {
   groovyOptions.optimizationOptions.indy = true
@@ -17,6 +18,7 @@ tasks.withType(GroovyCompile) {
 
 If you want to check the code is being compiled correctly the easiest way I've found to do so is to use `javap` to read the bytecode form a class file and see if there are any _invokedynamic_ instructions. Here's an example:
 
+[source,bash]
 ----------------------------------------------------------------------------------------
 javap -v -cp build/classes/test co.freeside.jdbi.time.LocalDateSpec | grep invokedynamic
 ----------------------------------------------------------------------------------------

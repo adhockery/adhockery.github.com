@@ -9,10 +9,8 @@ At work we're in the middle of upgrading http://showbiz.sky.com/[the] http://tv.
 
 For example, let's imagine we have a _Pet_ domain class that is has an owner that is a _Person_ and there exists another domain class, _Pirate_ that is a specialisation of _Person_:
 
-[[pet.groovy]]
-Pet.groovy
-++++++++++
-
+[source,groovy]
+.Pet.groovy
 ----------------
 class Pet {
     String type
@@ -21,10 +19,8 @@ class Pet {
 }
 ----------------
 
-[[person.groovy]]
-Person.groovy
-+++++++++++++
-
+[source,groovy]
+.Person.groovy
 ------------------------------------------------
 class Person {
 
@@ -41,10 +37,8 @@ class Person {
 }
 ------------------------------------------------
 
-[[pirate.groovy]]
-Pirate.groovy
-+++++++++++++
-
+[source,groovy]
+.Pirate.groovy
 ------------------------------------------------
 class Pirate extends Person {
 
@@ -62,6 +56,7 @@ class Pirate extends Person {
 
 We want to test that either a regular _Person_ or a _Pirate_ can own a _Pet_. To do so we write an integration test like this:
 
+[source,groovy]
 ---------------------------------------------------------------------------------
 void testAssignPersonAsPetOwner() {
     Person terry = new Person(name: 'Terry Elbow')
@@ -96,6 +91,7 @@ Great... what?
 
 When we read the _Pet_ instance back from the database the _owner_ association is set to lazy load so `Pet.findByName("Cap'n Flint").owner` is a _HibernateProxy_. The failure is caused by the fact that as _owner_ is declared as being of type _Person_ the proxy generated extends _Person_ and therefore the instanceof check in _Pirate_'s equals method fails...
 
+[source,groovy]
 ----------------------------------------
 if (!(o instanceof Pirate)) return false
 ----------------------------------------
@@ -110,6 +106,7 @@ Our options at this point seem to be...
 
 The first option is just admitting defeat! Loading objects from the database when it's not necessary is wasteful and we don't want to go creating that kind of tech debt just to get our test working. The second option is not acceptable as it would mean the _equals_ implementation on _Pirate_ would violate the http://java.sun.com/javase/6/docs/api/java/lang/Object.html#equals(java.lang.Object)[general contract of _equals_] as `aPerson == aPirate` would return _false_ but `aPirate == aPerson` would throw _MissingPropertyException_ when it tried to execute the line:
 
+[source,groovy]
 -----------------------------
 return nickname == o.nickname
 -----------------------------
@@ -118,6 +115,7 @@ This leaves us with figuring out a way to initialise the proxy so we're always d
 
 There is a convenience http://www.hibernate.org/hib_docs/v3/api/org/hibernate/Hibernate.html#initialize(java.lang.Object)[_initialize_] method in _org.hibernate.Hibernate_ that can force a proxy to load, but it is _void_ so our _equals_ method would still have a reference to the _HibernateProxy_ that is not actually an instance of _Pirate_. What we need to do is:
 
+[source,groovy]
 ------------------------------------------------------
 if (o instanceof org.hibernate.proxy.HibernateProxy) {
     o = o.hibernateLazyInitializer.implementation
@@ -133,6 +131,7 @@ No such property: hibernateLazyInitializer for class: Person_$$_javassist_0
 
 As luck would have it Grails has a utility method for doing exactly what we want and as it's written in Java no amount of meta class trickery will hide the _hibernateLazyInitializer_ property from it. Our final, working _equals_ implementation for _Pirate_ looks like:
 
+[source,groovy]
 ----------------------------------------------
 boolean equals(Object o) {
     if (!super.equals(o)) return false
@@ -146,6 +145,7 @@ boolean equals(Object o) {
 
 *Note:* this is a simple example so we'll gloss over the fact that _Pirate_'s _equals_ isn't symmetric as
 
+[source,groovy]
 -------------------------------------------------------------
 new Person(name: 'X') == new Pirate(name: 'X', nickname: 'Y')
 -------------------------------------------------------------

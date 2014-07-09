@@ -13,9 +13,7 @@ Unit tests are associated almost on a one-to-one basis with units of code. When 
 
 I've tried to distil some rules of thumb from all this.
 
-[[organize-tests-around-features-not-units-of-code]]
-1: Organize tests around features not units of code
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== 1: Organize tests around features not units of code
 
 When it comes to writing functional tests in Java or Groovy the tendency is to follow the pattern of associating tests to some kind of unit of software. Typically it's a test per web page or significant page component (e.g. _ArticlePageSpec_, _NewsTickerSpec_). When dealing with the content management side of apps rather than the public facing it often defaults to a test per high level domain object.
 
@@ -23,23 +21,19 @@ When work is started on new functionality the temptation is often to augment exi
 
 The functional tests are supposed to be, among other things, the living, executable documentation for your product. So there should be a strong association between the tests and the features that have been implemented over the life of the project. In the teams I've worked on features have been tracked using index cards on a board but the same could apply to issue tracking systems. When using _Spock_ there's even a dedicated annotation for tying a feature method or specification class to an issue:
 
+[source,groovy]
 ----------------------------------------------------------
-#!groovy
 import spock.lang.*
 
 @Issue("https://github.com/robfletcher/betamax/issues/34")
 class HttpsProxySpec extends Specification {
 ----------------------------------------------------------
 
-[[name-tests-according-to-features]]
-2: _Name_ tests according to features
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== 2: _Name_ tests according to features
 
 I think part of the reason the habit of associating tests with units of code is hard to break is naming. Test classes have to be called something and that something is limited by Java's class naming requirements and conventions. Naming things is often treated as an afterthought, http://martinfowler.com/bliki/TwoHardThings.html[but it's actually hard]. When I start working on a card with a description something like _"A user can save articles to a list of 'favourites'"_ what am I going to call the functional test class? I should probably go for _UserSavesArticleToFavouritesSpec_ but if this is the first card played that's to do with _favourites_ maybe I'll just be lazy and call it _FavouritesSpec_. Next week someone else plays a card _"Users can remove articles from their list of favourites"_ and adds their coverage to my original _FavouritesSpec_ which is now some hybrid beast testing two different bits of behaviour.
 
-[[put-tests-somewhere-you-can-find-them-later]]
-3: Put tests somewhere you can find them later
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== 3: Put tests somewhere you can find them later
 
 Over time something I've noticed is that it becomes difficult to identify where exactly a certain bit of functionality is covered in the functional tests. Team members fixing defects will sometimes try to figure out who implemented something in the first place and ask them where the tests are or even end up trawling through the _Git_ log. This shouldn't be necessary.
 
@@ -49,9 +43,7 @@ I've also seen test cruft floating around (still 'passing' somehow) from long-de
 
 Redundancy is a huge problem on some projects. One in particular had a vast suite of _Selenese_ tests that often repeatedly exercised bits of functionality often nothing to do with what the test was concerned with actually testing. For example the CMS used the _Grails_ URL convention of _/type/action/id_ (e.g. _/article/edit/1234_). Because such URLs are unpredictable tests would do things like invoke a data fixture then use the CMS's search tool to find the thing the fixture created and navigate to its edit page.
 
-[[keep-tests-atomic]]
-4: Keep tests atomic
-~~~~~~~~~~~~~~~~~~~~
+=== 4: Keep tests atomic
 
 There's a best practice that states each test should make a single logical assertion and I'd extend that to say that test classes should test a single feature (including variations and edge cases). If the new test you're writing is nothing to do with the other tests in the class or is only related to them because it deals with some of the same parts of the application then it should be broken out into a new class.
 
@@ -59,9 +51,7 @@ Sometimes this comes at the cost of repeated initialization or data setup and de
 
 _Selenese_ tests seem particularly prone to run-on testing where what are in reality multiple tests are combined into one because it is easy for the resulting state of an earlier part of the test to feed into further assertions. For example a test that creates an _article_ then makes sure the user can search for it, then uses the search result to navigate to an edit page where it makes sure the _article_ can be updated and finally deleted. A http://blog.james-carr.org/2006/11/03/tdd-anti-patterns/[TDD anti-pattern] known as _"The One"_. Spock's _@Stepwise_ annotation can be similarly abused.
 
-[[isolate-data-fixtures-for-each-test]]
-5: Isolate data fixtures for each test
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== 5: Isolate data fixtures for each test
 
 Starting out with simple tests that create some data we'll often spot some commonality & move some of the data setup into _setup_ or _setupSpec_ methods (_@Before_ or _@BeforeClass_ in JUnit). When successive cards are played and developers augment that test they'll find the original data is insufficient or inappropriate. Before long there's a test with some data created in _setup_, individual tests adding more, some tests ignoring the data from _setup_ completely and worse, some tests actually modifying or even deleting bits of it.
 
@@ -73,14 +63,10 @@ I do prefer tests that set up their own data rather than relying on a common fix
 
 Grails has a couple of plugins that are very useful here; _Fixtures_ and _Build Test Data_. I'm actually pretty bad at using the _Fixtures_ plugin effectively but am convinced it's a good idea. _Build Test Data_ is usually among the first plugins I install in any project and it's very useful for hiding irrelevant fixture detail from the test code.
 
-[[tldr-version]]
-TL;DR version
-~~~~~~~~~~~~~
+=== TL;DR version
 
 I firmly believe that small is good when it comes to functional tests. I want lots of tests each covering some well defined facet of the application's behaviour, preferably traceable in some way to the original card. I think if I've understood anything of Behaviour Driven Development it's that tests should be organized around product features and not units of code.
 
-[[still-tldr-version]]
-_Still_ TL;DR version
-~~~~~~~~~~~~~~~~~~~~~
+=== _Still_ TL;DR version
 
 I should probably start using http://cukes.info/[Cucumber].

@@ -7,15 +7,11 @@ alias: ["post/42903176615/date-and-time-inputs-vs-usability/"]
 
 Form input controls for date/time values have always been problematic. The more I experiment with different options, the more I think there is no one-size-fits-all solution.
 
-[[calendar-widgets]]
-Calendar widgets
-~~~~~~~~~~~~~~~~
+=== Calendar widgets
 
 Calendar widgets such as the http://jqueryui.com/demos/datepicker/[Opera HTML5 date input] are very popular and can be a slick looking addition to a form. I don't think they're entirely positive though and certainly don't work in all situations. They're great when you don't know exactly the date you want (_I want to book a flight around Easter time_) or you need to have an overview of the calendar (_I need to set a reminder for http://twitter.com/#!/LondonGGUG[GGUG] on the third Tuesday of every month_). However, when trying to enter your date of birth the widget is just in the way. Even if the widget is keyboard accessible and doesn't force you to page month-by-month to the correct year you can almost certainly type the date quicker than you can find and select it in a calendar widget.
 
-[[multi-field-inputs]]
-Multi-field inputs
-~~~~~~~~~~~~~~~~~~
+=== Multi-field inputs
 
 A multi-field input works well for entering familiar dates such as your date of birth or for transcribing data. They're not so good when you need the context a calendar widget affords (please don't force your users to mentally calculate what date the 3rd Tuesday of next month is).
 
@@ -23,23 +19,17 @@ With a multi-field input it's vital to remember that users in different places w
 
 A possible optimisation is to auto-tab between fields after the user has typed the requisite number of digits. In that case you should allow for the user to correct mistakes, so backspacing or using the cursor keys should also automatically jump between fields otherwise the auto-tabbing behaviour becomes more a hinderance than a help for fat-fingered typists like me.
 
-[[selects-in-a-multi-field-input]]
-Selects in a multi-field input
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Selects in a multi-field input
 
 It's very common to use a `select` input for some or all portions of the date. Personally, I pretty much detest this practice as it combines all the inconvenience of a calendar widget with none of the contextual information. http://grails.org/doc/latest/ref/Tags/datePicker.html[Grails' <g:datePicker> tag] does exactly this. Not only are `select` elements like this bulking out the page with huge option lists (Grails' datePicker dumps 8.6Kb of markup in your page _without_ time fields!) but they are cumbersome to input values into with the keyboard because so many values start with the same character. An arguable exception is a `select` for the month field as presenting textual values rather than numbers is a little friendlier and the option list is short enough and the values distinct enough to allow for reasonably quick keyboard selection.
 
 I suspect the rationale for using `select` elements is often that it all but ensures the user can't enter an invalid value (I've even seen significant hoop-jumping done in Javascript to ensure values such as _30th February_ can't be entered). I think it's preferable to give the user a clear input and trust them to do the right thing with it rather than forcing them to use an awkward input so that they _can't_ get it wrong.
 
-[[simple-textual-inputs]]
-Simple textual inputs
-~~~~~~~~~~~~~~~~~~~~~
+=== Simple textual inputs
 
 You shouldn't rule out using just a basic text input. In fact for monotonous data entry purposes it is probably optimal. The keystrokes to enter a date become muscle memory and there's no fiddling about tabbing between day, month and year fields or grabbing the mouse to pick options from a select element. Obviously the down-side is that a plain text input is error-prone and very liable to confuse users unless the expected format is made clear.
 
-[[html5]]
-HTML5
-~~~~~
+=== HTML5
 
 HTML5 specifies http://diveintohtml5.org/forms.html#type-date[various new date and time input types] which seems like good news but has some significant drawbacks at the moment. I can only imagine the new input types are designed to be rendered as native browser widgets (currently only Opera actually does so) as the required format is just about the most inconvenient imaginable for text entry. Sure, as a developer it's appealing to require that dates have to be entered as `yyyy-mm-dd` as you no longer have to support varied input formats but no user in the world would naturally type a date that way. Therefore, to make such inputs usable you really need to use Javascript to proxy them with a widget or a set of multi-field inputs. Fine, but what about users who disable Javascript or use mobile or assistive devices that might not cope particularly well with the widgets? The fallback - a text input into which the user must type a http://tools.ietf.org/html/rfc3339#section-5.8[machine-readable RFC3339 date] - is pretty unfriendly.
 
@@ -53,4 +43,3 @@ So, to sum up:
 * If they need to type some or all of the value make sure it's clear what format is expected or which field is which.
 * Allow for people to enter values in the order they are comfortable with and above all _don't_ force them to type it in a machine-readable format.
 * Don't strand Chrome and Safari users with broken HTML5 input types.
-

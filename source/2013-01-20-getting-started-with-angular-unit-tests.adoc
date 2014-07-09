@@ -11,15 +11,15 @@ Although I'm very familiar with http://pivotal.github.com/jasmine/[Jasmine] I wa
 
 The application I'm working on has a JavaScript file that defines the _http://docs.angularjs.org/api/angular.module[module]_ and routing:
 
+[source,javascript]
 ---------------------------------------
-#!javascript
 var myApp = angular.module('myApp', [])
 ---------------------------------------
 
 Then the controller I want to write tests for is defined on that module in another .js file:
 
+[source,javascript]
 ---------------------------------------------------
-#!javascript
 myApp.controller('MyController', function($scope) {
 
     // ... controller code
@@ -38,8 +38,8 @@ After some false starts I got going. I load all the following:
 
 In the test itself I then have `beforeEach` steps that use http://docs.angularjs.org/api/angular.mock.module[`angular.mock.module`] to set up the module and http://docs.angularjs.org/api/angular.mock.inject[`angular.mock.inject`] to wire up the controller with a scope (and I guess any other mock dependencies as I add them).
 
+[source,javascript]
 --------------------------------------------------------------------
-#!javascript
 describe('MyController', function() {
 
   beforeEach(angular.mock.module('myApp'));
@@ -62,8 +62,8 @@ After that writing the tests themselves is proving to be pretty simple. I can di
 
 I'm running the tests using https://github.com/airportyh/testem[Testem] using the following config:
 
+[source,yaml]
 ---------------------------------------------------
-#!yaml
 framework: jasmine
 before_tests: coffee -c test/unit/*.coffee
 src_files:
@@ -81,8 +81,8 @@ on_exit: find test/unit -name "*.js" -exec rm {} \;
 
 As you can see I'm writing the tests in CoffeeScript which I find makes for very readable Jasmine specs. So the test snippet I showed above actually looks like this:
 
+[source,coffeescript]
 ------------------------------------------------
-#!coffeescript
 describe 'MyController', ->
 
   beforeEach module('myApp')

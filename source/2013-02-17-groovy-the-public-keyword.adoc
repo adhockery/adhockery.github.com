@@ -9,8 +9,8 @@ One of the first things you learn in Groovy is that unlike Java `public` is the 
 
 When you declare a public constant in a Groovy class you would probably write something like this:
 
+[source,groovy]
 --------------------------------------------------
-#!groovy
 class HttpStatus {
     static final int SC_UNPROCESSABLE_ENTITY = 422
 }
@@ -29,22 +29,22 @@ This is a Groovy _property_ – a private field with accessor methods as per the
 
 It doesn't break anything and when referring to the constant from Groovy there's no difference in syntax. If you use the constant from a Java class though, you'll have to refer to it with:
 
+[source,java]
 ---------------------------------------
-#!java
 HttpStatus.getSC_UNPROCESSABLE_ENTITY()
 ---------------------------------------
 
 You might also notice that even in a Groovy class if you static import the constant in IntelliJ IDEA you end up with:
 
+[source,groovy]
 ---------------------------------------------------
-#!groovy
 import static HttpStatus.getSC_UNPROCESSABLE_ENTITY
 ---------------------------------------------------
 
 Let's add another constant – this time with the `public` keyword:
 
+[source,groovy]
 --------------------------------------------
-#!groovy
 public static final int SC_IM_A_TEAPOT = 418
 --------------------------------------------
 

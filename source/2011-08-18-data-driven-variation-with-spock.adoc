@@ -9,6 +9,7 @@ Spock's `where:` block is commonly used with a https://github.com/robfletcher/gr
 
 In this spec the `where:` block is driven by the list of table names read from the database metadata.
 
+[source,groovy]
 ------------------------------------------------------------------------------------------
 import grails.plugin.spock.IntegrationSpec
 import java.sql.Connection

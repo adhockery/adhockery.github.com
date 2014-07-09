@@ -7,9 +7,7 @@ alias: ["post/42902784310/upgrading-grails-1-1-1-2/"]
 
 We've just successfully upgraded our app from Grails 1.1 to http://www.grails.org/1.2+Release+Notes[1.2] and pushed it to our QA environment. I thought I'd write up some of the issues we encountered in case anyone is bashing their heads against them.
 
-[[custom-constraints-that-execute-queries]]
-Custom constraints that execute queries
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Custom constraints that execute queries
 
 Grails 1.2 now executes domain object validation on any unsaved objects when the Hibernate session flushes. One upshot of this is that if you have a custom constraint that executes a query you can end up with a _StackOverflowError_; the query causes the session to flush, causing the object to be validated, causing the query to run, causing the session to flush, etc.
 
@@ -17,6 +15,7 @@ The solution is to use one of the new domain class dynamic methods _http://grail
 
 For example, we have a domain class where only a single instance can exist in a 'live' state. A simple _http://grails.org/doc/latest/ref/Constraints/unique.html[unique]_ constraint won't work as any number of instances can exist in other states. The final constraint looks something like this:
 
+[source,groovy]
 ------------------------------------------------------------------------------------
 static constraints = {
     state validator: { value, self ->
@@ -31,14 +30,13 @@ static constraints = {
 }
 ------------------------------------------------------------------------------------
 
-[[errors-set-outside-constraints]]
-Errors set outside constraints
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Errors set outside constraints
 
 The new validation on flush behaviour also caused us a more subtle and difficult to trace problem. One of our controllers checks that a date/time property on a domain class instance is in the future when the instance is saved. Doing this in a constraint isn't desirable as it makes it awkward to set up test data or re-save instances in other contexts - the rule really only applies to the domain class when the user creates or updates it on the one particular form.
 
 The validation code in the controller looks something like this:
 
+[source,groovy]
 -----------------------------------------------------------
 domainInstance.validate()
 if (domainInstance.goLiveTime < new Date()) {
@@ -55,12 +53,11 @@ When upgrading one of our Selenium tests started failing as, although the save w
 
 If _http://grails.org/doc/latest/ref/Domain%20Classes/save.html[save]_ had been called and validation failed then the object would have been made read-only so Hibernate would not attempt to flush it. My solution was to do this explicitly in the _else_ block before rendering the form using `[GrailsHibernateUtil.setObjectToReadOnly(domainInstance, sessionFactory)][5]`. It's certainly not ideal that the controller should be aware of this kind of low-level detail so some refactoring is in order here, but it solved the problem.
 
-[[specifying-fetch-modes-on-associations-in-criteria-queries]]
-Specifying fetch modes on associations in criteria queries
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Specifying fetch modes on associations in criteria queries
 
 We have one particularly nasty query that retrieves a domain object instance and loads an entire hierarchy of associations using several `[fetchMode "property", FetchMode.JOIN][6]` in the criteria query. For example if _Author_ has many _books_ and each _Book_ has many _chapters_ the query previously looked like:
 
+[source,groovy]
 ----------------------------------------
 Author.withCriteria {
     // some criteria
@@ -71,6 +68,7 @@ Author.withCriteria {
 
 This always seemed syntactically odd as it appears that _chapters_ is a property of _Author_ when it is in fact a property of each member of _Author.books_. In Grails 1.2 the syntax makes much more sense as you nest the _fetchMode_ declarations just as you would other criteria. So the example above would become:
 
+[source,groovy]
 --------------------------------------------
 Author.withCriteria {
     // some criteria
@@ -81,23 +79,17 @@ Author.withCriteria {
 }
 --------------------------------------------
 
-[[date-binding-format]]
-Date binding format
-~~~~~~~~~~~~~~~~~~~
+=== Date binding format
 
 Date binding now uses a fixed format of _yyyy-MM-dd HH:mm:ss.S_ rather than the short format of the request locale. We have a couple of forms where dates are entered as text rather than using a date picker or rich control and the users (and our tests) expect to be able to enter dates as _dd/MM/yy_. In order to keep this functionality working I had to create a class that implements _http://static.springsource.org/spring/docs/3.0.x/javadoc-api/org/springframework/beans/PropertyEditorRegistrar.html[PropertyEditorRegistrar]_ and deploy it in _grails-app/conf/spring/resources.groovy_. The class registers a custom date editor using the required format.
 
 Because the custom property editor registration happens on a per-request basis it would be simple to use the same technique to allow users to enter dates in the locale format they are used to (Americans with their crazy month-day-year format and everyone else with something sensible, for example).
 
-[[setting-string-values-in-gset-tags]]
-Setting String values in _g:set_ tags
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Setting String values in _g:set_ tags
 
 One of the main features of Grails 1.2 is the enhanced GSP rendering performance. One way this was achieved as I understand it is that mutable streams are used rather than immutable _String_ instances where possible. One minor change I had to make to support this was changing _g:set_ tags in the format `<g:set var="name">${value}</g:set>` to `<g:set var="name" value="${value}"/>`Variable created in the first manner are now instances of _http://grails.org/doc/latest/api/org/codehaus/groovy/grails/web/util/StreamCharBuffer.html[StreamCharBuffer]_ rather than _java.lang.String_ which sometimes caused problems when they were used later.
 
-[[flash-scope-and-null-values]]
-Flash scope and null values
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Flash scope and null values
 
 The _http://grails.org/doc/latest/ref/Controllers/flash.html[flash]_ scope object available to controllers is now an instance of _ConcurrentHashMap_ which means none of its keys can map to _null_. There were a few places where we were setting _flash.message_ to the result of a method call that might return _null_. I simply ensured the empty string was used instead.
 

@@ -9,6 +9,7 @@ I've been working on an http://angularjs.org/[Angular JS] project for the past f
 
 When I use a commands like
 
+[source,bash]
 ------------------------------
 yo angular:controller cocktail
 yo angular:service cocktail

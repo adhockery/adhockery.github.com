@@ -18,8 +18,8 @@ I initially built this using:
 
 The _product_ list is displayed in a table and the form is declared after it:
 
+[source,markup]
 ----------------------------------------------
-#!markup
 <table>
   <tr ng-repeat="product in products">
     <!-- you get the idea -->
@@ -35,15 +35,15 @@ The _product_ list is displayed in a table and the form is declared after it:
 
 Each element in the _product_ list contains an _edit_ button:
 
+[source,markup]
 ------------------------------------------------------------
-#!markup
 <button type="button" ng-click="edit(product)">Edit</button>
 ------------------------------------------------------------
 
 Clicking the button triggers an event using http://docs.angularjs.org/api/ng.$rootScope.Scope#$broadcast[`$scope.$broadcast`]:
 
+[source,javascript]
 ---------------------------------------------
-#!javascript
 $scope.edit = function(product) {
   $scope.$broadcast('product:edit', product);
 }
@@ -51,8 +51,8 @@ $scope.edit = function(product) {
 
 That event is picked up by the _edit-product-form_ directive. It places the _product_ in its isolate scope – which automatically populates the form with the _product's_ properties – and pops up the modal:
 
+[source,javascript]
 -------------------------------------------------------------------
-#!javascript
 angular.module('myApp').directive('edit-product-form', function() {
   return {
     restrict: 'A',
@@ -66,17 +66,17 @@ angular.module('myApp').directive('edit-product-form', function() {
 
 The _save_ button handler in the directive sends another event back up the scope heirarchy using http://docs.angularjs.org/api/ng.$rootScope.Scope#$emit[`$scope.$emit`] and hides the modal again.
 
+[source,javascript]
 ----------------------------------------------------------
-#!javascript
-      $scope.save = function() {
-        $scope.product.$save(function() {
-          $scope.$emit('product:updated', $scope.product);
-          $element.modal('hide');
-        },
-        function() {
-          // display an error message
-        });
-      };
+$scope.save = function() {
+  $scope.product.$save(function() {
+    $scope.$emit('product:updated', $scope.product);
+    $element.modal('hide');
+  },
+  function() {
+    // display an error message
+  });
+};
 ----------------------------------------------------------
 
 Fine, this works *but* it's interacting with the Bootstrap modal jQuery plugin in an imperative way. When I want the modal to appear I _tell_ it to appear explicitly. When I want it to disappear I _tell_ it to hide. This is mixing up the logical action of placing the form data in the scope, saving changes and updating the list view with the specifics of _how_ the form is displayed – with a Bootstrap modal dialog. The logic governing view state would be the same if showing and hiding the form were handled in a different way. I've violated the http://en.wikipedia.org/wiki/Separation_of_concerns[_separation of concerns_].
@@ -91,8 +91,8 @@ We can do better.
 
 Let's pare things back to the simplest state – what am I trying to do here? I want to hide the "edit product" form until I have selected a product to edit, show the form while I'm working on that product then hide it again once I'm finished. The view state of _"user has selected a product"_ is represented by the existence of a property called `$scope.product`. With no fancy presentation or slide in/out effects I could do this by just adding and removing that scope property at the appropriate time:
 
+[source,javascript]
 -----------------------------------
-#!javascript
 $scope.edit = function(product) {
   $scope.product = product;
 };
@@ -108,8 +108,8 @@ $scope.save = function() {
 
 Then in the view I can _declaratively_ react to the presence or absence of the `product` property:
 
+[source,markup]
 -----------------------
-#!markup
 <div ng-show="product">
 -----------------------
 
@@ -121,8 +121,8 @@ I should be able to use a Bootstrap modal to hide and show the form instead of t
 
 To do this I'll add the Boostrap modal class to my view:
 
+[source,markup]
 ------------------------------------------
-#!markup
 <div class="modal fade" trigger="product">
 ------------------------------------------
 
@@ -130,8 +130,8 @@ Don't worry about the `trigger` attribute – I'll get to that.
 
 Then I'll create a new directive that is activated simply by the presence of the `modal` class on the element.
 
+[source,javascript]
 -------------------------------------------------------------------------------------
-#!javascript
 angular.module('myApp').directive('modal', function() {
   return {
     restrict: 'C',

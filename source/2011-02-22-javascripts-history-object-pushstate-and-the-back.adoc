@@ -17,6 +17,7 @@ I imagine a pretty typical use-case is what I've been trying to do with the pagi
 
 The essence of the script involved is this:
 
+[source,javascript]
 --------------------------------------------------------------------------------
 var links =     //... pagination and sorting links
 var container = //... the region of the page that will be updated with AJAX

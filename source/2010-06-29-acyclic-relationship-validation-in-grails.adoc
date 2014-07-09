@@ -9,6 +9,7 @@ A common domain class use-case is for a self-referential relationship that must 
 
 We're using just such a relationship for trees of pages that inherit certain characteristics from their ancestors. In order to validate that our users aren't setting up circular references I implemented the following constraint:
 
+[source,groovy]
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 import org.codehaus.groovy.grails.validation.AbstractConstraint
 import org.springframework.validation.Errors
@@ -59,6 +60,7 @@ This is also http://gist.github.com/457351.js?file=AcyclicConstraint.groovy[avai
 
 Then I just needed to register my new constraint by adding `ConstrainedProperty.registerNewConstraint(AcyclicConstraint.NAME, AcyclicConstraint)` to _grails-app/conf/spring/resources.groovy_. Using the constraint is as simple as this:
 
+[source,groovy]
 ----------------------------
 class Person {
 

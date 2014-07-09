@@ -11,19 +11,20 @@ The problem that's biting us right now is http://jira.codehaus.org/browse/GRAILS
 
 In Grails 1.1 this is simplicity itself. The following code goes in the domain class and that's all there is to it:
 
+[source,groovy]
 ----------------------------------------------
- User createdBy
- User updatedBy
+User createdBy
+User updatedBy
 
- def authenticateService
+def authenticateService
 
- def beforeInsert = {
+def beforeInsert = {
   createdBy = authenticateService.userDomain()
- }
+}
 
- def beforeUpdate = {
+def beforeUpdate = {
   updatedBy = authenticateService.userDomain()
- }
+}
 ----------------------------------------------
 
 Yes, it is quite 'exciting' that you're able to inject a service into a domain class instance. GORM only maps explicitly typed properties to the database so anything declared using `def` is effectively transient.

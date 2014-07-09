@@ -17,8 +17,8 @@ Actions : perform an action such as clicking a link or button. : will typically 
 
 First let's consider an authentication module that can be used across every page in a site. The markup of the module can be completely different depending on whether a user is logged in or not. When not logged in a username/password form is shown:
 
+[source,markup]
 ----------------------------------------------------------------------------
-#!html
 <aside id="auth">
     <fieldset>
         <legend>Log In</legend>
@@ -33,8 +33,8 @@ First let's consider an authentication module that can be used across every page
 
 When logged in, a welcome message is shown:
 
+[source,markup]
 ---------------------------------------------------------
-#!html
 <aside id="auth">
     Welcome back <span class="username">blackbeard</span>
     <a href="/auth/logout">Log Out]</a>
@@ -43,8 +43,8 @@ When logged in, a welcome message is shown:
 
 To model this I'll create a Geb _Module_ like this:
 
+[source,groovy]
 ------------------------------------------------------------------------------
-#!groovy
 class AuthModule extends Module {
     static base = { $("aside#auth") }
 
@@ -61,8 +61,8 @@ The `required: false` declaration is used to declare content properties that may
 
 I can use the module in some tests like this:
 
+[source,groovy]
 -------------------------------------------
-#!groovy
 def "user can log in"() {
     when:
     authModule.form.username = "blackbeard"
@@ -88,8 +88,8 @@ This is a good start but there are several assumptions and bits of page detail c
 
 To encapsulate the module's state and actions better I'll add the following methods:
 
+[source,groovy]
 ------------------------------------------------------------------------
-#!groovy
 boolean isLoggedIn() { username }
 
 void login(String username, String password = "password") {
@@ -107,8 +107,8 @@ void logout() {
 
 The methods declared by the module abstract some detail away very effectively. The `isLoggedIn` method means I can change the login detection mechanism later and just change the module's method rather than a bunch of tests. The `login` and `logout` methods abstract away the _how_ of logging in and out so the test can just deal with the _what_. I've used _IllegalStateException_ for cases where a method is called when the module is not in the correct state. The tests now look much clearer:
 
+[source,groovy]
 ---------------------------------------
-#!groovy
 def "user can log in"() {
     when:
     authModule.login "blackbeard"
@@ -130,8 +130,8 @@ def "user can log out"() {
 
 Another good example of encapsulating state and behaviour like this is a typical pagination module that would appear on a list or search results page. The markup would look something like this (I've omitted the link `href` attributes for clarity):
 
+[source,markup]
 --------------------------------------
-#!html
 <nav class="pagination">
     <a class="prevLink">Previous</a>
     <a class="step">1</a>
@@ -143,8 +143,8 @@ Another good example of encapsulating state and behaviour like this is a typical
 
 The _previous_ and _next_ links will only appear when there is a previous or next page and no links will be present at all if there is only a single page. The following _Module_ class models the state and actions of this component:
 
+[source,groovy]
 ----------------------------------------------------------------------------------------------------------
-#!groovy
 class Pagination extends Module {
     static content = {
         links(required: false) { $("a") }

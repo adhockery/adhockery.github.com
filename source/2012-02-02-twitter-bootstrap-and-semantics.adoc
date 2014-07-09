@@ -13,8 +13,8 @@ I get that these are to some extent practical considerations. Restyling all `but
 
 I can't help thinking that this…
 
+[source,markup]
 ------------------------
-#!html
       </div><!--/span-->
     </div><!--/row-->
   </div><!--/span-->
@@ -29,8 +29,8 @@ _LESS_ is great for structuring CSS better but I think its strengths go further.
 
 I recently came across _http://semantic.gs/[The Semantic Grid System]_ which really leverages the power of _LESS_ (or _http://sass-lang.com/[SASS]_ or _http://learnboost.github.com/stylus/[Stylus]_ if you prefer) . The _semantic.gs_ provides mixins that you use on the components of your pages. It's a full-blown responsive grid system with not a `column-container`, `row` or `grid-8` class anywhere in your markup. In fact, looking at the markup you wouldn't know the content was being laid out on a grid. It's all handled in your _LESS_ file. Want your _services_ and _clients_ sections laid out as ⅔ width blocks with your _about me_ section as a sidebar? Just declare:
 
+[source,less]
 -----------------------------------
-#!less
 section#services, section#clients {
     .column(9);
 }

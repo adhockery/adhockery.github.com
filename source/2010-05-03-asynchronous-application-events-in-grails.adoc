@@ -11,6 +11,7 @@ After wrestling with JMS one too many times we decided to take a look at Spring'
 
 Essentially any artefact can publish an event to the Spring application context. A simple publishing service can be implemented like this:
 
+[source,groovy]
 -------------------------------------------------------------------------------
 import org.springframework.context.*
 
@@ -29,6 +30,7 @@ class EventService implements ApplicationContextAware {
 
 So a Grails domain class can then do something like this:
 
+[source,groovy]
 ------------------------------------------------------------
 def eventService
 
@@ -47,6 +49,7 @@ void afterDelete() {
 
 Grails services make ideal http://static.springsource.org/spring/docs/3.0.x/javadoc-api/org/springframework/context/ApplicationListener.html[_ApplicationListener_] implementations. As services are singleton Spring beans they are automatically discovered by Spring's event system without any configuration required. For example:
 
+[source,groovy]
 --------------------------------------------------------------------------------
 import org.springframework.context.*
 
@@ -64,6 +67,7 @@ Of course, multiple listeners can respond to the same events.
 
 If you run the code you will notice that by default Spring's event system processes events synchronously. The _EventService_ and _ApplicationListener_ will print out the same Thread _id_. This is not ideal if any of the listener implementations might take any time. Luckily it's easy to override the http://static.springsource.org/spring/docs/3.0.x/javadoc-api/org/springframework/context/event/ApplicationEventMulticaster.html[_ApplicationEventMulticaster_] bean in `resources.groovy` so that it uses a thread pool:
 
+[source,groovy]
 --------------------------------------------------------------------
 import java.util.concurrent.*
 import org.springframework.context.event.*
@@ -79,6 +83,7 @@ Running the code again will show the event being published in one thread and con
 
 Oddly, I would have thought it was possible to override the _taskExecutor_ property of the default _ApplicationEventMulticaster_ in `Config.groovy` using Grails' http://grails.org/doc/latest/guide/14.%20Grails%20and%20Spring.html#14.6%20Property%20Override%20Configuration[property override configuration], but I found the following didn't work:
 
+[source,groovy]
 ------------------------------------------------------
 beans {
     applicationEventMulticaster {

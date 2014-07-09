@@ -11,6 +11,7 @@ First and foremost was a call site caching bug in Groovy 1.6.0 that caused chaos
 
 Unfortunately the same bug has another effect that was quite catastrophic for us. Any Hibernate proxy of an instance of a domain class involved in an inheritance hierarchy will throw _ClassCastException_ when you try to access a subclass property or do an _instanceof_ check. I http://blog.freeside.co/post/42902409632/when-is-a-pirate-not-a-pirate-when-its-a[blogged already] about the _instanceof_ issue but it's actually wider ranging than I realised at the time. It can cause very unpredictable behaviour because complex relationships between objects and the way they are loaded by a controller before a page is rendered can cause this error to pop up under obscure conditions that are very hard to nail down with test coverage. To solve the problem we've had to use eager fetching in places where associations are typed as the base class of an inheritance hierarchy and to use explicit checks for proxies such as:
 
+[source,groovy]
 ------------------------------------------
 if (o instanceof HibernateProxy) {
     o = GrailsHibernateUtil.unwrapProxy(o)

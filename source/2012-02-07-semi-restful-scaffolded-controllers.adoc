@@ -11,8 +11,8 @@ There's a slight quirk here in that a failed _save_ will cause the URL to change
 
 Imagine a bit of GSP code like this:
 
+[source,markup]
 -------------------------------------------------------------------------------------------------------
-#!html
 <nav>
     <g:link action="list" class="${actionName == 'list' ? 'active' : ''}">List Cocktails</g:link>
     <g:link action="create" class="${actionName == 'create' ? 'active' : ''}">Create Cocktail</g:link>
@@ -24,8 +24,8 @@ This creates a navigation element with links to the various controller actions &
 
 With the http://grails-twitter-bootstrap.cloudfoundry.com[Twitter Bootstrap scaffolding example] I created recently I used a different pattern in the scaffolded controller template:
 
+[source,groovy]
 ---------------------------------------
-#!groovy
 def create() {
     switch (request.method) {
     case 'GET':
@@ -49,4 +49,3 @@ This is neat enough but a couple of objections occur:
 * I don't particularly like the switch statement, but controller actions should be kept trivial anyway (controllers are for routing requests around, not performing complex logic).
 * Unit testing becomes marginally more awkward as we have to set `request.method` rather than just invoking a different action.
 * This is a sledgehammer to crack a nut & only a pedant would care. Yeah, fair enough.
-

@@ -9,8 +9,8 @@ When assigning to a property of an object in Groovy using the assignment operato
 
 Since meta-methods can be overloaded with different parameter types what will be printed to _sysout_ if we run this script? (Remember that Groovy - unlike Java - dispatches to the _most specific_ applicable method signature).
 
+[source,groovy]
 --------------------------------
-#!groovy
 Object.metaClass.with {
     setFoo = {
         println "setFoo(Object)"
@@ -33,8 +33,8 @@ It seems like the operator form will always dispatch to the _last_ implementatio
 
 When I first encountered this problem I assumed it was a peculiarity of meta class usage but actually it's not. Consider this example:
 
+[source,groovy]
 --------------------------------
-#!groovy
 class Fnord {
     void setFoo(Fnord o) {
         println "setFoo(Fnord)"

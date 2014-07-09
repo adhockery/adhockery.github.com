@@ -19,6 +19,7 @@ Simple repeating structures
 
 For example, imagine we want to verify an `ol` element like this:
 
+[source,markup]
 ---------------------------------
 <ol id="recent-books">
     <li>Zero History</li>
@@ -29,6 +30,7 @@ For example, imagine we want to verify an `ol` element like this:
 
 The most useful type would probably be a `List<String>` which we can get easily enough by defining our content like this:
 
+[source,groovy]
 ---------------------------------------------------
 static content = {
     recentBooks { $("ol#recent-books li")*.text() }
@@ -37,6 +39,7 @@ static content = {
 
 This is then very easy to use in a test:
 
+[source,groovy]
 -------------------------------------------------------------------------
 expect:
 recentBooks == ["Zero History", "Surface Detail", "The Machine of Death"]
@@ -48,6 +51,7 @@ Complex repeating structures using Modules
 
 A more complex example of a repeating structure is a table, where each row contains several fields. Here we can use a Geb `Module` to represent each row, with content properties to get data from each cell. Let's say we want to verify the contents of the following table of search results:
 
+[source,markup]
 ----------------------------------------
 <table id="book-results">
     <thead>
@@ -94,6 +98,7 @@ A more complex example of a repeating structure is a table, where each row conta
 
 We can define our module like this:
 
+[source,groovy]
 ----------------------------------------------------------------------------
 static content = {
     bookResults { i -> module BookRow, $("table#book-results tbody tr", i) }
@@ -115,6 +120,7 @@ The `bookResults` content closure takes a row number parameter and uses it to se
 
 This isn't bad as far as it goes. We can use the module pretty effectively in tests like this:
 
+[source,groovy]
 --------------------------------------
 expect:
 bookResults(0).title == "Zero History"
@@ -131,6 +137,7 @@ This ought to be possible bearing in mind 3 things:
 
 In fact we can get a `List<BookRow>` easily enough if we redefine the `bookResults` property like this:
 
+[source,groovy]
 -------------------------------
 static content = {
     bookResults {
@@ -143,6 +150,7 @@ static content = {
 
 The key here is that we iterate over the `tr` elements inside the content definition collecting a new `BookRow` instance for each one. Now the page object doesn't require the test to pass in the index of the row it's interested in. This enables our test to do some much more powerful and interesting things:
 
+[source,groovy]
 --------------------------------------------------------------------------------------
 expect:
 bookResults.size() == 4

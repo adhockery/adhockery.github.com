@@ -11,6 +11,7 @@ With Geb and IntelliJ Idea at least this is actually pretty straightforward (I'm
 
 Geb's dependence on the Grails lifecycle is pretty minimal so the tests can run without needing any magic to happen in any __Events_ scripts (unlike the Selenium RC plugin where this would be significantly more difficult). One extra step _is_ required; the Grails Geb plugin normally picks up its base URL from Grails configuration and the test will not be running in the same JVM as the Grails app if it runs from the IDE so configuration will not be available. Just add the following method to your test that extends _GebTests_ or _GebSpec_ (or add it to a base class):
 
+[source,groovy]
 --------------------------------------------
 @Override String getBaseUrl() {
     super.baseUrl ?: "http://localhost:8080"

@@ -24,6 +24,7 @@ When you run the Hudson job you should see it kick off one sub-job for each Grai
 
 I have my plugin test projects triggered by the plugin build and have them grab the plugin zip itself from the archived artefacts in the plugin's Hudson job. So I've added this before the `grails test-app` step:
 
+[source,bash]
 -----------------------------------------------------------------------------------------------------------------------------------
 grails install-plugin http://my.hudson.server/hudson/job/my-plugin/lastSuccessfulBuild/artifact/my-plugin-1.0.zip --non-interactive
 -----------------------------------------------------------------------------------------------------------------------------------

@@ -11,6 +11,7 @@ I http://jira.codehaus.org/browse/GRAILS-4689[raised a bug] a few days ago aroun
 
 Under Grails 1.1 you can use a Joda _DateTime_ for an auto-timestamped fields:
 
+[source,groovy]
 ----------------------------------------
 DateTime dateCreated
 DateTime lastUpdated
@@ -25,6 +26,7 @@ These behave exactly like the regular _Date_ fields with those names, i.e. they'
 
 There is a (somewhat strange) workaround - declare the timestamped fields as non-lazy!
 
+[source,groovy]
 -----------------------------------------------------
 DateTime dateCreated
 DateTime lastUpdated

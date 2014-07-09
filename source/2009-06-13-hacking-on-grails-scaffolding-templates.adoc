@@ -14,21 +14,21 @@ I'd done some customising of scaffolding templates before for the http://grails.
 
 image:http://4.bp.blogspot.com/_fh9xwLFYBUw/SjMixEDGEpI/AAAAAAAACVg/wcr4gaTX2zc/s320/createpirate.png[image] I'm pretty happy with the result. This is how a standard create form now appears. The grab is from Safari 4 but the rendering is all but consistent across Firefox 3 on my Ubuntu box, Safari 4 on my Mac and even IE6, IE7, Google Chrome and Opera 9 on the Windows XP http://www.virtualbox.org/[VirtualBox] instances I use for cross-browser testing.
 
-[[forms-without-tables]]
-Forms Without Tables
-~~~~~~~~~~~~~~~~~~~~
+=== Forms Without Tables
 
 Each form element is simply:
 
+[source,markup]
 ------------------------------------------------
-    <label for="${p.name}">Property Name</label>
-    ${renderEditor(p)}
+<label for="${p.name}">Property Name</label>
+${renderEditor(p)}
 ------------------------------------------------
 
 Which is reasonable semantic markup. Styling it cross-browser took me a while (I know just enough CSS to make me dangerous) but with a few helpful pointers from our resident front-end guru http://www.codecouch.com/author/jeff/[Jeff] I was able to achieve that with a lot less browser-specific tweaking than I would have thought would be necessary.
 
 The necessary CSS is just:
 
+[source,css]
 ---------------------------
 .prop {
     margin: 1em 0;
@@ -49,14 +49,13 @@ textarea {
 
 Making the label `inline-block` meant I can apply a width to it so all the fields will line up nicely but also keeps the label inline so I can then use `vertical-align` on the input to centre it on the text line of the label. The results are consistent cross-browser. Most solutions I've seen around the internet are horribly inconsistent between browsers (and operating systems with different font rendering) and often rely on nasty pixel-perfect margin and padding tweaks to try to align things nicely. That approach rapidly becomes a game of whack-a-mole as a tweak that fixes some alignment on IE will screw it up on Opera, fixing that will make Firefox do something odd, etc.
 
-[[automatically-indicating-mandatory-fields]]
-Automatically Indicating Mandatory Fields
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Automatically Indicating Mandatory Fields
 
 A polite form should really indicate to the user what fields are mandatory and it turns out this isn't hard to achieve automatically in Grails scaffolded views. The scaffolding templates already use the http://grails.org/doc/1.1.x/api/org/codehaus/groovy/grails/validation/ConstrainedProperty.html[constrained properties] of the domain class to determine whether to display a form field for each property. It's a very small step to use the _isNullable()_ and in the case of String properties _isBlank()_ methods to decide whether to render a mandatory indicator.
 
 I simply output a span with an asterisk inside the label then styled it with:
 
+[source,css]
 -----------------------------------------
 label {
     /* other label properties as above */
@@ -73,9 +72,7 @@ The absolute positioning takes the asterisk out of the flow of the page so the l
 
 I tried other techniques such as disabling the label's right margin when the asterisk is present and setting the asterisk's span to the exact same size the margin would have been. Unfortunately it seems 1.5em as an element width is not _quite_ the same thing as 1.5em as a right margin so the alignment of the labels and inputs was thrown off. Absolute positioning is necessary to maintain that alignment which is far more important to the eye than pixel-perfect placement of the asterisk itself.
 
-[[source-code]]
-Source Code
-~~~~~~~~~~~
+=== Source Code
 
 Here's the source code. Any suggestions for improvements would be very welcome. I based the templates on http://marceloverdijk.blogspot.com/[Marcel Overdijk]'s excellent http://grails.org/plugin/i18n-templates[i18n-templates], the only differences are in the rendering of the form fields and the surrounding _fieldset_.
 

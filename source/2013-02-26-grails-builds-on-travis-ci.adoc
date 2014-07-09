@@ -9,20 +9,20 @@ https://travis-ci.org/[Travis CI] is a cloud based continuous integration servic
 
 Travis is configured with a _.travis.yml_ file in the root of your project. A simple configuration might look like this
 
+[source,yaml]
 --------------------------------------
-#!yaml
 language: groovy
 script: ./grailsw refresh-dependencies
      && ./grailsw test-app
-     
+
 --------------------------------------
 
 The `refresh-dependencies` command ensures that plugins and libraries are installed and available on the classpath when `test-app` runs. Without this you may find that `test-app` will fail if your app contains compile time references to plugins or libraries.
 
 You can chain together as many commands as you like in the `script` section. For example one of my Grails plugins has the following configuration:
 
+[source,yaml]
 --------------------------------------
-#!yaml
 language: groovy
 jdk:
   - oraclejdk7
@@ -34,7 +34,7 @@ script: ./grailsw refresh-dependencies
   && cd test/apps/gson-test
   && ./grailsw refresh-dependencies
   && ./grailsw "test-app functional:"
-  
+
 --------------------------------------
 
 This runs the plugin's unit tests then changes directory into a test application and runs (headless) functional tests.

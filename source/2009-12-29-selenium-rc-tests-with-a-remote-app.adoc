@@ -11,6 +11,7 @@ All you need to do is set `selenium.remote = true` in your _SeleniumConfig.groov
 
 The _really_ useful thing is that _SeleniumConfig.groovy_ can contain environment blocks just as other Grails config files can. This means you can enable remote mode in your CI environment but continue to test as normal locally. For example:
 
+[source,groovy]
 -----------------------------------------------
 selenium {
     remote = false

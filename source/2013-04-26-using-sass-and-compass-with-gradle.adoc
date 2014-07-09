@@ -21,6 +21,7 @@ First I created a Gradle task called _installGems_ to install the _compass_ gem.
 
 JRuby itself is added to a new dependency scope since I'm only using it for running build tasks, not as part of the application itself.
 
+[source,groovy]
 --------------------------------------------------------------------------
 configurations {
     jruby
@@ -57,6 +58,7 @@ Next I created a _compileSass_ task. The trick is to supply two environment vari
 
 The _compileSass_ task's _inputs_ are the _outputs_ of _installGems_ – meaning _installGems_ is run automatically if necessary – along with the directories containing my _.scss_ files, images and JavaScript. The task's _output_ is the directory with the compiled CSS.
 
+[source,groovy]
 -----------------------------------------------------------------------------------------------------------------------------------------------
 ext {
     cssDir = file(/* output dir where CSS should go */)
@@ -86,6 +88,7 @@ task compileSass(type: JavaExec) {
 
 I also added _compileSass_ into the task dependency chain so it would automatically run when needed:
 
+[source,groovy]
 -----------------------------------------
 processResources.inputs.files compileSass
 clean.dependsOn cleanCompileSass
@@ -99,6 +102,7 @@ Watching for changes
 
 The next step was to use the `compass watch` command to automatically recompile SASS changes while the application is running. The _ratpack-site_ app uses the http://www.gradle.org/docs/current/userguide/application_plugin.html[Gradle application plugin] to provide a _run_ task. I needed to create a background thread that runs `compass watch`. I couldn't figure out how to re-use my _JRubyExec_ task here as I needed to use the imperative style of calling `project.javaexec` so I've ended up with some duplication. It does work, though, which is the main thing.
 
+[source,groovy]
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 task watchSass {
     doFirst {

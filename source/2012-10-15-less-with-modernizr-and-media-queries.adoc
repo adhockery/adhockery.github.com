@@ -9,8 +9,8 @@ One of the main advantages of http://lesscss.org/[LESS] is http://lesscss.org/#-
 
 http://modernizr.com/[Modernizr] is rapidly becoming ubiquitous for feature-based CSS rules. It attaches classes to the `html` element that your CSS rules can reference. For example, on the http://freeside.co/betamax[Betamax documentation page] I have a rule to add some padding above `h2` elements in the main content when the browser supports `@fontface` (due to the rendering of the web font I'm using). In CSS the rule is:
 
+[source,css]
 -----------------------------------------
-#!css
 #doc-content h2 {
     font-family: Kameron, Georgia, serif;
 }
@@ -26,8 +26,8 @@ I don't want to have the `.fontface` support rule separate from the other rules 
 
 It turns out there _is_ a syntax that will let me do this, although it doesn't seem to have made it to the LESS documentation yet. Here's how you do it:
 
+[source,less]
 ---------------------------------------------
-#!less
 #doc-content {
     h2 {
         font-family: Kameron, Georgia, serif;
@@ -42,8 +42,8 @@ Note the `&` operator there. This will compile into exactly the CSS above but al
 
 You can do something similar with media queries as well. Instead of having separate sections of your LESS file for the overrides for different breakpoints you can just nest them inside other rules. In this case you don't need the `&` operator at all. For example I want to increase the font-size of that same `h2` element when the viewport is above a certain size. The CSS I want is this:
 
+[source,css]
 ---------------------------
-#!css
 #doc-content h2 {
     font-size: 28px;
 }
@@ -57,8 +57,8 @@ You can do something similar with media queries as well. Instead of having separ
 
 In my LESS file I can declare the rules in a nested fashion so that the screen size specific rule appears alongside the default:
 
+[source,less]
 -------------------------------
-#!less
 #doc-content h2 {
     font-size: 28px;
     @media (min-width: 768px) {

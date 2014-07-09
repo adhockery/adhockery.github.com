@@ -9,6 +9,7 @@ The http://grails.org/JodaTime+Plugin[Joda-Time Plugin docs] state that http://g
 
 There are a couple of solutions to this. You can disable the auto-timestamping and define your own `beforeInsert` event which enables you to use http://joda-time.sourceforge.net/api-release/org/joda/time/DateTimeUtils.html#setCurrentMillisFixed(long)[`DateTimeUtils.setCurrentMillisFixed`]. For example:
 
+[source,groovy]
 --------------------------------
 static mapping = {
     autoTimestamp false
@@ -23,6 +24,7 @@ The other option would be to mock out the value returned by `System.currentTimeM
 
 On a related note the next release of the Joda-Time plugin will bind additional methods to `DateTimeUtils` to scope mocking of the current timestamp, for example:
 
+[source,groovy]
 --------------------------------------------------------
 DateTimeUtils.withCurrentMillisFixed(aLong) {
     // do some stuff that requires a mocked current time

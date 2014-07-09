@@ -11,8 +11,8 @@ The `old` method is possibly my favourite Spock feature. It's a simple thing but
 
 Consider a simple test like this:
 
+[source,groovy]
 ------------------
-#!groovy
 when:
 myList << 'foo'
 
@@ -24,8 +24,8 @@ This is fine in simple cases, but what happens if `myList.size()` is in a less p
 
 We can improve things a little by comparing the value after the `when:` block with the value before it:
 
+[source,groovy]
 ----------------------------
-#!groovy
 given:
 def oldSize = myList.size()
 
@@ -38,8 +38,8 @@ myList.size() == oldSize + 1
 
 With Spock's `old` method there's an even neater way, though:
 
+[source,groovy]
 ---------------------------------------
-#!groovy
 when:
 myList << 'foo'
 
@@ -55,8 +55,8 @@ The `old` method returns the value an arbitrary statement had _before_ the prece
 
 There's no limit to what you can do with `old`. I've used it in _Geb_ specs to do things like this:
 
+[source,groovy]
 -----------------------------------------------------------------
-#!groovy
 given:
 to CocktailListPage
 

@@ -11,8 +11,8 @@ I was caught out by a subtle difference between JavaScript and CoffeeScript yest
 
 In JavaScript you may be used to iterating over the properties of an object using a _for…in_ loop. For example:
 
+[source,javascript]
 --------------------------------------
-#!javascript
 var language = {
     name: 'JavaScript',
     syntaxFamily: 'C'
@@ -27,8 +27,8 @@ The `prop` variable in the loop is assigned the name of each property in the `la
 
 When translating some code that uses a _for…in_ loop to CoffeeScript I produced something equivalent to this:
 
+[source,coffeescript]
 ------------------------------------------
-#!coffeescript
 language =
   name: 'CoffeeScript'
   syntaxFamily: 'Ruby'
@@ -41,8 +41,8 @@ At first glance that looks equivalent but there's an important difference lurkin
 
 Here's the generated JavaScript. The problem is pretty obvious:
 
+[source,javascript]
 -------------------------------------------------------
-#!javascript
 var language, prop, _i, _len;
 
 language = {
@@ -60,7 +60,7 @@ The _for…in_ loop in CoffeeScript assumes iteration with a numeric index; it's
 
 Of course, for even more idiomatic CoffeeScript we can have multiple loop variables and in this example it might be appropriate to postfix the loop.
 
+[source,coffeescript]
 -----------------------------------------------------------
-#!coffeescript
 console.log "#{prop} '#{value}" for prop, value of language
 -----------------------------------------------------------

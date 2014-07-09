@@ -25,6 +25,7 @@ Create a domain class with a LocalDate property
 
 For this example I'll create a simple domain class representing a person:
 
+[source,groovy]
 -------------------------------------------
 import org.joda.time.*
 import org.joda.time.contrib.hibernate.*
@@ -42,6 +43,7 @@ If you have default mappings set up (which the Joda-Time plugin will attempt to 
 
 Execute `grails generate-all Person` to create a controller and scaffolded views for the _Person_ class. Finally change the _create.gsp_ and _edit.gsp_ files to use an HTML5 input instead of the standard Grails date picker tag. Replace the `<g:datePicker name="birthdate"…` with this:
 
+[source,markup]
 ----------------------------------------------------------------------
 <joda:dateField name="birthdate" value="${personInstance.birthdate}"/>
 ----------------------------------------------------------------------
@@ -54,6 +56,7 @@ Install jQuery and jQuery-UI
 
 You can include jQuery and jQuery-UI by simply downloading the JavaScript files into your app, or linking to them on Google. Alternatively you can use the Grails plugins. If you want to go the plugin route this is what you will need to do. First install the plugins:
 
+[source,bash]
 -------------------------------
 grails install-plugin jquery-ui
 -------------------------------
@@ -62,6 +65,7 @@ The jQuery plugin is installed automatically by the jQuery-UI plugin.
 
 Then you will need to add the libraries to your SiteMesh template (or you could include it just on the relevant pages, it doesn't matter). Add the following in the _head_ section:
 
+[source,markup]
 --------------------------------------------------------
 <g:javascript library="jquery" plugin="jquery"/>
 <jqui:resources components="datepicker" mode="normal" />
@@ -73,6 +77,7 @@ Install Modernizr
 
 Download Modernizr and put it in _web-app/js/modernizr_. You can link to the script direct from there or define a library by adding this to _BootStrap.groovy_:
 
+[source,groovy]
 --------------------------------------------------------------------------------------
 import org.codehaus.groovy.grails.plugins.web.taglib.JavascriptTagLib
 
@@ -84,6 +89,7 @@ class BootStrap {
 
 Then include Modernizr in your SiteMesh template by adding the following in the _head_ section:
 
+[source,markup]
 -----------------------------------
 <g:javascript library="modernizr"/>
 -----------------------------------
@@ -96,6 +102,7 @@ Bind the jQuery-UI datepicker to the field
 
 The last step is to ensure that any time a user hits the page with a browser that doesn't support a native widget for the _date_ input type they get a jQuery datepicker instead. To do this create a JavaScript file and link to it from your SiteMesh template or the pages using _date_ inputs. The script simply needs to contain the following code:
 
+[source,javascript]
 -------------------------------------------------------------------------
 $(document).ready(function() {
     if (!Modernizr.inputtypes.date) {
@@ -110,6 +117,7 @@ It's that simple. Now the _create_ and _edit person_ pages will use the native _
 
 So how does it look? Here's a screenshot of the page in Firefox when a visitor has focused the _date_ input: image:http://3.bp.blogspot.com/_fh9xwLFYBUw/TDh2YQnv0KI/AAAAAAAACoQ/3ToRH0Ga3iI/s320/firefox.png[image] Here's the same thing rendered in Opera using the native datepicker widget (yes, you could be forgiven for thinking the jQuery version is prettier): image:http://4.bp.blogspot.com/_fh9xwLFYBUw/TDh2akA7KeI/AAAAAAAACoY/73k5rC-uWww/s320/opera.png[image] With a little adaptation the same thing can be done for the other input types; _month_, _week_, _time_, _datetime_ and _datetime-local_. Of those _month_ should work perfectly by adding this to your script:
 
+[source,javascript]
 ------------------------------------------------------------
 if (!Modernizr.inputtypes.month) {
     $("input[type=month]").datepicker({dateFormat: 'yy-mm');

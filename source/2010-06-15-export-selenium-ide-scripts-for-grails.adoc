@@ -16,6 +16,7 @@ selenium.waitForAlertPresent()
 
 rather than
 
+[source,groovy]
 -----------------------------
 selenium.waitFor {
     selenium.isAlertPresent()

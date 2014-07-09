@@ -7,8 +7,8 @@ alias: ["post/54998201300/semantic-color-names-in-less-and-sass-stylesheets/"]
 
 Most people using Sass or LESS will define variables for the palette of colors in their page. Something like:
 
+[source,scss]
 --------------------------------
-#!sass
 $blackish: #231f20;
 $purple: #561e31;
 $pink: #da2770;
@@ -40,8 +40,8 @@ First, if we significantly change the color palette used in the design – or re
 
 A practive I've adopted is to define a palette with variables named like this but then _not reference them directly_ in the actual CSS rules. Instead I create intermediate variables with names reflecting the context in which they are used then reference _those_. For example:
 
+[source,scss]
 -----------------------------------------
-#!sass
 $blackish: #231f20;
 $purple: #561e31;
 $pink: #da2770;
@@ -81,8 +81,8 @@ It's slightly more verbose but has a number of advantages:
 
 Semantic color names can also be local in scope. Sections of the page that use variations on the palette – such as a sidebar that has a dark background and different link colors can have some variables defined locally (be careful you don't overwrite variables from the outer scope when doing this with Sass).
 
+[source,scss]
 ------------------------------------------
-#!sass
 $background: $off-white;
 $text: $blackish;
 
@@ -102,8 +102,8 @@ $text: $blackish;
 
 A big practical advantage is when you're defining multiple rules to support browsers with different capabilities. For example:
 
+[source,scss]
 ------------------------------------------------------------------
-#!sass
 $button-background: $blackish;
 $button-text: $pink;
 

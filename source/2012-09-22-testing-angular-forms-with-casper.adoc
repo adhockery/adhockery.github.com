@@ -11,8 +11,8 @@ At first I figured I might need to trigger a _change_, _blur_ or _keyup_ event o
 
 To work around this I just overrode the `fill` method such that after writing a value to each field it triggers the _input_ event as well:
 
+[source,coffeescript]
 -----------------------------------------------------------------------------------------------
-#!coffeescript
 casper.fill = (selector, values, submit = false) ->
     @evaluate (selector, values) ->
         $("#{selector} [name='#{name}']").val(value).trigger('input') for name, value of values

@@ -9,6 +9,7 @@ HTML5 specifies a number of enhancements to form inputs that are gradually being
 
 Let's look at http://inputvalidation.s3-website-us-east-1.amazonaws.com/[an example]. A simple registration form has inputs for the _name_, _email_ and _website_ of a prospective user. Of these _name_ and _email_ are required. The input elements are as follows:
 
+[source,markup]
 ------------------------------------------
 <input type="text" name="name" required>
 <input type="email" name="email" required>
@@ -24,6 +25,7 @@ CSS3 has `:invalid`, `:required` and `:optional` pseudo-classes that are support
 
 Applying styles to invalid fields is pretty easy. For example to highlight invalid fields with a red border and background:
 
+[source,css]
 ---------------------------
 input {
     border: 1px solid #ccc;
@@ -37,6 +39,7 @@ input:invalid {
 
 You can also combine the `:invalid` pseudo-class in combination with others. For example to highlight focused fields with a fancy CSS3 box-shadow:
 
+[source,css]
 --------------------------------------
 input:focus {
     border-color: #99f;
@@ -55,6 +58,7 @@ input:focus:invalid {
 
 It's worth noting that Firefox 4 automatically adds a red box-shadow to invalid fields (and not just focused ones). To turn it off you can specify:
 
+[source,css]
 --------------------------
 input:invalid {
     -moz-box-shadow: none;

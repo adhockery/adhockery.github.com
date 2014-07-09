@@ -7,30 +7,26 @@ alias: ["post/42902815893/full-page-caching-in-grails-with-ehcache-web/"]
 
 I'm on the verge of releasing a new version of the http://grails.org/plugin/springcache[Springcache plugin] that will feature a pretty cool new annotation-driven page fragment caching feature based on http://ehcache.org/documentation/web_caching.html[Ehcache-web]. However one of the things that came up during discussions on the mailing list was full page caching. I mentioned that it was pretty straightforward and promised to blog about how to do it, so…
 
-[[install-ehcache-web]]
-Install Ehcache-web
-~~~~~~~~~~~~~~~~~~~
+=== Install Ehcache-web
 
 Add the following to your dependencies in BuildConfig.groovy:
 
+[source,groovy]
 ---------------------------------------------
 runtime("net.sf.ehcache:ehcache-web:2.0.0") {
  excludes "ehcache-core"
 }
 ---------------------------------------------
 
-[[install-grails-templates]]
-Install Grails templates
-~~~~~~~~~~~~~~~~~~~~~~~~
+=== Install Grails templates
 
 Run: `grails install-templates`
 
-[[set-up-a-page-caching-filter]]
-Set up a page caching filter
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Set up a page caching filter
 
 Edit `src/templates/war/web.xml` and add this to the `filters` section:
 
+[source,markup]
 ------------------------------------------------------------------------------------------
 <filter>
  <filter-name>MyPageCachingFilter</filter-name>
@@ -49,6 +45,7 @@ myPageCache
 
 And this as the _first entry_ in the `filter-mappings` section:
 
+[source,markup]
 ------------------------------------------------
 <filter-mapping>
  <filter-name>MyPageCachingFilter</filter-name>
@@ -57,12 +54,11 @@ And this as the _first entry_ in the `filter-mappings` section:
 </filter-mapping>
 ------------------------------------------------
 
-[[configure-the-cache]]
-Configure the cache
-~~~~~~~~~~~~~~~~~~~
+=== Configure the cache
 
 Unfortunately you can't configure the cache in `grails-app/conf/spring/resources.groovy` using `EhCacheFactoryBean` instances as the servlet filter initialises before the Spring context. The cache definitions need to be added to a `ehcache.xml` which would normally be placed in `grails-app/conf`. Here is an example that works for the filter definitions above:
 
+[source,markup]
 --------------------------------------
 <ehcache>
 

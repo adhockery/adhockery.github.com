@@ -12,6 +12,7 @@ Here's an example. Both input boxes are set to `width: 100%` and have `padding: 
 Field 1 Field 2
 The trick to modifying the box model is to set `box-sizing: border-box`. Unfortunately that's not a cross-browser property, only Opera supports it at the moment. To get the same effect in other browsers you will also need to set browser-specific versions as well:
 
+[source,css]
 -------------------------------
    -moz-box-sizing: border-box;
 -webkit-box-sizing: border-box;

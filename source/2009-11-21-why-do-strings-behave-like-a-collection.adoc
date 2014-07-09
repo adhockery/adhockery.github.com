@@ -7,6 +7,7 @@ alias: ["post/42902683438/why-do-strings-behave-like-a-collection/"]
 
 Mostly I love Groovy but every now and then some behaviour gets on my nerves. For example, why do the iterator methods on String behave as though it was a collections of characters rather than an Object? If I define a method with a dynamic-typed parameter like:
 
+[source,groovy]
 ------------------------
 void printNames(names) {
     names.each {
@@ -19,6 +20,7 @@ Passing a collection of Strings results in each String being printed. Passing a 
 
 The solution is to override the method:
 
+[source,groovy]
 ------------------------------
 void printNames(String name) {
     printNames([name])

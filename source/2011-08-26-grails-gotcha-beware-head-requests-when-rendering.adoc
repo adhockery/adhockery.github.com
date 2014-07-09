@@ -7,6 +7,7 @@ alias: ["post/42903282817/grails-gotcha-beware-head-requests-when-rendering/"]
 
 Although most Grails controllers render HTML, JSON or XML output it is possible to use them to render binary data as well. We use a controller to render images uploaded by editors into our content management interface. The theory is simple enough, instead of using the `render` dynamic method or returning a _model_ the controller action just writes bytes directly to the HTTP response stream. Our action looked something like this:
 
+[source,groovy]
 ----------------------------------------------------
 def show = {
     def image = Image.read(params.id)
@@ -31,6 +32,7 @@ We caught this bug in our app completely by accident but it could actually have 
 
 The solution is simple enough. I changed the controller action to simply set a _200_ response code when it gets a _HEAD_ request for a valid image:
 
+[source,groovy]
 --------------------------------------------------------
 def show = {
     def image = Image.read(params.id)

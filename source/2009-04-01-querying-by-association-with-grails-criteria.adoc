@@ -7,8 +7,8 @@ alias: ["post/42902379524/querying-by-association-with-grails-criteria/"]
 
 A common requirement is to select all instances of a domain class where one of its many-to-many associations contains a particular instance of another domain class. Consider these domain classes where a `Ship` has a crew composed of `Pirate`s and any particular `Pirate` can be a part of the crew of several `Ship`s:
 
+[source,groovy]
 --------------------------------------
-#!groovy
 class Ship {
    static hasMany = [crew: CrewMember]
    String name
@@ -28,8 +28,8 @@ How can we use a criteria query to find all the `Ship` instances where a particu
 
 You might think it's pretty simple, surely:
 
+[source,groovy]
 -------------------------------
-#!groovy
 Ship.withCriteria {
    crew {
        eq('pirate', blackbeard)
@@ -39,8 +39,8 @@ Ship.withCriteria {
 
 However, this has a curious side-effect. For example:
 
+[source,groovy]
 --------------------------------------------------------
-#!groovy
 Ship.withSession {session ->
    blackbeard = new Pirate(name: 'Blackbeard')
    jack = new Pirate(name: 'Calico Jack')
@@ -93,8 +93,8 @@ The criteria query has restricted the content of the associations to only the on
 
 In _this_ example there is an alternative as the association is bi-directional. We can query from the other side of the association:
 
+[source,groovy]
 ------------------------------------------------
-#!groovy
 def blackbeardsShips = CrewMember.withCriteria {
    projections {
        property('ship')

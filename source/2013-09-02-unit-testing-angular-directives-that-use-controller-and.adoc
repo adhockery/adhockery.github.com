@@ -11,6 +11,7 @@ I'm using the Yeoman Angular generator so my tests are using Jasmine & running w
 
 In order to get my directive's template to load I used the _karma-ng-html2js-preprocessor_ plugin for Karma:
 
+[source,bash]
 ----------------------------------------------------
 npm install karma-ng-html2js-preprocessor --save-dev
 ----------------------------------------------------
@@ -21,8 +22,8 @@ I was previously using _grunt-karma_ 0.4.3 which I guess was what the Yeoman gen
 
 Then I added the specific config for the plugin.
 
+[source,javascript]
 ----------------------------------
-#!javascript
 preprocessors: {
   '**/*.coffee': 'coffee',
   'app/views/*.html': 'ng-html2js'
@@ -37,8 +38,8 @@ The CoffeeScript pre-processor is the default for Karma but I found I had to dec
 
 In order to load the template module I just added the template path to the Jasmine test:
 
+[source,coffeescript]
 ---------------------------------------------------
-#!coffeescript
 beforeEach module 'myApp', 'views/my-template.html'
 ---------------------------------------------------
 
@@ -46,8 +47,8 @@ My directive uses a controller that attaches a function to the scope. I wanted t
 
 To fix the first problem I explicitly called `$digest()` on the parent scope. That causes the controller function to execute. Then I could grab the directive's scope using the DOM element's `data` method.
 
+[source,coffeescript]
 -----------------------------------------------------------------------------
-#!coffeescript
 scope = {}
 
 beforeEach inject ($compile, $rootScope) ->

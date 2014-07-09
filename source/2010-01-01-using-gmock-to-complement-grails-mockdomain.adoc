@@ -11,38 +11,39 @@ So assuming we're trying to unit test a controller that uses criteria methods or
 
 First off you need to add the GMock dependency to your _BuildConfig.groovy_. Since GMock supports http://code.google.com/p/hamcrest/[Hamcrest matchers] for matching method arguments you'll probably want those as well:
 
+[source,groovy]
 --------------------------------------------
-    dependencies {
-        test "org.gmock:gmock:0.8.0"
-        test "org.hamcrest:hamcrest-all:1.0"
-    }
+dependencies {
+    test "org.gmock:gmock:0.8.0"
+    test "org.hamcrest:hamcrest-all:1.0"
+}
 --------------------------------------------
 
 If you're using an earlier version of Grails you'll need to just grab the jar files and put them in your app's _lib_ directory.
 
 Then in your test case you need to import GMock and Hamcrest classes and add an annotation to allow GMock to work:
 
+[source,groovy]
 ------------------------------------------------------------
-    import grails.test.*
-    import org.gmock.*
-    import static org.hamcrest.Matchers.*
+import grails.test.*
+import org.gmock.*
+import static org.hamcrest.Matchers.*
 
-    @WithGMock
-    class MyControllerTests extends ControllerUnitTestCase {
+@WithGMock
+class MyControllerTests extends ControllerUnitTestCase {
 ------------------------------------------------------------
 
 Adding criteria and named query methods is now fairly simple:
 
-[[mocking-a-withcriteria-method]]
-Mocking a withCriteria method
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Mocking a withCriteria method
 
+[source,groovy]
 ----------------------------------------------------------------------------
-    def results = // whatever you want your criteria query to return
-    mock(MyDomain).static.withCriteria(instanceOf(Closure)).returns(results)
-    play {
-        controller.myAction()
-    }
+def results = // whatever you want your criteria query to return
+mock(MyDomain).static.withCriteria(instanceOf(Closure)).returns(results)
+play {
+    controller.myAction()
+}
 ----------------------------------------------------------------------------
 
 Breaking this example down a little
@@ -53,77 +54,72 @@ Breaking this example down a little
 
 In this example we're expecting the _withCriteria_ method to be called just once but GMock supports more complex http://gmock.org/documentation/0.8.0#Time_matching[time matching expressions] if the method may be called again.
 
-[[mocking-a-createcriteria-method]]
-Mocking a _createCriteria_ method
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Mocking a _createCriteria_ method
 
 The _withCriteria_ method returns results directly but _createCriteria_ is a little more complicated in that it returns a criteria object that has methods such as _list_, _count_ and _get_. To simulate this we'll need to have the mocked _createCriteria_ method return a mocked criteria object.
 
+[source,groovy]
 --------------------------------------------------------------------
-    def results = // whatever you want your criteria query to return
-    def mockCriteria = mock() {
-        list(instanceOf(Closure)).returns(results)
-    }
-    mock(MyDomain).static.createCriteria().returns(mockCriteria)
-    play {
-        controller.myAction()
-    }
+def results = // whatever you want your criteria query to return
+def mockCriteria = mock() {
+    list(instanceOf(Closure)).returns(results)
+}
+mock(MyDomain).static.createCriteria().returns(mockCriteria)
+play {
+    controller.myAction()
+}
 --------------------------------------------------------------------
 
 This is only a little more complex than the previous example in that it has the mocked _list_ method on another mock object that is returned by the domain class' _createCriteria_ method. `mock()` provides an un-typed mock object as we really don't care about the type here.
 
-[[mocking-a-named-query]]
-Mocking a named query
-~~~~~~~~~~~~~~~~~~~~~
+=== Mocking a named query
 
 For our purposes named queries are actually pretty similar to _createCriteria_.
 
+[source,groovy]
 --------------------------------------------------------------------
-    def results = // whatever you want your criteria query to return
-    def mockCriteria = mock() {
-        list(instanceOf(Closure)).returns(results)
-    }
-    mock(MyDomain).static.myNamedQuery().returns(mockCriteria)
-    play {
-        controller.myAction()
-    }
+def results = // whatever you want your criteria query to return
+def mockCriteria = mock() {
+    list(instanceOf(Closure)).returns(results)
+}
+mock(MyDomain).static.myNamedQuery().returns(mockCriteria)
+play {
+    controller.myAction()
+}
 --------------------------------------------------------------------
 
 Some other examples:
 
-[[mocking-a-named-query-with-an-argument]]
-Mocking a named query with an argument
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Mocking a named query with an argument
 
+[source,groovy]
 --------------------------------------------------------------------
-    mock(MyDomain).static.myNamedQuery("blah").returns(mockCriteria)
+mock(MyDomain).static.myNamedQuery("blah").returns(mockCriteria)
 --------------------------------------------------------------------
 
 For simple parameters you don't need to use a Hamcrest matcher - a literal is just fine.
 
-[[mocking-a-withcriteria-call-using-options]]
-Mocking a _withCriteria_ call using options
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Mocking a _withCriteria_ call using options
 
 You can pass an argument map to _withCriteria_, _e.g._ `withCriteria(uniqueResult: true) { /* criteria */ }` will return a single instance rather than a _List_. To mock this you will need to expect the _Map_ as well as the _Closure_:
 
+[source,groovy]
 -----------------------------------------------------------------------------------------------
-    def result = // a single domain object instance
-    mock(MyDomain).static.withCriteria(uniqueResult: true, instanceOf(Closure)).returns(result)
+def result = // a single domain object instance
+mock(MyDomain).static.withCriteria(uniqueResult: true, instanceOf(Closure)).returns(result)
 -----------------------------------------------------------------------------------------------
 
-[[mocking-criteria-that-are-re-used]]
-Mocking criteria that are re-used
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Mocking criteria that are re-used
 
 It's fairly common in pagination scenarios to call a _list_ and _count_ method on a criteria object. We can just set multiple expectations on the mock criteria object, e.g.
 
+[source,groovy]
 --------------------------------------------------------------
-    def mockCriteria = mock() {
-        list(max: 10).returns(results)
-        count().returns(999)
-    }
-    mock(MyDomain).static.myNamedQuery().returns(mockCriteria)
+def mockCriteria = mock() {
+    list(max: 10).returns(results)
+    count().returns(999)
+}
+mock(MyDomain).static.myNamedQuery().returns(mockCriteria)
 --------------------------------------------------------------
 
 The nice thing about this technique is that it doesn't interfere with any of the enhancements _mockDomain_ makes to the domain class, so the _save_, _validate_, etc. methods will still work as will dynamic finders.

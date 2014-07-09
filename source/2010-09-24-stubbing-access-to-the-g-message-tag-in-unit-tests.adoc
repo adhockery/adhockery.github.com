@@ -13,6 +13,7 @@ I've come up with what I think is a pretty good and re-usable solution. It allow
 
 Here's an example. Imagine we're testing the following controller that displays a simple greeting:
 
+[source,groovy]
 -------------------------------------------------------------------------
 class GreetingController {
     def index = {
@@ -23,6 +24,7 @@ class GreetingController {
 
 Here's a spec that shows the behaviour both when a message is specified and when it isn't:
 
+[source,groovy]
 -------------------------------------------------------------------------------------------------
 import grails.plugin.spock.*
 import org.springframework.context.*

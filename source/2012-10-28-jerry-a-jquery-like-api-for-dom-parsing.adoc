@@ -11,8 +11,8 @@ Ideally making assertions against a parsed DOM would be the best solution but JV
 
 I've been using http://jodd.org/doc/jerry/index.html[Jerry] for some time for this kind of testing and it's pretty great. The API is derived from jQuery so there's virtually no learning curve. Instead of complex string matching you can write neat specs like this:
 
+[source,groovy]
 -----------------------------------------------------
-#!groovy
 void 'creates an input of the correct type'() {
     given:
     def markup = applyTemplate('<my:searchFormTag/>')
@@ -27,6 +27,7 @@ void 'creates an input of the correct type'() {
 
 For an even more jQuery like feel use Groovy's import aliasing:
 
+[source,groovy]
 -----------------------------------------
 import static jodd.jerry.Jerry.jerry as $
 -----------------------------------------

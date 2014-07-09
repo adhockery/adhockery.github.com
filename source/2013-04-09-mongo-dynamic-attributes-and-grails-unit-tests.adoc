@@ -9,8 +9,8 @@ When using _Mongo DB_ with _GORM_ it's possible to assign to dynamic attributes 
 
 All domain classes that are enabled in a test using the `@TestFor` or `@Mock` annotations are available via `grailsApplication.domainClasses`. This means you can simply add something like this in your setup method:
 
+[source,groovy]
 ------------------------------------------------------
-#!groovy
 for (domainClass in grailsApplication.domainClasses) {
     domainClass.metaClass.with {
         dynamicAttributes = [:]

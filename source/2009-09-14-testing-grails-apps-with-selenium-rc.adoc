@@ -9,21 +9,15 @@ I http://blog.freeside.co/post/42902576958/thoughts-on-testing[mentioned in my l
 
 So what are the big advantages of using http://seleniumhq.org/projects/remote-control/[Selenium RC] over just the IDE and `HtmlTestRunner`?
 
-[[test-design]]
-Test design
-~~~~~~~~~~~
+=== Test design
 
 Selenium tests written in HTML tend to either become an amorphous blob, not testing one simple thing or proliferate to the point of having hundreds of small test files. With Selenium RC you can write Selenium test classes with multiple test case methods just as you would unit tests. Each test case can be neat, self-contained and share set up with other test cases in the same class. Also by abstracting out common command sequences into utility methods you can start to develop a higher level DSL for testing your application. In HTML tests this can be done by writing extension functions in Javascript but it's not as straightforward.
 
-[[data-fixtures]]
-Data fixtures
-~~~~~~~~~~~~~
+=== Data fixtures
 
 Data set up is the biggest headache when writing Selenium tests in HTML. You can't drop out of _selenese_ and set up a couple of domain objects so you end up either trying to run all your tests against a monolithic data fixture (a Sisyphean task if any of your tests make modifications to the data) or write some sort of URL endpoints that can set up and tear down data. We've done the latter and it's resulted in the single most bloated, horrible, misused bit of code in our app. Fixtures get re-used by other tests because they set up approximately appropriate data - until some change requires a change in the fixture and suddenly a bunch of unrelated tests fail. Selenium RC tests don't have this problem; you're in Groovy-land so you can access domain classes directly and use the invaluable http://grails.org/plugin/build-test-data[build-test-data plugin] to set data up.
 
-[[data-verification]]
-Data verification
-~~~~~~~~~~~~~~~~~
+=== Data verification
 
 I mentioned previously the http://blog.freeside.co/post/42902576958/thoughts-on-testing#false-moniker[anti-pattern of false moniker testing] and HTML based Selenium tests are terrible for this. If you have a test that creates some data, how do you verify it has done it correctly? The only way is to scrape the data on another screen - _e.g._ a CRUD list or show view. Ugh! With Selenium RC you can read the data from the database with standard Grails domain classes and verify your expectations directly.
 

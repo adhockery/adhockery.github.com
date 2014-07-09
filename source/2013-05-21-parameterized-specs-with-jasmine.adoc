@@ -11,15 +11,15 @@ I used https://github.com/pivotal/jasmine[Jasmine] to test-drive my code and wan
 
 What I _didn't_ want to do was write test code like this:
 
+[source,javascript]
 ----------------------------------------------------------
-#!javascript
 it('should highlight Groovy operators', function() {
     var operators = {
         'elvis': '?:',
         'spaceship': '<=>',
         'firecracker': '==~'
     };
-    
+
     for (op in operators) {
         var tokens = $('#' + op).find('.operator').text();
         expect(tokens).toBe(operators[op]);
@@ -29,8 +29,8 @@ it('should highlight Groovy operators', function() {
 
 Which would fail fast if any operator wasn't highlighted correctly. Or this:
 
+[source,javascript]
 ------------------------------------------------------------
-#!javascript
 it('should highlight the elvis operator', function() {
     var tokens = $('#elvis').find('.operator').text();
     expect(tokens).toBe('?:');
@@ -53,8 +53,8 @@ Jasmine doesn't support anything like Spock's _where_ block directly but its spe
 
 The function that you pass to `it` does not take any parameters and a naïve implementation like this fails:
 
+[source,javascript]
 ---------------------------------------------------------------
-#!javascript
 var operators = {
     'elvis': '?:',
     'spaceship': '<=>',
@@ -81,8 +81,8 @@ The same assertion gets run multiple times.
 
 What we need to do is bind the loop parameters to a closure scope that is retained when the specification function is run. To do this I set up and immediately run an anonymous function inside the loop.
 
+[source,javascript]
 ---------------------------------------------------------------------
-#!javascript
 for (op in operators) {
     (function(name, tokens) {
         it('should highlight the ' + name + ' operator', function() {

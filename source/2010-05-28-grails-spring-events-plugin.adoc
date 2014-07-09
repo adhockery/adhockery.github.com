@@ -15,6 +15,7 @@ In addition to the asynchronous event processing the plugin gives you:
 
 To install the plugin just use:
 
+[source,bash]
 -----------------------------------
 grails install-plugin spring-events
 -----------------------------------

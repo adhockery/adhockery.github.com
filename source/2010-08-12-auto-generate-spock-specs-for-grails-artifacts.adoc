@@ -15,6 +15,7 @@ The other factor is that the superclass for the unit test is specified by the in
 
 Here's the code for your `_Events.groovy` script:
 
+[source,groovy]
 -----------------------------------------------------------------------------------------------------------------------------------
 eventDefaultStart = {
     createUnitTest = { Map args = [:] ->
@@ -37,6 +38,7 @@ eventDefaultStart = {
 
 The template specification should be placed in `src/templates/artifacts/Spec.groovy` and is simply:
 
+[source,groovy]
 -----------------------------------------------------
 @artifact.package@import spock.lang.*
 import grails.plugin.spock.*

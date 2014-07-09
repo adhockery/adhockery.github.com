@@ -9,12 +9,14 @@ Since version 2.0 the Groovy distribution has included an alternate artifact tha
 
 You can include that in a Gradle project by specifying a dependency like this:
 
+[source,groovy]
 ---------------------------------------------------
 compile "org.codehaus.groovy:groovy-all:2.3.3:indy"
 ---------------------------------------------------
 
 However if you have other libraries that depend on groovy they may pull in the regular version transitively giving you two versions of Groovy in your dependency graph. This happens to me a lot with Spock which depends on _groovy-all:2.0.5_. For example I probably have a dependency like this as well:
 
+[source,groovy]
 ----------------------------------------------------------
 testCompile "org.spockframework:spock-core:0.7-groovy-2.0"
 ----------------------------------------------------------
@@ -23,12 +25,14 @@ I noticed that the _External Libraries_ section of the project tree in _IntelliJ
 
 To debug where the dependency is coming from you can use Gradle's `dependencyInsight` target like this:
 
+[source,bash]
 ------------------------------------------------
 gradle dependencyInsight --dependency groovy-all
 ------------------------------------------------
 
 By default the `dependencyInsight` only searches the _compile_ configuration and you may well see nothing there. You can search other configurations by adding an argument on the command line. For example:
 
+[source,bash]
 ----------------------------------------------------------------------------
 gradle dependencyInsight --dependency groovy-all --configuration testCompile
 ----------------------------------------------------------------------------
@@ -49,6 +53,7 @@ Here we can see _groovy-all_ version _2.3.3_ explicitly included as a _compile_ 
 
 To fix this I first tried forcing the version with:
 
+[source,groovy]
 -----------------------------------------------------
 configurations.all {
   resolutionStrategy {
@@ -73,6 +78,7 @@ However, I could still see both versions of _groovy-all_ in IDEA's project tree.
 
 Unfortunately the only way to get evict the regular _groovy-all_ jar from the dependency tree seems to be to explicitly exclude it from every dependency that pulls it in transitively. For example:
 
+[source,groovy]
 -------------------------------------------------------------
 testCompile("org.spockframework:spock-core:0.7-groovy-2.0") {
   exclude module: "groovy-all"

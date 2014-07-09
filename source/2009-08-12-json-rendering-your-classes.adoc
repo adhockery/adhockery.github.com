@@ -9,6 +9,7 @@ It turns out adding custom JSON renderers for your own types to Grails is really
 
 Implementing a renderer for a type is as easy as this: http://gist.github.com/166335[`DateTimeMarshaller.java`]. After that all that's required is to register the new renderer in `BootStrap.groovy` or some other appropriate spot with:
 
+[source,groovy]
 ------------------------------------------------------------------------
 grails.converters.JSON.registerObjectMarshaller new DateTimeMarshaller()
 ------------------------------------------------------------------------
@@ -17,6 +18,7 @@ I'll be adding this to the next release of the http://grails.org/plugin/joda-tim
 
 _*Update:*_ Actually it's even easier than I thought. This being Groovy you can just use closures like so:
 
+[source,groovy]
 ---------------------------------------------------
 JSON.registerObjectMarshaller(DateTime) {
     return it?.toString("yyyy-MM-dd'T'HH:mm:ss'Z'")

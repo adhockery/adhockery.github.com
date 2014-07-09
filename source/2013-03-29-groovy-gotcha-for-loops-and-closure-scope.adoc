@@ -9,8 +9,8 @@ You probably know that Groovy closures retain information about the scope in whi
 
 Consider this example.
 
+[source,groovy]
 -------------------
-#!groovy
 def fns = []
 for (i in (1..5)) {
     fns << {->
@@ -26,8 +26,8 @@ When the closures are run the value that is bound to the variable `i` is the val
 
 Variables local to the loop body do not behave like this, obviously because each closure scope contains a reference to a different variable. Here's another example where I'm using a local variable in the loop to store the square of the loop variable itself. What will be printed to _sysout_ this time?
 
+[source,groovy]
 ------------------------------------
-#!groovy
 def fns = []
 for (i in (1..5)) {
     def isq = i * i
@@ -42,8 +42,8 @@ You can http://groovyconsole.appspot.com/script/928001[run this on the Groovy We
 
 I've run afoul of this a couple of times when augmenting Grails artifacts with new behavior in a plugin. Given what we know of loop variables & closure scope consider what this code would do:
 
+[source,groovy]
 ------------------------------------------------------
-#!groovy
 for (domainClass in grailsApplication.domainClasses) {
     domainClass.metaClass.getPropertyNames = {->
         domainClass.persistentProperties*.name
@@ -57,8 +57,8 @@ What's the solution? Should we always use `.each` rather than a _for_ loop? Well
 
 If you simply alias the loop variable and refer to that alias in the closure body all will be well:
 
+[source,groovy]
 --------------------------------------
-#!groovy
 def fns = []
 for (i in (1..5)) {
     def myi = i

@@ -7,8 +7,8 @@ alias: ["post/41774569512/wiring-taglib-dependencies-in-unit-tests/", "wiring-ta
 
 Grails 2 has made a lot of improvements in unit testing support. One of the things I always used to find particularly painful was unit testing taglibs. Now when your test class is annotated with `@TestFor(MyTagLib)` you can use the `applyTemplate` method like this:
 
+[source,groovy]
 ---------------------------------------------------
-#!groovy
 expect:
 applyTemplate('<my:tag/>') == 'the expected output'
 ---------------------------------------------------
@@ -19,8 +19,8 @@ Let's imagine that `my:tag` makes a call to a Grails service for some reason. In
 
 Although like with the old `TagLibUnitTest` and `TagLibSpec` classes your test gets a field called `taglib` that doesn't actually appear to be the instance that `applyTemplate` uses. This fails:
 
+[source,groovy]
 --------------------------------------------------------------------------------
-#!groovy
 void setup() {
     tagLib.myService = new MyService()
 }
@@ -34,8 +34,8 @@ void 'a taglib spec'() {
 
 Grails 2 unit test mixins provide a `defineBeans` method that allows you to add Spring beans to a mock application context using the _BeanBuilder_ DSL. So, next I tried this:
 
+[source,groovy]
 --------------------------------------------------------------------------------
-#!groovy
 void setup() {
     defineBeans {
         myService(MyService)
@@ -51,8 +51,8 @@ void 'a taglib spec'() {
 
 After some digging I discovered that you need to use `defineBeans` in `setupSpec` rather than `setup` for the wiring to work (I guess this would mean in `@BeforeClass` in a JUnit test). So this _does_ work:
 
+[source,groovy]
 -------------------------------------------------------
-#!groovy
 void setupSpec() {
     defineBeans {
         myService(MyService)
@@ -69,8 +69,8 @@ All very well so long as you don't need to inject a specific instance of _MyServ
 
 The test does get an `applicationContext` variable, but that doesn't have a method on its API to allow you to register an existing object as a bean. Spring's `MockApplicationContext` does, and after some digging I found that there's an instance of that available as `grailsApplication.mainContext`. However a bean added there doesn't get picked up by the tag either:
 
+[source,groovy]
 --------------------------------------------------------------------------------------
-#!groovy
 def mockService = Mock(MyService)
 
 void setup() {
@@ -86,8 +86,8 @@ void 'a taglib spec'() {
 
 Eventually I figured out that instead of registering your mock dependency in the application context you can instead get the correct taglib instance _from_ the application context and then wire its dependencies directly. I use Spock's mocks almost exclusively for this kind of thing, but the same technique should hold for any other mocking framework. What I ended up doing is this:
 
+[source,groovy]
 -------------------------------------------------------
-#!groovy
 def mockService = Mock(MyService)
 
 void setup() {

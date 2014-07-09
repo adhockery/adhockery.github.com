@@ -11,8 +11,8 @@ I was curious as to whether I could implement something similar with _Spock_. Th
 
 I got a basic version working using action closures. To directly translate the example from the _jMock_ documentation you'd do this:
 
+[source,groovy]
 -----------------------------------------------
-#!groovy
 given: "a turtle"
 def turtle = Mock(Turtle)
 
@@ -35,8 +35,8 @@ The first and last interactions change the current state of the `pen` and the mi
 
 The assertions on the state transitions are a bit redundant here. Perhaps a more useful approach is found in the way the examples in _GOOS_ work. There the state changes are modelled with stubs. Using that approach the previous example could be rewritten as:
 
+[source,groovy]
 -----------------------------------------------
-#!groovy
 given: "a turtle"
 def turtle = Mock(Turtle)
 
@@ -61,8 +61,8 @@ with(turtle) {
 
 It's clearer what's going on now. However, I'm not particularly keen on the explicit `assert` keywords. I'd also rather use an enum than a string to model the state. Wrapping the state transitions and verifications up into a small https://gist.github.com/robfletcher/5217772[`StateMachine`] class makes sense. After doing that we end up with this:
 
+[source,groovy]
 ---------------------------------------
-#!groovy
 given: "a turtle"
 def turtle = Mock(Turtle)
 

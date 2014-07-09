@@ -9,29 +9,25 @@ We've recently spent some time ensuring that our application is forwards-compati
 
 Although it took a little while I found the upgrade less painful than some previous versions. It feels like Grails is really maturing so there are fewer fundamental breaking changes and more in the way of new features. The bulk of the changes we had to make were to unit tests which are vastly improved in Grails 2. That said, I can see some of the things we ran into stumping people so I thought a write-up would make a useful reference. Some of these items may already be covered by the http://grails.org/doc/2.0.x/guide/gettingStarted.html#upgradingFromPreviousVersionsOfGrails[upgrading section of the Grails user guide] but some, particularly around plugins are probably new.
 
-[[compilation]]
-Compilation
-~~~~~~~~~~~
+=== Compilation
 
 Firstly we needed to do to just get the build working to the point where tests would run.
 
-[[upgrade-spock]]
-Upgrade Spock
-^^^^^^^^^^^^^
+==== Upgrade Spock
 
 Version _0.6-SNAPSHOT_ of the http://grails.org/plugin/spock[Spock plugin] is required for compatibility with Groovy 1.8.
 
 This also required us to update `@Unroll` annotations to use _Closure_ parameters. Instead of
 
+[source,groovy]
 -------------------------------------
-#!groovy
 @Unroll("#a plus #b should equal #x")
 -------------------------------------
 
 the annotation needs to be
 
+[source,groovy]
 ---------------------------------------
-#!groovy
 @Unroll({"$a plus $b should equal $x"})
 ---------------------------------------
 
@@ -45,20 +41,16 @@ The return type of java.lang.Object mockDomain(java.lang.Class) in com.sky.cms.A
 
 There's some kind of clash between the method signatures of _mockDomain_ in Spock's _UnitSpec_ and Grails core. We'd intended to switch to the new annotation-based unit test support anyway but apparently we needed to do so right away. On the surface this just meant making our specs extend _Specification_ instead of _UnitSpec_ and introducing the new `@TestFor` annotation. The other changes we had to make to get our tests running successfully are covered below.
 
-[[configuration-changes]]
-Configuration changes
-~~~~~~~~~~~~~~~~~~~~~
+=== Configuration changes
 
 Configuration-wise all we had to do was to change _DataSource.groovy_ to reference _H2_ rather than _hsqldb_. Because we were just dealing with the CMS plugin and its test harness we hadn't modified the default file in any way so we just replaced it with the new one from Grails 2 with:
 
+[source,bash]
 -----------------------------------------------------------------------------
-#!bash
 cp $GRAILS_HOME/src/grails/grails-app/conf/DataSource.groovy grails-app/conf/
 -----------------------------------------------------------------------------
 
-[[unit-tests]]
-Unit tests
-~~~~~~~~~~
+=== Unit tests
 
 The bulk of the time we spent upgrading was spent on unit tests. This is understandable since Grails 2 has made some significant enhancements in unit test support. Most of the changes are pretty straightforward but there are a couple of gotchas here.
 
@@ -75,24 +67,18 @@ The bulk of the time we spent upgrading was spent on unit tests. This is underst
 * Tag libs using `@TestFor` can actually find and render GSP templates when they call _render_. This means you might get more realistic output than your test was previously expecting!
 * We found that when testing tag libs with `@TestFor` that modifying the metaclass of the `taglib` field of the test class didn't affect tests using _applyTemplate_. However, we just had to change from `taglib.metaClass.blah` to `MyTagLib.metaClass.blah`.
 
-[[plugins]]
-Plugins
-~~~~~~~
+=== Plugins
 
-[[joda-time]]
-Joda Time
-^^^^^^^^^
+==== Joda Time
 
 We upgraded the http://gpc.github.com/grails-joda-time/[Joda-Time plugin] to version _1.3_. This also meant we had to add the Hibernate persistence library to the _dependencies_ section of _BuildConfig_ http://gpc.github.com/grails-joda-time/guide/2.%20Persistence.html[as documented here].
 
-[[resources]]
-Resources
-^^^^^^^^^
+==== Resources
 
 The Resources plugin currently (up to at least version _1.1.1_) http://jira.grails.org/browse/GPRESOURCES-109[has a bug] that means it does not generate resources properly in anything other than _dev_ mode. There is a workaround; just add the following to _BootStrap_:
 
+[source,groovy]
 ---------------------------------------------------
-#!groovy
 def grailsResourceProcessor
 
 def init = {
@@ -100,27 +86,20 @@ def init = {
 }
 ---------------------------------------------------
 
-[[geb]]
-Geb
-^^^
+==== Geb
 
 We upgraded http://gebish.org/[Geb] to version _0.6.1_ and the http://code.google.com/p/selenium/[Selenium] drivers to version _2.13.0_. The only issues we ran into were:
 
 * An additional dependency is required to handle `select` elements properly (installation details are handily included in the report for any test that fails due to this).
 * Setting values on `input type="file"` elements no longer worked. I've already fixed this issue and it should be in the next _Geb_ release. See http://jira.codehaus.org/browse/GEB-152[GEB-152] for more information.
 
-[[other-libraries]]
-Other Libraries
-~~~~~~~~~~~~~~~
+=== Other Libraries
 
 We had one test that used _http://code.google.com/p/gmock/[GMock]_. Unfortunately it is not currently compatible with Groovy 1.8. For us this wasn't a big deal as we could easily drop _GMock_ but some codebases may be more invested in it.
 
-[[actual-grails-bugs]]
-Actual Grails bugs
-~~~~~~~~~~~~~~~~~~
+=== Actual Grails bugs
 
 We only found a couple of problems with Grails itself both of which I've raised on the Grails bug tracker:
 
 * http://jira.grails.org/browse/GRAILS-8376[GRAILS-8376] Constraints on superclass associations are not inherited properly in mock domain instances. This bit us when instances of a child class of a superclass that had an association with `nullable: true` failed to save. The workaround is to simply duplicate the constraint in the child class (yes, it's ugly).
 * http://jira.grails.org/browse/GRAILS-837y[GRAILS-8377] `grails test run-app` fails with `Error loading plugin manager: GebGrailsPlugin`. This is kind of an edge case. We were only trying to run the application in test mode to help figure out the problem with resource processing mentioned above.
-

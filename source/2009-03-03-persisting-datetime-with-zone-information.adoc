@@ -9,6 +9,7 @@ I was stuck a while ago trying to figure out how to map http://joda-time.sourcef
 
 I could never figure out how to map the user type to my domain class property correctly. Just doing:
 
+[source,groovy]
 -----------------------------------------------
 static mapping = {
     dateTimeProperty type: PersistentDateTimeTZ
@@ -25,6 +26,7 @@ I seem to remember someone on the Grails mailing list suggesting I tried treatin
 
 I finally found the solution in the http://www.amazon.co.uk/Definitive-Guide-Grails-Experts-Development/dp/1590599950[2nd Edition of The Definitive Guide to Grails] (which I can't recommend enough, by the way). The trick is to pass a closure specifying the two columns to the property definition in the mapping builder. The working code looks like this:
 
+[source,groovy]
 ---------------------------------------------------
 static mapping = {
     dateTimeProperty type: PersistentDateTimeTZ, {

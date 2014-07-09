@@ -7,6 +7,7 @@ alias: ["post/48038157692/grails-and-rest-url-mappings/"]
 
 When building a REST-style API with Grails there's http://grails.org/doc/1.3.7/guide/13.%20Web%20Services.html#13.1%20REST[a very handy way of configuring URL mappings]. For example:
 
+[source,groovy]
 ----------------------------------
 "/person/$id?"(resource: "person")
 ----------------------------------
@@ -19,6 +20,7 @@ It would be possible to detect this in the _show_ action itself and forward to _
 
 A cleaner way would be to do this in the URL mappings:
 
+[source,groovy]
 -----------------------------------------------
 "/person"(controller: "person", action: "list")
 "/person/$id?"(resource: "person")
@@ -30,6 +32,7 @@ Unfortunately there's a problem here – _list_ isn't the only action that doesn
 
 It's possible to get things to work by mapping the _save_ action explicitly like this:
 
+[source,groovy]
 -----------------------------------------------------
 "/person"(controller: "person", parseRequest: true) {
     action = [GET: "list", PUT: "save"]
@@ -41,6 +44,7 @@ But I'm not very happy about explicitly mapping something the resource URL mappi
 
 Alternatively a _Rails_ style plural form like this will work:
 
+[source,groovy]
 -----------------------------------------------
 "/people"(controller: "person", action: "list")
 "/person/$id?"(resource: "person")

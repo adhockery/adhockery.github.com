@@ -7,8 +7,8 @@ alias: ["post/41774699277/derived-values-in-spock-where-tables/", "derived-value
 
 When using `where` blocks in Spock there are two forms; assigning iterable values to a variable, e.g. `crew << ['Mal', 'Kaylee', 'Jayne']` or using a datatable. In the first form I always knew you could use assigned values, for example:
 
+[source,groovy]
 ----------------------------------
-#!groovy
 where:
 crew << ['Mal', 'Kaylee', 'Jayne']
 nameLength = crew.length()
@@ -18,8 +18,8 @@ Note the assignment operator used rather than the left shift on the second line 
 
 I had always assumed that this option went out of the window when using a data table. Values in the columns can't reference other columns after all. But http://blog.proxerd.pl/[Marcin Erdmann] pointed out to me that it is in fact possible to still used derived values with data tables, like this:
 
+[source,groovy]
 --------------------------
-#!groovy
 where:
 name     | position
 'Mal'    | 'captain'
@@ -33,8 +33,8 @@ You just add additional variables after the data table. This doesn't seem to be 
 
 One way in which I find this particularly useful is in composing good text for `@Unroll` expressions. For example:
 
+[source,groovy]
 -----------------------------------------------------
-#!groovy
 @Unroll
 void '#name is the #status #position on the ship'() {
     expect:
@@ -57,4 +57,3 @@ Here the `where` block variable _status_ is probably not used in the body of the
 * `Kaylee is the current Mechanic on the ship`
 * `Jayne is the current PR officer on the ship`
 * `Wash is the former pilot on the ship`
-

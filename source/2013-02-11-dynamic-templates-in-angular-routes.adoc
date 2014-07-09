@@ -11,8 +11,8 @@ Since Angular route definitions are static (at time of writing anyway – there 
 
 I figured this wasn't such an unusual requirement & went looking for an existing solution. I came across https://groups.google.com/forum/m/?fromgroups#!topic/angular/YXmGKO7bz3Q[a very useful thread on Google Groups]. The solution it suggests is simple; instead of a `templateUrl` the route uses a `template` containing an `ng-include` directive that uses a scope property for its path.
 
+[source,javascript]
 ------------------------------------------------------------
-#!javascript
 .when('/:articleSlug', {
     controller: 'ArticleCtrl',
     template: '<article ng-include="templateUrl"></article>'

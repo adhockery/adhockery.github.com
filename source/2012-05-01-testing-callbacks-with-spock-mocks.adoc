@@ -9,8 +9,8 @@ I've been doing some work with http://vertx.io/[vert.x] over the last few days a
 
 For example, a simple REST server that saves some data might make a call like this:
 
+[source,groovy]
 ------------------------------------------------------------------------------------------------
-#!groovy
 void post(request) {
     def album = [artist: request.params.artist, title: request.params.title]
     eventBus.send('mongodb', [action: 'save', collection: 'albums', document: album]) { reply ->
@@ -29,8 +29,8 @@ The the Closure passed to `eventBus.send` will be called once the _save_ action 
 
 In a unit test we might want to use a mock _eventBus_ but we're not calling a method that returns a value; how do we get the mock to invoke the callback? It's not a well documented feature but using a http://code.google.com/p/spock/wiki/Interactions[_Spock_ mock] you can get to the arguments passed to a mocked method using a Closure like this:
 
+[source,groovy]
 -----------------------------------------------------------------------
-#!groovy
 void 'the server returns HTTP_OK if the save succeeds'() {
     given:
     server.eventBus = Mock(EventBus)
@@ -53,8 +53,8 @@ In a real test you'd want to use stricter matching on the mock interaction, but 
 
 What about testing a method that accepts a callback Closure directly? I've found that using a mock works fine there too. Imagine we're writing a test for this method:
 
+[source,groovy]
 ----------------------------------------------
-#!groovy
 void parse(input, Closure callback) {
     try {
         // do some complex processing
@@ -67,8 +67,8 @@ void parse(input, Closure callback) {
 
 It does some work and then invokes a callback. How can we test that the parameters passed to the callback Closure are correct?
 
+[source,groovy]
 -------------------------------------------------------------------
-#!groovy
 void 'callback is invoked with parse output'() {
     given:
     def callback = Mock(Closure)
@@ -91,8 +91,8 @@ Too few invocations for:
 
 For more helpful output you can use a Closure to trap the arguments passed to the callback like this:
 
+[source,groovy]
 -------------------------------------------------
-#!groovy
 then:
 1 * callback.call(_) >> { args ->
     assert args[0].status == 'ok'

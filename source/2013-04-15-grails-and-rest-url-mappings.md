@@ -2,7 +2,7 @@
 title: 'Grails and REST URL mappings'
 date: 2013-04-15T14:12:00+0100
 tags: grails, rest
-alias: post/48038157692/grails-and-rest-url-mappings
+alias: post/48038157692/grails-and-rest-url-mappings/
 ---
 
 When building a REST-style API with Grails there's [a very handy way of configuring URL mappings][1]. For example:

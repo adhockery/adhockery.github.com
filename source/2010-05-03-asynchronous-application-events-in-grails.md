@@ -2,7 +2,7 @@
 title: 'Asynchronous application events in Grails'
 date: 2010-05-03T21:59:00+0100
 tags: asynchronous, events, spring
-alias: post/42902948889/asynchronous-application-events-in-grails
+alias: post/42902948889/asynchronous-application-events-in-grails/
 ---
 
 On the project for my current client we've been using JMS in a rather na&iuml;ve way for some time now. We've also experienced a certain amount of pain getting JMS and ActiveMQ configured correctly. However, all we're really using JMS for is asynchronous event broadcasting. Essentially we have a handful actions such as flushing hardware caches and notifying external systems that take place when a document changes. We don't want these things blocking the request thread when users save data.

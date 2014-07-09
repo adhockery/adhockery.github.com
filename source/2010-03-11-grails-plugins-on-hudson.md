@@ -2,7 +2,7 @@
 title: 'Grails plugins on Hudson'
 date: 2010-03-11T17:50:00+0000
 tags: continuous integration, hudson, grails plugins
-alias: post/42902862201/grails-plugins-on-hudson
+alias: post/42902862201/grails-plugins-on-hudson/
 ---
 
 ![image][1]Yesterday I spent some time setting up [Hudson][2] continuous integration build for my various Grails plugins. It was pretty straightforward but I've [been asked][3] to document the steps involved.

@@ -2,7 +2,7 @@
 title: 'Using GMock to complement Grails mockDomain'
 date: 2010-01-01T14:33:00+0000
 tags: testing, gmock
-alias: post/42902750567/using-gmock-to-complement-grails-mockdomain
+alias: post/42902750567/using-gmock-to-complement-grails-mockdomain/
 ---
 
 Since Grails 1.1 we've had pretty good [unit testing support][1] via _GrailsUnitTestCase_ and its sub-classes. The _mockDomain_ method is particularly useful for simulating the various enhancements Grails adds to domain classes. However, there are some domain class capabilities, such as criteria queries and the new [named queries][2], that can't really be simulated by _mockDomain_.

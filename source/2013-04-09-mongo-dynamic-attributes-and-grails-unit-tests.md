@@ -2,7 +2,7 @@
 title: 'Mongo dynamic attributes and Grails unit tests'
 date: 2013-04-09T20:35:28+0100
 tags: mongo, gorm, testing
-alias: post/47556649498/mongo-dynamic-attributes-and-grails-unit-tests
+alias: post/47556649498/mongo-dynamic-attributes-and-grails-unit-tests/
 ---
 
 When using *Mongo DB* with *GORM* it's possible to assign to dynamic attributes of a domain class. However, you'll find that when you write unit tests for code that uses this feature it isn't supported. It's easy to emulate, though.

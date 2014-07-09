@@ -2,7 +2,7 @@
 title: 'Testing Grails Apps With Selenium-RC'
 date: 2009-09-14T16:00:00+0100
 tags: selenium, testing, grails plugins
-alias: post/42902592328/testing-grails-apps-with-selenium-rc
+alias: post/42902592328/testing-grails-apps-with-selenium-rc/
 ---
 
 I [mentioned in my last post][1] that I'd started to think we were going about [Selenium][2] testing all wrong. For years I've been writing Selenium tests using the [Selenium IDE][3], so the tests are in HTML files. When doing pre-commit testing and on CI the tests are run with the `HtmlTestRunner`. This technique is fine and well - developing tests with the IDE is fast and they can be easily worked on an re-tested in the IDE until they are correct. However, some things have always bothered me and Adam Goucher's thoughts on [the Selenium Value Chain][4] crystallised some of those suspicions.

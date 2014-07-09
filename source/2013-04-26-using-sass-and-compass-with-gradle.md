@@ -2,7 +2,7 @@
 title: 'Using SASS and Compass with Gradle'
 date: 2013-04-26T13:58:00+0100
 tags: gradle, sass
-alias: post/48926142330/using-sass-and-compass-with-gradle
+alias: post/48926142330/using-sass-and-compass-with-gradle/
 ---
 
 I recently started helping with the [Ratpack][13] website. It is (or will be) a Ratpack app & built with Gradle. I started prototyping with a simple webapp created with [Yeoman][4] and using [SASS][7] and [Compass][8] for authoring CSS. When I migrated the work-in-progress into the [*ratpack-site* application][5] I initially used [Ted Naleid's method][6] of calling Yeoman's [Grunt][14] tasks from Gradle. Unfortunately this meant there were rather a lot of build dependencies. In order to build the app you would need Node.js, Ruby and the Compass gem installed. Peter Ledbrook pointed out this could frustrate potential contributors & Marcin Erdmann [proved an example][1] of what he meant. Clearly I needed to simplify.

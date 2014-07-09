@@ -2,7 +2,7 @@
 title: 'Jerry: a jQuery like API for DOM parsing'
 date: 2012-10-28T14:36:00+0000
 tags: jerry, java, testing
-alias: post/41774782052/jerry-a-jquery-like-api-for-dom-parsing
+alias: post/41774782052/jerry-a-jquery-like-api-for-dom-parsing/
 ---
 
 When unit testing things that produce HTML output (such as some Grails taglibs) there are some common pitfalls. Comparing large chunks of markup with an expected string is very brittle; whitespace and attribute ordering becomes significant. Often people end up using regular expressions or assertions like `assert output.contains('<div id="foo">')`. Whilst it may be a bit more maintainable this doesn't really test correct DOM structure which is often important and again, attribute order can be a problem.

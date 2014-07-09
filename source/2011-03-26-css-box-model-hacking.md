@@ -2,7 +2,7 @@
 title: 'CSS box model hacking'
 date: 2011-03-26T16:25:00+0000
 tags: css
-alias: post/42903212159/css-box-model-hacking
+alias: post/42903212159/css-box-model-hacking/
 ---
 
 Want to make an HTML element fill 100% of its parent's width but also give it a border and/or some padding? Since the width of an element is _exclusive_ of its border and padding this can be a pain. However there's a fairly simple CSS solution that works cross-browser.

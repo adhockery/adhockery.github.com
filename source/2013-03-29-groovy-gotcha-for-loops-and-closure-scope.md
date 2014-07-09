@@ -2,7 +2,7 @@
 title: 'Groovy gotcha: for loops and closure scope'
 date: 2013-03-29T12:30:00+0000
 tags: groovy
-alias: post/46587122020/groovy-gotcha-for-loops-and-closure-scope
+alias: post/46587122020/groovy-gotcha-for-loops-and-closure-scope/
 ---
 
 You probably know that Groovy closures retain information about the scope in which they were created. The closure body can refer to values that were in scope where the closure was declared. There is a gotcha here that has bitten me a few times, though. That's when closures are created in a `for` loop.

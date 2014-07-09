@@ -2,7 +2,7 @@
 title: 'Why do Strings behave like a Collection?'
 date: 2009-11-21T14:17:00+0000
 tags: groovy
-alias: post/42902683438/why-do-strings-behave-like-a-collection
+alias: post/42902683438/why-do-strings-behave-like-a-collection/
 ---
 
 Mostly I love Groovy but every now and then some behaviour gets on my nerves. For example, why do the iterator methods on String behave as though it was a collections of characters rather than an Object? If I define a method with a dynamic-typed parameter like:

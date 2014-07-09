@@ -2,7 +2,7 @@
 title: 'Groovy & the public keyword'
 date: 2013-02-17T07:23:32+0000
 tags: groovy
-alias: post/43295812776/groovy-the-public-keyword
+alias: post/43295812776/groovy-the-public-keyword/
 ---
 
 One of the first things you learn in Groovy is that unlike Java `public` is the default scope for properties and methods declared on classes. Most developers get into the habit of simply omitting the `public` keyword everywhere. But, is there any situation where it's the right thing to use? Actually, yes.

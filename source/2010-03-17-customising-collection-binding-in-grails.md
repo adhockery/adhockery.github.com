@@ -2,7 +2,7 @@
 title: 'Customising collection binding in Grails'
 date: 2010-03-17T06:53:00+0000
 tags: data binding
-alias: post/42902880093/customising-collection-binding-in-grails
+alias: post/42902880093/customising-collection-binding-in-grails/
 ---
 
 Following up on my earlier post about [using custom `PropertyEditor` implementations to bind association properties][1] I started looking into the options for custom binding one-to-many associations.

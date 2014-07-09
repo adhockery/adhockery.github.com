@@ -2,7 +2,7 @@
 title: 'Acyclic relationship validation in Grails'
 date: 2010-06-29T16:27:00+0100
 tags: gorm
-alias: post/42903020788/acyclic-relationship-validation-in-grails
+alias: post/42903020788/acyclic-relationship-validation-in-grails/
 ---
 
 A common domain class use-case is for a self-referential relationship that must not be circular (a [directed acyclic graph][1]). For example, a _Person_ class may have a _parent_ property that is a many-to-one relationship with another _Person_ instance. However a given _Person_ cannot be his own _parent_ or ancestor.

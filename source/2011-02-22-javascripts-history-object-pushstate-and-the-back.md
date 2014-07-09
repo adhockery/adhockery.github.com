@@ -2,7 +2,7 @@
 title: 'JavaScript''s history object, pushState and the back button'
 date: 2011-02-22T22:31:00+0000
 tags: chrome, html5, safari, webkit, javascript
-alias: post/42903159156/javascripts-history-object-pushstate-and-the-back
+alias: post/42903159156/javascripts-history-object-pushstate-and-the-back/
 ---
 
 I'm not sure if it's the immaturity of the browser support or my general uselessness but I've been having some trouble with the JavaScript _history_ API.

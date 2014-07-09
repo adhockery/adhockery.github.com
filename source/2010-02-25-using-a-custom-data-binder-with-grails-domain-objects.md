@@ -2,7 +2,7 @@
 title: 'Using a custom data binder with Grails domain objects'
 date: 2010-02-25T13:04:00+0000
 tags: data binding, spring, gorm
-alias: post/42902830038/using-a-custom-data-binder-with-grails-domain-objects
+alias: post/42902830038/using-a-custom-data-binder-with-grails-domain-objects/
 ---
 
 Yesterday I read a [post by Stefan Armbruster][1] on how to register a custom data binder to lookup Grails domain objects by any arbitrary property. I wanted to go a little further so that I could not only bind existing domain instances but create new ones as well.

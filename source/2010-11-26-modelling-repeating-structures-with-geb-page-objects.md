@@ -2,7 +2,7 @@
 title: 'Modelling repeating structures with Geb page objects'
 date: 2010-11-26T00:17:00+0000
 tags: geb, testing
-alias: post/42903103830/modelling-repeating-structures-with-geb-page-objects
+alias: post/42903103830/modelling-repeating-structures-with-geb-page-objects/
 ---
 
 [Geb][1] is the hot new thing in Grails functional testing. One of its most powerful features is the concise DSL for defining page objects. The reasons for using page objects are [well][2] [enumerated][3] [elsewhere][4] but the basic point is to allow your tests to interact with pages in a manner agnostic of the detail of their structure. This is both practical (you can change markup structure without having to fix numerous tests that only fail because they were tightly coupled to that structure) and aesthetic (your tests read more like a user's interaction with the page - the _what_ rather than the _how_).

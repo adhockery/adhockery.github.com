@@ -2,7 +2,7 @@
 title: 'Selenium RC plugin v1.0'
 date: 2010-05-03T07:59:00+0100
 tags: selenium, testing, grails plugins
-alias: post/42902932580/selenium-rc-plugin-v1-0
+alias: post/42902932580/selenium-rc-plugin-v1-0/
 ---
 
 The Selenium RC plugin for Grails has hit version 1.0 with:

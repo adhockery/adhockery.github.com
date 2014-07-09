@@ -2,7 +2,7 @@
 title: 'Grails & front end tools'
 date: 2012-12-20T21:23:00+0000
 tags: grails, css, javascript, grunt, codekit, handlebars
-alias: post/41774804245/grails-and-front-end-tools
+alias: post/41774804245/grails-and-front-end-tools/
 ---
 
 Last week was the London Groovy & Grails Exchange 2012 where I gave a talk called [Grails for hipsters][grailsforhipsters] about integrating Grails apps with some of the buzziest current tools & techniques. Part of what I talked about was my approach to handling pre-processed front-end resources in Grails apps. In [the demo app][hipsteroid] for my talk I used [LESS][less] & [CoffeeScript][coffeescript] but everything I discusses applies equally to [SASS][sass], [Stylus][stylus], [TypeScript][typescript], etc.

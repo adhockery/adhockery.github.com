@@ -10,3 +10,6 @@ gem "builder", "~> 3.0"
 
 # Asciidoc support
 gem "asciidoctor", "~> 0.1.4"
+
+# Allow aliasing of old post URLs
+gem "middleman-alias"

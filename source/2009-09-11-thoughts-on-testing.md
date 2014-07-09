@@ -2,7 +2,7 @@
 title: 'Thoughts on Testing'
 date: 2009-09-11T02:56:00+0100
 tags: testing
-alias: post/42902576958/thoughts-on-testing
+alias: post/42902576958/thoughts-on-testing/
 ---
 
 These are some of the practices I try to live by when writing test coverage. Some of the detail may be [Grails][1]-centric since that's been my development platform of choice for the last couple of years, but the gist of the points is generally applicable.

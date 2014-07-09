@@ -2,7 +2,7 @@
 title: 'Why would I ever want to disable the L2 cache?'
 date: 2009-03-02T17:28:00+0000
 tags: caching, hibernate, gorm
-alias: post/42902311928/why-would-i-ever-want-to-disable-the-l2-cache
+alias: post/42902311928/why-would-i-ever-want-to-disable-the-l2-cache/
 ---
 
 This question came up when pairing last week. We were going through our code-base adding the [cache directive][1] to a bunch of our domain classes. Grails is all about sensible defaults and it seems slightly odd that the level 2 cache is configured by default in `DataSource.groovy` but not actually _used_ unless `cache(true)` is added to the mapping closure in each domain class. I wonder if anyone has any ideas why it might ever be a bad idea to use the L2 cache?

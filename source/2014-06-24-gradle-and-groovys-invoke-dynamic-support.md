@@ -2,7 +2,7 @@
 title: 'Gradle and Groovy''s Invoke Dynamic support'
 date: 2014-06-24T15:32:00+0100
 tags: groovy, gradle, jdk7, invokedynamic
-alias: post/89759686171/gradle-and-groovys-invoke-dynamic-support
+alias: post/89759686171/gradle-and-groovys-invoke-dynamic-support/
 ---
 
 Since version 2.0 the Groovy distribution has included an alternate artifact that enables [invoke dynamic](http://docs.oracle.com/javase/7/docs/technotes/guides/vm/multiple-language-support.html#invokedynamic) support.

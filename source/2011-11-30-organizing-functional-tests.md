@@ -2,7 +2,7 @@
 title: 'Organizing functional tests'
 date: 2011-11-30T23:27:00+0000
 tags: testing
-alias: post/41774546011/organizing-functional-tests
+alias: post/41774546011/organizing-functional-tests/
 ---
 
 I posted a few days ago [about functional testing & some of my frustrations][2], focusing mainly on the technical issues. I did touch on test organization in terms of modelling behaviour rather than page structure. As [Luke Daley has pointed out][3] the two aren't fundamentally in opposition and I've been giving this some further thought.

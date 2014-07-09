@@ -2,7 +2,7 @@
 title: 'Semantic color names in LESS and Sass stylesheets'
 date: 2013-07-09T14:28:00+0100
 tags: sass, less, dry
-alias: post/54998201300/semantic-color-names-in-less-and-sass-stylesheets
+alias: post/54998201300/semantic-color-names-in-less-and-sass-stylesheets/
 ---
 
 Most people using Sass or LESS will define variables for the palette of colors in their page. Something like:

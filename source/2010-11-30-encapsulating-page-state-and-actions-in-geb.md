@@ -2,7 +2,7 @@
 title: 'Encapsulating page state and actions in Geb'
 date: 2010-11-30T13:47:00+0000
 tags: geb, testing
-alias: post/42903120929/encapsulating-page-state-and-actions-in-geb
+alias: post/42903120929/encapsulating-page-state-and-actions-in-geb/
 ---
 
 Geb _Page_ and _Module_ classes are just regular Groovy classes. In addition to the _content_ DSL you can declare methods just as you would in any other class. Those methods can use content properties directly. This is really useful for encapsulating state and actions in a reusable way.

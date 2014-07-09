@@ -2,7 +2,7 @@
 title: 'Optional tag bodies'
 date: 2012-01-10T19:56:00+0000
 tags: grails
-alias: post/41774586420/optional-tag-bodies
+alias: post/41774586420/optional-tag-bodies/
 ---
 
 Sometimes you may want to implement a Grails GSP tag that has an optional body. Grails tag closures take one or two arguments, the first a map of the attributes passed to the tag the second a _Closure_ representing the tag body. Even if the tag was not invoked with a body the second argument is not _null_ so doing this does not work:

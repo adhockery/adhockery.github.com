@@ -2,7 +2,7 @@
 title: 'Testing Angular forms with Casper'
 date: 2012-09-22T14:27:00+0100
 tags: casperjs, angularjs, testing
-alias: post/41774715101/testing-angular-forms-with-casper
+alias: post/41774715101/testing-angular-forms-with-casper/
 ---
 
 When testing an [Angular](http://angularjs.org) application using [Casper](http://casperjs.org/) I found that the binding between inputs and model didn't seem to be happening when I filled in form fields. I used Casper's [`fill`](http://casperjs.org/api.html#casper.fill) method but found that the Angular form validation was rejecting any required fields as though they were still blank. With some debugging I was able to see that the `$scope` variables indeed weren't getting updated.

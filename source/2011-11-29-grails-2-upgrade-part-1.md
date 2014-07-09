@@ -2,7 +2,7 @@
 title: 'Upgrading to Grails 2: Part 1'
 date: 2011-11-29T00:07:00+0000
 tags: grails
-alias: post/41774508756/grails-2-upgrade-part-1
+alias: post/41774508756/grails-2-upgrade-part-1/
 ---
 
 We've recently spent some time ensuring that our application is forwards-compatible with the upcoming Grails 2. Our app is broadly split into the application itself and a large plugin that forms the core of our [CMS][cms]. We upgraded the plugin first as it contains the core domain classes but is also a slightly smaller task to tackle. I'll write up our findings when we've completed upgrading the application itself in a follow-up to this post.

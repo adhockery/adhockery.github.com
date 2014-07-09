@@ -2,7 +2,7 @@
 title: 'LESS with Modernizr and media queries'
 date: 2012-10-15T12:56:00+0100
 tags: less, modernizr, responsive
-alias: post/41774765950/less-with-modernizr-and-media-queries
+alias: post/41774765950/less-with-modernizr-and-media-queries/
 ---
 
 One of the main advantages of [LESS][less] is [nesting](http://lesscss.org/#-nested-rules) rules for components in a structure that mirrors the DOM. However, when using [Modernizr][modernizr] you create override rules based on classes present on the root `html` tag. It would be nice to declare those override rules alongside the other rules for the same components. The same concern applies when using media queries. Luckily, there _is_ a way to do this.

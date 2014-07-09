@@ -2,7 +2,7 @@
 title: 'Auditing data with the Acegi plugin and Grails upgrade pain'
 date: 2009-07-10T09:02:00+0100
 tags: acegi, events, grails upgrade, hibernate
-alias: post/42902527650/auditing-data-with-the-acegi-plugin-and-grails-upgrade
+alias: post/42902527650/auditing-data-with-the-acegi-plugin-and-grails-upgrade/
 ---
 
 I'm in the middle of trying to upgrade our app (again). We're running on Grails 1.1 now and I'm attempting to get us to 1.1.1 and from there to 1.2-M1. As Marc Palmer [points out][1] the more people using it the more likely it is that 1.2 final will be rock solid.

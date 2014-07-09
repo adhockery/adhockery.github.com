@@ -2,7 +2,7 @@
 title: 'LESS vs SASS variable scopes'
 date: 2012-10-16T13:14:00+0100
 tags: less, sass
-alias: post/41774744757/less-vs-sass-variable-scopes
+alias: post/41774744757/less-vs-sass-variable-scopes/
 ---
 
 Google for something like _"LESS vs SASS"_ and you will find the general consensus seems to be that SASS comes out ahead. Take a look at [this summary](http://wrangl.com/sass-v-less), for example.

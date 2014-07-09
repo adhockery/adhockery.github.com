@@ -2,7 +2,7 @@
 title: 'Hacking on Grails scaffolding templates'
 date: 2009-06-13T05:51:00+0100
 tags: css, scaffolding
-alias: post/42902452839/hacking-on-grails-scaffolding-templates
+alias: post/42902452839/hacking-on-grails-scaffolding-templates/
 ---
 
 Grails scaffolding is a fantastic mechanism for getting you up and running quickly. I love the fact that you can provide your own implementation of _some_ controller actions or views and scaffolding will just fill in the gaps. That way you can start hand-crafting things when complexity increases past a certain point but still have Grails do a bunch of work for you.

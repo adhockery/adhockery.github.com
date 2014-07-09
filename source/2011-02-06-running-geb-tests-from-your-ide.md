@@ -2,7 +2,7 @@
 title: 'Running Geb tests from your IDE'
 date: 2011-02-06T15:02:00+0000
 tags: geb, testing, intellij
-alias: post/42903139504/running-geb-tests-from-your-ide
+alias: post/42903139504/running-geb-tests-from-your-ide/
 ---
 
 A frequent complaint about functional testing in Grails is that the start up / shut down cycle time of the app makes prototyping a functional test prohibitive. There has been some recent progress in this are with Luke Daley's [Functional test development plugin][1] but it would be really nice to be able to just run functional tests from inside your IDE in the same way as a similar unit test.

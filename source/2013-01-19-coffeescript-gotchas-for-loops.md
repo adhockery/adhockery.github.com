@@ -2,7 +2,7 @@
 title: 'CoffeeScript Gotchas: for loops'
 date: 2013-01-19T17:20:00+0000
 tags: coffeescript
-alias: post/41774818353/coffeescript-gotchas-for-loops
+alias: post/41774818353/coffeescript-gotchas-for-loops/
 ---
 
 Title: CoffeeScript Gotchas: for loops

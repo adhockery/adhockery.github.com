@@ -2,7 +2,7 @@
 title: 'Data-driven variation with Spock'
 date: 2011-08-18T21:42:00+0100
 tags: spock, css, progressive enhancement, resources, i18n, spring
-alias: post/42903265561/data-driven-variation-with-spock
+alias: post/42903265561/data-driven-variation-with-spock/
 ---
 
 Spock's `where:` block is commonly used with a [data table][1] but can also be driven by any `Iterable` data. It's worth bearing in mind that the data driving the `where:` block doesn't have to be hardcoded, it can be dynamic. For example, today we implemented a spec to ensure that every table in our database schema has a primary key (because it's required by [HA-JDBC][2] and not automatically added by GORM on join tables).

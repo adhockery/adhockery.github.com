@@ -2,7 +2,7 @@
 title: 'Grails Spring Events Plugin'
 date: 2010-05-28T13:27:00+0100
 tags: asynchronous, events, spring, grails plugins
-alias: post/42902966203/grails-spring-events-plugin
+alias: post/42902966203/grails-spring-events-plugin/
 ---
 
 Following on from [my previous post][1] I've developed a Grails plugin that packages the asynchronous events behaviour up and adds some extra useful functionality.

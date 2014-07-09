@@ -2,7 +2,7 @@
 title: 'Testing with embedded Vert.x'
 date: 2012-05-09T00:47:00+0100
 tags: vertx, testing, spock
-alias: post/41774683415/testing-with-embedded-vertx
+alias: post/41774683415/testing-with-embedded-vertx/
 ---
 
 I blogged recently about [using Spock to test APIs that use callbacks][prevblog]. The post came out of some work I've been doing with [Vert.x][vertx]. Although the tests I wrote worked, I found them rather mock-heavy and felt I wasn't using the Vert.x API as idiomatically as I could have been.

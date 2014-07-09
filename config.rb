@@ -29,6 +29,8 @@ activate :blog do |blog|
   # blog.page_link = "page/{num}"
 end
 
+activate :alias
+
 page "/feed.xml", layout: false
 
 ###

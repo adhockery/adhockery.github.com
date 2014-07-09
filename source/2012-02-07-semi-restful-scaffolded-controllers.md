@@ -2,7 +2,7 @@
 title: 'Semi-RESTful Scaffolded Controllers'
 date: 2012-02-07T10:56:00+0000
 tags: grails, rest
-alias: post/41774629876/semi-restful-scaffolded-controllers
+alias: post/41774629876/semi-restful-scaffolded-controllers/
 ---
 
 The default Grails scaffolded controllers use a _create_ action to render a form and a _save_ action as the target the form will _POST_ to. If the _save_ action succeeds it redirects to _show_ and if it fails due to constraint violations it re-renders the form. The same applies to editing with the _edit_ and _update_ actions.

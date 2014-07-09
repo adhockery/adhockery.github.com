@@ -2,7 +2,7 @@
 title: 'Hibernate POGOs, Immutability and Encapsulation'
 date: 2009-03-01T11:21:00+0000
 tags: hibernate, gorm, immutable
-alias: post/42902297807/hibernate-pogos-immutability-and-encapsulation
+alias: post/42902297807/hibernate-pogos-immutability-and-encapsulation/
 ---
 
 I had a confusing experience this morning. I'm working on a simple web based game as a learning exercise.

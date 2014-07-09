@@ -2,7 +2,7 @@
 title: 'Slides from GGUG'
 date: 2009-11-21T06:45:00+0000
 tags: selenium, ggug, grails plugins
-alias: post/42902666554/slides-from-ggug
+alias: post/42902666554/slides-from-ggug/
 ---
 
 I gave a talk last night at the [London Groovy & Grails User Group][2] about the [Selenium RC plugin][3] and how to use it. I pitched the talk assuming that people were somewhat familiar with [Selenium][4] and had probably used the [Selenium IDE][5]. I'm not sure if that was the right way to go but the talk went pretty well and people seemed interested in what I had to say. I ended up talking a lot about the [page object pattern][6] and how awesome it is for building manageable suites of Selenium tests.

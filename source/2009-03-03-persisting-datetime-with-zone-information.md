@@ -2,7 +2,7 @@
 title: 'Persisting DateTime with zone information'
 date: 2009-03-03T13:31:00+0000
 tags: hibernate, gorm, joda time
-alias: post/42902330676/persisting-datetime-with-zone-information
+alias: post/42902330676/persisting-datetime-with-zone-information/
 ---
 
 I was stuck a while ago trying to figure out how to map [`PersistentDateTimeTZ`][1] in a GORM class. It's an implementation of Hibernate's [`UserType`][2] interface that persists a Joda [`DateTime`][3] value using 2 columns - one for the actual timestamp and one for the time zone. The `DateTime` class contains time zone information but a SQL timestamp column is time zone agnostic so you can lose data when the value is saved (the same exact problem exists when persisting `java.util.Date` values).

@@ -2,7 +2,7 @@
 title: 'Rendering Grails Joda-Time date inputs cross browser with HTML5, jQuery and Modernizr'
 date: 2010-07-10T14:30:00+0100
 tags: html5, joda time, jquery
-alias: post/42903051745/rendering-grails-joda-time-date-inputs-cross-browser
+alias: post/42903051745/rendering-grails-joda-time-date-inputs-cross-browser/
 ---
 
 Yesterday I released a new version of the Grails [Joda Time plugin][3]  that includes support for the various new [date and time input types](http://diveintohtml5.org/forms.html#type-date) in the HTML5 standard. Right now only [Opera][4] supports these types with proper date-picker type controls, the other browsers just render them as text inputs. However this doesn't mean you can't or shouldn't start using them right away. There's a very handy JavaScript library called [Modernizr][5] that you can use to detect the features supported by the client's browser and render alternatives using script. In this post I'm going to walk through how to combine the Joda-Time plugin, Modernizr and the [jQuery datepicker][6] to render an HTML5 _date_ input field that will bind to a _LocalDate_ property on a domain object.

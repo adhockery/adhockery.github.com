@@ -2,7 +2,7 @@
 title: 'Stubbing access to the g:message tag in unit tests'
 date: 2010-09-24T13:48:00+0100
 tags: i18n, testing
-alias: post/42903086163/stubbing-access-to-the-g-message-tag-in-unit-tests
+alias: post/42903086163/stubbing-access-to-the-g-message-tag-in-unit-tests/
 ---
 
 Grails controllers and tag libs can access any tag as though it were a method. The most common use for this is probably accessing i18n messages via the `[g:message][1]` tag. However, because tag access is magic wired up by Grails it's not available in unit tests without some effort.

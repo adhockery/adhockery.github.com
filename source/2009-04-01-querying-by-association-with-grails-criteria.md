@@ -2,7 +2,7 @@
 title: 'Querying By Association With Grails Criteria'
 date: 2009-04-01T12:46:00+0100
 tags: criteria queries, gorm, hibernate
-alias: post/42902379524/querying-by-association-with-grails-criteria
+alias: post/42902379524/querying-by-association-with-grails-criteria/
 ---
 
 A common requirement is to select all instances of a domain class where one of its many-to-many associations contains a particular instance of another domain class. Consider these domain classes where a `Ship` has a crew composed of `Pirate`s and any particular `Pirate` can be a part of the crew of several `Ship`s:

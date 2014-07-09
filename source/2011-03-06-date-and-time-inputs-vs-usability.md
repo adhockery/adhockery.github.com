@@ -2,7 +2,7 @@
 title: 'Date and time inputs vs. usability'
 date: 2011-03-06T20:08:00+0000
 tags: ux, html5, forms
-alias: post/42903176615/date-and-time-inputs-vs-usability
+alias: post/42903176615/date-and-time-inputs-vs-usability/
 ---
 
 Form input controls for date/time values have always been problematic. The more I experiment with different options, the more I think there is no one-size-fits-all solution.

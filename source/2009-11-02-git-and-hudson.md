@@ -2,7 +2,7 @@
 title: 'Git and Hudson'
 date: 2009-11-02T10:48:00+0000
 tags: ubuntu, hudson, git
-alias: post/42902614843/git-and-hudson
+alias: post/42902614843/git-and-hudson/
 ---
 
 I just encountered a rather annoying problem when running [Hudson][1] as a service on [Ubuntu][2]. I was getting the following exception whenever the build checked code out of [GitHub][3]:

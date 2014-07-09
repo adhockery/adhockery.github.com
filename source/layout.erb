@@ -14,7 +14,7 @@
     </main>
 
     <nav>
-      <h2>Recent Articles</h2>
+      <h2>Recent posts</h2>
       <ol>
         <% blog.articles[0...10].each do |article| %>
           <li><%= link_to article.title, article %> <span><%= article.date.strftime('%b %e') %></span></li>

@@ -1,0 +1,51 @@
+---
+title: 'LESS vs SASS variable scopes'
+date: 2012-10-16T13:14:00+0100
+tags: less, sass
+alias: post/41774744757/less-vs-sass-variable-scopes
+---
+
+Google for something like _"LESS vs SASS"_ and you will find the general consensus seems to be that SASS comes out ahead. Take a look at [this summary](http://wrangl.com/sass-v-less), for example.
+
+I'm not going to argue that in some respects SASS isn't more powerful but there's one particular thing - variable scoping - that I think LESS handles better.
+
+<!-- more -->
+
+In SASS variables are global; declared once and changed by any subsequent declaration. For example:
+
+	#!scss
+	$color: #000;
+
+	header {
+		color: $color;
+	}
+
+	article {
+		$color: #333;
+		color: $color;
+	}
+
+	footer {
+		color: $color;
+	}
+
+This will compile to:
+
+	#!css
+	header { color: #000; }
+	article { color: #333; }
+	footer { color: #333; }
+
+The re-declaration of `$color` inside the `article` changes the value of the original `$color` variable and any references after the `article` block ends will get the new value.
+
+In LESS things are a little different. The equivalent code (I won't bother to reproduce it here, just replace the `$` symbols with `@` in the SASS example) would compile to this CSS:
+
+	#!css
+	header { color: #000; }
+	article { color: #333; }
+	footer { color: #000; }
+
+The re-declaration of `@color` in the `article` block is treated as a scope local override. At the end of the `article` block it drops out of scope and references to `@color` will use the original declaration.
+
+Personally, I think the LESS scoping rules are much more useful. I frequently use a block-local override for a variable but I can't imagine ever finding the SASS approach useful. CSS is a declarative langage and at a macro scale order isn't (or shouldn't be) important. I expect to be able to re-order the declarations and have them produce the same result. Yes there are exceptions to this, for example CSS rules that conflict with each other (don't do that, then) and the fact that variables must be declared before being used (to me a natural exception).
+

@@ -1,0 +1,91 @@
+---
+title: 'Getting started with Angular unit tests'
+date: 2013-01-20T05:54:00+0000
+tags: testing, angularjs, jasmine, coffeescript
+alias: post/41774841006/getting-started-with-angular-unit-tests
+---
+
+I've been pretty enthusiastic about [Angular](http://angularjs.org/) for a while now but although I was encouraged by the consideration given to testing hadn't really tried unit testing my Angular components. I've been using [Casper](http://casperjs.org/) to test end-to-end which has been good enough for the experimental stuff I'd been doing with Angular. When I recently started working on a _real_ app with a fairly complex Angular controller it felt like I needed to define the logic with some fine-grained unit tests.
+
+<!-- more -->
+
+Although I'm very familiar with [Jasmine](http://pivotal.github.com/jasmine/) I wasn't quite sure where to start when using it to test Angular components. The Angular docs are a mixed bag, in places very thorough and in others a little lacking.
+
+The application I'm working on has a JavaScript file that defines the _[module](http://docs.angularjs.org/api/angular.module)_ and routing:
+
+    #!javascript
+    var myApp = angular.module('myApp', [])
+
+Then the controller I want to write tests for is defined on that module in another .js file:
+
+    #!javascript
+    myApp.controller('MyController', function($scope) {
+
+        // ... controller code
+
+    });
+
+All the unit test examples I could find had controllers that were straightforward JavaScript classes rather than being constructed in this way. It wasn't clear to me how I could construct a controller instance in the test.
+
+After some false starts I got going. I load all the following:
+
+* `angular.js`
+* `angular-mocks.js`
+* `app.js` (my module definition and routing)
+* `my-controller.js` (the controller class itself)
+
+In the test itself I then have `beforeEach` steps that use [`angular.mock.module`](http://docs.angularjs.org/api/angular.mock.module) to set up the module and [`angular.mock.inject`](http://docs.angularjs.org/api/angular.mock.inject) to wire up the controller with a scope (and I guess any other mock dependencies as I add them).
+
+    #!javascript
+    describe('MyController', function() {
+
+      beforeEach(angular.mock.module('myApp'));
+
+      beforeEach(angular.mock.inject(function($rootScope, $controller) {
+        this.scope = $rootScope.$new();
+        $controller('MyController', {
+          $scope: this.scope
+        });
+      }));
+
+    });
+
+For brevity's sake you can omit the `angular.mock` in front of `module` and `inject` as they are also attached to `window` for convenience.
+
+In the _inject_ function I'm creating a new [_Scope_](http://docs.angularjs.org/api/ng.$rootScope.Scope) derived from the `$rootScope` provided by the mock injector and assigning it to a property on the spec itself so I can refer to it later. Then I create the controller using the [`$controller`](http://docs.angularjs.org/api/ng.$controller) service and wire the _Scope_ into it.
+
+After that writing the tests themselves is proving to be pretty simple. I can directly access `this.scope` to set or get values and call functions defined by the controller.
+
+I'm running the tests using [Testem](https://github.com/airportyh/testem) using the following config:
+
+    #!yaml
+    framework: jasmine
+    before_tests: coffee -c test/unit/*.coffee
+    src_files:
+    - app/scripts/app.js
+    - app/scripts/controllers/my-controller.js
+    - test/unit/*.coffee
+    serve_files:
+    - app/scripts/vendor/angular.min.js
+    - test/vendor/angular-mocks.js
+    - app/scripts/app.js
+    - app/scripts/controllers/my-controller.js
+    - test/unit/*.js
+    on_exit: find test/unit -name "*.js" -exec rm {} \;
+
+As you can see I'm writing the tests in CoffeeScript which I find makes for very readable Jasmine specs. So the test snippet I showed above actually looks like this:
+
+    #!coffeescript
+    describe 'MyController', ->
+
+      beforeEach module('myApp')
+
+      beforeEach inject ($rootScope, $controller) ->
+        @scope = $rootScope.$new()
+        $controller 'MyController',
+          $scope: @scope
+
+Testem automatically compiles the CoffeeScript tests in the `before_tests` step and destroys the generated JavaScript in the `on_exit` step.
+
+Once over the initial confusion about how to initialize things I'm now off & running with writing unit tests.
+

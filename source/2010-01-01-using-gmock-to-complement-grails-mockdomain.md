@@ -1,0 +1,113 @@
+---
+title: 'Using GMock to complement Grails mockDomain'
+date: 2010-01-01T14:33:00+0000
+tags: testing, gmock
+alias: post/42902750567/using-gmock-to-complement-grails-mockdomain
+---
+
+Since Grails 1.1 we've had pretty good [unit testing support][1] via _GrailsUnitTestCase_ and its sub-classes. The _mockDomain_ method is particularly useful for simulating the various enhancements Grails adds to domain classes. However, there are some domain class capabilities, such as criteria queries and the new [named queries][2], that can't really be simulated by _mockDomain_.
+
+<!-- more -->
+
+So assuming we're trying to unit test a controller that uses criteria methods or named queries on a domain class how can we enhance the capabilities of _mockDomain_? One of my favourite Groovy libraries is [GMock][3] which I use in preference to Groovy's built in mock capabilities. One of its really powerful features is the ability to use ['partial mocks'][4], _i.e._ to mock particular methods on a class whilst allowing the rest of the class to continue functioning as normal. This means we can layer a mocked _createCriteria_, _withCriteria_ or named query call on to a domain class that is already enhanced by _mockDomain_.
+
+First off you need to add the GMock dependency to your _BuildConfig.groovy_. Since GMock supports [Hamcrest matchers][5] for matching method arguments you'll probably want those as well:
+
+        dependencies {
+            test "org.gmock:gmock:0.8.0"
+            test "org.hamcrest:hamcrest-all:1.0"
+        }
+
+If you're using an earlier version of Grails you'll need to just grab the jar files and put them in your app's _lib_ directory.
+
+Then in your test case you need to import GMock and Hamcrest classes and add an annotation to allow GMock to work:
+
+        import grails.test.*
+        import org.gmock.*
+        import static org.hamcrest.Matchers.*
+
+        @WithGMock
+        class MyControllerTests extends ControllerUnitTestCase {
+
+Adding criteria and named query methods is now fairly simple:
+
+## Mocking a withCriteria method
+
+        def results = // whatever you want your criteria query to return
+        mock(MyDomain).static.withCriteria(instanceOf(Closure)).returns(results)
+        play {
+            controller.myAction()
+        }
+
+Breaking this example down a little
+
+1. `mock(MyDomain)` establishes a partial mock of the domain class.
+2. `instanceOf(Closure)` uses a Hamcrest _instanceOf_ matcher to assert that the _withCriteria_ method is called with a single _Closure_ argument (the bit with all the criteria in).
+3. `returns(results)` tells the mock to return the specified results which here would be a list of domain object instances.
+
+In this example we're expecting the _withCriteria_ method to be called just once but GMock supports more complex [time matching expressions][6] if the method may be called again.
+
+## Mocking a _createCriteria_ method
+
+The _withCriteria_ method returns results directly but _createCriteria_ is a little more complicated in that it returns a criteria object that has methods such as _list_, _count_ and _get_. To simulate this we'll need to have the mocked _createCriteria_ method return a mocked criteria object.
+
+        def results = // whatever you want your criteria query to return
+        def mockCriteria = mock() {
+            list(instanceOf(Closure)).returns(results)
+        }
+        mock(MyDomain).static.createCriteria().returns(mockCriteria)
+        play {
+            controller.myAction()
+        }
+
+This is only a little more complex than the previous example in that it has the mocked _list_ method on another mock object that is returned by the domain class' _createCriteria_ method. `mock()` provides an un-typed mock object as we really don't care about the type here.
+
+## Mocking a named query
+
+For our purposes named queries are actually pretty similar to _createCriteria_.
+
+        def results = // whatever you want your criteria query to return
+        def mockCriteria = mock() {
+            list(instanceOf(Closure)).returns(results)
+        }
+        mock(MyDomain).static.myNamedQuery().returns(mockCriteria)
+        play {
+            controller.myAction()
+        }
+
+Some other examples:
+
+## Mocking a named query with an argument
+
+        mock(MyDomain).static.myNamedQuery("blah").returns(mockCriteria)
+
+For simple parameters you don't need to use a Hamcrest matcher - a literal is just fine.
+
+## Mocking a _withCriteria_ call using options
+
+You can pass an argument map to _withCriteria_, _e.g._ `withCriteria(uniqueResult: true) { /* criteria */ }` will return a single instance rather than a _List_. To mock this you will need to expect the _Map_ as well as the _Closure_:
+
+        def result = // a single domain object instance
+        mock(MyDomain).static.withCriteria(uniqueResult: true, instanceOf(Closure)).returns(result)
+
+## Mocking criteria that are re-used
+
+It's fairly common in pagination scenarios to call a _list_ and _count_ method on a criteria object. We can just set multiple expectations on the mock criteria object, e.g.
+
+        def mockCriteria = mock() {
+            list(max: 10).returns(results)
+            count().returns(999)
+        }
+        mock(MyDomain).static.myNamedQuery().returns(mockCriteria)
+
+The nice thing about this technique is that it doesn't interfere with any of the enhancements _mockDomain_ makes to the domain class, so the _save_, _validate_, etc. methods will still work as will dynamic finders.
+
+Be aware however, that what we're doing here is _mocking out_ the criteria queries, not testing them! All the interesting stuff inside the criteria closure is being ignored by the mocks and could, of course, be garbage. Named queries are pretty easy to test by having integration test cases for your domain class. Criteria queries beyond a trivial level of complexity should really be encapsulated in service methods or named queries and integration tested there. Of course, GMock then makes an excellent solution for mocking that service method in your controller unit test.
+
+[1]: http://grails.org/doc/latest/guide/single.html#9. Testing
+[2]: http://grails.org/doc/latest/ref/Domain%20Classes/namedQueries.html
+[3]: http://gmock.org/
+[4]: http://gmock.org/documentation/0.8.0#Partial_mock
+[5]: http://code.google.com/p/hamcrest/
+[6]: http://gmock.org/documentation/0.8.0#Time_matching
+

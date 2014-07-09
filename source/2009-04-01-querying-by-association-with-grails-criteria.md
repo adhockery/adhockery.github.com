@@ -1,0 +1,99 @@
+---
+title: 'Querying By Association With Grails Criteria'
+date: 2009-04-01T12:46:00+0100
+tags: criteria queries, gorm, hibernate
+alias: post/42902379524/querying-by-association-with-grails-criteria
+---
+
+A common requirement is to select all instances of a domain class where one of its many-to-many associations contains a particular instance of another domain class. Consider these domain classes where a `Ship` has a crew composed of `Pirate`s and any particular `Pirate` can be a part of the crew of several `Ship`s:
+
+    #!groovy
+    class Ship {
+       static hasMany = [crew: CrewMember]
+       String name
+    }
+
+    class CrewMember {
+       static belongsTo = [ship: Ship]
+       Pirate pirate
+    }
+
+    class Pirate {
+       String name
+    }
+
+How can we use a criteria query to find all the `Ship` instances where a particular `Pirate` is a member of the crew?
+
+<!-- more -->
+
+You might think it's pretty simple, surely:
+
+    #!groovy
+    Ship.withCriteria {
+       crew {
+           eq('pirate', blackbeard)
+       }
+    }
+
+However, this has a curious side-effect. For example:
+
+    #!groovy
+    Ship.withSession {session ->
+       blackbeard = new Pirate(name: 'Blackbeard')
+       jack = new Pirate(name: 'Calico Jack')
+       bart = new Pirate(name: 'Black Bart')
+       [blackbeard, jack, bart]*.save()
+
+       def ship1 = new Ship(name: "Queen Anne's Revenge")
+       ship1.addToCrew new CrewMember(pirate: blackbeard)
+       ship1.addToCrew new CrewMember(pirate: jack)
+
+       def ship2 = new Ship(name: "Royal Fortune")
+       ship2.addToCrew new CrewMember(pirate: blackbeard)
+       ship2.addToCrew new CrewMember(pirate: bart)
+
+       def ship3 = new Ship(name: "The Treasure")
+       ship3.addToCrew new CrewMember(pirate: jack)
+       ship3.addToCrew new CrewMember(pirate: bart)
+
+       [ship1, ship2, ship3]*.save()
+
+       session.flush()
+       session.clear()
+    }
+
+    def blackbeardsShips = Ship.withCriteria {
+       crew {
+           eq('pirate', blackbeard)
+       }
+    }
+    blackbeardsShips.each {
+       println "$it.name: ${it.crew.pirate.name.join(', ')}"
+    }
+
+You might expect the output to be:
+
+    Queen Anne's Revenge: Blackbeard, Calico Jack
+    Royal Fortune: Blackbeard, Black Bart
+
+but it is actually:
+
+    Queen Anne's Revenge: Blackbeard
+    Royal Fortune: Blackbeard
+
+The criteria query has restricted the content of the associations to only the ones matching the `eq('pirate', blackbeard)` criterion. This is quite a problem as it may well not be immediately obvious that it's happened and even using `ships*.refresh()` (which would be a horrible hack, especially if we were likely to get more than a couple of results) doesn't seem to restore the missing entries. I don't think there _is_ any criterion that does a 'contains' type match for a persistent collection. My guess is this problem isn't a Grails thing but a Hibernate thing - Grails' [`HibernateCriteriaBuilder`][1] is a very thin layer over Hibernate itself.
+
+In _this_ example there is an alternative as the association is bi-directional. We can query from the other side of the association:
+
+    #!groovy
+    def blackbeardsShips = CrewMember.withCriteria {
+       projections {
+           property('ship')
+       }
+       eq('pirate', blackbeard)
+    }
+
+If the association wasn't bidirectional this wouldn't be possible and we'd probably have to resort to using HQL to make the query exhibit the correct behaviour.
+
+[1]: http://grails.org/doc/1.1.x/ref/Domain%20Classes/createCriteria.html
+

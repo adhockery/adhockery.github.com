@@ -1,0 +1,95 @@
+---
+title: 'Testing callbacks with Spock mocks'
+date: 2012-05-01T12:50:00+0100
+tags: spock, vertx, testing
+alias: post/41774661851/testing-callbacks-with-spock-mocks
+---
+
+I've been doing some work with [vert.x][vertx] over the last few days and trying to develop components that are test-driven. Like any asynchronous framework rather than having methods that return a value you pass a callback Closure that gets invoked at some point in the future with the result. This makes it tricky to write unit tests that mock out collaborators as you might in a traditional app.
+
+<!-- more -->
+
+For example, a simple REST server that saves some data might make a call like this:
+
+    #!groovy
+    void post(request) {
+        def album = [artist: request.params.artist, title: request.params.title]
+        eventBus.send('mongodb', [action: 'save', collection: 'albums', document: album]) { reply ->
+            if (reply.body.status == 'ok') {
+            	request.response.statusCode = 200
+            	request.response.end 'Updated OK'
+            } else {
+            	request.response.statusCode = 500
+            	request.response.end "Update failed: $reply.body.message"
+            }
+        }
+    }
+
+The the Closure passed to `eventBus.send` will be called once the _save_ action has been completed and depending on the result the correct HTTP status and message will get returned to the client.
+
+In a unit test we might want to use a mock _eventBus_ but we're not calling a method that returns a value; how do we get the mock to invoke the callback? It's not a well documented feature but using a [_Spock_ mock][spockmocks] you can get to the arguments passed to a mocked method using a Closure like this:
+
+    #!groovy
+    void 'the server returns HTTP_OK if the save succeeds'() {
+        given:
+        server.eventBus = Mock(EventBus)
+
+        when: 'the server gets invoked'
+        // for this example let's assume the request has been set up
+        server.post(request)
+
+        then: 'the save is executed'
+        1 * server.eventBus.send(_, _, _) >> { address, params, callback ->
+        	callback([body: [status: 'ok']])
+        }
+
+        and: 'HTTP_OK is returned to the client'
+        request.response.statusCode == 200
+    }
+
+In a real test you'd want to use stricter matching on the mock interaction, but using Spock's `_` wildcard for the final callback parameter is the right thing to do.
+
+What about testing a method that accepts a callback Closure directly? I've found that using a mock works fine there too. Imagine we're writing a test for this method:
+
+    #!groovy
+    void parse(input, Closure callback) {
+        try {
+        	// do some complex processing
+        	callback(status: 'ok', result: output)
+        } catch (e) {
+        	callback(status: 'error')
+        }
+    }
+
+It does some work and then invokes a callback. How can we test that the parameters passed to the callback Closure are correct?
+
+    #!groovy
+    void 'callback is invoked with parse output'() {
+        given:
+        def callback = Mock(Closure)
+
+        when:
+        parser.parse('my input data', callback)
+
+        then:
+        1 * callback.call([status: 'ok', result: 'my expected output'])
+    }
+
+This works pretty well. The only downside is that if `callback` is called with the wrong arguments or not called at all you get the same output in your test results:
+
+    Too few invocations for:
+
+    1 * callback.call([status: 'ok', result: 'my expected output'])   (0 invocations)
+
+For more helpful output you can use a Closure to trap the arguments passed to the callback like this:
+
+    #!groovy
+    then:
+    1 * callback.call(_) >> { args ->
+    	assert args[0].status == 'ok'
+    	assert args[0].result == 'my expected output'
+    }
+
+[vertx]:http://vertx.io/
+[spockmocks]:http://code.google.com/p/spock/wiki/Interactions
+

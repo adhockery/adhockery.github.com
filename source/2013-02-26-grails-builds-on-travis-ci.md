@@ -1,0 +1,40 @@
+---
+title: 'Grails builds on Travis CI'
+date: 2013-02-26T14:08:20+0000
+tags: grails, ci
+alias: post/44061616547/grails-builds-on-travis-ci
+---
+
+[Travis CI][1] is a cloud based continuous integration service. It's a great way to automate test runs for projects hosted on GitHub. Since the Grails wrapper was added to Grails in version 2.1 you can use Travis to build Grails apps.
+
+<!-- more -->
+
+Travis is configured with a _.travis.yml_ file in the root of your project. A simple configuration might look like this
+
+    #!yaml
+    language: groovy
+    script: ./grailsw refresh-dependencies
+         && ./grailsw test-app
+         
+The `refresh-dependencies` command ensures that plugins and libraries are installed and available on the classpath when `test-app` runs. Without this you may find that `test-app` will fail if your app contains compile time references to plugins or libraries.
+
+You can chain together as many commands as you like in the `script` section. For example one of my Grails plugins has the following configuration:
+
+    #!yaml
+    language: groovy
+    jdk:
+      - oraclejdk7
+    branches:
+      only:
+        - master
+    script: ./grailsw refresh-dependencies
+      && ./grailsw "test-app unit:"
+      && cd test/apps/gson-test
+      && ./grailsw refresh-dependencies
+      && ./grailsw "test-app functional:"
+      
+This runs the plugin's unit tests then changes directory into a test application and runs (headless) functional tests.
+
+Travis will email you when builds fail and by default runs against all branches. In the example above I've configured it to only run when changes are pushed to *master* so that I can push unfinished changes to other branches without affecting the project's build status.
+
+[1]:https://travis-ci.org/

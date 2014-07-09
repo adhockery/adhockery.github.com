@@ -1,0 +1,62 @@
+---
+title: '@CompileStatic and polymorphic method dispatch'
+date: 2014-07-08T07:11:00+0100
+tags: groovy, compilestatic, typechecked
+alias: post/91127019156/compilestatic-and-polymorphic-method-dispatch
+---
+
+I'm a big fan of Groovy's `@CompileStatic` feature – so much so that I've updated the _Groovy class_ template in IntelliJ IDEA to use it by default. I should stress I don't do this because I believe non-statically compiled Groovy to be slow – it isn't.
+
+Recently [Peter Ledbrook reminded me of one drawback](https://twitter.com/pledbrook/status/475986668840050688) which is that method dispatch is statically bound when using `@CompileStatic` like it is in Java. This means that the behavior of calling polymorphic methods can change when argument types are not known at compile time.
+
+<!-- more -->
+
+Here's a simple example. What will this code print?
+
+    class Categorizer {
+
+      void accept(String s) { println "String: '$s'" }
+      void accept(Number n) { println "Number: $n" }
+      void accept(Object o) { println "Object: $o" }
+      
+      void accept(Object... objects) {
+        objects.each {
+          accept(it)
+        }
+      }
+
+    }
+
+    new Categorizer().accept(
+      "a", 
+      "${'b'}", 
+      1, 
+      true, 
+      ["c", "d", 2] as Object[]
+    )
+    
+This is straight up dynamic Groovy so we get this:
+
+    String: 'a'
+    String: 'b'
+    Number: 1
+    Object: true
+    String: 'c'
+    String: 'd'
+    Number: 2
+    
+Dynamically compiled Groovy uses runtime method dispatch meaning that the version of `Categorizer.accept` to use for the statement `accept(it)` is determined at runtime based on the type of `it`.
+
+What happens to that output if we add `@CompileStatic` to the `Categorizer` class? The output changes to this:
+
+    Object: a
+    Object: b
+    Object: 1
+    Object: true
+    Object: [c, d, 2]
+
+Now the statement `accept(it)` is bound at _compile time_ and there is no type information about `it`. The compiler's only choice is to bind to `accept(Object)`.
+
+This is completely logical when you understand what the compiler is doing but it's behavior that annoyed me back when I was using Java full time and I much prefer Groovy's runtime dispatch.
+
+There is a compromise, though. Instead of full static compilation you can enable static type checking in the Groovy compiler using `@TypeChecked`. With `@TypeChecked` the call to `accept(it)` is dispatched at runtime and the output is the same as the original.

@@ -1,0 +1,55 @@
+---
+title: 'Grails Gotcha: Beware HEAD requests when rendering binary output in controllers'
+date: 2011-08-26T17:19:00+0100
+tags: grails controllers, css, progressive enhancement, resources, i18n, spring, spock
+alias: post/42903282817/grails-gotcha-beware-head-requests-when-rendering
+---
+
+Although most Grails controllers render HTML, JSON or XML output it is possible to use them to render binary data as well. We use a controller to render images uploaded by editors into our content management interface. The theory is simple enough, instead of using the `render` dynamic method or returning a _model_ the controller action just writes bytes directly to the HTTP response stream. Our action looked something like this:
+
+    def show = {
+        def image = Image.read(params.id)
+        if (image) {
+            response.contentType = image.contentType
+            response.outputStream.withStream { stream ->
+                stream << image.bytes
+            }
+        } else {
+            response.sendError SC_NOT_FOUND
+        }
+    }
+
+This seemed to work well enough. However when writing a test I noticed an odd thing. I was using [RESTClient][1] to scrape resource URLs out of and make a _HEAD_ request against them to ensure the URLs were valid. Javascript and CSS files were working fine but all the non-static images in the page were getting 404s.
+
+<!-- more -->
+
+Initially I suspected a data setup problem and spent some time ensuring my test was setting data up properly. It was only once I put some debug logging in the controller action that I saw that the controller _was_ actually loading images. The 404 was not coming from the _else_ block in the action as I initially assumed. I tried changing the _RESTClient_ call from _head_ to _get_ and suddenly the image URLs started working!
+
+Once I did that I realised what the problem was. An HTTP _HEAD_ request does not expect a response, in fact a server receiving a _HEAD_ request [_must not_ return a response][2]. The response stream that our controller action is writing to is, when the request method is _HEAD_, actually a no-op stream. When the action completes Grails checks to see if anything has been committed to the response stream and since it has not assumes that we want to render a view by convention. You can probably see where this is going now. The convention is that the request gets forwarded to `grails-app/views/<controller>/<action>.gsp` which of course does not exist. The forwarded request sets a response code of _404_ because there is no GSP!
+
+We caught this bug in our app completely by accident but it could actually have been quite serious. Caching proxies and CDNs may well use a _HEAD_ request to revalidate content and on getting a _404_ assume that the URL is no longer valid. If the _404_ response itself then gets cached we could get broken images on our site because the CDN tells the client browser there's nothing there.
+
+The solution is simple enough. I changed the controller action to simply set a _200_ response code when it gets a _HEAD_ request for a valid image:
+
+    def show = {
+        def image = Image.read(params.id)
+        if (image) {
+            if (request.method == "HEAD") {
+                render SC_OK
+            } else {
+                response.contentType = image.contentType
+                response.outputStream.withStream { stream ->
+                    stream << image.bytes
+                }
+            }
+        } else {
+            response.sendError SC_NOT_FOUND
+        }
+    }
+
+A neater solution might be to use Grails' support for [mapping actions to request methods][3] so that _GET_ and _HEAD_ requests dispatch to different actions.
+
+[1]: http://groovy.codehaus.org/modules/http-builder/doc/rest.html
+[2]: http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html#sec9.4
+[3]: http://grails.org/doc/latest/guide/6.%20The%20Web%20Layer.html#6.4.5%20Mapping%20to%20HTTP%20methods
+

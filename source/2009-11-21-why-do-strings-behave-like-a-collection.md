@@ -1,0 +1,27 @@
+---
+title: 'Why do Strings behave like a Collection?'
+date: 2009-11-21T14:17:00+0000
+tags: groovy
+alias: post/42902683438/why-do-strings-behave-like-a-collection
+---
+
+Mostly I love Groovy but every now and then some behaviour gets on my nerves. For example, why do the iterator methods on String behave as though it was a collections of characters rather than an Object? If I define a method with a dynamic-typed parameter like:
+
+    void printNames(names) {
+        names.each {
+            println it
+        }
+    }
+
+Passing a collection of Strings results in each String being printed. Passing a single String results in each character of the String being printed separately. I would have thought that the Object behaviour was a more appropriate default here (iterators on Object are called once passing the object itself). After all the `.chars` property is available if you really want to represent a String as a collection of characters.
+
+The solution is to override the method:
+
+    void printNames(String name) {
+        printNames([name])
+    }
+
+Unlike in Java dispatch to such overridden methods in Groovy is based on the runtime rather than declared type of the parameter.
+
+You might think this is a trivial point, but the scenario that keeps biting me is HTTP parameters passed into a Grails controller. If you have multiple inputs with the same name, or a multi-select then sometimes `params.x` is a String and sometimes it's a List of Strings. Any code dealing with that parameter has to handle the two cases separately.
+

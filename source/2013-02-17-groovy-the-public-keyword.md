@@ -1,0 +1,49 @@
+---
+title: 'Groovy & the public keyword'
+date: 2013-02-17T07:23:32+0000
+tags: groovy
+alias: post/43295812776/groovy-the-public-keyword
+---
+
+One of the first things you learn in Groovy is that unlike Java `public` is the default scope for properties and methods declared on classes. Most developers get into the habit of simply omitting the `public` keyword everywhere. But, is there any situation where it's the right thing to use? Actually, yes.
+
+<!-- more -->
+
+When you declare a public constant in a Groovy class you would probably write something like this:
+
+	#!groovy
+	class HttpStatus {
+		static final int SC_UNPROCESSABLE_ENTITY = 422
+	}
+
+Nothing wrong with that, right?
+
+If you look at the byte code for the class you will notice that you got a little more than you may have bargained for:
+
+	private static final int HttpStatus.SC_UNPROCESSABLE_ENTITY
+	public static final int HttpStatus.getSC_UNPROCESSABLE_ENTITY()
+
+This is a Groovy *property* – a private field with accessor methods as per the Java beans standard. In this case it happens to be static and because it was declared `final` it doesn't have a setter method.
+
+It doesn't break anything and when referring to the constant from Groovy there's no difference in syntax. If you use the constant from a Java class though, you'll have to refer to it with:
+
+	#!java
+	HttpStatus.getSC_UNPROCESSABLE_ENTITY()
+
+You might also notice that even in a Groovy class if you static import the constant in IntelliJ IDEA you end up with:
+
+	#!groovy
+	import static HttpStatus.getSC_UNPROCESSABLE_ENTITY
+
+Let's add another constant – this time with the `public` keyword:
+
+	#!groovy
+	public static final int SC_IM_A_TEAPOT = 418
+
+Then look at the byte code as before:
+
+	public static final int HttpStatus.SC_IM_A_TEAPOT
+	
+This time you created a constant *field* rather than a property. More appropriate in this case and with no syntactic issues when referenced from Java.
+ 
+This isn't just about constants. Adding *any* scope keyword to a property in a Groovy class turns it into a field. That's useful to bear in mind when you're dealing with class hierarchies with `protected` fields, encapsulating `private` state or figuring out what properties will be persisted in a GORM class (hint – Hibernate looks for Java bean getter and setter methods by default).

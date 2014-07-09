@@ -1,0 +1,35 @@
+---
+title: 'Jerry: a jQuery like API for DOM parsing'
+date: 2012-10-28T14:36:00+0000
+tags: jerry, java, testing
+alias: post/41774782052/jerry-a-jquery-like-api-for-dom-parsing
+---
+
+When unit testing things that produce HTML output (such as some Grails taglibs) there are some common pitfalls. Comparing large chunks of markup with an expected string is very brittle; whitespace and attribute ordering becomes significant. Often people end up using regular expressions or assertions like `assert output.contains('<div id="foo">')`. Whilst it may be a bit more maintainable this doesn't really test correct DOM structure which is often important and again, attribute order can be a problem.
+
+<!-- more -->
+
+Ideally making assertions against a parsed DOM would be the best solution but JVM libraries have usually been designed more for XML than HTML. Since nobody in their right mind is still using XHTML in 2012 the parser needs to be capable of coping with unclosed tags, value-less boolean attributes, etc.
+
+I've been using [Jerry][jerry] for some time for this kind of testing and it's pretty great. The API is derived from jQuery so there's virtually no learning curve. Instead of complex string matching you can write neat specs like this:
+
+	#!groovy
+	void 'creates an input of the correct type'() {
+		given:
+		def markup = applyTemplate('<my:searchFormTag/>')
+
+		expect:
+		def dom = Jerry.jerry(markup)
+		dom.find('form').hasClass('search-form')
+		dom.find('form input').attr('type') == 'search'
+		dom.find('form button').text() == 'Go'
+	}
+
+For an even more jQuery like feel use Groovy's import aliasing:
+
+	import static jodd.jerry.Jerry.jerry as $
+
+To add Jerry to your project just include `'org.jodd:jodd-lagarto:3.4.0'` as a test dependency.
+
+[jerry]:http://jodd.org/doc/jerry/index.html
+

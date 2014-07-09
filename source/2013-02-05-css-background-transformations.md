@@ -1,0 +1,148 @@
+---
+title: 'CSS background transformations'
+date: 2013-02-05T16:13:00+0000
+tags: css
+alias: post/42357804660/css-background-transformations
+---
+
+CSS3 includes a bunch of `transform` options allowing things like rotation & distortion of element boxes. I wanted to apply that to achieve an effect inspired by [mid 20th Century _Googie_ signage][googie].
+
+My goal was to distort just the background behind an element whilst leaving the text alone. The text should also be able to "escape" from the background, for example letters can overflow beyond the background.
+
+Naturally, being a CSS purist I also wanted to do all this without introducing non-semantic extra elements into the document.
+
+<!-- more -->
+
+<aside>
+In order to save space I'm not using any vendor specific prefixes in the code in this article. On _jsFiddle_ I'm using [Lea Verou's awesome _-prefix-free_ library][prefixfree] if you're applying this technique you'll need to do the same or add the vendor prefixed versions of CSS properties like `transform` and `background-clip`.
+</aside>
+
+## Doing it the dumb way
+
+My first thought was to apply a `background-color` to the element along with the CSS3 transforms then "reverse out" the transformations in child elements.
+
+	#!css
+	.googie {
+	    background-color: lightblue;
+	    transform: skew(7deg, 2deg) scale(0.8) rotate(-4deg);
+	}
+	.googie > * {
+	    transform: skew(-7deg, -2deg) scale(1.2) rotate(4deg);
+	}
+
+Here's the result and the [jsFiddle][fiddle1] code. ![Transform and reverse][img1]
+
+This works up to a point but the more complex the transforms the harder they are to reverse out correctly. I also found that certain transformations were effectively impossible to reverse out in this way. For example, if I apply a `rotate` transform to the element then each child element will be out of position when rotated back. It doesn't feel like a very maintainable solution.
+
+You can see what I mean if I add a border to the left of the various elements. They get progressively out of line as they are reverse transformed. The longer the content gets the more of a problem this becomes. ![Reverse transformations force elements out of line][img2]
+
+## Say hello to the pseudo-background-element
+
+Instead of transforming the background of the element itself I figured the best approach would be to position another element behind the content and transform that. The advantage being that the transformations are then only applied to the background and not the element itself.
+
+Since I didn't want to add extra markup I decided to try this with a `:before` pseudo-element.
+
+	#!css
+	.googie {
+	    position: relative;
+	}
+
+	.googie:before {
+	    background-color: lightblue;
+	    transform: skew(7deg, 2deg) scale(0.8) rotate(-4deg);
+
+	    content: '';
+	    position: absolute;
+	    top: 0;
+	    left: 0;
+	    width: 100%;
+	    height: 100%;
+	    z-index: -1;
+	}
+
+The pseudo-element is positioned behind the actual element using `position: absolute` and `z-index: -1` and given the same dimensions as the "real" element. In order for the pseudo-element to render it requires the `content` declaration although I'm just using an empty string which seems to be enough to trigger the rendering.
+
+The result doesn't look particularly different from the first attempt but the code is much simpler now there's no reverse transformation going on. ![Pseudo-element background][img3] Here's the code on [jsFiddle][fiddle2].
+
+If I add a border to the content elements again you can see that they are now properly in line – the background transformation has not affected them. Win! ![Using pseudo background elements are in line][img4]
+
+## Into the 3rd dimension
+
+Because the transformations no longer affect the element or its content it's possible to get a lot more ambitious. 3d transforms in particular can be used to achieve some really cool effects.
+
+	#!css
+	.googie {
+	    position: relative;
+	    perspective: 350;
+	}
+
+	.googie:before {
+	    background-color: lightblue;
+	    transform: translateX(6px) translateY(11px) translateZ(-2px) rotateX(-25deg) rotateY(5deg) rotateZ(-4deg);
+
+	    /* ... positioning as before ... */
+	}
+
+Here's an example of a 3D transformed background: ![3d transformed background][img5] … and the code on [jsFiddle][fiddle3].
+
+## The inevitable compatibility issues
+
+### Everyone's favorite browser
+
+As ever, Internet Explorer is going to rain on our parade here as up to and including version 8 it flat out doesn't support CSS transforms. IE9 will do 2d transforms (using the `-ms-` vendor prefix) but not 3d. IE10 has partial 3d transform support but I'm not exactly sure what that means in practice.
+
+### Keeping the background in the back
+
+Some browsers will allow parts of the 3d transformed background to project "_through_" the content and either block mouse clicks or actually obscure the content. The former is a big problem if you have anchors in the content as you won't be able to click them. Even `:hover` styles won't trigger. [Tim Yates provided me with a workaround][timyates] which is to add `pointer-events: none;` to the pseudo-element's CSS.
+
+Some browsers (at least iOS Safari & Chrome, possibly others) render the transformed background so that it actually obscures the content. ![3d background projecting through content][img6]
+
+To prevent this you need to set the `transform-origin` property to the corner of the element *"closest"* to the front on the *z* axis. By default the origin is at the center so by moving it to the _"closest"_ corner you guarantee that z-axis transformations pivot the background behind the content.
+
+    #!css
+    transform-origin: top left;
+
+The background is no longer projecting through the content. Some more fine-tuning is required on the element position but the fundamental problem is fixed. ![Background with transform origin set][img7] The full example is on [jsFiddle][fiddle4].
+
+### Smoothing the edges
+
+On certain browsers skewed or rotated shapes will suffer from aliasing. The standard fix is to add `backface-visibility: hidden;` to the element's CSS. This clears things up in desktop webkit browsers for example.
+
+Unfortunately I found adding `backface-visibility: hidden` actually *caused* aliasing on iOS. ![iOS aliasing][img8]
+
+[One site I found][ios-aliasing] suggested adding padding to a wrapper element. I didn't want to introduce any extra markup but I was able to adapt the technique to solve the problem without having to do so.
+
+Instead of adding a wrapper element I added the padding to the pseudo-element itself then used `background-clip` to constrain the background to the content box – *inside* the padding rather than including the padding.
+
+	#!css
+    .googie:before {
+        padding: 2px;
+        background-clip: content-box;
+    }
+
+Again, the code is on [jsFiddle][fiddle5].
+
+This clears things up perfectly on iOS. The only down-side is that if you want to add a border or drop shadow there will be a gap between the background and the border / shadow. ![Gap between background & drop shadow][img9]
+
+One solution to this is to use an `:after` pseudo-element placed behind the `:before` pseudo-element and positioned or resized to look like a border or drop-shadow. I've created a simple example on [jsFiddle][fiddle6].
+
+[googie]: https://www.google.com/images?q=googie+signage
+[prefixfree]: http://leaverou.github.com/prefixfree/
+[timyates]: https://twitter.com/tim_yates/status/294487820435865600
+[ios-aliasing]: http://www.fngtps.com/2011/how-to-prevent-jagged-edges-when-using-css-transformation-in-mobile-safari/
+[img1]: http://static.tumblr.com/x4ukvcb/3Mvmhr5k9/image.jpg "Element transformed & content reverse transformed"
+[img2]: http://static.tumblr.com/x4ukvcb/bKlmhr5r3/image.jpg "Elements drift out of line using transform & reverse"
+[img3]: http://static.tumblr.com/x4ukvcb/PFDmhr5tv/image.jpg "Pseudo background element"
+[img4]: http://static.tumblr.com/x4ukvcb/X2Cmhr5vr/image.jpg "Content is correctly aligned using pseudo background element"
+[img5]: http://static.tumblr.com/x4ukvcb/nWNmhr5xo/image.jpg "3D transformed background"
+[img6]: http://static.tumblr.com/x4ukvcb/N4bmhr603/image.jpg "3D transformed background projecting through content"
+[img7]: http://static.tumblr.com/x4ukvcb/B5Emhr61v/image.jpg "3D transformed background with origin set"
+[img8]: http://static.tumblr.com/x4ukvcb/okJmhr63c/image.jpg "Edges aliasing on iOS"
+[img9]: http://static.tumblr.com/x4ukvcb/rlpmhr64v/image.jpg "Gap between background & drop shadow"
+[fiddle1]: http://jsfiddle.net/piraterob/sKgmM/
+[fiddle2]: http://jsfiddle.net/piraterob/sKgmM/1/
+[fiddle3]: http://jsfiddle.net/piraterob/sKgmM/2/
+[fiddle4]: http://jsfiddle.net/piraterob/sKgmM/8/
+[fiddle5]: http://jsfiddle.net/piraterob/sKgmM/9/
+[fiddle6]: http://jsfiddle.net/piraterob/sKgmM/10/
+

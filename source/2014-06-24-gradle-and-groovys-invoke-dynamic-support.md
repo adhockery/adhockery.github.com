@@ -1,16 +1,17 @@
 ---
-title: Gradle and Groovy's Invoke Dynamic support
-date: 2014-06-24T15:32+0100
-tags: groovy, invokedynamic, gradle
+title: 'Gradle and Groovy''s Invoke Dynamic support'
+date: 2014-06-24T15:32:00+0100
+tags: groovy, gradle, jdk7, invokedynamic
+alias: post/89759686171/gradle-and-groovys-invoke-dynamic-support
 ---
 
 Since version 2.0 the Groovy distribution has included an alternate artifact that enables [invoke dynamic](http://docs.oracle.com/javase/7/docs/technotes/guides/vm/multiple-language-support.html#invokedynamic) support.
 
+<!-- more -->
+
 You can include that in a Gradle project by specifying a dependency like this:
 
     compile "org.codehaus.groovy:groovy-all:2.3.3:indy"
-
-READMORE
 
 However if you have other libraries that depend on groovy they may pull in the regular version transitively giving you two versions of Groovy in your dependency graph. This happens to me a lot with Spock which depends on _groovy-all:2.0.5_. For example I probably have a dependency like this as well:
 
@@ -21,11 +22,11 @@ I noticed that the _External Libraries_ section of the project tree in _IntelliJ
 To debug where the dependency is coming from you can use Gradle's `dependencyInsight` target like this:
 
     gradle dependencyInsight --dependency groovy-all
-
+    
 By default the `dependencyInsight` only searches the _compile_ configuration and you may well see nothing there. You can search other configurations by adding an argument on the command line. For example:
 
     gradle dependencyInsight --dependency groovy-all --configuration testCompile
-
+    
 The output from the command looks like this:
 
     :dependencyInsight
@@ -65,3 +66,4 @@ Unfortunately the only way to get evict the regular _groovy-all_ jar from the de
     }
 
 Finally the extra jar is gone from IDEA.
+

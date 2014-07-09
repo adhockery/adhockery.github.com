@@ -1,0 +1,50 @@
+---
+title: 'Customising collection binding in Grails'
+date: 2010-03-17T06:53:00+0000
+tags: data binding
+alias: post/42902880093/customising-collection-binding-in-grails
+---
+
+Following up on my earlier post about [using custom `PropertyEditor` implementations to bind association properties][1] I started looking into the options for custom binding one-to-many associations.
+
+<!-- more -->
+
+For example, tags, as seen on many sites (including Blogger) would typically be modelled as a `Set` of either `String` or some kind of _Tag_ domain object. With _tag_ functionality we really don't want to be selecting tags using a multi-select combo box. It would be ridiculously huge and hard to find anything in it. An auto-completer that recognises commas as delimiters would be the way to go. Script.aculo.us has an [AJAX Autocompleter][2] that can handle this kind of tokenised input. Similarly, the Grails RichUI plugin offers an [autocomplete tag][3] that uses a Yahoo! UI component. There are comparable controls available if you're using jQuery or some other Javascript library. What you will end up with is the browser submitting a single parameter containing a comma-separated String of tag names. The trick is to turn that into a collection of `String` or `Tag` domain instances.
+
+For the former case binding is pretty easy. All you need is a property editor that converts a comma-separated String into a `Set` of `String` and _vice-versa_:
+
+    class TagListEditor extends PropertyEditorSupport {
+        void setAsText(String text) {
+            value = text.split(/,\s*/) as Set
+        }
+
+        String getAsText() {
+            value?.join(", ")
+        }
+    }
+
+Then just register the editor in your `PropertyEditorRegistrar` implementation:
+
+    registry.registerCustomEditor List, "tags", new TagListEditor()
+
+If you've gone the latter route and used a domain object to represent a _tag_ things have been trickier. Grails didn't allow you to register custom property editors against one-to-many association properties as it considered it knew how to handle such binding.
+
+I raised and fixed a [Grails issue][4] to allow for registering custom editors on one-to-many properties so from 1.2.2 and 1.3-M2 you will be able to use a property editor something like this:
+
+    class TagListEditor extends PropertyEditorSupport {
+        void setAsText(String text) {
+            value = text.split(/,\s*/).collect {
+                Tag.findByName(it) ?: new Tag(name: it)
+            } as Set
+        }
+
+        String getAsText() {
+            value?.name?.join(", ")
+        }
+    }
+
+[1]: http://blog.freeside.co/post/42902830038/using-a-custom-data-binder-with-grails-domain-objects
+[2]: http://wiki.github.com/madrobby/scriptaculous/ajax-autocompleter
+[3]: http://grails.org/plugin/richui#AutoComplete
+[4]: http://jira.codehaus.org/browse/GRAILS-5985
+

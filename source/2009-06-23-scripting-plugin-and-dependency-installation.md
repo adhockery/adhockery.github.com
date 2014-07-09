@@ -1,0 +1,19 @@
+---
+title: 'Scripting Plugin and Dependency Installation'
+date: 2009-06-23T18:17:00+0100
+tags: ivy, grails scripts, grails plugins
+alias: post/42902509169/scripting-plugin-and-dependency-installation
+---
+
+Another quick script that I find quite useful, particularly on continuous integration servers is my [Prepare.groovy][1] script. It solves a couple of problems
+
+* Some plugins are not as well behaved as others on installation, for example [the Functional Testing plugin][2] automatically installs when `test-app` or `run-app` is installed but will then immediately crash with a `ClassNotFoundException` because the libraries it depends on are not on the classpath yet. Re-running the command will then work but if the commands are part of a CI build it's probably already bombed out and reported a broken build.
+* [The Ivy plugin][3] is great but `test-app` and `run-app` won't invoke its `get-dependencies` target to pull down libraries the way they will automatically install plugins.
+* Sometimes the grails command you want the build to execute is supplied by a plugin so there's no convenient way to run it directly from a brand new workspace because the plugin isn't installed yet.
+
+The script simply ensures all plugins are installed and then invokes the Ivy plugin's `get-dependencies` target (only if the Ivy plugin is installed - it won't blow up on you if you don't use Ivy). At that point you should have a fully workable workspace and be able to run any grails command you like without your app complaining that some library or other isn't present.
+
+[1]: http://gist.github.com/134689
+[2]: http://grails.org/plugin/functional-test
+[3]: http://grails.org/plugin/ivy
+

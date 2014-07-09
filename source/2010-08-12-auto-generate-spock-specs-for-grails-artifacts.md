@@ -1,0 +1,53 @@
+---
+title: 'Auto-generate Spock specs for Grails artifacts'
+date: 2010-08-12T22:46:00+0100
+tags: events, spock, scaffolding, grails scripts
+alias: post/42903069805/auto-generate-spock-specs-for-grails-artifacts
+---
+
+When creating artifacts such as domain classes, controllers and tag libs Grails generates a _JUnit_ test case. If, like me, you're digging writing specifications with [Spock][1] you'd probably rather have Grails generate one of those. The last thing I want is to manually transform every generated test case into a specification for every artifact I create.
+
+<!-- more -->
+
+It's very simple to create a _CreateUnitSpec_ or _CreateIntegrationSpec_ script with a template specification. Hooking in to the other types of artifact creation turned out to be fiddlier. Each _create-*_ command calls a Closure called _createUnitTest_. Reassigning that Closure should be the solution. The trick is in figuring out where that can be done.
+
+Any time one of its [Gant][2] targets is invoked the Grails build system fires an event. You can respond to those events by declaring a closure called `event<target name>Start` in `scripts/_Events.groovy`. The only Gant target directly invoked when an artifact is created is called _'default'_. It is possible to intercept that although that means the event handler will be invoked any time **any** Gant target called _'default'_ runs. For this purpose that's no problem since we're just overriding a closure in the build binding.
+
+The other factor is that the superclass for the unit test is specified by the individual _create-*_ scripts (or defaulted to _GrailsUnitTestCase_). Rather than having to override those scripts as well, I've just mapped the non-standard unit test superclasses to the Spock equivalents.
+
+Here's the code for your `_Events.groovy` script:
+
+    eventDefaultStart = {
+        createUnitTest = { Map args = [:] ->
+            def superClass
+            // map unit test superclass to Spock equivalent
+            switch(args["superClass"]) {
+                case "ControllerUnitTestCase":
+                    superClass = "ControllerSpec"
+                    break
+                case "TagLibUnitTestCase":
+                    superClass = "TagLibSpec"
+                    break
+                default:
+                    superClass = "UnitSpec"
+            }
+            createArtifact name: args["name"], suffix: "${args['suffix']}Spec", type: "Spec", path: "test/unit", superClass: superClass
+        }
+    }
+
+The template specification should be placed in `src/templates/artifacts/Spec.groovy` and is simply:
+
+    @artifact.package@import spock.lang.*
+    import grails.plugin.spock.*
+
+    class @artifact.name@ extends @artifact.superclass@ {
+        def "feature method"() {
+
+        }
+    }
+
+It goes without saying that this is a slightly hairy and it would be great if Grails provided a proper hook for overriding the test generation. I can live with some fun-size evil in __Events.groovy_ for the sake of the convenience of getting template specs for all my artifacts, though.
+
+[1]: http://spockframework.org/
+[2]: http://gant.codehaus.org/
+

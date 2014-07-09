@@ -1,0 +1,63 @@
+---
+title: 'CoffeeScript Gotchas: for loops'
+date: 2013-01-19T17:20:00+0000
+tags: coffeescript
+alias: post/41774818353/coffeescript-gotchas-for-loops
+---
+
+Title: CoffeeScript Gotchas: for loops
+Date: 2013-01-19 17:20
+Slug: coffeescript-gotchas-for-loops
+
+I was caught out by a subtle difference between JavaScript and CoffeeScript yesterday.
+
+<!-- more -->
+
+In JavaScript you may be used to iterating over the properties of an object using a *for…in* loop. For example:
+
+    #!javascript
+    var language = {
+        name: 'JavaScript',
+        syntaxFamily: 'C'
+    };
+
+    for (prop in language) {
+        console.log(prop, language[prop]);
+    }
+
+The `prop` variable in the loop is assigned the name of each property in the `language` object in turn.
+
+When translating some code that uses a *for…in* loop to CoffeeScript I produced something equivalent to this:
+
+    #!coffeescript
+    language =
+      name: 'CoffeeScript'
+      syntaxFamily: 'Ruby'
+
+    for prop in language
+      console.log "#{prop} '#{language[prop]}"
+
+At first glance that looks equivalent but there's an important difference lurking. Run it and you'll see nothing gets logged to the console.
+
+Here's the generated JavaScript. The problem is pretty obvious:
+
+    #!javascript
+    var language, prop, _i, _len;
+
+    language = {
+      name: 'CoffeeScript',
+      syntaxFamily: 'Ruby'
+    };
+
+    for (_i = 0, _len = language.length; _i < _len; _i++) {
+      prop = language[_i];
+      console.log("" + prop + " '" + language[prop]);
+    }
+
+The *for…in* loop in CoffeeScript assumes iteration with a numeric index; it's used for iterating over arrays. The correct CoffeeScript syntax is `for prop of language` - that's **of** not **in**.
+
+Of course, for even more idiomatic CoffeeScript we can have multiple loop variables and in this example it might be appropriate to postfix the loop.
+
+    #!coffeescript
+    console.log "#{prop} '#{value}" for prop, value of language
+

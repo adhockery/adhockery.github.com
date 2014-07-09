@@ -10,6 +10,8 @@ You can include that in a Gradle project by specifying a dependency like this:
 
     compile "org.codehaus.groovy:groovy-all:2.3.3:indy"
 
+READMORE
+
 However if you have other libraries that depend on groovy they may pull in the regular version transitively giving you two versions of Groovy in your dependency graph. This happens to me a lot with Spock which depends on _groovy-all:2.0.5_. For example I probably have a dependency like this as well:
 
     testCompile "org.spockframework:spock-core:0.7-groovy-2.0"

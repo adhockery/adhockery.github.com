@@ -8,6 +8,8 @@ I'm a big fan of Groovy's +@CompileStatic+ feature – so much so that I've upd
 
 Recently https://twitter.com/pledbrook/status/475986668840050688[Peter Ledbrook reminded me of one drawback] which is that method dispatch is statically bound when using +@CompileStatic+ like it is in Java. This means that the behavior of calling polymorphic methods can change when argument types are not known at compile time.
 
+READMORE
+
 Here's a simple example. What will this code print?
 
 [source,groovy]

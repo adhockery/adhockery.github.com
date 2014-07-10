@@ -101,7 +101,7 @@ main, #site-nav {
   }
 }
 
-article {
+article, section.primary {
   background: #fff;
   @include leader(1);
   @include trailer(1);
@@ -137,6 +137,10 @@ article {
     @include leader(1);
     @include padding-leader(1);
     @include padding-trailer(1);
+  }
+
+  ul, ol {
+    list-style-position: inside;
   }
 }
 

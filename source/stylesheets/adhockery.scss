@@ -22,10 +22,14 @@ $base-font-family: $serif-font-family;
 
 @include establish-baseline;
 
+// border box sizing including adjustments for susy grid (Susy has a mixin for
+// this but it doesn't do the before & after pseudo-elements)
+$border-box-sizing: true;
 *, *:before, *:after {
   @include box-sizing(border-box);
 }
 
+// use webfont for main headers
 h1, h2 {
   font-family: $display-font-family;
   .fontface & {
@@ -33,11 +37,13 @@ h1, h2 {
   }
 }
 
+// monospace font for code
 code, kbd, pre, samp {
   font-family: $mono-font-family;
   font-smoothing: auto;
 }
 
+// pre blocks are horizontally scrollable with no wrapping
 pre {
   white-space: pre;
   word-wrap: initial;
@@ -47,6 +53,10 @@ pre {
   background: #f2f2f2;
   border: 1px solid #d8d8d8;
   padding: 1em;
+}
+
+ul, ol {
+  padding: 0;
 }
 
 #site-header {
@@ -61,33 +71,94 @@ main, #site-nav {
   }
 }
 
-ul.tag-list {
-  @include inline-list;
+#site-nav {
+  .recent, .archive, .tags {
+    background: {
+      color: $red;
+      image: image-url('green-dust-and-scratches.png');
+    }
+    @include leader(1);
+    @include trailer(1);
+  }
+
+  .recent, .archive, .tags {
+    position: relative;
+    &:after {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      display: block;
+      background: {
+        position: center right;
+        repeat: no-repeat;
+        size: contain;
+      }
+      height: 100%;
+      width: 100%;
+    }
+  }
+
+  .recent:after {
+    background-image: image-url('paperboy.png');
+  }
+
+  .archive:after {
+    background-image: image-url('archivist.png');
+  }
+
+  .tags:after {
+    background-image: image-url('paperthrow.png');
+  }
+
+  // .recent {
+  //   @include span-columns(6);
+  // }
+  // .archive, .tags {
+  //   @include span-columns(3);
+  // }
 }
 
-#site-nav {
-  .recent {
-    @include span-columns(6);
-  }
-  .archive, .tags {
-    @include span-columns(3);
-  }
+body {
+  background: $teal;
 }
 
 article {
+  background: #fff;
+  @include leader(1);
+  @include trailer(1);
   header {
+    // contain the h1/2 margins in the header
     @include clearfix;
-    background-color: $teal;
+
+    // retro paper background
+    background-color: $red;
     background-image: image-url('green-dust-and-scratches.png');
     color: #fff;
-    margin: 0 -1em;
-    padding: 0 1em;
     a {
       @include unstyled-link;
+    }
+
+    // extend horizontal edges outside bounds
+    margin: 0 -1em;
+    padding: 0 1em;
+
+    // use h1 header sizes for article headers on the index page
+    h2 {
+      @include adjust-font-size-to($h1-font-size);
+      @include leader(1, $h1-font-size);
+      @include trailer(1, $h1-font-size);
     }
   }
 }
 
 .listingblock .title {
-  // @include subheader;
+  @include adjust-font-size-to($h3-font-size);
+  @include leader(1, $h3-font-size);
+  @include trailer(0, $h3-font-size);
+  font-weight: 700;
+}
+
+ul.tag-list {
+  @include inline-list;
 }

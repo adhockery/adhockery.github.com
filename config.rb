@@ -44,12 +44,9 @@ page "/feed.xml", layout: false
 # Compass
 ###
 
-require "susy"
-
 # Change Compass configuration
-compass_config do |config|
-  config.add_import_path "/Users/rfletcher/.rvm/gems/ruby-1.9.3-p547/gems/susy-1.0.9/sass"
-end
+# compass_config do |config|
+# end
 
 ###
 # Page options, layouts, aliases and proxies

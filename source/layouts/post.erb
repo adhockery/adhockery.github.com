@@ -9,7 +9,7 @@ pageable: false
     <%= yield %>
     <footer>
       <time datetime="<%= current_article.date.strftime('%Y-%m-%dT%H:%M:%S') %>"><%= current_article.date.strftime('%b %e %Y') %></time>
-      <ul class="tags">
+      <ul class="tag-list">
         <% current_article.tags.each do |tag| %>
           <li><%= link_to tag, tag_path(tag) %></li>
         <% end %>

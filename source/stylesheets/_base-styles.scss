@@ -1,0 +1,49 @@
+*, *:before, *:after {
+  @include box-sizing(border-box);
+}
+
+body {
+  background: {
+    color: $background-color;
+    image: image-url('translucent-fibres.png');
+  }
+  color: #222;
+}
+
+// use webfont for main headers
+h1, h2 {
+  font-family: $display-font-family;
+  .fontface & {
+    font-weight: 400;
+  }
+}
+
+// monospace font for code
+code, kbd, pre, samp {
+  font-family: $mono-font-family;
+  font-smoothing: auto;
+}
+
+// pre blocks are horizontally scrollable with no wrapping
+pre {
+  white-space: pre;
+  word-wrap: initial;
+  overflow-x: auto;
+  overflow-y: visible;
+
+  background: #f2f2f2;
+  border: 1px solid #d8d8d8;
+  padding: 1em;
+}
+
+ul, ol {
+  padding: 0;
+}
+
+time {
+  font-style: italic;
+}
+
+a {
+  @include hover-link;
+}

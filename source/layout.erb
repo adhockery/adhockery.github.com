@@ -23,16 +23,20 @@
 
     <nav id="site-nav">
       <section class="recent">
-        <h2>Recent posts</h2>
+        <header>
+          <h2>Recent posts</h2>
+        </header>
         <ol>
           <% blog.articles[0...10].each do |article| %>
-            <li><%= link_to article.title, article %> <time datetime="<%= article.date.strftime('%Y-%m-%d') %>"><%= article.date.strftime('%b %e %Y') %></time></li>
+            <li><%= link_to article.title, article %> – <time datetime="<%= article.date.strftime('%Y-%m-%d') %>"><%= article.date.strftime('%b %e %Y') %></time></li>
           <% end %>
         </ol>
       </section>
 
       <section class="archive">
-        <h2>By Year</h2>
+        <header>
+          <h2>Archive by year</h2>
+        </header>
         <ol>
           <% blog.articles.group_by {|a| a.date.year }.each do |year, articles| %>
             <li><%= link_to "<time>#{year}</time> (#{articles.size})", blog_year_path(year) %></li>
@@ -41,7 +45,9 @@
       </section>
 
       <section class="tags">
-        <h2>Tags</h2>
+        <header>
+          <h2>Tags</h2>
+        </header>
         <ul class="tag-list">
           <% blog.tags.sort().each do |tag, articles| %>
             <li><%= link_to "#{tag} (#{articles.size})", tag_path(tag) %></li>

@@ -6,6 +6,8 @@ $serif-font-family: Palatino, "Palatino Linotype", "Palatino LT STD", "Book Anti
 $display-font-family: "Francois One", "Oswald", "Franklin Gothic Medium", "Franklin Gothic", "ITC Franklin Gothic", Arial, sans-serif;
 $mono-font-family: "Courier New", Courier, monospace;
 
+$texture: 'green-dust-and-scratches.png';
+
 // compass overrides
 $contrasted-dark-default: #222;
 
@@ -13,51 +15,20 @@ $contrasted-dark-default: #222;
 $base-font-size: 18px;
 $base-font-family: $serif-font-family;
 
+// grid
+$total-width: 960px;
+
+$background-color: $teal;
+
 @import "compass";
 @import "normalize";
-@import "susy";
+@import "grid";
 
 @import "fout";
+@import "base-styles";
 @import "logo";
 
 @include establish-baseline;
-
-// border box sizing including adjustments for susy grid (Susy has a mixin for
-// this but it doesn't do the before & after pseudo-elements)
-$border-box-sizing: true;
-*, *:before, *:after {
-  @include box-sizing(border-box);
-}
-
-// use webfont for main headers
-h1, h2 {
-  font-family: $display-font-family;
-  .fontface & {
-    font-weight: 400;
-  }
-}
-
-// monospace font for code
-code, kbd, pre, samp {
-  font-family: $mono-font-family;
-  font-smoothing: auto;
-}
-
-// pre blocks are horizontally scrollable with no wrapping
-pre {
-  white-space: pre;
-  word-wrap: initial;
-  overflow-x: auto;
-  overflow-y: visible;
-
-  background: #f2f2f2;
-  border: 1px solid #d8d8d8;
-  padding: 1em;
-}
-
-ul, ol {
-  padding: 0;
-}
 
 #site-header {
   background: $black;
@@ -65,83 +36,94 @@ ul, ol {
 }
 
 main, #site-nav {
-  @include container(10);
+  @include clearfix;
+  max-width: $total-width;
+  margin: 0 auto;
   > * {
-    @include span-columns(12);
+    @include column(12);
   }
 }
 
 #site-nav {
-  .recent, .archive, .tags {
+  > * {
+    @include clearfix;
+    padding: {
+      left: 1em;
+      right: 1em;
+    }
+
     background: {
       color: $red;
-      image: image-url('green-dust-and-scratches.png');
+      image: image-url($texture);
     }
+    color: #fff;
+
+    .multiplebgs & {
+      background: {
+        position: 0 0, center right;
+        repeat: repeat, no-repeat;
+        size: image-width($texture) image-height($texture), contain;
+      }
+    }
+
     @include leader(1);
     @include trailer(1);
-  }
 
-  .recent, .archive, .tags {
-    position: relative;
-    &:after {
-      content: "";
-      position: absolute;
-      top: 0;
-      right: 0;
-      display: block;
-      background: {
-        position: center right;
-        repeat: no-repeat;
-        size: contain;
-      }
-      height: 100%;
-      width: 100%;
+    h2 {
+      color: #fff;
+      text-transform: uppercase;
     }
   }
 
-  .recent:after {
-    background-image: image-url('paperboy.png');
+  .multiplebgs & {
+    .recent {
+      background-image: image-url($texture), image-url('paperboy.png');
+    }
+
+    .archive {
+      background-image: image-url($texture), image-url('tapedrive.png');
+    }
+
+    .tags {
+      background-image: image-url($texture), image-url('filing.png');
+    }
   }
 
-  .archive:after {
-    background-image: image-url('archivist.png');
+  ul, ol {
+    @include leader(1);
+    @include trailer(1);
+    list-style-type: disc;
+    list-style-position: inside;
   }
 
-  .tags:after {
-    background-image: image-url('paperthrow.png');
+  a {
+    @include link-colors(#fff);
   }
-
-  // .recent {
-  //   @include span-columns(6);
-  // }
-  // .archive, .tags {
-  //   @include span-columns(3);
-  // }
-}
-
-body {
-  background: $teal;
 }
 
 article {
   background: #fff;
   @include leader(1);
   @include trailer(1);
-  header {
+
+  > * {
+    padding: {
+      left: 1em;
+      right: 1em;
+    }
+  }
+
+  header, footer {
     // contain the h1/2 margins in the header
     @include clearfix;
 
     // retro paper background
     background-color: $red;
-    background-image: image-url('green-dust-and-scratches.png');
+    background-image: image-url($texture);
     color: #fff;
     a {
       @include unstyled-link;
     }
-
-    // extend horizontal edges outside bounds
-    margin: 0 -1em;
-    padding: 0 1em;
 
     // use h1 header sizes for article headers on the index page
     h2 {
@@ -150,6 +132,12 @@ article {
       @include trailer(1, $h1-font-size);
     }
   }
+
+  footer {
+    @include leader(1);
+    @include padding-leader(1);
+    @include padding-trailer(1);
+  }
 }
 
 .listingblock .title {
@@ -157,8 +145,15 @@ article {
   @include leader(1, $h3-font-size);
   @include trailer(0, $h3-font-size);
   font-weight: 700;
+
+  + .content pre {
+    margin-top: 0;
+  }
 }
 
 ul.tag-list {
-  @include inline-list;
+  @include inline-block-list;
+  li:not(:last-child):after {
+    content: ", ";
+  }
 }

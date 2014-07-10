@@ -18,5 +18,4 @@ gem "middleman-alias"
 gem "middleman-deploy"
 
 gem "middleman-autoprefixer"
-gem "susy"
 gem "normalize-scss"

@@ -1,24 +1,26 @@
 ---
 pageable: false
 ---
-<h1>Articles tagged '<%= tagname %>'</h1>
+<section class="primary tag">
+  <header>
+    <h1>Articles tagged <em>‘<%= tagname %>’</em></h1>
+  </header>
 
-<% if paginate && num_pages > 1 %>
-  <p>Page <%= page_number %> of <%= num_pages %></p>
+  <ul>
+    <% page_articles.each_with_index do |article, i| %>
+      <li><%= link_to article.title, article %> <time datetime="<%= article.date.strftime('%Y-%m-%dT%H:%M:%S') %>"><%= article.date.strftime('%b %e %Y') %></time></li>
+    <% end %>
+  </ul>
 
-  <% if prev_page %>
-    <p><%= link_to 'Previous page', prev_page %></p>
+  <% if paginate && num_pages > 1 %>
+    <nav class="pagination">
+      <% if prev_page %>
+        <%= link_to 'Previous page', prev_page %>
+      <% end %>
+      <span>Page <%= page_number %> of <%= num_pages %></span>
+      <% if next_page %>
+        <%= link_to 'Next page', next_page %>
+      <% end %>
+    </nav>
   <% end %>
-<% end %>
-
-<ul>
-  <% page_articles.each_with_index do |article, i| %>
-    <li><%= link_to article.title, article %> <time datetime="<%= article.date.strftime('%Y-%m-%dT%H:%M:%S') %>"><%= article.date.strftime('%b %e %Y') %></time></li>
-  <% end %>
-</ul>
-
-<% if paginate %>
-  <% if next_page %>
-    <p><%= link_to 'Next page', next_page %></p>
-  <% end %>
-<% end %>
+</section>

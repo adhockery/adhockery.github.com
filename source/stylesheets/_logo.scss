@@ -19,18 +19,25 @@ h1.logo {
   font-family: $logo-font;
   font-weight: normal;
   font-size: $logo-size;
-  line-height: $logo-size * .75;
+  line-height: $logo-size;
   text-transform: uppercase;
   margin: 0;
   .fontface & {
     position: relative;
-    top: 6px;
+    top: $logo-size / 8;
+  }
+
+  a {
+    @include unstyled-link;
   }
 
   @media only screen and (min-width: 768px) {
     $logo-size: 64px;
     font-size: $logo-size;
-    line-height: $logo-size * .75;
+    line-height: $logo-size;
+    .fontface & {
+      top: $logo-size / 8;
+    }
   }
 
   .char1 {

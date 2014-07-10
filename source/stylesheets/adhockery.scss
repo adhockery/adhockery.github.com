@@ -9,6 +9,7 @@ $base-font-family: $serif-font-family;
 @import "normalize";
 @import "susy";
 
+@import "fout";
 @import "logo";
 
 @include establish-baseline;

@@ -1,0 +1,7 @@
+body {
+  opacity: 0;
+  @include single-transition(opacity, 0.25s, linear);
+  .wf-active &, .wf-inactive & {
+    opacity: 1;
+  }
+}

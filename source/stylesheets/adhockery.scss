@@ -3,7 +3,7 @@ $red: #E84327;
 $black: #141615;
 
 $serif-font-family: Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
-$display-font-family: "Francois One", "Oswald", "Franklin Gothic Medium", "Franklin Gothic", "ITC Franklin Gothic", Arial, sans-serif;
+$display-font-family: "Oswald", "Franklin Gothic Medium", "Franklin Gothic", "ITC Franklin Gothic", Arial, sans-serif;
 $mono-font-family: "Courier New", Courier, monospace;
 
 $texture: 'green-dust-and-scratches.png';
@@ -16,7 +16,8 @@ $base-font-size: 18px;
 $base-font-family: $serif-font-family;
 
 // grid
-$total-width: 960px;
+$total-width: 100%;
+$max-width: 960px;
 
 $background-color: $teal;
 
@@ -24,20 +25,32 @@ $background-color: $teal;
 @import "normalize";
 @import "grid";
 
+@import "rem";
 @import "fout";
 @import "base-styles";
 @import "logo";
 
 @include establish-baseline;
 
-#site-header {
+.header-container {
   background: $black;
-  padding: 0 0.5em;
+  @include rem(padding, 0 0.5rem);
+}
+
+#site-header {
+  @include clearfix;
+  max-width: $max-width;
+  margin: 0 auto;
+
+  h1 {
+    @include column(6);
+    @include rem(padding-left, 1rem);
+  }
 }
 
 main, #site-nav {
   @include clearfix;
-  max-width: $total-width;
+  max-width: $max-width;
   margin: 0 auto;
   > * {
     @include column(12);
@@ -45,12 +58,13 @@ main, #site-nav {
 }
 
 #site-nav {
+  $sidebar-font-size: 16px;
+  @include adjust-font-size-to($sidebar-font-size);
+
   > * {
     @include clearfix;
-    padding: {
-      left: 1em;
-      right: 1em;
-    }
+    @include rem(padding-left, 1rem);
+    @include rem(padding-right, 1rem);
 
     background: {
       color: $red;
@@ -60,16 +74,17 @@ main, #site-nav {
 
     .multiplebgs & {
       background: {
-        position: 0 0, center right;
+        position: 0 0, 100% 100%;
         repeat: repeat, no-repeat;
         size: image-width($texture) image-height($texture), contain;
       }
     }
 
-    @include leader(1);
-    @include trailer(1);
+    @include leader(1, $sidebar-font-size);
+    @include trailer(1, $sidebar-font-size);
 
     h2 {
+      @include adjust-font-size-to($h2-font-size, $from-size: $sidebar-font-size);
       color: #fff;
       text-transform: uppercase;
     }
@@ -90,8 +105,8 @@ main, #site-nav {
   }
 
   ul, ol {
-    @include leader(1);
-    @include trailer(1);
+    @include leader(1, $sidebar-font-size);
+    @include trailer(1, $sidebar-font-size);
     list-style-type: disc;
     list-style-position: inside;
   }
@@ -107,10 +122,8 @@ article, section.primary {
   @include trailer(1);
 
   > * {
-    padding: {
-      left: 1em;
-      right: 1em;
-    }
+    @include rem(padding-left, 1rem);
+    @include rem(padding-right, 1rem);
   }
 
   header, footer {

@@ -1,0 +1,15 @@
+.header-container {
+  background: $black;
+  @include rem(padding, 0 0.5rem);
+}
+
+#site-header {
+  @include clearfix;
+  max-width: $max-width;
+  margin: 0 auto;
+
+  h1 {
+    @include column(6);
+    @include rem(padding-left, 1rem);
+  }
+}

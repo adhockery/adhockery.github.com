@@ -1,0 +1,58 @@
+#site-nav {
+  $sidebar-font-size: 16px;
+  @include adjust-font-size-to($sidebar-font-size);
+
+  > * {
+    @include clearfix;
+    @include rem(padding-left, 1rem);
+    @include rem(padding-right, 1rem);
+
+    background: {
+      color: $red;
+      image: image-url($texture);
+    }
+    color: #fff;
+
+    .multiplebgs & {
+      background: {
+        position: 0 0, 100% 100%;
+        repeat: repeat, no-repeat;
+        size: image-width($texture) image-height($texture), contain;
+      }
+    }
+
+    @include leader(1, $sidebar-font-size);
+    @include trailer(1, $sidebar-font-size);
+
+    h2 {
+      @include adjust-font-size-to($h2-font-size, $from-size: $sidebar-font-size);
+      color: #fff;
+      text-transform: uppercase;
+    }
+  }
+
+  .multiplebgs & {
+    .recent {
+      background-image: image-url($texture), image-url('paperboy.png');
+    }
+
+    .archive {
+      background-image: image-url($texture), image-url('tapedrive.png');
+    }
+
+    .tags {
+      background-image: image-url($texture), image-url('filing.png');
+    }
+  }
+
+  ul, ol {
+    @include leader(1, $sidebar-font-size);
+    @include trailer(1, $sidebar-font-size);
+    list-style-type: disc;
+    list-style-position: inside;
+  }
+
+  a {
+    @include link-colors(#fff);
+  }
+}

@@ -1,0 +1,40 @@
+article, section.primary {
+  background: #fff;
+  @include leader(1);
+  @include trailer(1);
+
+  > * {
+    @include rem(padding-left, 1rem);
+    @include rem(padding-right, 1rem);
+  }
+
+  header, footer {
+    // contain the h1/2 margins in the header
+    @include clearfix;
+
+    // retro paper background
+    background-color: $red;
+    background-image: image-url($texture);
+    color: #fff;
+    a {
+      @include unstyled-link;
+    }
+
+    // use h1 header sizes for article headers on the index page
+    h2 {
+      @include adjust-font-size-to($h1-font-size);
+      @include leader(1, $h1-font-size);
+      @include trailer(1, $h1-font-size);
+    }
+  }
+
+  footer {
+    @include leader(1);
+    @include padding-leader(1);
+    @include padding-trailer(1);
+  }
+
+  ul, ol {
+    list-style-position: inside;
+  }
+}

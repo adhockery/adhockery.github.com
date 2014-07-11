@@ -1,0 +1,8 @@
+main, #site-nav {
+  @include clearfix;
+  max-width: $max-width;
+  margin: 0 auto;
+  > * {
+    @include column(12);
+  }
+}

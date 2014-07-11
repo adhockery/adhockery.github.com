@@ -1,6 +1,7 @@
 $teal: #8ECDC5;
 $red: #E84327;
 $black: #141615;
+$white: #fff;
 
 $serif-font-family: Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
 $display-font-family: "Oswald", "Franklin Gothic Medium", "Franklin Gothic", "ITC Franklin Gothic", Arial, sans-serif;
@@ -29,148 +30,8 @@ $background-color: $teal;
 @import "fout";
 @import "base-styles";
 @import "logo";
-
-@include establish-baseline;
-
-.header-container {
-  background: $black;
-  @include rem(padding, 0 0.5rem);
-}
-
-#site-header {
-  @include clearfix;
-  max-width: $max-width;
-  margin: 0 auto;
-
-  h1 {
-    @include column(6);
-    @include rem(padding-left, 1rem);
-  }
-}
-
-main, #site-nav {
-  @include clearfix;
-  max-width: $max-width;
-  margin: 0 auto;
-  > * {
-    @include column(12);
-  }
-}
-
-#site-nav {
-  $sidebar-font-size: 16px;
-  @include adjust-font-size-to($sidebar-font-size);
-
-  > * {
-    @include clearfix;
-    @include rem(padding-left, 1rem);
-    @include rem(padding-right, 1rem);
-
-    background: {
-      color: $red;
-      image: image-url($texture);
-    }
-    color: #fff;
-
-    .multiplebgs & {
-      background: {
-        position: 0 0, 100% 100%;
-        repeat: repeat, no-repeat;
-        size: image-width($texture) image-height($texture), contain;
-      }
-    }
-
-    @include leader(1, $sidebar-font-size);
-    @include trailer(1, $sidebar-font-size);
-
-    h2 {
-      @include adjust-font-size-to($h2-font-size, $from-size: $sidebar-font-size);
-      color: #fff;
-      text-transform: uppercase;
-    }
-  }
-
-  .multiplebgs & {
-    .recent {
-      background-image: image-url($texture), image-url('paperboy.png');
-    }
-
-    .archive {
-      background-image: image-url($texture), image-url('tapedrive.png');
-    }
-
-    .tags {
-      background-image: image-url($texture), image-url('filing.png');
-    }
-  }
-
-  ul, ol {
-    @include leader(1, $sidebar-font-size);
-    @include trailer(1, $sidebar-font-size);
-    list-style-type: disc;
-    list-style-position: inside;
-  }
-
-  a {
-    @include link-colors(#fff);
-  }
-}
-
-article, section.primary {
-  background: #fff;
-  @include leader(1);
-  @include trailer(1);
-
-  > * {
-    @include rem(padding-left, 1rem);
-    @include rem(padding-right, 1rem);
-  }
-
-  header, footer {
-    // contain the h1/2 margins in the header
-    @include clearfix;
-
-    // retro paper background
-    background-color: $red;
-    background-image: image-url($texture);
-    color: #fff;
-    a {
-      @include unstyled-link;
-    }
-
-    // use h1 header sizes for article headers on the index page
-    h2 {
-      @include adjust-font-size-to($h1-font-size);
-      @include leader(1, $h1-font-size);
-      @include trailer(1, $h1-font-size);
-    }
-  }
-
-  footer {
-    @include leader(1);
-    @include padding-leader(1);
-    @include padding-trailer(1);
-  }
-
-  ul, ol {
-    list-style-position: inside;
-  }
-}
-
-.listingblock .title {
-  @include adjust-font-size-to($h3-font-size);
-  @include leader(1, $h3-font-size);
-  @include trailer(0, $h3-font-size);
-  font-weight: 700;
-
-  + .content pre {
-    margin-top: 0;
-  }
-}
-
-ul.tag-list {
-  @include inline-block-list;
-  li:not(:last-child):after {
-    content: ", ";
-  }
-}
+@import "site-header";
+@import "column-layout";
+@import "site-footer"; // TODO: site-footer?
+@import "main-content";
+@import "asciidoc";

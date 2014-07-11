@@ -1,3 +1,5 @@
+@include establish-baseline;
+
 *, *:before, *:after {
   @include box-sizing(border-box);
 }
@@ -7,7 +9,7 @@ body {
     color: $background-color;
     image: image-url('translucent-fibres.png');
   }
-  color: #222;
+  color: $black;
 }
 
 // use webfont for main headers
@@ -46,4 +48,11 @@ time {
 
 a {
   @include hover-link;
+}
+
+ul.tag-list {
+  @include inline-block-list;
+  li:not(:last-child):after {
+    content: ", ";
+  }
 }

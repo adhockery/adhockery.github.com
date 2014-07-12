@@ -9,15 +9,10 @@ article, section.primary {
   }
 
   header, footer {
-    // contain the h1/2 margins in the header
-    @include clearfix;
-
-    // retro paper background
-    background-color: $red;
-    background-image: image-url($texture);
-    color: #fff;
-    a {
-      @include unstyled-link;
+    h1, h2 {
+      a {
+        @include unstyled-link;
+      }
     }
 
     // use h1 header sizes for article headers on the index page

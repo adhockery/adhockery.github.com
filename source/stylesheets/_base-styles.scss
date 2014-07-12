@@ -5,16 +5,13 @@
 }
 
 body {
-  background: {
-    color: $background-color;
-    image: image-url('translucent-fibres.png');
-  }
   color: $black;
 }
 
 // use webfont for main headers
 h1, h2 {
   font-family: $display-font-family;
+  text-transform: uppercase;
   .fontface & {
     font-weight: 400;
   }

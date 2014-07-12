@@ -1,15 +1,69 @@
-.header-container {
-  background: $black;
-  @include rem(padding, 0 0.5rem);
-}
-
 #site-header {
   @include clearfix;
   max-width: $max-width;
   margin: 0 auto;
 
   h1 {
-    @include column(6);
-    @include rem(padding-left, 1rem);
+    @include column(12);
+    @include rem(padding, 0 1rem);
+    $logo-size: 64px;
+    @include adjust-font-size-to($logo-size);
+    display:inline-block;
+
+    font-family: $logo-font;
+    font-style: italic;
+    text-transform: lowercase;
+    .fontface & {
+      font-weight: 400;
+    }
+
+    a {
+      @include unstyled-link;
+    }
+
+    @media only screen and (min-width: 768px) {
+      $logo-size: 96px;
+      @include adjust-font-size-to($logo-size);
+    }
+
+    &:before {
+      content: "::";
+      color: $teal;
+      margin-right: 0.1em;
+    }
+    &:after {
+      content: ".";
+      color: $red;
+      margin-left: 0.1em;
+    }
+  }
+
+  .strapline {
+    @include column(12);
+    @include adjust-font-size-to(16px);
+    @include rem(padding, 0 1rem);
+    display: none;
+    margin-top: 0;
+
+    @media only screen and (min-width: 768px) {
+      display: block;
+    }
+
+    dt {
+      font-weight: 700;
+    }
+
+    dd {
+      @include rem(margin, 0 2rem);
+    }
+  }
+
+  cite {
+    display: block;
+    text-align: right;
+
+    &:before {
+      content: '— ';
+    }
   }
 }

@@ -4,9 +4,9 @@ $black: #222;
 $white: #fff;
 
 $serif-font-family: Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
-$display-font-family: "league-gothic", "Franklin Gothic Medium", "Franklin Gothic", "ITC Franklin Gothic", Arial, sans-serif;
+$heading-font-family: "league-gothic", "Franklin Gothic Medium", "Franklin Gothic", "ITC Franklin Gothic", Arial, sans-serif;
 $mono-font-family: "Courier New", Courier, monospace;
-$logo-font: 'acta-poster', $serif-font-family !default;
+$logo-font-family: 'acta-poster', $serif-font-family !default;
 
 $texture: 'green-dust-and-scratches.png';
 
@@ -22,7 +22,8 @@ $total-width: 100%;
 $max-width: 960px;
 
 $background-color: $white;
-$decoration-color: lighten($black, 40%);
+$decoration-color: $teal; //lighten($black, 40%);
+$muted-text-color: lighten($black, 50%);
 
 @import "compass";
 @import "normalize";

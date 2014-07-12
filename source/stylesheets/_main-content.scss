@@ -1,3 +1,26 @@
+@mixin pagination-link($direction, $content) {
+  @include unstyled-link;
+  &:#{$direction} {
+    content: $content;
+    color: transparent;
+    font-size: 1.5em;
+  }
+  &:active, &:hover, &:focus {
+    text-decoration: none;
+    &:#{$direction} {
+      color: $decoration-color;
+    }
+  }
+}
+
+@mixin next-link {
+  @include pagination-link(after, "\00a0»");
+}
+
+@mixin prev-link {
+  @include pagination-link(before, "«\00a0");
+}
+
 article, section.primary {
   background: #fff;
   @include leader(1);
@@ -11,19 +34,12 @@ article, section.primary {
   header, footer {
     h1, h2 {
       a {
-        @include unstyled-link;
-        &:after {
-          content: "\00a0»";
-          color: transparent;
-          line-height: $h1-font-size;
-          font-size: 1.5em;
-        }
-        &:active, &:hover, &:focus {
-          text-decoration: none;
-          &:after {
-            color: $decoration-color;
-          }
-        }
+        @include next-link;
+      }
+
+      code {
+        font-family: inherit;
+        text-transform: none;
       }
     }
 
@@ -32,6 +48,10 @@ article, section.primary {
       @include adjust-font-size-to($h1-font-size);
       @include leader(1, $h1-font-size);
       @include trailer(1, $h1-font-size);
+    }
+
+    time {
+      color: $muted-text-color;
     }
   }
 
@@ -43,5 +63,49 @@ article, section.primary {
 
   ul, ol {
     list-style-position: inside;
+  }
+
+  .tag-list {
+    color: $muted-text-color;
+
+    a {
+      @include unstyled-link;
+      &:hover, &:active, &:focus {
+        color: $teal;
+      }
+    }
+
+    li:first-child:before {
+      content: "Tagged: ";
+      font-style: italic;
+    }
+  }
+}
+
+.pagination {
+  $pagination-font-size: $h2-font-size;
+  @include adjust-font-size-to($pagination-font-size);
+  @include leader(2, $pagination-font-size);
+  @include trailer(2, $pagination-font-size);
+  @include rem(padding, 0 1rem);
+  text-align: center;
+  font-family: $heading-font-family;
+  text-transform: uppercase;
+
+  a[rel=next] {
+    @include next-link;
+    &:before {
+      content: "\00b7\00a0";
+      margin: 0 0.5em;
+      color: $decoration-color;
+    }
+  }
+  a[rel=prev] {
+    @include prev-link;
+    &:after {
+      content: "\00a0\00b7";
+      margin: 0 0.5em;
+      color: $decoration-color;
+    }
   }
 }

@@ -10,7 +10,7 @@
     @include adjust-font-size-to($logo-size);
     display:inline-block;
 
-    font-family: $logo-font;
+    font-family: $logo-font-family;
     font-style: italic;
     text-transform: lowercase;
     .fontface & {

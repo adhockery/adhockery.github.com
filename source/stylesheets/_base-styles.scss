@@ -10,7 +10,7 @@ body {
 
 // use webfont for main headers
 h1, h2 {
-  font-family: $display-font-family;
+  font-family: $heading-font-family;
   text-transform: uppercase;
   .fontface & {
     font-weight: 400;
@@ -20,7 +20,6 @@ h1, h2 {
 // monospace font for code
 code, kbd, pre, samp {
   font-family: $mono-font-family;
-  font-smoothing: auto;
 }
 
 // pre blocks are horizontally scrollable with no wrapping
@@ -31,7 +30,7 @@ pre {
   overflow-y: visible;
 
   background: #f2f2f2;
-  border: 1px solid #d8d8d8;
+  border: 1px dashed $muted-text-color;
   padding: 1em;
 }
 
@@ -56,5 +55,5 @@ ul.tag-list {
 
 hr {
   border: 0;
-  border-bottom: 1px dashed $decoration-color;
+  border-bottom: 2px dashed $decoration-color;
 }

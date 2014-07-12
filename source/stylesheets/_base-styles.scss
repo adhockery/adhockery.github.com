@@ -53,3 +53,8 @@ ul.tag-list {
     content: ", ";
   }
 }
+
+hr {
+  border: 0;
+  border-bottom: 1px dashed $decoration-color;
+}

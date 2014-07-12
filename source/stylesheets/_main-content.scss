@@ -21,7 +21,7 @@ article, section.primary {
         &:active, &:hover, &:focus {
           text-decoration: none;
           &:after {
-            color: lighten($black, 40%);
+            color: $decoration-color;
           }
         }
       }

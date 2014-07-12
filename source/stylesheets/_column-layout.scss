@@ -5,4 +5,8 @@ main, #site-nav {
   > * {
     @include column(12);
   }
+  > hr {
+    @include column(10);
+    @include push(1);
+  }
 }

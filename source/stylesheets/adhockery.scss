@@ -22,6 +22,7 @@ $total-width: 100%;
 $max-width: 960px;
 
 $background-color: $white;
+$decoration-color: lighten($black, 40%);
 
 @import "compass";
 @import "normalize";

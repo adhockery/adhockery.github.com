@@ -123,3 +123,9 @@ article, section.primary {
     }
   }
 }
+
+a.read-more {
+  display: inline-block;
+  @include trailer(1);
+  font-style: italic;
+}

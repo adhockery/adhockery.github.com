@@ -13,7 +13,7 @@ activate :blog do |blog|
   # blog.sources = "{year}-{month}-{day}-{title}.html"
   # blog.taglink = "tags/{tag}.html"
   blog.layout = "post"
-  blog.summary_separator = /(READMORE)/
+  blog.summary_separator = /(<div class="paragraph">\s*<p>READMORE<\/p>\s*<\/div>)/
   blog.summary_length = nil
   # blog.year_link = "{year}.html"
   # blog.month_link = "{year}/{month}.html"

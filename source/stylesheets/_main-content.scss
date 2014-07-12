@@ -33,6 +33,8 @@ article, section.primary {
 
   header, footer {
     h1, h2 {
+      margin-top: 0;
+
       a {
         @include next-link;
       }
@@ -46,12 +48,13 @@ article, section.primary {
     // use h1 header sizes for article headers on the index page
     h2 {
       @include adjust-font-size-to($h1-font-size);
-      @include leader(1, $h1-font-size);
       @include trailer(1, $h1-font-size);
     }
 
     time {
+      @include leader(1);
       color: $muted-text-color;
+      display: block;
     }
   }
 

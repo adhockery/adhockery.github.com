@@ -4,8 +4,8 @@ pageable: false
 <% wrap_layout :layout do %>
   <article>
     <header>
-      <h1><%= current_article.title %></h1>
       <time datetime="<%= current_article.date.strftime('%Y-%m-%dT%H:%M:%S') %>"><%= current_article.date.strftime('%b %e %Y') %></time>
+      <h1><%= current_article.title %></h1>
     </header>
     <%= yield %>
     <footer>

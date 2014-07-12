@@ -55,5 +55,5 @@ ul.tag-list {
 
 hr {
   border: 0;
-  border-bottom: 2px dashed $decoration-color;
+  border-bottom: 1px solid transparentize($muted-text-color, 0.5);
 }

@@ -1,7 +1,7 @@
 #site-header {
   @include clearfix;
   max-width: $max-width;
-  margin: 0 auto;
+  margin: 0 auto rhythm(2);
 
   h1 {
     @include column(12);

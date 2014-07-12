@@ -1,5 +1,5 @@
 ---
-title: 'Enabling Groovy''s "invokedynamic" support in Gradle'
+title: 'Enabling Groovy’s “invokedynamic” support in Gradle'
 date: 2014-06-24T15:46:00+0100
 tags: invokedynamic, gradle, groovy, jdk7
 alias: ["post/89760608881/enabling-groovys-invokedynamic-support-in-gradle/"]

@@ -1,5 +1,5 @@
 ---
-title: 'When is a Pirate not a Pirate? When it''s a HibernateProxy'
+title: 'When is a Pirate not a Pirate? When it’s a HibernateProxy'
 date: 2009-04-15T02:49:00+0100
 tags: gorm, hibernate
 alias: ["post/42902409632/when-is-a-pirate-not-a-pirate-when-its-a/"]

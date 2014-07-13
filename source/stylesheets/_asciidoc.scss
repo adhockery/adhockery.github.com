@@ -4,6 +4,7 @@
   @include trailer(0, $h3-font-size);
   padding-left: rhythm(1, $h3-font-size);
   font-weight: 700;
+  color: $muted-text-color;
 
   + .content pre {
     margin-top: 0;

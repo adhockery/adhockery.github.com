@@ -30,7 +30,11 @@ pre {
   overflow-y: visible;
 
   background: #f2f2f2;
-  border: 1px dashed $muted-text-color;
+  border: {
+    width: 1px 0;
+    style: dashed;
+    color: $muted-text-color;
+  }
   padding: rhythm(1);
 }
 

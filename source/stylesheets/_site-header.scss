@@ -1,11 +1,14 @@
 #site-header {
   @include clearfix;
   max-width: $max-width;
-  margin: 0 auto rhythm(2);
+  margin: 0 auto rhythm(1);
+
+  @media only screen and (min-width: 768px) {
+    margin-bottom: rhythm(2);
+  }
 
   h1 {
     @include column(12);
-    @include rem(padding, 0 1rem);
     $logo-size: 48px;
     @include adjust-font-size-to($logo-size);
     display:inline-block;
@@ -20,21 +23,6 @@
       @include unstyled-link;
     }
 
-    @media only screen and (min-width: 480) {
-      $logo-size: 64px;
-      @include adjust-font-size-to($logo-size);
-    }
-
-    @media only screen and (min-width: 640px) {
-      $logo-size: 72px;
-      @include adjust-font-size-to($logo-size);
-    }
-
-    @media only screen and (min-width: 940px) {
-      $logo-size: 96px;
-      @include adjust-font-size-to($logo-size);
-    }
-
     &:before {
       content: "::";
       color: $teal;
@@ -42,6 +30,29 @@
     &:after {
       content: ".";
       color: $red;
+    }
+
+    @media only screen and (min-width: 480px) {
+      $logo-size: 64px;
+      @include adjust-font-size-to($logo-size);
+    }
+
+    @media only screen and (min-width: 640px) {
+      $logo-size: 72px;
+      @include adjust-font-size-to($logo-size);
+      @include column(10);
+      @include push(1);
+      @include pull(1);
+      position: relative;
+      &:before {
+        position: absolute;
+        left: -0.604166666666667em;
+      }
+    }
+
+    @media only screen and (min-width: 940px) {
+      $logo-size: 96px;
+      @include adjust-font-size-to($logo-size);
     }
   }
 

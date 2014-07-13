@@ -26,11 +26,6 @@ article, section.primary {
   @include leader(1);
   @include trailer(1);
 
-  > * {
-    @include rem(padding-left, 1rem);
-    @include rem(padding-right, 1rem);
-  }
-
   header, footer {
     h1, h2 {
       margin-top: 0;

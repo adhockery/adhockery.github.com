@@ -3,10 +3,13 @@ main, #site-nav {
   max-width: $max-width;
   margin: 0 auto;
   > * {
-    @include column(12);
-  }
-  > hr {
     @include column(10);
     @include push(1);
+    @include pull(1);
+  }
+  > hr {
+    @include column(12);
+    @include push(0);
+    @include pull(0);
   }
 }

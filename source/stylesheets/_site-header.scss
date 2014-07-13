@@ -6,12 +6,11 @@
   h1 {
     @include column(12);
     @include rem(padding, 0 1rem);
-    $logo-size: 64px;
+    $logo-size: 48px;
     @include adjust-font-size-to($logo-size);
     display:inline-block;
 
     font-family: $logo-font-family;
-    font-style: italic;
     text-transform: lowercase;
     .fontface & {
       font-weight: 400;
@@ -21,7 +20,17 @@
       @include unstyled-link;
     }
 
-    @media only screen and (min-width: 768px) {
+    @media only screen and (min-width: 480) {
+      $logo-size: 64px;
+      @include adjust-font-size-to($logo-size);
+    }
+
+    @media only screen and (min-width: 640px) {
+      $logo-size: 72px;
+      @include adjust-font-size-to($logo-size);
+    }
+
+    @media only screen and (min-width: 940px) {
       $logo-size: 96px;
       @include adjust-font-size-to($logo-size);
     }
@@ -29,19 +38,17 @@
     &:before {
       content: "::";
       color: $teal;
-      margin-right: 0.1em;
     }
     &:after {
       content: ".";
       color: $red;
-      margin-left: 0.1em;
     }
   }
 
   .strapline {
-    @include column(12);
+    @include column(8);
+    @include push(1);
     @include adjust-font-size-to(16px);
-    @include rem(padding, 0 1rem);
     display: none;
     margin-top: 0;
 

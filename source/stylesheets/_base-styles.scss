@@ -47,7 +47,8 @@ time {
 }
 
 a {
-  @include hover-link;
+  @include unstyled-link;
+  color: inherit;
 }
 
 ul.tag-list {
@@ -59,5 +60,27 @@ ul.tag-list {
 
 hr {
   border: 0;
-  border-bottom: 1px solid transparentize($muted-text-color, 0.5);
+  border-bottom: 1px dotted transparentize($black, 0.2);
+}
+
+blockquote {
+  position: relative;
+
+  &:before, &:after {
+    font-family: $logo-font-family;
+    font-size: 2.5em;
+    color: $muted-text-color;
+    position: absolute;
+    top: 0;
+  }
+
+  &:before {
+    left: -0.75em;
+    content: "“";
+  }
+
+  &:after {
+    right: -0.75em;
+    content: "”";
+  }
 }

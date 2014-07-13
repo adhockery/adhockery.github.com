@@ -26,12 +26,17 @@ article, section.primary {
   @include leader(1);
   @include trailer(1);
 
+  a {
+    border-bottom: 1px dotted transparentize($black, 0.2);
+  }
+
   header, footer {
     h1, h2 {
       margin-top: 0;
 
       a {
         @include next-link;
+        border-bottom: none;
       }
 
       code {
@@ -123,4 +128,6 @@ a.read-more {
   display: inline-block;
   @include trailer(1);
   font-style: italic;
+  font-weight: 700;
+  border-bottom: none;
 }

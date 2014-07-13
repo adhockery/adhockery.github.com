@@ -8,8 +8,8 @@ main, #site-nav {
     @include pull(1);
   }
   > hr {
-    @include column(12);
-    @include push(0);
-    @include pull(0);
+    @include column(8);
+    @include push(2);
+    @include pull(2);
   }
 }

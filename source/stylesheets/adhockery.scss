@@ -3,7 +3,7 @@ $red: #E84327;
 $black: #222;
 $white: #fff;
 
-$serif-font-family: Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
+$serif-font-family: Garamond, Baskerville, "Baskerville Old Face", "Hoefler Text", "Times New Roman", serif;
 $heading-font-family: "league-gothic", "Franklin Gothic Medium", "Franklin Gothic", "ITC Franklin Gothic", Arial, sans-serif;
 $mono-font-family: "Courier New", Courier, monospace;
 $logo-font-family: 'acta-poster', $serif-font-family !default;
@@ -19,7 +19,7 @@ $base-font-family: $serif-font-family;
 
 // grid
 $total-width: 100%;
-$max-width: 960px;
+$max-width: 1024px;
 
 $background-color: $white;
 $decoration-color: $teal; //lighten($black, 40%);

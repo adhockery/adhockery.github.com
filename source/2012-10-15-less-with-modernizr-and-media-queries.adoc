@@ -7,6 +7,8 @@ alias: ["post/41774765950/less-with-modernizr-and-media-queries/", "less-with-mo
 
 One of the main advantages of http://lesscss.org/[LESS] is http://lesscss.org/#-nested-rules[nesting] rules for components in a structure that mirrors the DOM. However, when using http://modernizr.com/[Modernizr] you create override rules based on classes present on the root `html` tag. It would be nice to declare those override rules alongside the other rules for the same components. The same concern applies when using media queries. Luckily, there _is_ a way to do this.
 
+READMORE
+
 http://modernizr.com/[Modernizr] is rapidly becoming ubiquitous for feature-based CSS rules. It attaches classes to the `html` element that your CSS rules can reference. For example, on the http://freeside.co/betamax[Betamax documentation page] I have a rule to add some padding above `h2` elements in the main content when the browser supports `@fontface` (due to the rendering of the web font I'm using). In CSS the rule is:
 
 [source,css]

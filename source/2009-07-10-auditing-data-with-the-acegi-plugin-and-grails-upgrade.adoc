@@ -7,6 +7,8 @@ alias: ["post/42902527650/auditing-data-with-the-acegi-plugin-and-grails-upgrade
 
 I'm in the middle of trying to upgrade our app (again). We're running on Grails 1.1 now and I'm attempting to get us to 1.1.1 and from there to 1.2-M1. As Marc Palmer http://www.anyware.co.uk/2005/2009/07/03/grails-12m1-and-why-you-need-to-download-it-now/[points out] the more people using it the more likely it is that 1.2 final will be rock solid.
 
+READMORE
+
 The problem that's biting us right now is http://jira.codehaus.org/browse/GRAILS-4453[GRAILS-4453] (or, more accurately, http://opensource.atlassian.com/projects/hibernate/browse/HHH-2763[HHH-2763]). We're using http://grails.org/doc/1.1.x/guide/5.%20Object%20Relational%20Mapping%20(GORM).html#5.5.1%20Events%20and%20Auto%20Timestamping[Grails' Hibernate events support] to track the user that created and last updated assets in our system. This isn't just us being anal, the site editors frequently search the data using those criteria so it's an essential feature.
 
 In Grails 1.1 this is simplicity itself. The following code goes in the domain class and that's all there is to it:

@@ -18,6 +18,8 @@ def myTag = { attrs, body ->
 }
 ---------------------------------------
 
+READMORE
+
 It turns out that if the tag did not have a body the argument passed to the _Closure_ is always the same constant, so what you _can_ do is:
 
 [source,groovy]

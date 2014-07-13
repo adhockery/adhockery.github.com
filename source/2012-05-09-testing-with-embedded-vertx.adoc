@@ -7,6 +7,8 @@ alias: ["post/41774683415/testing-with-embedded-vertx/", "testing-with-embedded-
 
 I blogged recently about http://blog.freeside.co/post/41774661851/testing-callbacks-with-spock-mocks[using Spock to test APIs that use callbacks]. The post came out of some work I've been doing with http://vertx.io/[Vert.x]. Although the tests I wrote worked, I found them rather mock-heavy and felt I wasn't using the Vert.x API as idiomatically as I could have been.
 
+READMORE
+
 Next I tried http://vertx.io/manual.html#vertx-embedded[creating an embedded `Vertx` instance] in my test and sending messages to my component over the real event bus. This is surprisingly easy and worked well.
 
 The embedded API doesn't allow you to deploy _verticles_ or start http://vertx.io/manual.html#busmods[busmods] as they are intended to run in isolated classloaders. You _can_ use the event bus, though.

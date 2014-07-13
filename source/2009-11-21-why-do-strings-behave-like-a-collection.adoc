@@ -18,6 +18,8 @@ void printNames(names) {
 
 Passing a collection of Strings results in each String being printed. Passing a single String results in each character of the String being printed separately. I would have thought that the Object behaviour was a more appropriate default here (iterators on Object are called once passing the object itself). After all the `.chars` property is available if you really want to represent a String as a collection of characters.
 
+READMORE
+
 The solution is to override the method:
 
 [source,groovy]

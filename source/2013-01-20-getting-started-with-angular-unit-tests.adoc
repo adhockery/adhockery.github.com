@@ -7,6 +7,8 @@ alias: ["post/41774841006/getting-started-with-angular-unit-tests/", "getting-st
 
 I've been pretty enthusiastic about http://angularjs.org/[Angular] for a while now but although I was encouraged by the consideration given to testing hadn't really tried unit testing my Angular components. I've been using http://casperjs.org/[Casper] to test end-to-end which has been good enough for the experimental stuff I'd been doing with Angular. When I recently started working on a _real_ app with a fairly complex Angular controller it felt like I needed to define the logic with some fine-grained unit tests.
 
+READMORE
+
 Although I'm very familiar with http://pivotal.github.com/jasmine/[Jasmine] I wasn't quite sure where to start when using it to test Angular components. The Angular docs are a mixed bag, in places very thorough and in others a little lacking.
 
 The application I'm working on has a JavaScript file that defines the _http://docs.angularjs.org/api/angular.module[module]_ and routing:

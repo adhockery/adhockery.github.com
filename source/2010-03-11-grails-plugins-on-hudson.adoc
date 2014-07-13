@@ -7,6 +7,8 @@ alias: ["post/42902862201/grails-plugins-on-hudson/"]
 
 image:http://4.bp.blogspot.com/_fh9xwLFYBUw/S5ks3ENs8yI/AAAAAAAACbU/vHE684-UsTI/s400/hudson.png[image]Yesterday I spent some time setting up http://hudson-ci.org/[Hudson] continuous integration build for my various Grails plugins. It was pretty straightforward but I've https://twitter.com/wangjammer5/statuses/10269319705[been asked] to document the steps involved.
 
+READMORE
+
 Each plugin has one or more test applications under `test/projects` each of which has `grails.plugin.location.whatever = "../../.."` in `BuildConfig.groovy`. So each plugin CI build needs to run not only the plugin's own unit tests but any integration and/or functional tests included in the test apps as well.
 
 === Hudson plugins

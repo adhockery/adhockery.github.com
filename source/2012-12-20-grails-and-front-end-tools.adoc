@@ -7,6 +7,8 @@ alias: ["post/41774804245/grails-and-front-end-tools/", "grails-and-front-end-to
 
 Last week was the London Groovy & Grails Exchange 2012 where I gave a talk called http://skillsmatter.com/podcast/groovy-grails/grails-for-hipsters[Grails for hipsters] about integrating Grails apps with some of the buzziest current tools & techniques. Part of what I talked about was my approach to handling pre-processed front-end resources in Grails apps. In http://git.io/hipsteroid[the demo app] for my talk I used http://lesscss.org/[LESS] & http://coffeescript.org/[CoffeeScript] but everything I discusses applies equally to http://sass-lang.com/[SASS], http://learnboost.github.com/stylus/[Stylus], http://www.typescriptlang.org/[TypeScript], etc.
 
+READMORE
+
 I've been using external tools - specifically http://gruntjs.com/[Grunt] or http://incident57.com/codekit/[CodeKit] - to pre-process resources during development rather than using extensions of the http://grails.org/plugin/resources[Grails Resources plugin]. In my setup Resources is only aware of the final JavaScript & CSS files.
 
 === Handling resource graphs

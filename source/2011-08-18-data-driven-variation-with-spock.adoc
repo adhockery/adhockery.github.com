@@ -7,6 +7,8 @@ alias: ["post/42903265561/data-driven-variation-with-spock/"]
 
 Spock's `where:` block is commonly used with a https://github.com/robfletcher/grails-enhanced-scaffolding/blob/master/test/projects/scaffolding-example/test/functional/scaffolding/InputTypesSpec.groovy#L18[data table] but can also be driven by any `Iterable` data. It's worth bearing in mind that the data driving the `where:` block doesn't have to be hardcoded, it can be dynamic. For example, today we implemented a spec to ensure that every table in our database schema has a primary key (because it's required by http://ha-jdbc.sourceforge.net/[HA-JDBC] and not automatically added by GORM on join tables).
 
+READMORE
+
 In this spec the `where:` block is driven by the list of table names read from the database metadata.
 
 [source,groovy]

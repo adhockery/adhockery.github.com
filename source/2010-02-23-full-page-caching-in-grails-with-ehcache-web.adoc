@@ -7,6 +7,8 @@ alias: ["post/42902815893/full-page-caching-in-grails-with-ehcache-web/"]
 
 I'm on the verge of releasing a new version of the http://grails.org/plugin/springcache[Springcache plugin] that will feature a pretty cool new annotation-driven page fragment caching feature based on http://ehcache.org/documentation/web_caching.html[Ehcache-web]. However one of the things that came up during discussions on the mailing list was full page caching. I mentioned that it was pretty straightforward and promised to blog about how to do it, so…
 
+READMORE
+
 === Install Ehcache-web
 
 Add the following to your dependencies in BuildConfig.groovy:

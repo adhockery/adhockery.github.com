@@ -9,6 +9,8 @@ The Java mocking library http://jmock.org/[jMock] has http://jmock.org/states.ht
 
 I was curious as to whether I could implement something similar with _Spock_. There's no syntactic support right now (although there is http://code.google.com/p/spock/issues/detail?id=130[an open issue]) but it's not that complex to achieve something adequate.
 
+READMORE
+
 I got a basic version working using action closures. To directly translate the example from the _jMock_ documentation you'd do this:
 
 [source,groovy]

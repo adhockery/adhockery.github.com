@@ -12,4 +12,6 @@ hudson.plugins.git.GitException: Could not apply tag hudson-Selenium_RC_Plugin-2
  at hudson.plugins.git.GitAPI.tag(GitAPI.java:265)
 ---------------------------------------------------------------------------------
 
+READMORE
+
 It turns out Git needs a username to be set and the hudson user that the Debian package creates when Hudson is installed doesn't have one. Easily fixed by using `sudo nano /etc/passwd` to add `Hudson,,,` into the hudson user's entry (if you look at your own entry you should see where it needs to go).

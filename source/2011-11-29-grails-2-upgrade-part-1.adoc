@@ -7,6 +7,8 @@ alias: ["post/41774508756/grails-2-upgrade-part-1/", "grails-2-upgrade-part-1/"]
 
 We've recently spent some time ensuring that our application is forwards-compatible with the upcoming Grails 2. Our app is broadly split into the application itself and a large plugin that forms the core of our http://en.wikipedia.org/wiki/Content_management_system[CMS]. We upgraded the plugin first as it contains the core domain classes but is also a slightly smaller task to tackle. I'll write up our findings when we've completed upgrading the application itself in a follow-up to this post.
 
+READMORE
+
 Although it took a little while I found the upgrade less painful than some previous versions. It feels like Grails is really maturing so there are fewer fundamental breaking changes and more in the way of new features. The bulk of the changes we had to make were to unit tests which are vastly improved in Grails 2. That said, I can see some of the things we ran into stumping people so I thought a write-up would make a useful reference. Some of these items may already be covered by the http://grails.org/doc/2.0.x/guide/gettingStarted.html#upgradingFromPreviousVersionsOfGrails[upgrading section of the Grails user guide] but some, particularly around plugins are probably new.
 
 === Compilation

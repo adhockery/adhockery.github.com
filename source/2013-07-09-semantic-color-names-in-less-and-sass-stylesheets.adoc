@@ -36,6 +36,8 @@ This is good as far as it goes. Tweaking colors in the page is pretty easy as th
 
 That said, I think there are a couple of problems here.
 
+READMORE
+
 First, if we significantly change the color palette used in the design – or re-use the same components in a page with a different palette – the variable names become misleading. Either we need to change `$pink` to `$light-green` everywhere or we'll be listening to a lot of expletives from the next poor sap who tries to understand the stylesheet. Second, because we've used variable names descriptive of the colors themselves rather than the role they play it can be confusing trying to consistently apply the palette across the whole stylesheet. Imagine you're adding a `button` that you want to style with colors consistent with the links in the rest of the page; now was that `$pink` with `$purple` on hover?
 
 A practive I've adopted is to define a palette with variables named like this but then _not reference them directly_ in the actual CSS rules. Instead I create intermediate variables with names reflecting the context in which they are used then reference _those_. For example:

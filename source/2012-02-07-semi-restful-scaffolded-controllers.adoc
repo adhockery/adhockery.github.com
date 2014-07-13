@@ -9,6 +9,8 @@ The default Grails scaffolded controllers use a _create_ action to render a form
 
 There's a slight quirk here in that a failed _save_ will cause the URL to change from _/controllerName/create_ to _/controllerName/save_. Not a particularly huge issue, after all it's not something a search spider will see and users will be very unlikely to care. One thing I have found problematic though is when rendering a navigation element that highlights an item based on the current action.
 
+READMORE
+
 Imagine a bit of GSP code like this:
 
 [source,markup]

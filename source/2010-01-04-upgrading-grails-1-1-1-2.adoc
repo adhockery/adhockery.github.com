@@ -7,6 +7,8 @@ alias: ["post/42902784310/upgrading-grails-1-1-1-2/"]
 
 We've just successfully upgraded our app from Grails 1.1 to http://www.grails.org/1.2+Release+Notes[1.2] and pushed it to our QA environment. I thought I'd write up some of the issues we encountered in case anyone is bashing their heads against them.
 
+READMORE
+
 === Custom constraints that execute queries
 
 Grails 1.2 now executes domain object validation on any unsaved objects when the Hibernate session flushes. One upshot of this is that if you have a custom constraint that executes a query you can end up with a _StackOverflowError_; the query causes the session to flush, causing the object to be validated, causing the query to run, causing the session to flush, etc.

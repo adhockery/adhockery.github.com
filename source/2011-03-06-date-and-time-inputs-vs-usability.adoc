@@ -7,6 +7,8 @@ alias: ["post/42903176615/date-and-time-inputs-vs-usability/"]
 
 Form input controls for date/time values have always been problematic. The more I experiment with different options, the more I think there is no one-size-fits-all solution.
 
+READMORE
+
 === Calendar widgets
 
 Calendar widgets such as the http://jqueryui.com/demos/datepicker/[Opera HTML5 date input] are very popular and can be a slick looking addition to a form. I don't think they're entirely positive though and certainly don't work in all situations. They're great when you don't know exactly the date you want (_I want to book a flight around Easter time_) or you need to have an overview of the calendar (_I need to set a reminder for http://twitter.com/#!/LondonGGUG[GGUG] on the third Tuesday of every month_). However, when trying to enter your date of birth the widget is just in the way. Even if the widget is keyboard accessible and doesn't force you to page month-by-month to the correct year you can almost certainly type the date quicker than you can find and select it in a calendar widget.

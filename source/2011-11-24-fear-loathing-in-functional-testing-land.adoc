@@ -9,6 +9,8 @@ As projects grow the two things I've repeatedly found to be particularly painful
 
 _Disclaimers:_ I have more questions than answers and I'm completely open to the idea that _I'm doing it all wrong_. I'm not trying to diss any tool or technique here. I have spent a lot of time over the last few years writing functional test coverage so I think I at least have some perspective on the issues if no clue how to solve them.
 
+READMORE
+
 When I say functional testing I mean in the http://grails.org/doc/latest/guide/9.%20Testing.html#9.3%20Functional%20Testing[GOOS] approach of working outside in; starting with a (failing) functional test that defines the desired behaviour in a user-centric way and building in to the low-level implementation with its unit tests then back out to watch the original end-to-end test (hopefully) pass.
 
 === Why is functional testing difficult?

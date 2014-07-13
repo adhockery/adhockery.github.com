@@ -7,6 +7,8 @@ alias: ["post/42902545073/json-rendering-your-classes/"]
 
 It turns out adding custom JSON renderers for your own types to Grails is really easy. Since I habitually use http://joda-time.sourceforge.net/[Joda Time] instead of the horrible `java.util.Date` and even more horrible `java.util.Calendar` I need to be able to render classes such as Joda's `DateTime` as JSON so that domain objects with fields of those types will convert properly.
 
+READMORE
+
 Implementing a renderer for a type is as easy as this: http://gist.github.com/166335[`DateTimeMarshaller.java`]. After that all that's required is to register the new renderer in `BootStrap.groovy` or some other appropriate spot with:
 
 [source,groovy]

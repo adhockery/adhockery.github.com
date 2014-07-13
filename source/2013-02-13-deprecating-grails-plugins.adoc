@@ -7,6 +7,8 @@ alias: ["post/43006835840/deprecating-grails-plugins/"]
 
 I've written a number of Grails plugins and the fact is that some of them are effectively unsupported. I've only got so much time & I'm juggling work, family, conference speaking, my own projects and open source. Any plugin development I do is going to be driven by the requirements of work or other projects, so even those plugins I still consider as supported might not get updated as often as some people would like.
 
+READMORE
+
 I'm no longer supporting…
 
 * http://freeside.co/grails-selenium-rc/docs/manual/index.html[The Selenium RC plugin]. It's based on Selenium 1 which is discontinuted. I contributed to http://gebish.org/[Geb] which is based on Selenium 2 and is actively supported by http://ldaley.com/[Luke Daley] & http://blog.proxerd.pl/[Marcin Erdmann]. You should consider using that.

@@ -7,6 +7,8 @@ alias: ["post/41774661851/testing-callbacks-with-spock-mocks/", "testing-callbac
 
 I've been doing some work with http://vertx.io/[vert.x] over the last few days and trying to develop components that are test-driven. Like any asynchronous framework rather than having methods that return a value you pass a callback Closure that gets invoked at some point in the future with the result. This makes it tricky to write unit tests that mock out collaborators as you might in a traditional app.
 
+READMORE
+
 For example, a simple REST server that saves some data might make a call like this:
 
 [source,groovy]

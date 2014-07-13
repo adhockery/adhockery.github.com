@@ -7,6 +7,8 @@ alias: ["post/42902452839/hacking-on-grails-scaffolding-templates/"]
 
 Grails scaffolding is a fantastic mechanism for getting you up and running quickly. I love the fact that you can provide your own implementation of _some_ controller actions or views and scaffolding will just fill in the gaps. That way you can start hand-crafting things when complexity increases past a certain point but still have Grails do a bunch of work for you.
 
+READMORE
+
 I'd done some customising of scaffolding templates before for the http://grails.org/plugin/joda-time[Joda Time plugin] but recently started playing with them again with a view to creating some I could re-use for future projects. Because scaffolding templates are not only used for dynamic views but also provide the basis of generated views that you go on to customise it's worth having a solid baseline. A couple of things I wanted to do were:
 
 1.  Mark up create and edit forms without using tables

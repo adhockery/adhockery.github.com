@@ -15,6 +15,8 @@ applyTemplate('<my:tag/>') == 'the expected output'
 
 However, one thing I found is that it's quite tricky to wire a dependency in to the taglib instance that's used by the `applyTemplate` method.
 
+READMORE
+
 Let's imagine that `my:tag` makes a call to a Grails service for some reason. In the tag's unit test you'll need to wire in a mock or real instance of that service.
 
 Although like with the old `TagLibUnitTest` and `TagLibSpec` classes your test gets a field called `taglib` that doesn't actually appear to be the instance that `applyTemplate` uses. This fails:

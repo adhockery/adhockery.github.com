@@ -7,6 +7,8 @@ alias: ["post/42902948889/asynchronous-application-events-in-grails/"]
 
 On the project for my current client we've been using JMS in a rather naïve way for some time now. We've also experienced a certain amount of pain getting JMS and ActiveMQ configured correctly. However, all we're really using JMS for is asynchronous event broadcasting. Essentially we have a handful actions such as flushing hardware caches and notifying external systems that take place when a document changes. We don't want these things blocking the request thread when users save data.
 
+READMORE
+
 After wrestling with JMS one too many times we decided to take a look at Spring's event framework instead. It turns out it's extremely easy to use for these kinds of asynchronous notifications in a Grails application.
 
 Essentially any artefact can publish an event to the Spring application context. A simple publishing service can be implemented like this:

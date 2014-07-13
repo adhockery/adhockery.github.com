@@ -7,6 +7,8 @@ alias: ["post/41774610097/twitter-bootstrap-and-semantics/", "twitter-bootstrap-
 
 There's a lot to like about http://twitter.github.com/bootstrap/[Twitter Bootstrap]; it's a fantastic resource for getting off the ground, particularly for getting a slick-looking admin interface up and running quickly. The recent changes to accommodate responsive layouts are really impressive. I'm particularly impressed with the way http://twitter.github.com/bootstrap/base-css.html#forms[horizontal forms] stack on smaller screens (failure to accommodate small screens in form design is something I've https://twitter.com/#!/rfletcherEW/status/161718223207804928[complained about before]). However, there are some things I'm less keen on…
 
+READMORE
+
 Looking at the markup it seems heavy and overly concerned with presentation. In http://twitter.github.com/bootstrap/examples/fluid.html[this example layout] links in the top navbar have no less than 4 _divs_ between them and the top of the document. There are a lot of classes everywhere and almost all of them are concerned with presentation rather than semantics; _how_ a _div_ should look rather than what it represents. Classes like `row-fluid`, `span9` even the ubiquitous `btn` are slightly troubling as they're bleeding presentation details into the markup.
 
 I get that these are to some extent practical considerations. Restyling all `button` elements would be disruptive for people who wanted to drop Bootstrap in to an existing site, for example. Maybe I'm being pedantic but I've worked on sites with severe div-itis and it makes things difficult both for maintenance and accommodating changes.

@@ -7,4 +7,6 @@ alias: ["post/42902666554/slides-from-ggug/"]
 
 I gave a talk last night at the http://skillsmatter.com/event/ajax-ria/testing-grails-applications-with-selenium-rc[London Groovy & Grails User Group] about the http://grails.org/plugin/selenium-rc[Selenium RC plugin] and how to use it. I pitched the talk assuming that people were somewhat familiar with http://seleniumhq.org/docs/[Selenium] and had probably used the http://seleniumhq.org/projects/ide/[Selenium IDE]. I'm not sure if that was the right way to go but the talk went pretty well and people seemed interested in what I had to say. I ended up talking a lot about the http://code.google.com/p/webdriver/wiki/PageObjects[page object pattern] and how awesome it is for building manageable suites of Selenium tests.
 
+READMORE
+
 I really wanted to show a few quick examples but I had neglected to consider that a http://store.apple.com/uk/product/MB572Z/A?fnode=MTY1NDA3Ng&mco=MTA4NDU0NjA[mini display port VGA adapter] might be a useful thing to bring and unfortunately with Skills Matter being in the middle of an office move there wasn't one to hand. Luckily I was able to borrow a laptop so at least I could get my slides up on the projector.

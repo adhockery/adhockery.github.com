@@ -7,6 +7,8 @@ alias: ["post/41774715101/testing-angular-forms-with-casper/", "testing-angular-
 
 When testing an http://angularjs.org[Angular] application using http://casperjs.org/[Casper] I found that the binding between inputs and model didn't seem to be happening when I filled in form fields. I used Casper's http://casperjs.org/api.html#casper.fill[`fill`] method but found that the Angular form validation was rejecting any required fields as though they were still blank. With some debugging I was able to see that the `$scope` variables indeed weren't getting updated.
 
+READMORE
+
 At first I figured I might need to trigger a _change_, _blur_ or _keyup_ event or something but after some digging in the Angular source I figured out that Angular uses a custom _input_ event to trigger a refresh of the model. When Casper sets the form field values the event isn't triggered so Angular doesn't _"see"_ the change.
 
 To work around this I just overrode the `fill` method such that after writing a value to each field it triggers the _input_ event as well:

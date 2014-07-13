@@ -5,7 +5,11 @@ tags: i18n, spring
 alias: ["post/42902346489/internationalizing-domain-classes-and-enums/"]
 ---
 
-It's common to provide a `toString` implementation on a domain object that may well end up being used in the view. However, this doesn't allow for internationalization in the view. A good solution that I've used a number of times is to have classes implement Spring's http://static.springframework.org/spring/docs/2.5.x/api/org/springframework/context/MessageSourceResolvable.html[MessageSourceResolvable] interface. Consider this domain class that represents an image file:
+It's common to provide a `toString` implementation on a domain object that may well end up being used in the view. However, this doesn't allow for internationalization in the view. A good solution that I've used a number of times is to have classes implement Spring's http://static.springframework.org/spring/docs/2.5.x/api/org/springframework/context/MessageSourceResolvable.html[MessageSourceResolvable] interface.
+
+READMORE
+
+Consider this domain class that represents an image file:
 
 [source,groovy]
 .grails-app/domain/Image.groovy

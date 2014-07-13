@@ -11,6 +11,8 @@ My goal was to distort just the background behind an element whilst leaving the 
 
 Naturally, being a CSS purist I also wanted to do all this without introducing non-semantic extra elements into the document.
 
+READMORE
+
 In order to save space I'm not using any vendor specific prefixes in the code in this article. On _jsFiddle_ I'm using http://leaverou.github.com/prefixfree/[Lea Verou's awesome _-prefix-free_ library] if you're applying this technique you'll need to do the same or add the vendor prefixed versions of CSS properties like `transform` and `background-clip`.
 
 === Doing it the dumb way

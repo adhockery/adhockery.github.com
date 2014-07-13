@@ -1,13 +1,15 @@
 ---
 title: 'Static analysis and strictness'
 date: 2014-06-22T08:27:00+0100
-tags: 
+tags:
 alias: ["post/89533810726/static-analysis-and-strictness/"]
 ---
 
 Let me be clear – static analysis tools like Checkstyle and Codenarc are useful tools. But…
 
 I don't think you should have overly strict enforcement. There is a small class of static analysis rules that are unambiguous – you're not using that `import`, that `if` block doesn't have braces – but there is a large class of rules that exist in a grey area. Is that method really unused or is it invoked reflectively somewhere? Yes, generally we should declare constants for magic numbers but is it really necessary for the prime seed of a hash code method?
+
+READMORE
 
 I think the only sane thing to do with those kinds of rule is to enforce them as warnings. What are the alternatives?
 

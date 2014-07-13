@@ -7,6 +7,8 @@ alias: ["post/42902297807/hibernate-pogos-immutability-and-encapsulation/"]
 
 I had a confusing experience this morning. I'm working on a simple web based game as a learning exercise.
 
+READMORE
+
 I use a custom tag to determine if the currently logged in user is the active player (i.e. the player whose turn it is).
 
 [source,markup]

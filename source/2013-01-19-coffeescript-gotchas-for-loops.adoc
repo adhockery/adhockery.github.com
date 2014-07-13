@@ -5,9 +5,9 @@ tags: coffeescript
 alias: ["post/41774818353/coffeescript-gotchas-for-loops/", "coffeescript-gotchas-for-loops/"]
 ---
 
-Title: CoffeeScript Gotchas: for loops Date: 2013-01-19 17:20 Slug: coffeescript-gotchas-for-loops
-
 I was caught out by a subtle difference between JavaScript and CoffeeScript yesterday.
+
+READMORE
 
 In JavaScript you may be used to iterating over the properties of an object using a _for…in_ loop. For example:
 

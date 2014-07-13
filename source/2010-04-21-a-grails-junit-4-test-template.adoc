@@ -28,4 +28,6 @@ class @artifact.name@ {
 }
 ------------------------------------------------
 
+READMORE
+
 To use this just run `grails install-templates` then copy the contents over the file _src/templates/artifacts/Tests.groovy_. You can delete anything else in the _src/templates_ directory that you don't need. Then every time you use a Grails command such as `grails create-service foo` the generated test will use the JUnit 4 template.

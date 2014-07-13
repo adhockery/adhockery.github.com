@@ -16,6 +16,8 @@ nameLength = crew.length()
 
 Note the assignment operator used rather than the left shift on the second line there.
 
+READMORE
+
 I had always assumed that this option went out of the window when using a data table. Values in the columns can't reference other columns after all. But http://blog.proxerd.pl/[Marcin Erdmann] pointed out to me that it is in fact possible to still used derived values with data tables, like this:
 
 [source,groovy]

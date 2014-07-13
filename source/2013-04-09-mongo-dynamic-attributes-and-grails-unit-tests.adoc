@@ -7,6 +7,8 @@ alias: ["post/47556649498/mongo-dynamic-attributes-and-grails-unit-tests/"]
 
 When using _Mongo DB_ with _GORM_ it's possible to assign to dynamic attributes of a domain class. However, you'll find that when you write unit tests for code that uses this feature it isn't supported. It's easy to emulate, though.
 
+READMORE
+
 All domain classes that are enabled in a test using the `@TestFor` or `@Mock` annotations are available via `grailsApplication.domainClasses`. This means you can simply add something like this in your setup method:
 
 [source,groovy]

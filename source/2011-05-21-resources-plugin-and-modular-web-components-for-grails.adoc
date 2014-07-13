@@ -7,6 +7,8 @@ alias: ["post/42903231998/resources-plugin-and-modular-web-components-for-grails
 
 I recently gave a talk on http://www.eu2011.gr8conf.org/talk/progressive-uis['Building progressive UIs with Grails'] at http://www.eu2011.gr8conf.org/[gr8conf] in Copenhagen and was really pleased with the feedback & comments I received afterwards. There was a question asked at the end that I felt in retrospect I could have answered better, though. I had mentioned that the Grails http://grails.org/doc/latest/guide/6.%20The%20Web%20Layer.html#6.7%20Ajax[AJAX tags] were something that should be avoided as they write script blocks directly into the page and event handlers directly onto HTML elements. I was pitching an approach based on a clean separation of clean semantic markup and script enhancements and inline script violates that separation.
 
+READMORE
+
 I was asked if there might be any kind of tags that could be developed that provided a more appropriate replacement and answered that since modern JavaScript frameworks such as http://api.jquery.com/category/ajax/[jQuery] make decorating elements with AJAX functionality so easy that I didn't think there was much point.
 
 I wouldn't want anyone to understand me to mean that creating taglibs and GSP templates for modular components of your pages is a bad thing. I'd just advocate keeping the script out of them. Custom tags that write out markup or delegate to templates can be really useful for building complex reusable modules. Pairing those with external JavaScript files that enhance the generated markup would be very effective.

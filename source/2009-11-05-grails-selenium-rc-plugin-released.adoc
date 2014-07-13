@@ -9,6 +9,8 @@ I've finally got the first release of the Selenium RC plugin out of the door. Ju
 
 For anyone unfamiliar with http://selenium-rc.seleniumhq.org/[Selenium RC] basically the plugin allows you to write and run Selenium tests in Groovy to functionally test Grails apps using a real browser. The tests run in the functional phase using `grails test-app` or `grails test-app -functional`.
 
+READMORE
+
 In terms of compatibility there is a very minor issue with Safari and some slightly more annoying ones with IE - all of which the plugin's default configuration will work around for you. Unfortunately Firefox 3.5 on OSX Snow Leopard doesn't want to play at all due to an http://jira.openqa.org/browse/SRC-743[open Selenium bug]. Firefox on other platforms, Google Chrome and Opera all appear to be 100% compatible.
 
 I've tried to make writing the tests themselves as similar to regular Grails unit and integration testing as possible. Not only that, if you have the http://grails.org/plugin/spock[Spock plugin] installed you can write your Selenium tests as Spock Specifications.

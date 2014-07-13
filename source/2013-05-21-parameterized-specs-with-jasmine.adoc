@@ -7,6 +7,8 @@ alias: ["post/50986014902/parameterized-specs-with-jasmine/"]
 
 Spock's _where_ block makes testing similar conditions for a bunch of inputs very straightforward. Recently I was working on the Groovy language definition for the http://prismjs.com/[Prism syntax highlighter] and wanted something similar.
 
+READMORE
+
 I used https://github.com/pivotal/jasmine[Jasmine] to test-drive my code and wanted to be able to make some very similar assertions about how the highlighting operated. For example, a particular code block should contain particular characters highlighted as _operator_ tokens. The assertions for each of Groovy's (many) operator types would look extremely similar with the only variance being the _id_ of the code block and the expected operator tokens. Using Spock this would be a classic case for writing a single specification method and applying a _where_ block.
 
 What I _didn't_ want to do was write test code like this:

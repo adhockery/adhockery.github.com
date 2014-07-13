@@ -7,6 +7,8 @@ alias: ["post/42902966203/grails-spring-events-plugin/"]
 
 Following on from http://blog.freeside.co/post/42902948889/asynchronous-application-events-in-grails[my previous post] I've developed a Grails plugin that packages the asynchronous events behaviour up and adds some extra useful functionality.
 
+READMORE
+
 In addition to the asynchronous event processing the plugin gives you:
 
 * A _publishEvent_ method attached to all domain classes, controllers and services.

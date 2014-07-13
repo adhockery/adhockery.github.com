@@ -13,6 +13,8 @@ There's a fairly popular technique in Grails plugin development where the plugin
 
 The downside is that to run all the plugin project's tests it's necessary to run the plugin's own tests, then change directory into each of the test apps and run their tests. Continuous integration config is also fiddlier for the same reason.
 
+READMORE
+
 I wanted to find a way to automate this so I could run all my plugins' tests with a single command. I could write a _bash_ script or an _Ant_ build I guess, or even use _maven <shudder>_. However keeping things in Groovy-land I decided to try using _http://www.gradle.org/[Gradle]_ which I've been meaning to look into for a while now. I saw http://skillsmatter.com/podcast/java-jee/gradle-deep-dive[Hans Dockter's presentation] on _Gradle_ at the http://skillsmatter.com/event/java-jee/groovy-grails-exchange-2009/wd-184[London Groovy & Grails Exchange] back in December and was impressed with how terse and expressive the syntax is, especially compared to XML based formats. Unfortunately one thing _Gradle_ doesn't grok yet is Grails.
 
 The solution I've come up with is based on http://www.mail-archive.com/user@gradle.codehaus.org/msg01871.html[a post by Helmut Denk] on the _gradle-user_ list. Gradle just uses http://ant.apache.org/manual/CoreTasks/exec.html[Ant's exec task] to shell out and execute the appropriate Grails command. Combining this with Gradle's multi-project build support I now have plugin builds that can be run with `gradle test` that will automatically descend into the test apps under _test/projects/*_.

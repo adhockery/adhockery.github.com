@@ -7,6 +7,8 @@ alias: ["post/42902495229/joda-time-auto-timestamping-issue-on-grails-1-1-1/"]
 
 I've not upgraded most of my code to Grails 1.1.1 yet so I hadn't noticed this problem until it was http://www.nabble.com/Problem-with-Joda-plugin-and-autotimestamping-td24068191.html#a24068191[brought to my attention] by Manuel Vio on the http://grails.org/Mailing+lists[grails-user] mailing list.
 
+READMORE
+
 I http://jira.codehaus.org/browse/GRAILS-4689[raised a bug] a few days ago around the fact that GORM identifies Joda Time types (and presumably any non-default property type) as a one-to-one association. Up to now the only problem this caused me was that it means the http://grails.org/plugin/joda-time[Joda Time plugin] has to do some slightly hacky tricks in the scaffolding templates to prevent crashes when Grails tries to render the properties as though they were associated domain instances only to find they have no _id_ property. However, on Grails 1.1.1 the bug is causing a nasty failure on auto-timestamping.
 
 Under Grails 1.1 you can use a Joda _DateTime_ for an auto-timestamped fields:

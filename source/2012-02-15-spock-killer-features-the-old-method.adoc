@@ -9,6 +9,8 @@ I use Spock almost exclusively to test Groovy or Java code these days. It's got 
 
 The `old` method is possibly my favourite Spock feature. It's a simple thing but really enhances test legibility. It's also great for wowing developers new to Spock because it looks like black magic at first glance.
 
+READMORE
+
 Consider a simple test like this:
 
 [source,groovy]

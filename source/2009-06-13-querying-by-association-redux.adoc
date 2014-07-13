@@ -9,6 +9,8 @@ A couple of months back I http://blog.freeside.co/post/42902379524/querying-by-a
 
 Last night I was reading through my new copy of http://blogs.bytecode.com.au/glen/[Glen Smith] and Peter Ledbrook's http://www.amazon.co.uk/Grails-Action-Glen-Smith/dp/1933988932[Grails In Action] and my eye was caught by a particular example where they use aliases in a criteria query. Sure enough a quick test this morning confirms that this is the solution to the problem.
 
+READMORE
+
 To recap. If I have these domain classes:
 
 [source,groovy]

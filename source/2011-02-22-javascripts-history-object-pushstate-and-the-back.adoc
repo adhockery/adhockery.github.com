@@ -7,6 +7,8 @@ alias: ["post/42903159156/javascripts-history-object-pushstate-and-the-back/"]
 
 I'm not sure if it's the immaturity of the browser support or my general uselessness but I've been having some trouble with the JavaScript _history_ API.
 
+READMORE
+
 I won't try to explain the _history_ API here, it's pretty well covered at https://developer.mozilla.org/en/DOM/Manipulating_the_browser_history[Mozilla Developer Network] and http://dev.w3.org/html5/spec-author-view/history.html[W3]. The basics are simple enough:
 
 * The API provides two methods; http://dev.w3.org/html5/spec/history.html#dom-history-pushstate[`pushState`] which allows you to add a new entry to the browser history and http://dev.w3.org/html5/spec/history.html#dom-history-replacestate[`replaceState`] which modifies the current history entry.

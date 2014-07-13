@@ -7,6 +7,8 @@ alias: ["post/42903069805/auto-generate-spock-specs-for-grails-artifacts/"]
 
 When creating artifacts such as domain classes, controllers and tag libs Grails generates a _JUnit_ test case. If, like me, you're digging writing specifications with http://spockframework.org/[Spock] you'd probably rather have Grails generate one of those. The last thing I want is to manually transform every generated test case into a specification for every artifact I create.
 
+READMORE
+
 It's very simple to create a _CreateUnitSpec_ or _CreateIntegrationSpec_ script with a template specification. Hooking in to the other types of artifact creation turned out to be fiddlier. Each _create-*_ command calls a Closure called _createUnitTest_. Reassigning that Closure should be the solution. The trick is in figuring out where that can be done.
 
 Any time one of its http://gant.codehaus.org/[Gant] targets is invoked the Grails build system fires an event. You can respond to those events by declaring a closure called `event<target name>Start` in `scripts/_Events.groovy`. The only Gant target directly invoked when an artifact is created is called _'default'_. It is possible to intercept that although that means the event handler will be invoked any time *any* Gant target called _'default'_ runs. For this purpose that's no problem since we're just overriding a closure in the build binding.

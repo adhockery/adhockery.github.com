@@ -7,6 +7,8 @@ alias: ["post/42902311928/why-would-i-ever-want-to-disable-the-l2-cache/"]
 
 This question came up when pairing last week. We were going through our code-base adding the http://grails.org/doc/1.1.x/ref/Database%20Mapping/cache.html[cache directive] to a bunch of our domain classes. Grails is all about sensible defaults and it seems slightly odd that the level 2 cache is configured by default in `DataSource.groovy` but not actually _used_ unless `cache(true)` is added to the mapping closure in each domain class. I wonder if anyone has any ideas why it might ever be a bad idea to use the L2 cache?
 
+READMORE
+
 The only scenario I can come up with is situations where updates are made direct to the DB, bypassing Hibernate. This is, I would think, pretty rare (we do it for some rather naïve hit tracking and for voting on polls). Sure, in this circumstance the L2 cache will likely give you stale results. However, it's very much the exception rather than the rule.
 
 Most other objections I've heard have been some variety of worry about caches eating up vast amounts of heap space and crashing the JVM (which is why cache implementations like http://ehcache.sourceforge.net/[ehcache] use time-based and LRU eviction).

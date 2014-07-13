@@ -27,6 +27,8 @@ o.foo = "foo"
 o.foo = o
 --------------------------------
 
+READMORE
+
 Copy & paste this into the Groovy REPL or http://groovyconsole.appspot.com/script/931001[try it on the Groovy Web Console]. I think you may be surprised.
 
 It seems like the operator form will always dispatch to the _last_ implementation attached to the meta class regardless of parameter types whereas the method form will dispatch "correctly".

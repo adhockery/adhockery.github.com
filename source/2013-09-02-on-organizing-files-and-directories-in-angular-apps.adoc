@@ -7,6 +7,8 @@ alias: ["post/60062381788/on-organizing-files-and-directories-in-angular-apps/"]
 
 I've been working on an http://angularjs.org/[Angular JS] project for the past few weeks. It's not the first time I've used Angular but it is the first time I've used the https://github.com/yeoman/generator-angular[_generator-angular_] package for http://yeoman.io/[Yeoman]. Having the ability to quickly generate skeletons for new components is really nice but there's one thing that rubs me up the wrong way – the way the genenerated code is organized on the file system.
 
+READMORE
+
 When I use a commands like
 
 [source,bash]

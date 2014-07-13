@@ -24,6 +24,8 @@ def show = {
 
 This seemed to work well enough. However when writing a test I noticed an odd thing. I was using http://groovy.codehaus.org/modules/http-builder/doc/rest.html[RESTClient] to scrape resource URLs out of and make a _HEAD_ request against them to ensure the URLs were valid. Javascript and CSS files were working fine but all the non-static images in the page were getting 404s.
 
+READMORE
+
 Initially I suspected a data setup problem and spent some time ensuring my test was setting data up properly. It was only once I put some debug logging in the controller action that I saw that the controller _was_ actually loading images. The 404 was not coming from the _else_ block in the action as I initially assumed. I tried changing the _RESTClient_ call from _head_ to _get_ and suddenly the image URLs started working!
 
 Once I did that I realised what the problem was. An HTTP _HEAD_ request does not expect a response, in fact a server receiving a _HEAD_ request http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html#sec9.4[_must not_ return a response]. The response stream that our controller action is writing to is, when the request method is _HEAD_, actually a no-op stream. When the action completes Grails checks to see if anything has been committed to the response stream and since it has not assumes that we want to render a view by convention. You can probably see where this is going now. The convention is that the request gets forwarded to `grails-app/views/<controller>/<action>.gsp` which of course does not exist. The forwarded request sets a response code of _404_ because there is no GSP!

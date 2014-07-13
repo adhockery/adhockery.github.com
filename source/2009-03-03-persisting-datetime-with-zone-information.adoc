@@ -7,6 +7,8 @@ alias: ["post/42902330676/persisting-datetime-with-zone-information/"]
 
 I was stuck a while ago trying to figure out how to map http://joda-time.sourceforge.net/contrib/hibernate/apidocs/org/joda/time/contrib/hibernate/PersistentDateTimeTZ.html[`PersistentDateTimeTZ`] in a GORM class. It's an implementation of Hibernate's http://www.hibernate.org/hib_docs/v3/api/org/hibernate/usertype/UserType.html[`UserType`] interface that persists a Joda http://joda-time.sourceforge.net/api-release/org/joda/time/DateTime.html[`DateTime`] value using 2 columns - one for the actual timestamp and one for the time zone. The `DateTime` class contains time zone information but a SQL timestamp column is time zone agnostic so you can lose data when the value is saved (the same exact problem exists when persisting `java.util.Date` values).
 
+READMORE
+
 I could never figure out how to map the user type to my domain class property correctly. Just doing:
 
 [source,groovy]

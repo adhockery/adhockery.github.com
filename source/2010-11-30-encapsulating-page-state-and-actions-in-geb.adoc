@@ -9,6 +9,8 @@ Geb _Page_ and _Module_ classes are just regular Groovy classes. In addition to 
 
 In this post I want to run through a couple of simple examples of re-usable _Module_ classes that are enhanced with methods. Although the examples deal with _Module_ classes everything here is equally applicable to _Page_ classes.
 
+READMORE
+
 Page object methods tend to fall into two categories:
 
 Observers : report on some aspect of page state (e.g. whether a user is logged in or not). : have non-_void_ return types (I prefer explicit return types on methods but `def` would work too). : can be used for making assertions.

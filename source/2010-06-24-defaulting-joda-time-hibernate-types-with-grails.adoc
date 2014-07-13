@@ -23,6 +23,8 @@ static mapping = {
 }
 ----------------------------------------
 
+READMORE
+
 Now you can just add this to your _Config.groovy_ once and do away with the type mappings in the individual classes:
 
 [source,groovy]

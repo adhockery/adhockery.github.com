@@ -7,6 +7,8 @@ alias: ["post/42902576958/thoughts-on-testing/"]
 
 These are some of the practices I try to live by when writing test coverage. Some of the detail may be http://grails.org/[Grails]-centric since that's been my development platform of choice for the last couple of years, but the gist of the points is generally applicable.
 
+READMORE
+
 I've been thinking about posting something like this for quite a while and was pushed over the edge by reading some interesting things...
 
 * http://www.think-box.co.uk/[Simon Baker] recommended that I read what J.B. Rainsberger http://jbrains.ca/permalink/242[has to say about integration tests] which chimed with my disgruntlement with them and my tendency to refactor old integration tests into unit tests when I touch related code.

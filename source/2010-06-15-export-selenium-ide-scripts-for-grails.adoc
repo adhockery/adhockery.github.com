@@ -7,6 +7,8 @@ alias: ["post/42902982709/export-selenium-ide-scripts-for-grails/"]
 
 Thanks to the http://adam.goucher.ca/?p=1352[documentation] provided on http://adam.goucher.ca/[Adam Goucher's blog] I've created a simple Firefox plugin that extends the http://seleniumhq.org/projects/ide/[Selenium IDE] and adds formatters that allow you to export a script as a http://robfletcher.github.com/grails-selenium-rc/docs/manual/index.html[Grails Selenium RC] test case. You have the option of JUnit 3 (extends _GroovyTestCase_, uses _assertEquals_) or JUnit 4 (doesn't extend anything, uses annotations and _assertThat_) formats.
 
+READMORE
+
 I think everything is working. There are some things I'd still like to do:
 
 * Custom commands are currently exported as commented out which they don't need to be given Grails Selenium RC test cases can call Javascript extension functions directly.

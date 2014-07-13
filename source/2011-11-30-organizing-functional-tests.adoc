@@ -7,6 +7,8 @@ alias: ["post/41774546011/organizing-functional-tests/", "organizing-functional-
 
 I posted a few days ago http://blog.freeside.co/post/42903299940/fear-loathing-in-functional-testing-land[about functional testing & some of my frustrations], focusing mainly on the technical issues. I did touch on test organization in terms of modelling behaviour rather than page structure. As http://ldaley.com/post/13251886270/in-response-to-robs-post-on-functional-testing[Luke Daley has pointed out] the two aren't fundamentally in opposition and I've been giving this some further thought.
 
+READMORE
+
 I think the crux of the issue is that functional tests, end-to-end tests, acceptance tests, whatever you want to call them are _not_ the same thing as unit tests. They're not really even just a higher level of the same thing. Yet on the projects I've worked on we've generally carried on as though they were.
 
 Unit tests are associated almost on a one-to-one basis with units of code. When you execute `grails create-controller Foo` the framework generates a skeleton controller and a unit test for it. You certainly shouldn't be slavishly beholden to the one unit test class per production class habit but it's generally reasonable. Each unit test describes the behaviour of a single unit of the software. I don't think the same association _is_ appropriate for functional tests but we often end up using it anyway.

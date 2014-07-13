@@ -9,6 +9,8 @@ For my Grails plugins I generally write a test project (or more than one). I tho
 
 Using http://hudson-ci.org/[Hudson] this turned out to be pretty straightforward.
 
+READMORE
+
 You will need all the Grails versions you want to test against installed on your Hudson box. I put them in `/opt` so replace that with wherever you have them in the steps below. Also, if you want the builds to run in parallel and will be running any functional tests you'll need the http://wiki.hudson-ci.org/display/HUDSON/Port+Allocator+Plugin[Hudson Port Allocator plugin].
 
 * Start by creating a new job in Hudson and choosing _"Build multi-configuration project"_.

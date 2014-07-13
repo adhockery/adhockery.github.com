@@ -7,6 +7,8 @@ alias: ["post/42903020788/acyclic-relationship-validation-in-grails/"]
 
 A common domain class use-case is for a self-referential relationship that must not be circular (a http://en.wikipedia.org/wiki/Directed_acyclic_graph[directed acyclic graph]). For example, a _Person_ class may have a _parent_ property that is a many-to-one relationship with another _Person_ instance. However a given _Person_ cannot be his own _parent_ or ancestor.
 
+READMORE
+
 We're using just such a relationship for trees of pages that inherit certain characteristics from their ancestors. In order to validate that our users aren't setting up circular references I implemented the following constraint:
 
 [source,groovy]

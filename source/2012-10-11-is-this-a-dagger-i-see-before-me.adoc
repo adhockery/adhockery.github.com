@@ -7,6 +7,8 @@ alias: ["post/41774730401/is-this-a-dagger-i-see-before-me/", "is-this-a-dagger-
 
 Recently https://twitter.com/marcinerdmann[Marcin Erdmann] and I decided to experiment with using https://github.com/square/dagger[Dagger] for dependency injection in a project at work. It's a super-lightweight DI framework built by http://squareup.com[Square].
 
+READMORE
+
 We felt the code we were working on was in danger of getting out of hand. In particular we found ourselves passing a lot of parameters _through_ methods or classes as they were dependencies of objects being used or created deeper in the stack. Testability was suffering as objects and methods were becoming tightly coupled and we were ending up using excessive numbers of mocks & test doubles.
 
 A pet hate of mine is having lots of noise in tests. It makes test maintenance really difficult later when it's hard to remember which bits of setup are really relevant to the scenario under test.

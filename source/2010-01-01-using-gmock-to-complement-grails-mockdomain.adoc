@@ -7,6 +7,8 @@ alias: ["post/42902750567/using-gmock-to-complement-grails-mockdomain/"]
 
 Since Grails 1.1 we've had pretty good http://grails.org/doc/latest/guide/single.html#9.%20Testing[unit testing support] via _GrailsUnitTestCase_ and its sub-classes. The _mockDomain_ method is particularly useful for simulating the various enhancements Grails adds to domain classes. However, there are some domain class capabilities, such as criteria queries and the new http://grails.org/doc/latest/ref/Domain%20Classes/namedQueries.html[named queries], that can't really be simulated by _mockDomain_.
 
+READMORE
+
 So assuming we're trying to unit test a controller that uses criteria methods or named queries on a domain class how can we enhance the capabilities of _mockDomain_? One of my favourite Groovy libraries is http://gmock.org/[GMock] which I use in preference to Groovy's built in mock capabilities. One of its really powerful features is the ability to use http://gmock.org/documentation/0.8.0#Partial_mock['partial mocks'], _i.e._ to mock particular methods on a class whilst allowing the rest of the class to continue functioning as normal. This means we can layer a mocked _createCriteria_, _withCriteria_ or named query call on to a domain class that is already enhanced by _mockDomain_.
 
 First off you need to add the GMock dependency to your _BuildConfig.groovy_. Since GMock supports http://code.google.com/p/hamcrest/[Hamcrest matchers] for matching method arguments you'll probably want those as well:

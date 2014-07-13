@@ -22,6 +22,8 @@ fns.each { it() }
 
 What will get printed to _sysout_? Give up? You can http://groovyconsole.appspot.com/script/920002[run the script on Groovy Web Console].
 
+READMORE
+
 When the closures are run the value that is bound to the variable `i` is the value it had on the _final_ iteration of the loop rather than the iteration where the closure was created. The closures' scopes have references to `i` and by the time any of the closures are executed `i` is _5_.
 
 Variables local to the loop body do not behave like this, obviously because each closure scope contains a reference to a different variable. Here's another example where I'm using a local variable in the loop to store the square of the loop variable itself. What will be printed to _sysout_ this time?

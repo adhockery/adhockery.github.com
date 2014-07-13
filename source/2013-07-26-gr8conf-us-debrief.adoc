@@ -1,11 +1,13 @@
 ---
 title: 'GR8Conf US debrief'
 date: 2013-07-26T13:57:00+0100
-tags: 
+tags:
 alias: ["post/56513755063/gr8conf-us-debrief/"]
 ---
 
 I just got back from my second GR8Conf US in Minneapolis. Despite the jet-lag it was well worth it.
+
+READMORE
 
 https://twitter.com/sjurgemeyer[Shaun Jurgemeyer] did an amazing job of organizing things. I can't imagine how he survives between looking after the delegates, dealing with us prima-donna speakers and coordinating the hotel & conference center. Somehow he found time to also socialize with us & stay up late talking about music. I can't thank him enough for laying on the conference and giving me the opportunity to come over for the second time.
 

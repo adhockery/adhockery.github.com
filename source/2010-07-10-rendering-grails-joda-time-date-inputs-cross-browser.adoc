@@ -7,9 +7,9 @@ alias: ["post/42903051745/rendering-grails-joda-time-date-inputs-cross-browser/"
 
 Yesterday I released a new version of the Grails http://grails.org/plugin/joda-time[Joda Time plugin] that includes support for the various new http://diveintohtml5.org/forms.html#type-date[date and time input types] in the HTML5 standard. Right now only http://opera.com[Opera] supports these types with proper date-picker type controls, the other browsers just render them as text inputs. However this doesn't mean you can't or shouldn't start using them right away. There's a very handy JavaScript library called http://www.modernizr.com/[Modernizr] that you can use to detect the features supported by the client's browser and render alternatives using script. In this post I'm going to walk through how to combine the Joda-Time plugin, Modernizr and the http://jqueryui.com/demos/datepicker/[jQuery datepicker] to render an HTML5 _date_ input field that will bind to a _LocalDate_ property on a domain object.
 
-[[install-the-joda-time-plugin]]
-Install the Joda-Time plugin
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+READMORE
+
+=== Install the Joda-Time plugin
 
 If you don't currently have version 1.1+ of the Joda-Time plugin installed, run `grails install-plugin joda-time`.
 
@@ -19,9 +19,7 @@ Once the plugin is installed you will need to enable HTML5 support so that data 
 jodatime.format.html5 = true
 ----------------------------
 
-[[create-a-domain-class-with-a-localdate-property]]
-Create a domain class with a LocalDate property
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Create a domain class with a LocalDate property
 
 For this example I'll create a simple domain class representing a person:
 
@@ -50,9 +48,7 @@ Execute `grails generate-all Person` to create a controller and scaffolded views
 
 In the unlikely event that all your site's visitors are using Opera then your work is done at this point. However right now anyone using another browser will have to type in the _birthdate_ value in the correct format in order to get the forms to submit properly which isn't the friendliest user experience.
 
-[[install-jquery-and-jquery-ui]]
-Install jQuery and jQuery-UI
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Install jQuery and jQuery-UI
 
 You can include jQuery and jQuery-UI by simply downloading the JavaScript files into your app, or linking to them on Google. Alternatively you can use the Grails plugins. If you want to go the plugin route this is what you will need to do. First install the plugins:
 
@@ -71,9 +67,7 @@ Then you will need to add the libraries to your SiteMesh template (or you could 
 <jqui:resources components="datepicker" mode="normal" />
 --------------------------------------------------------
 
-[[install-modernizr]]
-Install Modernizr
-~~~~~~~~~~~~~~~~~
+=== Install Modernizr
 
 Download Modernizr and put it in _web-app/js/modernizr_. You can link to the script direct from there or define a library by adding this to _BootStrap.groovy_:
 
@@ -96,9 +90,7 @@ Then include Modernizr in your SiteMesh template by adding the following in the 
 
 To get Modernizr to work its magic you should add a `class="no-js"` to the _html_ element at the top of your SiteMesh template. Modernizr will replace this when the document loads with a whole bunch of classes that it uses to detect the various features supported by the browser.
 
-[[bind-the-jquery-ui-datepicker-to-the-field]]
-Bind the jQuery-UI datepicker to the field
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Bind the jQuery-UI datepicker to the field
 
 The last step is to ensure that any time a user hits the page with a browser that doesn't support a native widget for the _date_ input type they get a jQuery datepicker instead. To do this create a JavaScript file and link to it from your SiteMesh template or the pages using _date_ inputs. The script simply needs to contain the following code:
 

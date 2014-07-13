@@ -5,7 +5,11 @@ tags: grails plugins, caching
 alias: ["post/42902846737/page-fragment-caching-with-grails-springcache-plugin/"]
 ---
 
-Yesterday I released the new version of the Springcache plugin for Grails. The new feature this brings to the table is page fragment caching driven by annotations on controller actions. The feature is based on http://ehcache.org/documentation/web_caching.html[EhCache Web] and is even simpler and more powerful than the full page caching http://blog.freeside.co/post/42902815893/full-page-caching-in-grails-with-ehcache-web[I blogged about recently]. With the page fragment caching feature you can:
+Yesterday I released the new version of the Springcache plugin for Grails. The new feature this brings to the table is page fragment caching driven by annotations on controller actions. The feature is based on http://ehcache.org/documentation/web_caching.html[EhCache Web] and is even simpler and more powerful than the full page caching http://blog.freeside.co/post/42902815893/full-page-caching-in-grails-with-ehcache-web[I blogged about recently].
+
+READMORE
+
+With the page fragment caching feature you can:
 
 * Define `@Cacheable` and `@CacheFlush` annotations on controller actions.
 * Have SiteMesh decorate cached and uncached output alike.

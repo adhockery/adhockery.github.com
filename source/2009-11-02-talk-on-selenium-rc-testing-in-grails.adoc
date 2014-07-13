@@ -7,4 +7,6 @@ alias: ["post/42902630990/talk-on-selenium-rc-testing-in-grails/"]
 
 I'll be delivering a short talk about testing Grails apps with the http://github.com/robfletcher/grails-selenium-rc[Selenium RC plugin] I'm http://blog.freeside.co/post/42902592328/testing-grails-apps-with-selenium-rc[working on] at the http://skillsmatter.com/user-group/java-jee/ggug[London Groovy and Grails User Group] on 20th November. Details are http://skillsmatter.com/event/java-jee/testing-grails-applications-with-selenium-rc[here].
 
+READMORE
+
 The plugin is basically release ready, I'll try to make the final push some time this week so that it's out in the wild in advance of the talk (and hopefully any particularly idiotic bugs are reported and fixed before I make a total fool of myself).

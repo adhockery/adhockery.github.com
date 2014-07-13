@@ -7,9 +7,12 @@ alias: ["post/89760608881/enabling-groovys-invokedynamic-support-in-gradle/"]
 
 I posted link:/post/89759686171/gradle-and-groovys-invoke-dynamic-support[previously] about configuring a Gradle project to ensure that only the _indy_ version of Groovy (that is the variant that supports Java 7's _invokedynamic_ bytecode instruction) is included in the dependency graph. However, just including that version of the Groovy jar is *not* enough to make your Groovy code compile in such a way that it uses _invokedynamic_.
 
+READMORE
+
 In addition to including the right version of the jar you need to configure Gradle's `GroovyCompile` task like this:
 
 [source,groovy]
+.build.gradle
 -----------------------------------------------
 tasks.withType(GroovyCompile) {
   groovyOptions.optimizationOptions.indy = true

@@ -7,6 +7,8 @@ alias: ["post/42902880093/customising-collection-binding-in-grails/"]
 
 Following up on my earlier post about http://blog.freeside.co/post/42902830038/using-a-custom-data-binder-with-grails-domain-objects[using custom `PropertyEditor` implementations to bind association properties] I started looking into the options for custom binding one-to-many associations.
 
+READMORE
+
 For example, tags, as seen on many sites (including Blogger) would typically be modelled as a `Set` of either `String` or some kind of _Tag_ domain object. With _tag_ functionality we really don't want to be selecting tags using a multi-select combo box. It would be ridiculously huge and hard to find anything in it. An auto-completer that recognises commas as delimiters would be the way to go. Script.aculo.us has an http://wiki.github.com/madrobby/scriptaculous/ajax-autocompleter[AJAX Autocompleter] that can handle this kind of tokenised input. Similarly, the Grails RichUI plugin offers an http://grails.org/plugin/richui#AutoComplete[autocomplete tag] that uses a Yahoo! UI component. There are comparable controls available if you're using jQuery or some other Javascript library. What you will end up with is the browser submitting a single parameter containing a comma-separated String of tag names. The trick is to turn that into a collection of `String` or `Tag` domain instances.
 
 For the former case binding is pretty easy. All you need is a property editor that converts a comma-separated String into a `Set` of `String` and _vice-versa_:

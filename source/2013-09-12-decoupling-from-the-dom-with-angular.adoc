@@ -7,6 +7,8 @@ alias: ["post/60977491011/decoupling-from-the-dom-with-angular/"]
 
 One piece of advice you'll run into pretty soon when working with Angular is that you should never touch the DOM outside of a directive. Especially when test-driving your components this is pretty wise. The great strength of Angular is the declarative way in which the view (HTML) works with the view model (Angular controllers). It's almost absurd how easy it is to unit test Angular controllers. Controller functions tend to act on `$scope` properties, trigger or respond to events and all those things are straightforward to replicate in unit tests.
 
+READMORE
+
 However, since Angular directives can _contain_ controllers the temptation can be to write some pretty non-idiomatic Angular code by writing _view logic_ that really belongs in a "pure" controller in a bloated directive that happily interacts with the DOM via the http://docs.angularjs.org/api/angular.element[`$element`] injected into its controller in much the way a Backbone view might.
 
 I was recently building some fairly simple CRUD functionality for my current client. There's a list of _products_ and each has an _edit_ button that pops up a http://getbootstrap.com/javascript/#modals[Bootstrap modal] containing a form with the _product_ data.

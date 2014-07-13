@@ -7,6 +7,8 @@ alias: ["post/42902363843/joda-time-and-grails-auto-timestamping/"]
 
 The http://grails.org/JodaTime+Plugin[Joda-Time Plugin docs] state that http://grails.org/doc/1.1.x/guide/5.%20Object%20Relational%20Mapping%20(GORM).html#5.5.1%20Events%20and%20Auto%20Timestamping[Grails' auto-timestamping] works with Joda-Time properties which is the case. However, when testing it can be useful to take advantage of Joda Time's http://joda-time.sourceforge.net/api-release/org/joda/time/DateTimeUtils.html[`DateTimeUtils`] class to mock the current time. This enables you to have new `DateTime` objects, for example, use a predictable timestamp. Unfortunately it doesn't play nicely with Grails' auto-timestamping which under the covers uses `System.currentTimeMillis()`.
 
+READMORE
+
 There are a couple of solutions to this. You can disable the auto-timestamping and define your own `beforeInsert` event which enables you to use http://joda-time.sourceforge.net/api-release/org/joda/time/DateTimeUtils.html#setCurrentMillisFixed(long)[`DateTimeUtils.setCurrentMillisFixed`]. For example:
 
 [source,groovy]

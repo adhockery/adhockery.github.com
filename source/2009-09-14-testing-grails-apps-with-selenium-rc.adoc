@@ -7,6 +7,8 @@ alias: ["post/42902592328/testing-grails-apps-with-selenium-rc/"]
 
 I http://blog.freeside.co/post/42902576958/thoughts-on-testing[mentioned in my last post] that I'd started to think we were going about http://seleniumhq.org/[Selenium] testing all wrong. For years I've been writing Selenium tests using the http://seleniumhq.org/projects/ide/[Selenium IDE], so the tests are in HTML files. When doing pre-commit testing and on CI the tests are run with the `HtmlTestRunner`. This technique is fine and well - developing tests with the IDE is fast and they can be easily worked on an re-tested in the IDE until they are correct. However, some things have always bothered me and Adam Goucher's thoughts on http://adam.goucher.ca/?p=1198[the Selenium Value Chain] crystallised some of those suspicions.
 
+READMORE
+
 So what are the big advantages of using http://seleniumhq.org/projects/remote-control/[Selenium RC] over just the IDE and `HtmlTestRunner`?
 
 === Test design

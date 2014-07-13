@@ -7,6 +7,8 @@ alias: ["post/60074672413/unit-testing-angular-directives-that-use-controller-an
 
 I spent an hour or so this morning figuring out how to unit test an Angular directive that uses a controller and a template loaded from a file (as opposed to inline). There's a useful example in the https://github.com/vojtajina/ng-directive-testing[ng-directive-testing] repository but I thought a quick summary would be useful (as much to remind me the next time I have to do it as anything). Also the examples there test by interacting with DOM elements rather than directly with the directive's scope.
 
+READMORE
+
 I'm using the Yeoman Angular generator so my tests are using Jasmine & running with Karma.
 
 In order to get my directive's template to load I used the _karma-ng-html2js-preprocessor_ plugin for Karma:

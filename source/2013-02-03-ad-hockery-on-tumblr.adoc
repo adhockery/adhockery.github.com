@@ -7,6 +7,8 @@ alias: ["post/42172874088/ad-hockery-on-tumblr/"]
 
 There's nothing more boring than an _"I moved my blog"_ post but a couple of people have actually asked me to write up something about why I chose Tumblr & how I used http://gruntjs.com/[Grunt] to help me build the theme. So – sorry – here's my _"I moved my blog"_ post…
 
+READMORE
+
 I've been using http://octopress.org/[Octopress] for my blog for a while now & I've been very happy with it. However, I recently acquired an iPad mini & I'd like to be able to use that to compose & publish blog posts. Whilst composing is no problem using an app like http://bywordapp.com/[Byword] I need a unix terminal to publish posts when they're ready.
 
 I started looking for a new blogging service that:

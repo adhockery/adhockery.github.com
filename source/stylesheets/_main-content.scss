@@ -21,9 +21,7 @@
   @include pagination-link(before, "«\00a0");
 }
 
-article, section.primary {
-  background: #fff;
-  @include leader(1);
+article, .archive {
   @include trailer(1);
 
   a {
@@ -31,26 +29,6 @@ article, section.primary {
   }
 
   header, footer {
-    h1, h2 {
-      margin-top: 0;
-
-      a {
-        @include next-link;
-        border-bottom: none;
-      }
-
-      code {
-        font-family: inherit;
-        text-transform: none;
-      }
-    }
-
-    // use h1 header sizes for article headers on the index page
-    h2 {
-      @include adjust-font-size-to($h1-font-size);
-      @include trailer(1, $h1-font-size);
-    }
-
     time {
       @include leader(1);
       color: $muted-text-color;
@@ -62,6 +40,24 @@ article, section.primary {
     @include leader(1);
     @include padding-leader(1);
     @include padding-trailer(1);
+  }
+
+  h1, h2 {
+    margin-top: 0;
+
+    a {
+      @include next-link;
+      border-bottom: none;
+    }
+
+    code {
+      font-family: inherit;
+      text-transform: none;
+    }
+
+    time {
+      font-style: normal;
+    }
   }
 
   ul, ol {
@@ -81,6 +77,30 @@ article, section.primary {
     li:first-child:before {
       content: "Tagged: ";
       font-style: italic;
+    }
+  }
+}
+
+article {
+  @include leader(1);
+  // use h1 header sizes for article headers on the index page
+  h2 {
+    @include adjust-font-size-to($h1-font-size);
+    @include trailer(1, $h1-font-size);
+  }
+}
+
+.archive {
+  h2 {
+    margin-bottom: 0;
+  }
+  ul {
+    margin-top: 0;
+    a {
+      border-bottom: 0;
+    }
+    time {
+      color: $muted-text-color;
     }
   }
 }

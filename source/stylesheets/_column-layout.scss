@@ -1,3 +1,5 @@
+@include establish-baseline;
+
 main, #site-nav {
   @include clearfix;
   max-width: $max-width;
@@ -12,4 +14,15 @@ main, #site-nav {
     @include push(2);
     @include pull(2);
   }
+}
+
+@media (min-width: 960px) {
+  $base-font-size: 21px;
+  $base-line-height: 28px;
+  @include establish-baseline;
+}
+@media (min-width: 1280px) {
+  $base-font-size: 24px;
+  $base-line-height: 32px;
+  @include establish-baseline;
 }

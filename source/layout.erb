@@ -25,41 +25,6 @@
       <%= yield %>
     </main>
 
-    <nav id="site-nav">
-      <section class="recent">
-        <header>
-          <h2>Recent posts</h2>
-        </header>
-        <ol>
-          <% blog.articles[0...10].each do |article| %>
-            <li><%= link_to article.title, article %> – <time datetime="<%= article.date.strftime('%Y-%m-%d') %>"><%= article.date.strftime('%b %e %Y') %></time></li>
-          <% end %>
-        </ol>
-      </section>
-
-      <section class="archive">
-        <header>
-          <h2>Archive by year</h2>
-        </header>
-        <ol>
-          <% blog.articles.group_by {|a| a.date.year }.each do |year, articles| %>
-            <li><%= link_to "<time>#{year}</time> (#{articles.size})", blog_year_path(year) %></li>
-          <% end %>
-        </ol>
-      </section>
-
-      <section class="tags">
-        <header>
-          <h2>Tags</h2>
-        </header>
-        <ul class="tag-list">
-          <% blog.tags.sort().each do |tag, articles| %>
-            <li><%= link_to "#{tag} (#{articles.size})", tag_path(tag) %></li>
-          <% end %>
-        </ul>
-      </section>
-    </nav>
-
     <script src="/javascripts/adhockery.js"></script>
   </body>
 </html>

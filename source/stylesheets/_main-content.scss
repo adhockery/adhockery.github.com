@@ -3,7 +3,12 @@
   &:#{$direction} {
     content: $content;
     color: transparent;
-    font-size: 1.5em;
+    font: {
+      family: $heading-font-family;
+      size: 1.5em;
+      style: normal;
+      weight: 400;
+    }
   }
   &:active, &:hover, &:focus {
     text-decoration: none;
@@ -25,7 +30,7 @@ article, .archive {
   @include trailer(1);
 
   a {
-    border-bottom: 1px dotted transparentize($black, 0.2);
+    border-bottom: 1px dotted $border-color;
   }
 
   header, footer {
@@ -72,6 +77,7 @@ article, .archive {
       &:hover, &:active, &:focus {
         color: $teal;
       }
+      border-bottom: none;
     }
 
     li:first-child:before {
@@ -98,8 +104,11 @@ article {
     margin-top: 0;
     a {
       border-bottom: 0;
+      @include next-link;
     }
     time {
+      display: inline-block;
+      min-width: 3em;
       color: $muted-text-color;
     }
   }
@@ -108,7 +117,7 @@ article {
 .pagination {
   $pagination-font-size: $h2-font-size;
   @include adjust-font-size-to($pagination-font-size);
-  @include leader(2, $pagination-font-size);
+  @include leader(1, $pagination-font-size);
   @include trailer(2, $pagination-font-size);
   @include rem(padding, 0 1rem);
   text-align: center;
@@ -150,4 +159,5 @@ a.read-more {
   font-style: italic;
   font-weight: 700;
   border-bottom: none;
+  @include next-link;
 }

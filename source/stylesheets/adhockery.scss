@@ -6,9 +6,7 @@ $white: #fff;
 $serif-font-family: Garamond, Baskerville, "Baskerville Old Face", "Hoefler Text", "Times New Roman", serif;
 $heading-font-family: "league-gothic", "Franklin Gothic Medium", "Franklin Gothic", "ITC Franklin Gothic", Arial, sans-serif;
 $mono-font-family: "Courier New", Courier, monospace;
-$logo-font-family: 'acta-poster', $serif-font-family !default;
-
-$texture: 'green-dust-and-scratches.png';
+$logo-font-family: "acta-poster", $serif-font-family;
 
 // compass overrides
 $contrasted-dark-default: #222;
@@ -19,11 +17,13 @@ $base-font-family: $serif-font-family;
 
 // grid
 $total-width: 100%;
-$max-width: 1024px;
+$max-width: 56em;
 
 $background-color: $white;
-$decoration-color: $teal; //lighten($black, 40%);
+$decoration-color: $teal;
 $muted-text-color: lighten($black, 50%);
+$border-color: transparentize($muted-text-color, 0.2);
+$example-background: transparentize(#f2f2f2, 0.2);
 
 @import "compass";
 @import "normalize";
@@ -34,6 +34,5 @@ $muted-text-color: lighten($black, 50%);
 @import "base-styles";
 @import "site-header";
 @import "column-layout";
-@import "site-footer"; // TODO: site-footer?
 @import "main-content";
 @import "asciidoc";

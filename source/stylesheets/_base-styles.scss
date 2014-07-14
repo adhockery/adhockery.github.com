@@ -29,11 +29,11 @@ pre {
   overflow-x: auto;
   overflow-y: visible;
 
-  background: #f2f2f2;
+  background: $example-background;
   border: {
     width: 1px 0;
-    style: dashed;
-    color: $muted-text-color;
+    style: dotted;
+    color: $border-color;
   }
   padding: rhythm(1);
 }
@@ -60,7 +60,7 @@ ul.tag-list {
 
 hr {
   border: 0;
-  border-bottom: 1px dotted transparentize($black, 0.2);
+  border-bottom: 1px dotted $border-color;
 }
 
 blockquote {

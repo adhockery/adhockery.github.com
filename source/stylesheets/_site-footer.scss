@@ -1,13 +1,9 @@
 body > footer {
-  @include column(10);
-  @include push(1);
-  @include pull(10);
   @include leader(1);
   @include trailer(1);
 
-  border-top: 1px dotted $border-color;
-
   nav {
+    border-top: 1px dotted $border-color;
     text-align: right;
   }
 

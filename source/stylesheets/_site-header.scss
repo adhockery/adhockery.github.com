@@ -4,7 +4,10 @@
   margin: 0 auto;
 
   h1 {
-    @include column(12);
+    @include column(10);
+    @include push(1);
+    @include pull(1);
+    position: relative;
     $logo-size: 48px;
     @include adjust-font-size-to($logo-size);
     display:inline-block;
@@ -22,6 +25,8 @@
     &:before {
       content: "::";
       color: $teal;
+      position: absolute;
+      left: -0.604166666666667em;
     }
     &:after {
       content: ".";
@@ -36,14 +41,6 @@
     @media only screen and (min-width: 640px) {
       $logo-size: 72px;
       @include adjust-font-size-to($logo-size);
-      @include column(10);
-      @include push(1);
-      @include pull(1);
-      position: relative;
-      &:before {
-        position: absolute;
-        left: -0.604166666666667em;
-      }
     }
 
     @media only screen and (min-width: 940px) {

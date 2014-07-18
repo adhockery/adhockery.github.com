@@ -1,5 +1,11 @@
-*, *:before, *:after {
+// http://css-tricks.com/inheriting-box-sizing-probably-slightly-better-best-practice/?utm_source=dlvr.it&utm_medium=twitter
+
+html {
   @include box-sizing(border-box);
+}
+
+*, *:before, *:after {
+  @include box-sizing(inherit);
 }
 
 body {

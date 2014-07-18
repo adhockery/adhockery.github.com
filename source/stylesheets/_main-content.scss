@@ -91,7 +91,7 @@ article {
   $pagination-font-size: $h2-font-size;
   @include adjust-font-size-to($pagination-font-size);
   @include leader(1, $pagination-font-size);
-  @include trailer(2, $pagination-font-size);
+  @include trailer(1, $pagination-font-size);
   text-align: center;
   font-family: $heading-font-family;
   text-transform: uppercase;
@@ -127,7 +127,6 @@ article {
 
 a.read-more {
   display: inline-block;
-  @include trailer(1);
   font-style: italic;
   font-weight: 700;
   border-bottom: none;

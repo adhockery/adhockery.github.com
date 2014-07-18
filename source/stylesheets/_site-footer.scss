@@ -1,4 +1,4 @@
-body > footer {
+main + footer {
   @include leader(1);
   @include trailer(1);
 

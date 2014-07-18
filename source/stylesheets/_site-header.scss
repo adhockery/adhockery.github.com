@@ -1,4 +1,4 @@
-#site-header {
+body > header {
   @include clearfix;
   @include leader(1);
   max-width: $max-width;
@@ -11,6 +11,10 @@
     @include column(10);
     @include push(1);
     @include pull(1);
+    margin: {
+      top: 0;
+      bottom: 0;
+    }
     position: relative;
     $logo-size: 48px;
     @include adjust-font-size-to($logo-size);

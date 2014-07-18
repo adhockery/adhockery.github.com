@@ -69,6 +69,8 @@ hr {
     color: $border-color;
   }
   @include trailing-border($border-style: dotted);
+  @include leader(1);
+  @include trailer(2);
 }
 
 blockquote {

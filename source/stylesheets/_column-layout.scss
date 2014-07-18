@@ -1,4 +1,4 @@
-main, #site-footer, #disqus_thread {
+body > .container {
   @include clearfix;
   max-width: $max-width;
   margin: 0 auto;

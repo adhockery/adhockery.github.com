@@ -1,0 +1,96 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery - Why do Strings behave like a Collection?</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+        <article>
+    <header>
+      <time datetime="2009-11-21T14:17:00">Nov 21 2009</time>
+      <h1>Why do Strings behave like a Collection?</h1>
+    </header>
+    <div class="paragraph">
+<p>Mostly I love Groovy but every now and then some behaviour gets on my nerves. For example, why do the iterator methods on String behave as though it was a collections of characters rather than an Object? If I define a method with a dynamic-typed parameter like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">void printNames(names) {
+    names.each {
+        println it
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Passing a collection of Strings results in each String being printed. Passing a single String results in each character of the String being printed separately. I would have thought that the Object behaviour was a more appropriate default here (iterators on Object are called once passing the object itself). After all the <code>.chars</code> property is available if you really want to represent a String as a collection of characters.</p>
+</div>
+
+<div class="paragraph">
+<p>The solution is to override the method:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">void printNames(String name) {
+    printNames([name])
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Unlike in Java dispatch to such overridden methods in Groovy is based on the runtime rather than declared type of the parameter.</p>
+</div>
+<div class="paragraph">
+<p>You might think this is a trivial point, but the scenario that keeps biting me is HTTP parameters passed into a Grails controller. If you have multiple inputs with the same name, or a multi-select then sometimes <code>params.x</code> is a String and sometimes it&#8217;s a List of Strings. Any code dealing with that parameter has to handle the two cases separately.</p>
+</div>
+    <footer>
+      <ul class="tag-list">
+          <li><a href="/tags/groovy/">groovy</a></li>
+      </ul>
+    </footer>
+  </article>
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>
+
+<div id="disqus_thread"></div>
+            <script type="text/javascript">
+            //<![CDATA[
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//adhockery.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            //]]>
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </script>

@@ -1,0 +1,232 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery - Upgrading to Grails 2: Part 1</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+        <article>
+    <header>
+      <time datetime="2011-11-29T00:07:00">Nov 29 2011</time>
+      <h1>Upgrading to Grails 2: Part 1</h1>
+    </header>
+    <div class="paragraph">
+<p>We&#8217;ve recently spent some time ensuring that our application is forwards-compatible with the upcoming Grails 2. Our app is broadly split into the application itself and a large plugin that forms the core of our <a href="http://en.wikipedia.org/wiki/Content_management_system">CMS</a>. We upgraded the plugin first as it contains the core domain classes but is also a slightly smaller task to tackle. I&#8217;ll write up our findings when we&#8217;ve completed upgrading the application itself in a follow-up to this post.</p>
+</div>
+
+<div class="paragraph">
+<p>Although it took a little while I found the upgrade less painful than some previous versions. It feels like Grails is really maturing so there are fewer fundamental breaking changes and more in the way of new features. The bulk of the changes we had to make were to unit tests which are vastly improved in Grails 2. That said, I can see some of the things we ran into stumping people so I thought a write-up would make a useful reference. Some of these items may already be covered by the <a href="http://grails.org/doc/2.0.x/guide/gettingStarted.html#upgradingFromPreviousVersionsOfGrails">upgrading section of the Grails user guide</a> but some, particularly around plugins are probably new.</p>
+</div>
+<div class="sect2">
+<h3 id="_compilation">Compilation</h3>
+<div class="paragraph">
+<p>Firstly we needed to do to just get the build working to the point where tests would run.</p>
+</div>
+<div class="sect3">
+<h4 id="_upgrade_spock">Upgrade Spock</h4>
+<div class="paragraph">
+<p>Version <em>0.6-SNAPSHOT</em> of the <a href="http://grails.org/plugin/spock">Spock plugin</a> is required for compatibility with Groovy 1.8.</p>
+</div>
+<div class="paragraph">
+<p>This also required us to update <code>@Unroll</code> annotations to use <em>Closure</em> parameters. Instead of</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">@Unroll("#a plus #b should equal #x")</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>the annotation needs to be</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">@Unroll({"$a plus $b should equal $x"})</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Whilst this is a bit of a chore there are some advantages to this format as you can reference properties and call methods on the parameters right in the annotation.</p>
+</div>
+<div class="paragraph">
+<p>Before the tests would run we got a compilation error:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>The return type of java.lang.Object mockDomain(java.lang.Class) in com.sky.cms.AssetSpec is incompatible with void mockDomain(java.lang.Class) in grails.plugin.spock.UnitSpec`</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>There&#8217;s some kind of clash between the method signatures of <em>mockDomain</em> in Spock&#8217;s <em>UnitSpec</em> and Grails core. We&#8217;d intended to switch to the new annotation-based unit test support anyway but apparently we needed to do so right away. On the surface this just meant making our specs extend <em>Specification</em> instead of <em>UnitSpec</em> and introducing the new <code>@TestFor</code> annotation. The other changes we had to make to get our tests running successfully are covered below.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_configuration_changes">Configuration changes</h3>
+<div class="paragraph">
+<p>Configuration-wise all we had to do was to change <em>DataSource.groovy</em> to reference <em>H2</em> rather than <em>hsqldb</em>. Because we were just dealing with the CMS plugin and its test harness we hadn&#8217;t modified the default file in any way so we just replaced it with the new one from Grails 2 with:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="bash language-bash">cp $GRAILS_HOME/src/grails/grails-app/conf/DataSource.groovy grails-app/conf/</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_unit_tests">Unit tests</h3>
+<div class="paragraph">
+<p>The bulk of the time we spent upgrading was spent on unit tests. This is understandable since Grails 2 has made some significant enhancements in unit test support. Most of the changes are pretty straightforward but there are a couple of gotchas here.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The <code>mockConfig</code> method was always a bit awkward (as anyone who has tried to assign the path to a <em>File</em> object to a config key on a Windows machine will attest) and has been removed. Unit tests now get a genuine <em>GrailsApplication</em> instance injected by default if using one of the new annotations and you can directly assign values to the <code>config</code> property.</p>
+</li>
+<li>
+<p>Remove <code>mockDomain</code> calls &amp; add a <code>@TestFor</code> or <code>@Mock</code> annotation to the test class. Use <code>@TestFor(MyDomainClass)</code> for the domain class' own tests and <code>@Mock(MyDomainClass)</code> when the domain class is a collaborator. <code>@Mock</code> accepts multiple classes if you need it.</p>
+</li>
+<li>
+<p>We had a number of assertions about domain validation errors that we had to change from <code>domainInstance.errors.&lt;fieldName&gt;</code> to <code>domainInstance.errors.getFieldError('&lt;fieldName&gt;').code</code>. The latter is more long winded but has the advantage of using the same API as when you deal with Spring <em>Errors</em> instances in application code.</p>
+</li>
+<li>
+<p>Tests for a controller that has an <code>allowedMethods</code> declaration must set the <code>request.method</code> or they get a <em>405: Method Not Allowed</em> response.</p>
+</li>
+<li>
+<p>Domain class validation is evaluated on mock domain instances. Often this isn&#8217;t actually desirable. Tests cluttered with data setup that is only required to satisfy domain constraints are harder to maintain. To get round this you can use <code>.save(validate: false)</code>.</p>
+</li>
+<li>
+<p>Domain class event handlers such as <em>beforeInsert</em> are not triggered unless the session is flushed. In the few tests this affected we just had to change <code>.save()</code> to <code>.save(flush: true)</code>.</p>
+</li>
+<li>
+<p>Assigned ids are wiped from domain object instances when <code>@Mock</code> is used. It seems like even when assigning ids on construction with code like <code>new Pirate(id: 1234, name: "Edward Teach")</code> the <em>id</em> will be <em>null</em> until the <em>save</em> method is called. This wasn&#8217;t a big deal for us &amp; mostly meant getting rid of a few <a href="http://en.wikipedia.org/wiki/Magic_number_(programming)#Unnamed_numerical_constants">magic numbers</a> from test code.</p>
+</li>
+<li>
+<p><code>grailsApplication</code> is not wired into domain instances like it is into controllers and tag libs when using <code>@TestFor</code>.</p>
+</li>
+<li>
+<p>We ran into some issues with tests for property editors where we were setting up mock a <em>request</em> variable. We had a <em>NullPointerException</em> thrown from domain class constructors after doing so. Using the <em>request</em> property provided by <code>@TestMixin(ControllerUnitTestMixin)</code> instead fixed things.</p>
+</li>
+<li>
+<p>We converted our old tag lib tests to use <code>@TestFor(TagLibClass)</code> and the new <em>applyTemplate</em> method. See the <a href="http://grails.org/doc/2.0.x/guide/testing.html#unitTestingTagLibraries">relevant section of the Grails user guide</a> for more details on this.</p>
+</li>
+<li>
+<p>Tag libs using <code>@TestFor</code> can actually find and render GSP templates when they call <em>render</em>. This means you might get more realistic output than your test was previously expecting!</p>
+</li>
+<li>
+<p>We found that when testing tag libs with <code>@TestFor</code> that modifying the metaclass of the <code>taglib</code> field of the test class didn&#8217;t affect tests using <em>applyTemplate</em>. However, we just had to change from <code>taglib.metaClass.blah</code> to <code>MyTagLib.metaClass.blah</code>.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_plugins">Plugins</h3>
+<div class="sect3">
+<h4 id="_joda_time">Joda Time</h4>
+<div class="paragraph">
+<p>We upgraded the <a href="http://gpc.github.com/grails-joda-time/">Joda-Time plugin</a> to version <em>1.3</em>. This also meant we had to add the Hibernate persistence library to the <em>dependencies</em> section of <em>BuildConfig</em> <a href="http://gpc.github.com/grails-joda-time/guide/2.%20Persistence.html">as documented here</a>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_resources">Resources</h4>
+<div class="paragraph">
+<p>The Resources plugin currently (up to at least version <em>1.1.1</em>) <a href="http://jira.grails.org/browse/GPRESOURCES-109">has a bug</a> that means it does not generate resources properly in anything other than <em>dev</em> mode. There is a workaround; just add the following to <em>BootStrap</em>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">def grailsResourceProcessor
+
+def init = {
+    grailsResourceProcessor.updateDependencyOrder()
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_geb">Geb</h4>
+<div class="paragraph">
+<p>We upgraded <a href="http://gebish.org/">Geb</a> to version <em>0.6.1</em> and the <a href="http://code.google.com/p/selenium/">Selenium</a> drivers to version <em>2.13.0</em>. The only issues we ran into were:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>An additional dependency is required to handle <code>select</code> elements properly (installation details are handily included in the report for any test that fails due to this).</p>
+</li>
+<li>
+<p>Setting values on <code>input type="file"</code> elements no longer worked. I&#8217;ve already fixed this issue and it should be in the next <em>Geb</em> release. See <a href="http://jira.codehaus.org/browse/GEB-152">GEB-152</a> for more information.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_other_libraries">Other Libraries</h3>
+<div class="paragraph">
+<p>We had one test that used <em><a href="http://code.google.com/p/gmock/">GMock</a></em>. Unfortunately it is not currently compatible with Groovy 1.8. For us this wasn&#8217;t a big deal as we could easily drop <em>GMock</em> but some codebases may be more invested in it.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_actual_grails_bugs">Actual Grails bugs</h3>
+<div class="paragraph">
+<p>We only found a couple of problems with Grails itself both of which I&#8217;ve raised on the Grails bug tracker:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="http://jira.grails.org/browse/GRAILS-8376">GRAILS-8376</a> Constraints on superclass associations are not inherited properly in mock domain instances. This bit us when instances of a child class of a superclass that had an association with <code>nullable: true</code> failed to save. The workaround is to simply duplicate the constraint in the child class (yes, it&#8217;s ugly).</p>
+</li>
+<li>
+<p><a href="http://jira.grails.org/browse/GRAILS-837y">GRAILS-8377</a> <code>grails test run-app</code> fails with <code>Error loading plugin manager: GebGrailsPlugin</code>. This is kind of an edge case. We were only trying to run the application in test mode to help figure out the problem with resource processing mentioned above.</p>
+</li>
+</ul>
+</div>
+</div>
+    <footer>
+      <ul class="tag-list">
+          <li><a href="/tags/grails/">grails</a></li>
+      </ul>
+    </footer>
+  </article>
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>
+
+<div id="disqus_thread"></div>
+            <script type="text/javascript">
+            //<![CDATA[
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//adhockery.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            //]]>
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </script>

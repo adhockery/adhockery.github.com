@@ -1,0 +1,208 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+      <header>
+  <h1>Articles tagged <em>‘gorm’</em></h1>
+</header>
+
+  <article>
+    <header>
+      <time datetime="2013-04-09T20:35:28">Apr  9 2013</time>
+      <h2><a href="/2013/04/09/mongo-dynamic-attributes-and-grails-unit-tests/">Mongo dynamic attributes and Grails unit tests</a></h2>
+    </header>
+    <div class="paragraph">
+<p>When using <em>Mongo DB</em> with <em>GORM</em> it&#8217;s possible to assign to dynamic attributes of a domain class. However, you&#8217;ll find that when you write unit tests for code that uses this feature it isn&#8217;t supported. It&#8217;s easy to emulate, though.</p>
+</div>
+
+    <a class="read-more" href="/2013/04/09/mongo-dynamic-attributes-and-grails-unit-tests/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2010-06-29T16:27:00">Jun 29 2010</time>
+      <h2><a href="/2010/06/29/acyclic-relationship-validation-in-grails/">Acyclic relationship validation in Grails</a></h2>
+    </header>
+    <div class="paragraph">
+<p>A common domain class use-case is for a self-referential relationship that must not be circular (a <a href="http://en.wikipedia.org/wiki/Directed_acyclic_graph">directed acyclic graph</a>). For example, a <em>Person</em> class may have a <em>parent</em> property that is a many-to-one relationship with another <em>Person</em> instance. However a given <em>Person</em> cannot be his own <em>parent</em> or ancestor.</p>
+</div>
+
+    <a class="read-more" href="/2010/06/29/acyclic-relationship-validation-in-grails/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2010-06-24T06:57:00">Jun 24 2010</time>
+      <h2><a href="/2010/06/24/defaulting-joda-time-hibernate-types-with-grails/">Defaulting Joda Time Hibernate Types with Grails</a></h2>
+    </header>
+    <div class="paragraph">
+<p>Grails 1.2 added the ability to define default Hibernate mappings that apply to all GORM classes. It turns out this is incredibly useful if you&#8217;re using Joda-Time types instead of <em>java.util.Date</em> in your domain objects. Previously you had to specify the Hibernate user type for every single field, like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">import org.joda.time.*
+import org.joda.time.contrib.hibernate.*
+
+DateTime dateCreated
+DateTime lastUpdated
+LocalDate birthday
+
+static mapping = {
+    dateCreated type: PersistentDateTime
+    lastUpdated type: PersistentDateTime
+    birthday type: PersistentLocalDate
+}</code></pre>
+</div>
+</div>
+
+    <a class="read-more" href="/2010/06/24/defaulting-joda-time-hibernate-types-with-grails/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2010-02-25T13:04:00">Feb 25 2010</time>
+      <h2><a href="/2010/02/25/using-a-custom-data-binder-with-grails-domain-objects/">Using a custom data binder with Grails domain objects</a></h2>
+    </header>
+    <div class="paragraph">
+<p>Yesterday I read a <a href="http://blog.armbruster-it.de/2010/01/customizing-grails-data-binding-with-a-groovy-propertyeditor/">post by Stefan Armbruster</a> on how to register a custom data binder to lookup Grails domain objects by any arbitrary property. I wanted to go a little further so that I could not only bind existing domain instances but create new ones as well.</p>
+</div>
+
+    <a class="read-more" href="/2010/02/25/using-a-custom-data-binder-with-grails-domain-objects/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2010-01-04T21:22:00">Jan  4 2010</time>
+      <h2><a href="/2010/01/04/upgrading-grails-1-1-1-2/">Upgrading Grails 1.1 -> 1.2</a></h2>
+    </header>
+    <div class="paragraph">
+<p>We&#8217;ve just successfully upgraded our app from Grails 1.1 to <a href="http://www.grails.org/1.2+Release+Notes">1.2</a> and pushed it to our QA environment. I thought I&#8217;d write up some of the issues we encountered in case anyone is bashing their heads against them.</p>
+</div>
+
+    <a class="read-more" href="/2010/01/04/upgrading-grails-1-1-1-2/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2009-06-18T05:54:00">Jun 18 2009</time>
+      <h2><a href="/2009/06/18/joda-time-auto-timestamping-issue-on-grails-1-1-1/">Joda Time Auto-Timestamping Issue on Grails 1.1.1</a></h2>
+    </header>
+    <div class="paragraph">
+<p>I&#8217;ve not upgraded most of my code to Grails 1.1.1 yet so I hadn&#8217;t noticed this problem until it was <a href="http://www.nabble.com/Problem-with-Joda-plugin-and-autotimestamping-td24068191.html#a24068191">brought to my attention</a> by Manuel Vio on the <a href="http://grails.org/Mailing+lists">grails-user</a> mailing list.</p>
+</div>
+
+    <a class="read-more" href="/2009/06/18/joda-time-auto-timestamping-issue-on-grails-1-1-1/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2009-06-13T06:25:00">Jun 13 2009</time>
+      <h2><a href="/2009/06/13/querying-by-association-redux/">Querying by Association Redux</a></h2>
+    </header>
+    <div class="paragraph">
+<p>A couple of months back I <a href="http://blog.freeside.co/post/42902379524/querying-by-association-with-grails-criteria">posted</a> about the problems with criteria queries where you want results with a collection property that <em>contains</em> some value.</p>
+</div>
+<div class="paragraph">
+<p>Last night I was reading through my new copy of <a href="http://blogs.bytecode.com.au/glen/">Glen Smith</a> and Peter Ledbrook&#8217;s <a href="http://www.amazon.co.uk/Grails-Action-Glen-Smith/dp/1933988932">Grails In Action</a> and my eye was caught by a particular example where they use aliases in a criteria query. Sure enough a quick test this morning confirms that this is the solution to the problem.</p>
+</div>
+
+    <a class="read-more" href="/2009/06/13/querying-by-association-redux/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2009-04-15T02:49:00">Apr 15 2009</time>
+      <h2><a href="/2009/04/15/when-is-a-pirate-not-a-pirate-when-its-a/">When is a Pirate not a Pirate? When it’s a HibernateProxy</a></h2>
+    </header>
+    <div class="paragraph">
+<p>At work we&#8217;re in the middle of upgrading <a href="http://showbiz.sky.com/">the</a> <a href="http://tv.sky.com/">Sky</a> <a href="http://movies.sky.com/">Entertainment</a> <a href="http://sky1.sky.com/">sites</a> from Grails 1.0.3 to Grails 1.1 - a long blog post will follow with a tale of our woes! One of the changes in Grails 1.1 is that one-to-one domain associations are now lazy by default. This raised an interesting problem for us as it meant we were now sometimes dealing with <a href="http://www.hibernate.org/hib_docs/v3/api/org/hibernate/proxy/HibernateProxy.html">HibernateProxy</a> instances where before we weren&#8217;t.</p>
+</div>
+
+    <a class="read-more" href="/2009/04/15/when-is-a-pirate-not-a-pirate-when-its-a/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2009-04-01T12:46:00">Apr  1 2009</time>
+      <h2><a href="/2009/04/01/querying-by-association-with-grails-criteria/">Querying By Association With Grails Criteria</a></h2>
+    </header>
+    <div class="paragraph">
+<p>A common requirement is to select all instances of a domain class where one of its many-to-many associations contains a particular instance of another domain class. Consider these domain classes where a <code>Ship</code> has a crew composed of <code>Pirate`s and any particular `Pirate</code> can be a part of the crew of several <code>Ship</code>s:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">class Ship {
+   static hasMany = [crew: CrewMember]
+   String name
+}
+
+class CrewMember {
+   static belongsTo = [ship: Ship]
+   Pirate pirate
+}
+
+class Pirate {
+   String name
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>How can we use a criteria query to find all the <code>Ship</code> instances where a particular <code>Pirate</code> is a member of the crew?</p>
+</div>
+
+    <a class="read-more" href="/2009/04/01/querying-by-association-with-grails-criteria/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2009-03-31T14:55:00">Mar 31 2009</time>
+      <h2><a href="/2009/03/31/joda-time-and-grails-auto-timestamping/">Joda-Time and Grails Auto-Timestamping</a></h2>
+    </header>
+    <div class="paragraph">
+<p>The <a href="http://grails.org/JodaTime+Plugin">Joda-Time Plugin docs</a> state that <a href="http://grails.org/doc/1.1.x/guide/5.%20Object%20Relational%20Mapping%20(GORM).html#5.5.1%20Events%20and%20Auto%20Timestamping">Grails' auto-timestamping</a> works with Joda-Time properties which is the case. However, when testing it can be useful to take advantage of Joda Time&#8217;s <a href="http://joda-time.sourceforge.net/api-release/org/joda/time/DateTimeUtils.html"><code>DateTimeUtils</code></a> class to mock the current time. This enables you to have new <code>DateTime</code> objects, for example, use a predictable timestamp. Unfortunately it doesn&#8217;t play nicely with Grails' auto-timestamping which under the covers uses <code>System.currentTimeMillis()</code>.</p>
+</div>
+
+    <a class="read-more" href="/2009/03/31/joda-time-and-grails-auto-timestamping/">Read more…</a>
+  </article>
+  <hr>
+
+  <nav class="pagination">
+      <a disabled>Previous page</a>
+    <span>Page 1 of 2</span>
+      <a rel="next" href="/tags/gorm/page/2/">Next page</a>
+  </nav>
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>

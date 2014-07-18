@@ -1,0 +1,131 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery - Groovy & the public keyword</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+        <article>
+    <header>
+      <time datetime="2013-02-17T07:23:32">Feb 17 2013</time>
+      <h1>Groovy & the public keyword</h1>
+    </header>
+    <div class="paragraph">
+<p>One of the first things you learn in Groovy is that unlike Java <code>public</code> is the default scope for properties and methods declared on classes. Most developers get into the habit of simply omitting the <code>public</code> keyword everywhere. But, is there any situation where it&#8217;s the right thing to use? Actually, yes.</p>
+</div>
+
+<div class="paragraph">
+<p>When you declare a public constant in a Groovy class you would probably write something like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">class HttpStatus {
+    static final int SC_UNPROCESSABLE_ENTITY = 422
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Nothing wrong with that, right?</p>
+</div>
+<div class="paragraph">
+<p>If you look at the byte code for the class you will notice that you got a little more than you may have bargained for:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>private static final int HttpStatus.SC_UNPROCESSABLE_ENTITY
+public static final int HttpStatus.getSC_UNPROCESSABLE_ENTITY()</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This is a Groovy <em>property</em> – a private field with accessor methods as per the Java beans standard. In this case it happens to be static and because it was declared <code>final</code> it doesn&#8217;t have a setter method.</p>
+</div>
+<div class="paragraph">
+<p>It doesn&#8217;t break anything and when referring to the constant from Groovy there&#8217;s no difference in syntax. If you use the constant from a Java class though, you&#8217;ll have to refer to it with:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="java language-java">HttpStatus.getSC_UNPROCESSABLE_ENTITY()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You might also notice that even in a Groovy class if you static import the constant in IntelliJ IDEA you end up with:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">import static HttpStatus.getSC_UNPROCESSABLE_ENTITY</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s add another constant – this time with the <code>public</code> keyword:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">public static final int SC_IM_A_TEAPOT = 418</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then look at the byte code as before:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>public static final int HttpStatus.SC_IM_A_TEAPOT</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This time you created a constant <em>field</em> rather than a property. More appropriate in this case and with no syntactic issues when referenced from Java.</p>
+</div>
+<div class="paragraph">
+<p>This isn&#8217;t just about constants. Adding <em>any</em> scope keyword to a property in a Groovy class turns it into a field. That&#8217;s useful to bear in mind when you&#8217;re dealing with class hierarchies with <code>protected</code> fields, encapsulating <code>private</code> state or figuring out what properties will be persisted in a GORM class (hint – Hibernate looks for Java bean getter and setter methods by default).</p>
+</div>
+    <footer>
+      <ul class="tag-list">
+          <li><a href="/tags/groovy/">groovy</a></li>
+      </ul>
+    </footer>
+  </article>
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>
+
+<div id="disqus_thread"></div>
+            <script type="text/javascript">
+            //<![CDATA[
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//adhockery.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            //]]>
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </script>

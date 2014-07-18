@@ -1,0 +1,138 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery - Unit testing Angular directives that use controller and templateUrl</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+        <article>
+    <header>
+      <time datetime="2013-09-02T14:48:00">Sep  2 2013</time>
+      <h1>Unit testing Angular directives that use controller and templateUrl</h1>
+    </header>
+    <div class="paragraph">
+<p>I spent an hour or so this morning figuring out how to unit test an Angular directive that uses a controller and a template loaded from a file (as opposed to inline). There&#8217;s a useful example in the <a href="https://github.com/vojtajina/ng-directive-testing">ng-directive-testing</a> repository but I thought a quick summary would be useful (as much to remind me the next time I have to do it as anything). Also the examples there test by interacting with DOM elements rather than directly with the directive&#8217;s scope.</p>
+</div>
+
+<div class="paragraph">
+<p>I&#8217;m using the Yeoman Angular generator so my tests are using Jasmine &amp; running with Karma.</p>
+</div>
+<div class="paragraph">
+<p>In order to get my directive&#8217;s template to load I used the <em>karma-ng-html2js-preprocessor</em> plugin for Karma:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="bash language-bash">npm install karma-ng-html2js-preprocessor --save-dev</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This plugin compiles HTML templates into JavaScript (I guess a little like the way the Handlebars compiler works) which are then exposed as an Angular module that your tests can depend on.</p>
+</div>
+<div class="paragraph">
+<p>I was previously using <em>grunt-karma</em> 0.4.3 which I guess was what the Yeoman generator set me up with. In order to get the plugin to work I had to upgrade to 0.6.1 which also meant reconfiguring my <em>karma.conf.js</em> to the new style where the config is exported as a module. Karma was pretty good about pointing out what was wrong in my existing config so it was easy enough to update.</p>
+</div>
+<div class="paragraph">
+<p>Then I added the specific config for the plugin.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="javascript language-javascript">preprocessors: {
+  '**/*.coffee': 'coffee',
+  'app/views/*.html': 'ng-html2js'
+},
+
+ngHtml2JsPreprocessor: {
+  stripPrefix: 'app/',
+},</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The CoffeeScript pre-processor is the default for Karma but I found I had to declare it explicitly when declaring another preprocessor. The <em>ng-html2js</em> preprocessor operates on all HTML files under <code>app/views</code> which is where the Yeoman generator places them. The other bit of config under <em>ngHtml2JsPreprocessor</em> determines how the file path is converted to a module name the test can load. I&#8217;m removing the <code>app/</code> folder so that the module name will be the same as the path to the file declared in my directive&#8217;s <code>templateUrl</code> property.</p>
+</div>
+<div class="paragraph">
+<p>In order to load the template module I just added the template path to the Jasmine test:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="coffeescript language-coffeescript">beforeEach module 'myApp', 'views/my-template.html'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>My directive uses a controller that attaches a function to the scope. I wanted to write a test where I call the function directly on the scope as I would in a regular controller unit test. I found two problems with this. Firstly, the controller was not executing and secondly the scope that I compile the directive against is the <em>parent of</em> the scope the controller interacts with not the same one.</p>
+</div>
+<div class="paragraph">
+<p>To fix the first problem I explicitly called <code>$digest()</code> on the parent scope. That causes the controller function to execute. Then I could grab the directive&#8217;s scope using the DOM element&#8217;s <code>data</code> method.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="coffeescript language-coffeescript">scope = {}
+
+beforeEach inject ($compile, $rootScope) -&gt;
+    # the compilation step generated by Yeoman
+    element = angular.element '&lt;my-directive/&gt;'
+    element = $compile(element) $rootScope
+
+    # execute the controller function
+    $rootScope.$digest()
+
+    # the directive's scope is a child of the one used to compile the element
+    scope = element.data '$scope'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When tests subsequently use that <code>scope</code> variable they can directly call the scope functions declared by the controller.</p>
+</div>
+    <footer>
+      <ul class="tag-list">
+          <li><a href="/tags/angular/">angular</a></li>
+          <li><a href="/tags/js/">js</a></li>
+          <li><a href="/tags/testing/">testing</a></li>
+      </ul>
+    </footer>
+  </article>
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>
+
+<div id="disqus_thread"></div>
+            <script type="text/javascript">
+            //<![CDATA[
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//adhockery.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            //]]>
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </script>

@@ -1,0 +1,159 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+      <header>
+  <h1>Articles tagged <em>‘grails’</em></h1>
+</header>
+
+  <article>
+    <header>
+      <time datetime="2013-04-15T14:12:00">Apr 15 2013</time>
+      <h2><a href="/2013/04/15/grails-and-rest-url-mappings/">Grails and REST URL mappings</a></h2>
+    </header>
+    <div class="paragraph">
+<p>When building a REST-style API with Grails there&#8217;s <a href="http://grails.org/doc/1.3.7/guide/13.%20Web%20Services.html#13.1%20REST">a very handy way of configuring URL mappings</a>. For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">"/person/$id?"(resource: "person")</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>will map requests to <code>/myApp/person</code> to the different actions of <code>PersonController</code> according to the HTTP request method. The mappings are <code>GET</code>&#8594;_show_, <code>PUT</code>&#8594;_save_, <code>POST</code>&#8594;_update_, <code>DELETE</code>&#8594;_delete_.</p>
+</div>
+
+    <a class="read-more" href="/2013/04/15/grails-and-rest-url-mappings/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2013-02-26T14:08:20">Feb 26 2013</time>
+      <h2><a href="/2013/02/26/grails-builds-on-travis-ci/">Grails builds on Travis CI</a></h2>
+    </header>
+    <div class="paragraph">
+<p><a href="https://travis-ci.org/">Travis CI</a> is a cloud based continuous integration service. It&#8217;s a great way to automate test runs for projects hosted on GitHub. Since the Grails wrapper was added to Grails in version 2.1 you can use Travis to build Grails apps.</p>
+</div>
+
+    <a class="read-more" href="/2013/02/26/grails-builds-on-travis-ci/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2012-12-20T21:23:00">Dec 20 2012</time>
+      <h2><a href="/2012/12/20/grails-and-front-end-tools/">Grails & front end tools</a></h2>
+    </header>
+    <div class="paragraph">
+<p>Last week was the London Groovy &amp; Grails Exchange 2012 where I gave a talk called <a href="http://skillsmatter.com/podcast/groovy-grails/grails-for-hipsters">Grails for hipsters</a> about integrating Grails apps with some of the buzziest current tools &amp; techniques. Part of what I talked about was my approach to handling pre-processed front-end resources in Grails apps. In <a href="http://git.io/hipsteroid">the demo app</a> for my talk I used <a href="http://lesscss.org/">LESS</a> &amp; <a href="http://coffeescript.org/">CoffeeScript</a> but everything I discusses applies equally to <a href="http://sass-lang.com/">SASS</a>, <a href="http://learnboost.github.com/stylus/">Stylus</a>, <a href="http://www.typescriptlang.org/">TypeScript</a>, etc.</p>
+</div>
+
+    <a class="read-more" href="/2012/12/20/grails-and-front-end-tools/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2012-02-07T10:56:00">Feb  7 2012</time>
+      <h2><a href="/2012/02/07/semi-restful-scaffolded-controllers/">Semi-RESTful Scaffolded Controllers</a></h2>
+    </header>
+    <div class="paragraph">
+<p>The default Grails scaffolded controllers use a <em>create</em> action to render a form and a <em>save</em> action as the target the form will <em>POST</em> to. If the <em>save</em> action succeeds it redirects to <em>show</em> and if it fails due to constraint violations it re-renders the form. The same applies to editing with the <em>edit</em> and <em>update</em> actions.</p>
+</div>
+<div class="paragraph">
+<p>There&#8217;s a slight quirk here in that a failed <em>save</em> will cause the URL to change from <em>/controllerName/create</em> to <em>/controllerName/save</em>. Not a particularly huge issue, after all it&#8217;s not something a search spider will see and users will be very unlikely to care. One thing I have found problematic though is when rendering a navigation element that highlights an item based on the current action.</p>
+</div>
+
+    <a class="read-more" href="/2012/02/07/semi-restful-scaffolded-controllers/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2012-01-10T19:56:00">Jan 10 2012</time>
+      <h2><a href="/2012/01/10/optional-tag-bodies/">Optional tag bodies</a></h2>
+    </header>
+    <div class="paragraph">
+<p>Sometimes you may want to implement a Grails GSP tag that has an optional body. Grails tag closures take one or two arguments, the first a map of the attributes passed to the tag the second a <em>Closure</em> representing the tag body. Even if the tag was not invoked with a body the second argument is not <em>null</em> so doing this does not work:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">def myTag = { attrs, body -&gt;
+    if (!body) {
+        // render a default body
+    } else {
+        // render the supplied tag body
+    }
+}</code></pre>
+</div>
+</div>
+
+    <a class="read-more" href="/2012/01/10/optional-tag-bodies/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2011-12-23T10:24:00">Dec 23 2011</time>
+      <h2><a href="/2011/12/23/wiring-taglib-dependencies-in-unit-tests/">Wiring taglib dependencies in Grails 2 unit tests</a></h2>
+    </header>
+    <div class="paragraph">
+<p>Grails 2 has made a lot of improvements in unit testing support. One of the things I always used to find particularly painful was unit testing taglibs. Now when your test class is annotated with <code>@TestFor(MyTagLib)</code> you can use the <code>applyTemplate</code> method like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">expect:
+applyTemplate('&lt;my:tag/&gt;') == 'the expected output'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>However, one thing I found is that it&#8217;s quite tricky to wire a dependency in to the taglib instance that&#8217;s used by the <code>applyTemplate</code> method.</p>
+</div>
+
+    <a class="read-more" href="/2011/12/23/wiring-taglib-dependencies-in-unit-tests/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2011-11-29T00:07:00">Nov 29 2011</time>
+      <h2><a href="/2011/11/29/grails-2-upgrade-part-1/">Upgrading to Grails 2: Part 1</a></h2>
+    </header>
+    <div class="paragraph">
+<p>We&#8217;ve recently spent some time ensuring that our application is forwards-compatible with the upcoming Grails 2. Our app is broadly split into the application itself and a large plugin that forms the core of our <a href="http://en.wikipedia.org/wiki/Content_management_system">CMS</a>. We upgraded the plugin first as it contains the core domain classes but is also a slightly smaller task to tackle. I&#8217;ll write up our findings when we&#8217;ve completed upgrading the application itself in a follow-up to this post.</p>
+</div>
+
+    <a class="read-more" href="/2011/11/29/grails-2-upgrade-part-1/">Read more…</a>
+  </article>
+  <hr>
+
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>

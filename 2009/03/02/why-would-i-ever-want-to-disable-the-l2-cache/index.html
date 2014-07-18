@@ -1,0 +1,79 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery - Why would I ever want to disable the L2 cache?</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+        <article>
+    <header>
+      <time datetime="2009-03-02T17:28:00">Mar  2 2009</time>
+      <h1>Why would I ever want to disable the L2 cache?</h1>
+    </header>
+    <div class="paragraph">
+<p>This question came up when pairing last week. We were going through our code-base adding the <a href="http://grails.org/doc/1.1.x/ref/Database%20Mapping/cache.html">cache directive</a> to a bunch of our domain classes. Grails is all about sensible defaults and it seems slightly odd that the level 2 cache is configured by default in <code>DataSource.groovy</code> but not actually <em>used</em> unless <code>cache(true)</code> is added to the mapping closure in each domain class. I wonder if anyone has any ideas why it might ever be a bad idea to use the L2 cache?</p>
+</div>
+
+<div class="paragraph">
+<p>The only scenario I can come up with is situations where updates are made direct to the DB, bypassing Hibernate. This is, I would think, pretty rare (we do it for some rather naïve hit tracking and for voting on polls). Sure, in this circumstance the L2 cache will likely give you stale results. However, it&#8217;s very much the exception rather than the rule.</p>
+</div>
+<div class="paragraph">
+<p>Most other objections I&#8217;ve heard have been some variety of worry about caches eating up vast amounts of heap space and crashing the JVM (which is why cache implementations like <a href="http://ehcache.sourceforge.net/">ehcache</a> use time-based and LRU eviction).</p>
+</div>
+<div class="paragraph">
+<p>Oh, and yeah, we did have some issues with our changes but most seem to be to do with <a href="http://www.catb.org/jargon/html/C/cruft.html">cruft</a> and <a href="http://www.think-box.co.uk/blog/2005/11/repaying-technical-debt.html">tech debt</a> in our code (mostly now-redundant workarounds to GORM issues from older releases of Grails).</p>
+</div>
+    <footer>
+      <ul class="tag-list">
+          <li><a href="/tags/caching/">caching</a></li>
+          <li><a href="/tags/hibernate/">hibernate</a></li>
+          <li><a href="/tags/gorm/">gorm</a></li>
+      </ul>
+    </footer>
+  </article>
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>
+
+<div id="disqus_thread"></div>
+            <script type="text/javascript">
+            //<![CDATA[
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//adhockery.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            //]]>
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </script>

@@ -1,0 +1,189 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+      <header>
+  <h1>Articles tagged <em>‘spock’</em></h1>
+</header>
+
+  <article>
+    <header>
+      <time datetime="2013-03-22T00:16:00">Mar 22 2013</time>
+      <h2><a href="/2013/03/22/stateful-interactions-in-spock/">Stateful interactions in Spock</a></h2>
+    </header>
+    <div class="paragraph">
+<p>The Java mocking library <a href="http://jmock.org/">jMock</a> has <a href="http://jmock.org/states.html">a nice feature for dealing with verifying mock interactions in stateful circumstances</a>. I first came across it when reading <a href="http://www.growing-object-oriented-software.com/">Growing Object-Oriented Software Guided By Tests</a> (<em>GOOS</em>) by Steve Freeman &amp; Nat Pryce.</p>
+</div>
+<div class="paragraph">
+<p>I was curious as to whether I could implement something similar with <em>Spock</em>. There&#8217;s no syntactic support right now (although there is <a href="http://code.google.com/p/spock/issues/detail?id=130">an open issue</a>) but it&#8217;s not that complex to achieve something adequate.</p>
+</div>
+
+    <a class="read-more" href="/2013/03/22/stateful-interactions-in-spock/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2012-08-29T17:29:00">Aug 29 2012</time>
+      <h2><a href="/2012/08/29/derived-values-in-spock-where-tables/">Derived values in Spock where tables</a></h2>
+    </header>
+    <div class="paragraph">
+<p>When using <code>where</code> blocks in Spock there are two forms; assigning iterable values to a variable, e.g. <code>crew &lt;&lt; ['Mal', 'Kaylee', 'Jayne']</code> or using a datatable. In the first form I always knew you could use assigned values, for example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">where:
+crew &lt;&lt; ['Mal', 'Kaylee', 'Jayne']
+nameLength = crew.length()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note the assignment operator used rather than the left shift on the second line there.</p>
+</div>
+
+    <a class="read-more" href="/2012/08/29/derived-values-in-spock-where-tables/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2012-05-09T00:47:00">May  9 2012</time>
+      <h2><a href="/2012/05/09/testing-with-embedded-vertx/">Testing with embedded Vert.x</a></h2>
+    </header>
+    <div class="paragraph">
+<p>I blogged recently about <a href="http://blog.freeside.co/post/41774661851/testing-callbacks-with-spock-mocks">using Spock to test APIs that use callbacks</a>. The post came out of some work I&#8217;ve been doing with <a href="http://vertx.io/">Vert.x</a>. Although the tests I wrote worked, I found them rather mock-heavy and felt I wasn&#8217;t using the Vert.x API as idiomatically as I could have been.</p>
+</div>
+
+    <a class="read-more" href="/2012/05/09/testing-with-embedded-vertx/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2012-05-01T12:50:00">May  1 2012</time>
+      <h2><a href="/2012/05/01/testing-callbacks-with-spock-mocks/">Testing callbacks with Spock mocks</a></h2>
+    </header>
+    <div class="paragraph">
+<p>I&#8217;ve been doing some work with <a href="http://vertx.io/">vert.x</a> over the last few days and trying to develop components that are test-driven. Like any asynchronous framework rather than having methods that return a value you pass a callback Closure that gets invoked at some point in the future with the result. This makes it tricky to write unit tests that mock out collaborators as you might in a traditional app.</p>
+</div>
+
+    <a class="read-more" href="/2012/05/01/testing-callbacks-with-spock-mocks/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2012-02-15T06:46:00">Feb 15 2012</time>
+      <h2><a href="/2012/02/15/spock-killer-features-the-old-method/">Spock Killer Features: The “old” method</a></h2>
+    </header>
+    <div class="paragraph">
+<p>I use Spock almost exclusively to test Groovy or Java code these days. It&#8217;s got some fantastic features that other test frameworks don&#8217;t have. Some of them aren&#8217;t that well known or documented, though.</p>
+</div>
+<div class="paragraph">
+<p>The <code>old</code> method is possibly my favourite Spock feature. It&#8217;s a simple thing but really enhances test legibility. It&#8217;s also great for wowing developers new to Spock because it looks like black magic at first glance.</p>
+</div>
+
+    <a class="read-more" href="/2012/02/15/spock-killer-features-the-old-method/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2011-11-24T00:59:00">Nov 24 2011</time>
+      <h2><a href="/2011/11/24/fear-loathing-in-functional-testing-land/">Fear & loathing in functional testing land</a></h2>
+    </header>
+    <div class="paragraph">
+<p>As projects grow the two things I&#8217;ve repeatedly found to be particularly painful have been functional testing and data fixtures. I might write up some thoughts on data fixtures another time but what follows is a brain-dump of my troubled relationship with functional testing.</p>
+</div>
+<div class="paragraph">
+<p><em>Disclaimers:</em> I have more questions than answers and I&#8217;m completely open to the idea that <em>I&#8217;m doing it all wrong</em>. I&#8217;m not trying to diss any tool or technique here. I have spent a lot of time over the last few years writing functional test coverage so I think I at least have some perspective on the issues if no clue how to solve them.</p>
+</div>
+
+    <a class="read-more" href="/2011/11/24/fear-loathing-in-functional-testing-land/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2011-08-26T17:19:00">Aug 26 2011</time>
+      <h2><a href="/2011/08/26/grails-gotcha-beware-head-requests-when-rendering/">Grails Gotcha: Beware HEAD requests when rendering binary output in controllers</a></h2>
+    </header>
+    <div class="paragraph">
+<p>Although most Grails controllers render HTML, JSON or XML output it is possible to use them to render binary data as well. We use a controller to render images uploaded by editors into our content management interface. The theory is simple enough, instead of using the <code>render</code> dynamic method or returning a <em>model</em> the controller action just writes bytes directly to the HTTP response stream. Our action looked something like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">def show = {
+    def image = Image.read(params.id)
+    if (image) {
+        response.contentType = image.contentType
+        response.outputStream.withStream { stream -&gt;
+            stream &lt;&lt; image.bytes
+        }
+    } else {
+        response.sendError SC_NOT_FOUND
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This seemed to work well enough. However when writing a test I noticed an odd thing. I was using <a href="http://groovy.codehaus.org/modules/http-builder/doc/rest.html">RESTClient</a> to scrape resource URLs out of and make a <em>HEAD</em> request against them to ensure the URLs were valid. Javascript and CSS files were working fine but all the non-static images in the page were getting 404s.</p>
+</div>
+
+    <a class="read-more" href="/2011/08/26/grails-gotcha-beware-head-requests-when-rendering/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2011-08-18T21:42:00">Aug 18 2011</time>
+      <h2><a href="/2011/08/18/data-driven-variation-with-spock/">Data-driven variation with Spock</a></h2>
+    </header>
+    <div class="paragraph">
+<p>Spock&#8217;s <code>where:</code> block is commonly used with a <a href="https://github.com/robfletcher/grails-enhanced-scaffolding/blob/master/test/projects/scaffolding-example/test/functional/scaffolding/InputTypesSpec.groovy#L18">data table</a> but can also be driven by any <code>Iterable</code> data. It&#8217;s worth bearing in mind that the data driving the <code>where:</code> block doesn&#8217;t have to be hardcoded, it can be dynamic. For example, today we implemented a spec to ensure that every table in our database schema has a primary key (because it&#8217;s required by <a href="http://ha-jdbc.sourceforge.net/">HA-JDBC</a> and not automatically added by GORM on join tables).</p>
+</div>
+
+    <a class="read-more" href="/2011/08/18/data-driven-variation-with-spock/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2010-08-12T22:46:00">Aug 12 2010</time>
+      <h2><a href="/2010/08/12/auto-generate-spock-specs-for-grails-artifacts/">Auto-generate Spock specs for Grails artifacts</a></h2>
+    </header>
+    <div class="paragraph">
+<p>When creating artifacts such as domain classes, controllers and tag libs Grails generates a <em>JUnit</em> test case. If, like me, you&#8217;re digging writing specifications with <a href="http://spockframework.org/">Spock</a> you&#8217;d probably rather have Grails generate one of those. The last thing I want is to manually transform every generated test case into a specification for every artifact I create.</p>
+</div>
+
+    <a class="read-more" href="/2010/08/12/auto-generate-spock-specs-for-grails-artifacts/">Read more…</a>
+  </article>
+  <hr>
+
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>

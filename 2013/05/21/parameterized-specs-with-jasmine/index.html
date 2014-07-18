@@ -1,0 +1,184 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery - Parameterized specs with Jasmine</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+        <article>
+    <header>
+      <time datetime="2013-05-21T13:49:01">May 21 2013</time>
+      <h1>Parameterized specs with Jasmine</h1>
+    </header>
+    <div class="paragraph">
+<p>Spock&#8217;s <em>where</em> block makes testing similar conditions for a bunch of inputs very straightforward. Recently I was working on the Groovy language definition for the <a href="http://prismjs.com/">Prism syntax highlighter</a> and wanted something similar.</p>
+</div>
+
+<div class="paragraph">
+<p>I used <a href="https://github.com/pivotal/jasmine">Jasmine</a> to test-drive my code and wanted to be able to make some very similar assertions about how the highlighting operated. For example, a particular code block should contain particular characters highlighted as <em>operator</em> tokens. The assertions for each of Groovy&#8217;s (many) operator types would look extremely similar with the only variance being the <em>id</em> of the code block and the expected operator tokens. Using Spock this would be a classic case for writing a single specification method and applying a <em>where</em> block.</p>
+</div>
+<div class="paragraph">
+<p>What I <em>didn&#8217;t</em> want to do was write test code like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="javascript language-javascript">it('should highlight Groovy operators', function() {
+    var operators = {
+        'elvis': '?:',
+        'spaceship': '&lt;=&gt;',
+        'firecracker': '==~'
+    };
+
+    for (op in operators) {
+        var tokens = $('#' + op).find('.operator').text();
+        expect(tokens).toBe(operators[op]);
+    }
+});</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Which would fail fast if any operator wasn&#8217;t highlighted correctly. Or this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="javascript language-javascript">it('should highlight the elvis operator', function() {
+    var tokens = $('#elvis').find('.operator').text();
+    expect(tokens).toBe('?:');
+});
+
+it('should highlight the spaceship operator', function() {
+    var tokens = $('#spaceship').find('.operator').text();
+    expect(tokens).toBe('&lt;=&gt;');
+});
+
+it('should highlight the firecracker operator', function() {
+    var tokens = $('#firecracker').find('.operator').text();
+    expect(tokens).toBe('==~');
+});</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Which would make life painful when I (inevitably) decide I want to implement the test a different way or discover that there&#8217;s a bug in the implementation.</p>
+</div>
+<div class="paragraph">
+<p>Jasmine doesn&#8217;t support anything like Spock&#8217;s <em>where</em> block directly but its specs are created by calling the <code>it</code> method and passing a description and a function that asserts the required behaviour. In theory there&#8217;s no reason why you can&#8217;t set up a looping construct and call <code>it</code> repeatedly.</p>
+</div>
+<div class="paragraph">
+<p>The function that you pass to <code>it</code> does not take any parameters and a naïve implementation like this fails:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="javascript language-javascript">var operators = {
+    'elvis': '?:',
+    'spaceship': '&lt;=&gt;',
+    'firecracker': '==~'
+};
+
+for (op in operators) {
+    it('should highlight the ' + op + ' operator', function() {
+        var tokens = $('#' + op).find('.operator').text();
+        expect(tokens).toBe(operators[op]);
+    });
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The reason for this is similar to <a href="http://blog.freeside.co/post/46587122020/groovy-gotcha-for-loops-and-closure-scope">something I blogged about recently in relation to Groovy</a>. The loop parameter is a mutable reference so although three specifications are set up by the repeated calls to <code>it</code> they are all operating on the last value of the loop parameter when they run. In other words with this example the output would be…</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>'should highlight the firecracker operator'
+'should highlight the firecracker operator'
+'should highlight the firecracker operator'</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The same assertion gets run multiple times.</p>
+</div>
+<div class="paragraph">
+<p>What we need to do is bind the loop parameters to a closure scope that is retained when the specification function is run. To do this I set up and immediately run an anonymous function inside the loop.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="javascript language-javascript">for (op in operators) {
+    (function(name, tokens) {
+        it('should highlight the ' + name + ' operator', function() {
+            var tokens = $('#' + name).find('.operator').text();
+            expect(tokens).toBe(tokens);
+        });
+    })(op, operators[op]);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now we have a closure for each iteration of the loop with the variables <code>name</code> and <code>symbol</code> which is retained in the scope of the specification function when it runs.</p>
+</div>
+<div class="paragraph">
+<p>There&#8217;s nothing special about the parameter object itself, I&#8217;ve used a plain object because I just need two parameters. You could use the same technique with any number of parameters by using an array or some other construct. The parameters just need to be declared on and passed to the anonymous function that creates the closure.</p>
+</div>
+<div class="sect2">
+<h3 id="_more">More…</h3>
+<div class="paragraph">
+<p>You can see the Prism Groovy language definition <a href="http://freeside.co/prism-groovy/">here</a>. The Jasmine tests are executed right in the page. The <a href="https://github.com/robfletcher/prism-groovy/blob/gh-pages/test/prism-groovy.spec.js">specification code itself</a> is found in the GitHub repository.</p>
+</div>
+<div class="paragraph">
+<p>If you&#8217;re interested in a Jasmine extension that wraps this kind of parameterization in an API then check out <a href="http://htmlpreview.github.io/?https://raw.github.com/desirable-objects/neckbeard.js/master/website/index.html">Neckbeard.js</a>.</p>
+</div>
+<div class="paragraph">
+<p>For more on JavaScript closures and anonymous functions I recommend <a href="http://www.manning.com/resig/">Secrets of the JavaScript Ninja</a> by John Resig and Bear Bibeault.</p>
+</div>
+</div>
+    <footer>
+      <ul class="tag-list">
+          <li><a href="/tags/javascript/">javascript</a></li>
+          <li><a href="/tags/jasmine/">jasmine</a></li>
+          <li><a href="/tags/testing/">testing</a></li>
+      </ul>
+    </footer>
+  </article>
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>
+
+<div id="disqus_thread"></div>
+            <script type="text/javascript">
+            //<![CDATA[
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//adhockery.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            //]]>
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </script>

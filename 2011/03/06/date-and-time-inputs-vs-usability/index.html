@@ -1,0 +1,134 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery - Date and time inputs vs. usability</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+        <article>
+    <header>
+      <time datetime="2011-03-06T20:08:00">Mar  6 2011</time>
+      <h1>Date and time inputs vs. usability</h1>
+    </header>
+    <div class="paragraph">
+<p>Form input controls for date/time values have always been problematic. The more I experiment with different options, the more I think there is no one-size-fits-all solution.</p>
+</div>
+
+<div class="sect2">
+<h3 id="_calendar_widgets">Calendar widgets</h3>
+<div class="paragraph">
+<p>Calendar widgets such as the <a href="http://jqueryui.com/demos/datepicker/">Opera HTML5 date input</a> are very popular and can be a slick looking addition to a form. I don&#8217;t think they&#8217;re entirely positive though and certainly don&#8217;t work in all situations. They&#8217;re great when you don&#8217;t know exactly the date you want (<em>I want to book a flight around Easter time</em>) or you need to have an overview of the calendar (<em>I need to set a reminder for <a href="http://twitter.com/#!/LondonGGUG">GGUG</a> on the third Tuesday of every month</em>). However, when trying to enter your date of birth the widget is just in the way. Even if the widget is keyboard accessible and doesn&#8217;t force you to page month-by-month to the correct year you can almost certainly type the date quicker than you can find and select it in a calendar widget.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_multi_field_inputs">Multi-field inputs</h3>
+<div class="paragraph">
+<p>A multi-field input works well for entering familiar dates such as your date of birth or for transcribing data. They&#8217;re not so good when you need the context a calendar widget affords (please don&#8217;t force your users to mentally calculate what date the 3rd Tuesday of next month is).</p>
+</div>
+<div class="paragraph">
+<p>With a multi-field input it&#8217;s vital to remember that users in different places will expect to enter dates in a different order. For example, here in the UK we use the completely logical <em>dd mm yyyy</em> order whilst an American will, bizarrely, want to put the month before the day. It&#8217;s not particularly difficult to build a tag that renders the fields in a different order according to the request locale. Using <a href="http://diveintohtml5.org/forms.html#placeholder">the HTML5 <em>placeholder</em> attribute</a> (or a suitable fallback for older browsers) is invaluable to ensure that users know which field is which.</p>
+</div>
+<div class="paragraph">
+<p>A possible optimisation is to auto-tab between fields after the user has typed the requisite number of digits. In that case you should allow for the user to correct mistakes, so backspacing or using the cursor keys should also automatically jump between fields otherwise the auto-tabbing behaviour becomes more a hinderance than a help for fat-fingered typists like me.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_selects_in_a_multi_field_input">Selects in a multi-field input</h3>
+<div class="paragraph">
+<p>It&#8217;s very common to use a <code>select</code> input for some or all portions of the date. Personally, I pretty much detest this practice as it combines all the inconvenience of a calendar widget with none of the contextual information. <a href="http://grails.org/doc/latest/ref/Tags/datePicker.html">Grails' &lt;g:datePicker&gt; tag</a> does exactly this. Not only are <code>select</code> elements like this bulking out the page with huge option lists (Grails' datePicker dumps 8.6Kb of markup in your page <em>without</em> time fields!) but they are cumbersome to input values into with the keyboard because so many values start with the same character. An arguable exception is a <code>select</code> for the month field as presenting textual values rather than numbers is a little friendlier and the option list is short enough and the values distinct enough to allow for reasonably quick keyboard selection.</p>
+</div>
+<div class="paragraph">
+<p>I suspect the rationale for using <code>select</code> elements is often that it all but ensures the user can&#8217;t enter an invalid value (I&#8217;ve even seen significant hoop-jumping done in Javascript to ensure values such as <em>30th February</em> can&#8217;t be entered). I think it&#8217;s preferable to give the user a clear input and trust them to do the right thing with it rather than forcing them to use an awkward input so that they <em>can&#8217;t</em> get it wrong.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_simple_textual_inputs">Simple textual inputs</h3>
+<div class="paragraph">
+<p>You shouldn&#8217;t rule out using just a basic text input. In fact for monotonous data entry purposes it is probably optimal. The keystrokes to enter a date become muscle memory and there&#8217;s no fiddling about tabbing between day, month and year fields or grabbing the mouse to pick options from a select element. Obviously the down-side is that a plain text input is error-prone and very liable to confuse users unless the expected format is made clear.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_html5">HTML5</h3>
+<div class="paragraph">
+<p>HTML5 specifies <a href="http://diveintohtml5.org/forms.html#type-date">various new date and time input types</a> which seems like good news but has some significant drawbacks at the moment. I can only imagine the new input types are designed to be rendered as native browser widgets (currently only Opera actually does so) as the required format is just about the most inconvenient imaginable for text entry. Sure, as a developer it&#8217;s appealing to require that dates have to be entered as <code>yyyy-mm-dd</code> as you no longer have to support varied input formats but no user in the world would naturally type a date that way. Therefore, to make such inputs usable you really need to use Javascript to proxy them with a widget or a set of multi-field inputs. Fine, but what about users who disable Javascript or use mobile or assistive devices that might not cope particularly well with the widgets? The fallback - a text input into which the user must type a <a href="http://tools.ietf.org/html/rfc3339#section-5.8">machine-readable RFC3339 date</a> - is pretty unfriendly.</p>
+</div>
+<div class="paragraph">
+<p>What&#8217;s worse is that Webkit based browsers such as Chrome and Safari will render the new input types as regular text inputs but refuse to submit a form containing incorrectly formatted values and unbelievably provide no user feedback whatsoever when they do so.</p>
+</div>
+<div class="paragraph">
+<p>I&#8217;m inclined to think that the useful support for the new input types is so minimal and the actively user-hostile handling of them so much more widespread that they&#8217;re best avoided altogether.</p>
+</div>
+<div class="paragraph">
+<p>So, to sum up:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Think about who your users are and what they are trying to accomplish with <em>this particular</em> input field and give them the right input for the job at hand.</p>
+</li>
+<li>
+<p>If they need to type some or all of the value make sure it&#8217;s clear what format is expected or which field is which.</p>
+</li>
+<li>
+<p>Allow for people to enter values in the order they are comfortable with and above all <em>don&#8217;t</em> force them to type it in a machine-readable format.</p>
+</li>
+<li>
+<p>Don&#8217;t strand Chrome and Safari users with broken HTML5 input types.</p>
+</li>
+</ul>
+</div>
+</div>
+    <footer>
+      <ul class="tag-list">
+          <li><a href="/tags/ux/">ux</a></li>
+          <li><a href="/tags/html5/">html5</a></li>
+          <li><a href="/tags/forms/">forms</a></li>
+      </ul>
+    </footer>
+  </article>
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>
+
+<div id="disqus_thread"></div>
+            <script type="text/javascript">
+            //<![CDATA[
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//adhockery.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            //]]>
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </script>

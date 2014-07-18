@@ -1,0 +1,134 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery - Data-driven variation with Spock</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+        <article>
+    <header>
+      <time datetime="2011-08-18T21:42:00">Aug 18 2011</time>
+      <h1>Data-driven variation with Spock</h1>
+    </header>
+    <div class="paragraph">
+<p>Spock&#8217;s <code>where:</code> block is commonly used with a <a href="https://github.com/robfletcher/grails-enhanced-scaffolding/blob/master/test/projects/scaffolding-example/test/functional/scaffolding/InputTypesSpec.groovy#L18">data table</a> but can also be driven by any <code>Iterable</code> data. It&#8217;s worth bearing in mind that the data driving the <code>where:</code> block doesn&#8217;t have to be hardcoded, it can be dynamic. For example, today we implemented a spec to ensure that every table in our database schema has a primary key (because it&#8217;s required by <a href="http://ha-jdbc.sourceforge.net/">HA-JDBC</a> and not automatically added by GORM on join tables).</p>
+</div>
+
+<div class="paragraph">
+<p>In this spec the <code>where:</code> block is driven by the list of table names read from the database metadata.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">import grails.plugin.spock.IntegrationSpec
+import java.sql.Connection
+import javax.sql.DataSource
+import spock.lang.*
+
+class DatabaseSchemaSpec extends IntegrationSpec {
+
+    @Shared def dataSource
+    @Shared List&lt;string&gt; tableNames
+
+    def setupSpec() {
+        DataSource.mixin(DataSourceCategory)
+
+        tableNames = []
+        dataSource.withConnection {connection -&gt;
+            def rs = connection.metaData.getTables(null, null, '%', ['TABLE'] as String[])
+            while (rs.next()) {
+                tableNames &lt;&lt; rs.getString(3)
+            }
+        }
+    }
+
+    @Unroll("the #table table has a primary key")
+    void "all tables have a primary key"() {
+        expect:
+        dataSource.withConnection { Connection connection -&gt;
+            assert connection.metaData.getPrimaryKeys(null, null, table).next()
+        }
+
+        where:
+        table &lt;&lt; tableNames
+    }
+}
+
+@Category(DataSource)
+class DataSourceCategory {
+    static void withConnection(dataSource, Closure closure) {
+        Connection connection = dataSource.connection
+        try {
+            closure(connection)
+        } finally {
+            connection?.close()
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><em>Get this code <a href="https://gist.github.com/1154459.js?file=DatabaseSchemaSpec.groovy">as a Gist</a>.</em></p>
+</div>
+<div class="paragraph">
+<p>Something like this could be done with JUnit, of course. A test could iterate over the table names and assert that each has a primary key. However, such a test would fail fast whereas with the power of Spock&#8217;s <code>@Unroll</code> annotation the spec creates a separate test result for each database table and will run each individually regardless of whether any others pass or fail. The command line output from this spec will be enough to tell you which tables do not have primary keys as <code>@Unroll</code> puts the table name right in the test name.</p>
+</div>
+<div class="paragraph">
+<p>The other great thing about this spec is that it doesn&#8217;t require maintenance; as we add more domain classes to our app the spec will automatically check the associated tables.</p>
+</div>
+    <footer>
+      <ul class="tag-list">
+          <li><a href="/tags/spock/">spock</a></li>
+          <li><a href="/tags/css/">css</a></li>
+          <li><a href="/tags/progressive-enhancement/">progressive enhancement</a></li>
+          <li><a href="/tags/resources/">resources</a></li>
+          <li><a href="/tags/i18n/">i18n</a></li>
+          <li><a href="/tags/spring/">spring</a></li>
+      </ul>
+    </footer>
+  </article>
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>
+
+<div id="disqus_thread"></div>
+            <script type="text/javascript">
+            //<![CDATA[
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//adhockery.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            //]]>
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </script>

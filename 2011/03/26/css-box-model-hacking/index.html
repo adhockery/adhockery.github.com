@@ -1,0 +1,86 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery - CSS box model hacking</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+        <article>
+    <header>
+      <time datetime="2011-03-26T16:25:00">Mar 26 2011</time>
+      <h1>CSS box model hacking</h1>
+    </header>
+    <div class="paragraph">
+<p>Want to make an HTML element fill 100% of its parent&#8217;s width but also give it a border and/or some padding? Since the width of an element is <em>exclusive</em> of its border and padding this can be a pain. However there&#8217;s a fairly simple CSS solution that works cross-browser.</p>
+</div>
+
+<div class="paragraph">
+<p>Here&#8217;s an example. Both input boxes are set to <code>width: 100%</code> and have <code>padding: 5px</code>. The first input shows the problem. Because the padding and border are added to the width of the element it overflows its container. The box model of the second input has been modified so that the padding and border are <em>inside</em> the declared width.</p>
+</div>
+<div class="paragraph">
+<p>Field 1 Field 2
+The trick to modifying the box model is to set <code>box-sizing: border-box</code>. Unfortunately that&#8217;s not a cross-browser property, only Opera supports it at the moment. To get the same effect in other browsers you will also need to set browser-specific versions as well:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="css language-css">   -moz-box-sizing: border-box;
+-webkit-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+        box-sizing: border-box;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note that Internet Explorer only supports the <code>-ms-box-sizing</code> property from version 8 upwards so you should probably be judicious with this technique or use an alternative method to get a similar effect in IE7 and below.</p>
+</div>
+    <footer>
+      <ul class="tag-list">
+          <li><a href="/tags/css/">css</a></li>
+      </ul>
+    </footer>
+  </article>
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>
+
+<div id="disqus_thread"></div>
+            <script type="text/javascript">
+            //<![CDATA[
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//adhockery.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            //]]>
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </script>

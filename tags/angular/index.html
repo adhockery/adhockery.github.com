@@ -1,0 +1,92 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+      <header>
+  <h1>Articles tagged <em>‘angular’</em></h1>
+</header>
+
+  <article>
+    <header>
+      <time datetime="2013-09-12T01:13:00">Sep 12 2013</time>
+      <h2><a href="/2013/09/12/decoupling-from-the-dom-with-angular/">Decoupling from the DOM with Angular</a></h2>
+    </header>
+    <div class="paragraph">
+<p>One piece of advice you&#8217;ll run into pretty soon when working with Angular is that you should never touch the DOM outside of a directive. Especially when test-driving your components this is pretty wise. The great strength of Angular is the declarative way in which the view (HTML) works with the view model (Angular controllers). It&#8217;s almost absurd how easy it is to unit test Angular controllers. Controller functions tend to act on <code>$scope</code> properties, trigger or respond to events and all those things are straightforward to replicate in unit tests.</p>
+</div>
+
+    <a class="read-more" href="/2013/09/12/decoupling-from-the-dom-with-angular/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2013-09-02T14:48:00">Sep  2 2013</time>
+      <h2><a href="/2013/09/02/unit-testing-angular-directives-that-use-controller-and/">Unit testing Angular directives that use controller and templateUrl</a></h2>
+    </header>
+    <div class="paragraph">
+<p>I spent an hour or so this morning figuring out how to unit test an Angular directive that uses a controller and a template loaded from a file (as opposed to inline). There&#8217;s a useful example in the <a href="https://github.com/vojtajina/ng-directive-testing">ng-directive-testing</a> repository but I thought a quick summary would be useful (as much to remind me the next time I have to do it as anything). Also the examples there test by interacting with DOM elements rather than directly with the directive&#8217;s scope.</p>
+</div>
+
+    <a class="read-more" href="/2013/09/02/unit-testing-angular-directives-that-use-controller-and/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2013-09-02T10:07:00">Sep  2 2013</time>
+      <h2><a href="/2013/09/02/on-organizing-files-and-directories-in-angular-apps/">On organizing files and directories in Angular apps</a></h2>
+    </header>
+    <div class="paragraph">
+<p>I&#8217;ve been working on an <a href="http://angularjs.org/">Angular JS</a> project for the past few weeks. It&#8217;s not the first time I&#8217;ve used Angular but it is the first time I&#8217;ve used the <a href="https://github.com/yeoman/generator-angular"><em>generator-angular</em></a> package for <a href="http://yeoman.io/">Yeoman</a>. Having the ability to quickly generate skeletons for new components is really nice but there&#8217;s one thing that rubs me up the wrong way – the way the genenerated code is organized on the file system.</p>
+</div>
+
+    <a class="read-more" href="/2013/09/02/on-organizing-files-and-directories-in-angular-apps/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2013-02-11T22:37:00">Feb 11 2013</time>
+      <h2><a href="/2013/02/11/dynamic-templates-in-angular-routes/">Dynamic templates in Angular routes</a></h2>
+    </header>
+    <div class="paragraph">
+<p>We&#8217;re building an application where content can be published using different layouts selected by an editor. In Angular this translates to a situation where the same route &amp; controller will need to display content from the same <code>$http</code> endpoint using a range of different templates. The name of the template is included in the JSON data returned by the <code>$http</code> endpoint so it&#8217;s not known at the time the route is triggered.</p>
+</div>
+
+    <a class="read-more" href="/2013/02/11/dynamic-templates-in-angular-routes/">Read more…</a>
+  </article>
+  <hr>
+
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>

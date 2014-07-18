@@ -1,0 +1,140 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery - LESS with Modernizr and media queries</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+        <article>
+    <header>
+      <time datetime="2012-10-15T12:56:00">Oct 15 2012</time>
+      <h1>LESS with Modernizr and media queries</h1>
+    </header>
+    <div class="paragraph">
+<p>One of the main advantages of <a href="http://lesscss.org/">LESS</a> is <a href="http://lesscss.org/#-nested-rules">nesting</a> rules for components in a structure that mirrors the DOM. However, when using <a href="http://modernizr.com/">Modernizr</a> you create override rules based on classes present on the root <code>html</code> tag. It would be nice to declare those override rules alongside the other rules for the same components. The same concern applies when using media queries. Luckily, there <em>is</em> a way to do this.</p>
+</div>
+
+<div class="paragraph">
+<p><a href="http://modernizr.com/">Modernizr</a> is rapidly becoming ubiquitous for feature-based CSS rules. It attaches classes to the <code>html</code> element that your CSS rules can reference. For example, on the <a href="http://freeside.co/betamax">Betamax documentation page</a> I have a rule to add some padding above <code>h2</code> elements in the main content when the browser supports <code>@fontface</code> (due to the rendering of the web font I&#8217;m using). In CSS the rule is:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="css language-css">#doc-content h2 {
+    font-family: Kameron, Georgia, serif;
+}
+
+.fontface #doc-content h2 {
+    padding-top: 5px;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>That is; if the browser supports <code>@fontface</code> and will therefore be rendering the <code>h2</code> using <em>Kameron</em> the padding gets added. If it is falling back to <em>Georgia</em> then it does not.</p>
+</div>
+<div class="paragraph">
+<p>I don&#8217;t want to have the <code>.fontface</code> support rule separate from the other rules for the <code>#doc-content</code> section but since the class is on the root <code>html</code> tag it&#8217;s not immediately obvious how I can continue to use nesting.</p>
+</div>
+<div class="paragraph">
+<p>It turns out there <em>is</em> a syntax that will let me do this, although it doesn&#8217;t seem to have made it to the LESS documentation yet. Here&#8217;s how you do it:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="less language-less">#doc-content {
+    h2 {
+        font-family: Kameron, Georgia, serif;
+        .fontface &amp; {
+            padding-top: 5px;
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note the <code>&amp;</code> operator there. This will compile into exactly the CSS above but allow you to neatly nest your modernizr tweaks alongside the rules they augment.</p>
+</div>
+<div class="paragraph">
+<p>You can do something similar with media queries as well. Instead of having separate sections of your LESS file for the overrides for different breakpoints you can just nest them inside other rules. In this case you don&#8217;t need the <code>&amp;</code> operator at all. For example I want to increase the font-size of that same <code>h2</code> element when the viewport is above a certain size. The CSS I want is this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="css language-css">#doc-content h2 {
+    font-size: 28px;
+}
+
+@media (min-width: 768px) {
+    #doc-content h2 {
+        font-size: 48px;
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In my LESS file I can declare the rules in a nested fashion so that the screen size specific rule appears alongside the default:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="less language-less">#doc-content h2 {
+    font-size: 28px;
+    @media (min-width: 768px) {
+        font-size: 48px;
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Again, this doesn&#8217;t seem to have made it into the LESS documentation but works fine with <em>less.js</em>, <em><a href="http://incident57.com/less/">LESS.app</a></em> and the Ruby Gem.</p>
+</div>
+    <footer>
+      <ul class="tag-list">
+          <li><a href="/tags/less/">less</a></li>
+          <li><a href="/tags/modernizr/">modernizr</a></li>
+          <li><a href="/tags/responsive/">responsive</a></li>
+      </ul>
+    </footer>
+  </article>
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>
+
+<div id="disqus_thread"></div>
+            <script type="text/javascript">
+            //<![CDATA[
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//adhockery.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            //]]>
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </script>

@@ -1,0 +1,219 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery - Using GMock to complement Grails mockDomain</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+        <article>
+    <header>
+      <time datetime="2010-01-01T14:33:00">Jan  1 2010</time>
+      <h1>Using GMock to complement Grails mockDomain</h1>
+    </header>
+    <div class="paragraph">
+<p>Since Grails 1.1 we&#8217;ve had pretty good <a href="http://grails.org/doc/latest/guide/single.html#9.%20Testing">unit testing support</a> via <em>GrailsUnitTestCase</em> and its sub-classes. The <em>mockDomain</em> method is particularly useful for simulating the various enhancements Grails adds to domain classes. However, there are some domain class capabilities, such as criteria queries and the new <a href="http://grails.org/doc/latest/ref/Domain%20Classes/namedQueries.html">named queries</a>, that can&#8217;t really be simulated by <em>mockDomain</em>.</p>
+</div>
+
+<div class="paragraph">
+<p>So assuming we&#8217;re trying to unit test a controller that uses criteria methods or named queries on a domain class how can we enhance the capabilities of <em>mockDomain</em>? One of my favourite Groovy libraries is <a href="http://gmock.org/">GMock</a> which I use in preference to Groovy&#8217;s built in mock capabilities. One of its really powerful features is the ability to use <a href="http://gmock.org/documentation/0.8.0#Partial_mock"><em>partial mocks</em></a>, <em>i.e.</em> to mock particular methods on a class whilst allowing the rest of the class to continue functioning as normal. This means we can layer a mocked <em>createCriteria</em>, <em>withCriteria</em> or named query call on to a domain class that is already enhanced by <em>mockDomain</em>.</p>
+</div>
+<div class="paragraph">
+<p>First off you need to add the GMock dependency to your <em>BuildConfig.groovy</em>. Since GMock supports <a href="http://code.google.com/p/hamcrest/">Hamcrest matchers</a> for matching method arguments you&#8217;ll probably want those as well:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">dependencies {
+    test "org.gmock:gmock:0.8.0"
+    test "org.hamcrest:hamcrest-all:1.0"
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you&#8217;re using an earlier version of Grails you&#8217;ll need to just grab the jar files and put them in your app&#8217;s <em>lib</em> directory.</p>
+</div>
+<div class="paragraph">
+<p>Then in your test case you need to import GMock and Hamcrest classes and add an annotation to allow GMock to work:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">import grails.test.*
+import org.gmock.*
+import static org.hamcrest.Matchers.*
+
+@WithGMock
+class MyControllerTests extends ControllerUnitTestCase {</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Adding criteria and named query methods is now fairly simple:</p>
+</div>
+<div class="sect2">
+<h3 id="_mocking_a_withcriteria_method">Mocking a withCriteria method</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">def results = // whatever you want your criteria query to return
+mock(MyDomain).static.withCriteria(instanceOf(Closure)).returns(results)
+play {
+    controller.myAction()
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Breaking this example down a little</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>mock(MyDomain)</code> establishes a partial mock of the domain class.</p>
+</li>
+<li>
+<p><code>instanceOf(Closure)</code> uses a Hamcrest <em>instanceOf</em> matcher to assert that the <em>withCriteria</em> method is called with a single <em>Closure</em> argument (the bit with all the criteria in).</p>
+</li>
+<li>
+<p><code>returns(results)</code> tells the mock to return the specified results which here would be a list of domain object instances.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>In this example we&#8217;re expecting the <em>withCriteria</em> method to be called just once but GMock supports more complex <a href="http://gmock.org/documentation/0.8.0#Time_matching">time matching expressions</a> if the method may be called again.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_mocking_a_em_createcriteria_em_method">Mocking a <em>createCriteria</em> method</h3>
+<div class="paragraph">
+<p>The <em>withCriteria</em> method returns results directly but <em>createCriteria</em> is a little more complicated in that it returns a criteria object that has methods such as <em>list</em>, <em>count</em> and <em>get</em>. To simulate this we&#8217;ll need to have the mocked <em>createCriteria</em> method return a mocked criteria object.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">def results = // whatever you want your criteria query to return
+def mockCriteria = mock() {
+    list(instanceOf(Closure)).returns(results)
+}
+mock(MyDomain).static.createCriteria().returns(mockCriteria)
+play {
+    controller.myAction()
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This is only a little more complex than the previous example in that it has the mocked <em>list</em> method on another mock object that is returned by the domain class' <em>createCriteria</em> method. <code>mock()</code> provides an un-typed mock object as we really don&#8217;t care about the type here.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_mocking_a_named_query">Mocking a named query</h3>
+<div class="paragraph">
+<p>For our purposes named queries are actually pretty similar to <em>createCriteria</em>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">def results = // whatever you want your criteria query to return
+def mockCriteria = mock() {
+    list(instanceOf(Closure)).returns(results)
+}
+mock(MyDomain).static.myNamedQuery().returns(mockCriteria)
+play {
+    controller.myAction()
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Some other examples:</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_mocking_a_named_query_with_an_argument">Mocking a named query with an argument</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">mock(MyDomain).static.myNamedQuery("blah").returns(mockCriteria)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For simple parameters you don&#8217;t need to use a Hamcrest matcher - a literal is just fine.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_mocking_a_em_withcriteria_em_call_using_options">Mocking a <em>withCriteria</em> call using options</h3>
+<div class="paragraph">
+<p>You can pass an argument map to <em>withCriteria</em>, <em>e.g.</em> <code>withCriteria(uniqueResult: true) { /* criteria */ }</code> will return a single instance rather than a <em>List</em>. To mock this you will need to expect the <em>Map</em> as well as the <em>Closure</em>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">def result = // a single domain object instance
+mock(MyDomain).static.withCriteria(uniqueResult: true, instanceOf(Closure)).returns(result)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_mocking_criteria_that_are_re_used">Mocking criteria that are re-used</h3>
+<div class="paragraph">
+<p>It&#8217;s fairly common in pagination scenarios to call a <em>list</em> and <em>count</em> method on a criteria object. We can just set multiple expectations on the mock criteria object, e.g.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">def mockCriteria = mock() {
+    list(max: 10).returns(results)
+    count().returns(999)
+}
+mock(MyDomain).static.myNamedQuery().returns(mockCriteria)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The nice thing about this technique is that it doesn&#8217;t interfere with any of the enhancements <em>mockDomain</em> makes to the domain class, so the <em>save</em>, <em>validate</em>, etc. methods will still work as will dynamic finders.</p>
+</div>
+<div class="paragraph">
+<p>Be aware however, that what we&#8217;re doing here is <em>mocking out</em> the criteria queries, not testing them! All the interesting stuff inside the criteria closure is being ignored by the mocks and could, of course, be garbage. Named queries are pretty easy to test by having integration test cases for your domain class. Criteria queries beyond a trivial level of complexity should really be encapsulated in service methods or named queries and integration tested there. Of course, GMock then makes an excellent solution for mocking that service method in your controller unit test.</p>
+</div>
+</div>
+    <footer>
+      <ul class="tag-list">
+          <li><a href="/tags/testing/">testing</a></li>
+          <li><a href="/tags/gmock/">gmock</a></li>
+      </ul>
+    </footer>
+  </article>
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>
+
+<div id="disqus_thread"></div>
+            <script type="text/javascript">
+            //<![CDATA[
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//adhockery.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            //]]>
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </script>

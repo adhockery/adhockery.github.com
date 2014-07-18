@@ -1,0 +1,141 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery - Hibernate POGOs, Immutability and Encapsulation</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+        <article>
+    <header>
+      <time datetime="2009-03-01T11:21:00">Mar  1 2009</time>
+      <h1>Hibernate POGOs, Immutability and Encapsulation</h1>
+    </header>
+    <div class="paragraph">
+<p>I had a confusing experience this morning. I&#8217;m working on a simple web based game as a learning exercise.</p>
+</div>
+
+<div class="paragraph">
+<p>I use a custom tag to determine if the currently logged in user is the active player (i.e. the player whose turn it is).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="markup language-markup">&lt;g:isNextPlayer&gt;
+  &lt;!-- display something only active player should see --&gt;
+&lt;/g:isNextPlayer&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The tag is used at various places in the page - displaying an "it&#8217;s your turn" message, switching on bits of script, rendering buttons, etc. Suddenly I found the last couple of calls to the tag in a page weren&#8217;t rendering the tag body.</p>
+</div>
+<div class="paragraph">
+<p>The tag uses a transient property on the <code>Game</code> domain class that looks like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">Player getNextPlayer() {
+  return players.empty ? null : players[turn % players.size()]
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The variable <code>turn</code> is simply an integer that gets incremented when a turn completes.</p>
+</div>
+<div class="paragraph">
+<p>After poking around with debug logging I figured out that the implementation of <code>getNextPlayer</code> was fine and the value of <code>turn</code> wasn&#8217;t being accidentally changed but the collection property <code>players</code> was getting re-ordered. What I&#8217;d done was introduce some code mid-way in the page that displays the players' names and scores - <em>ordered by score.</em></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="markup language-markup">&lt;g:each var="player" in="${gameInstance.players.sort { -it.score }}"&gt;
+  &lt;tr&gt;
+    &lt;td&gt;${player.user.username}&lt;/td&gt;
+    &lt;td&gt;${player.score}&lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/g:each&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>I had assumed when I did this that <a href="http://groovy.codehaus.org/groovy-jdk/java/util/Collection.html#sort(groovy.lang.Closure)"><code>Collection.sort(Closure)</code></a> would return a copy (which <em>is</em> what the docs state - not that I&#8217;d checked). However, it seems that is only the case if the collection it&#8217;s called on is not a <code>List</code>. On <code>List</code> instances the method acts as a mutator and does an in-place sort.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">def c = [1,2,3] as Set
+def s = c.sort { it }
+assert !(c.is(s))</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Remove the <em><code>as Set</code></em> and the assertion fails.</p>
+</div>
+<div class="paragraph">
+<p>Although I&#8217;d argue that Groovy&#8217;s sort implementation doesn&#8217;t exactly stick to the principal of least surprise that&#8217;s not really what concerns me. In my domain it doesn&#8217;t make sense for me to be able to mutate the <code>players</code> property of <code>Game</code>. Once a game is created the players are fixed, they can&#8217;t leave, can&#8217;t take turns out of order. The state of an individual <code>Player</code> can change - his score can change, for example, but not the collection property of <code>Game</code>. In a regular non-persistent class this sort of invariant would be enforced by overriding the getter and setter:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">private List players
+List getPlayers() { players.asImmutable() }
+void setPlayers(List players) {
+  this.players = []
+  this.players.addAll players
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If my <code>Game</code> class was implemented that way I&#8217;d have got an <code>UnsupportedOperationException</code> from the <code>sort</code> call. If nothing else it would have saved me 5 minutes of "<em>WTF?</em>" and 10 minutes of trying to figure out if it was something to do with the second-level cache. Unfortunately, this technique doesn&#8217;t quite work satisfactorily in a GORM domain class though. For a start declaring the property as <code>private</code> will result in a compilation failure - <em>'The field <em>players</em> is declared multiple times.<em></em> Declaring the property without <code>private</code> gets you past the compilation phase but Grails <a href="http://grails.org/doc/1.1.x/ref/Domain%20Classes/addTo.html">'addTo*</em></a> dynamic method isn&#8217;t bound.</p>
+</div>
+<div class="paragraph">
+<p>One of the things that&#8217;s always nagged at the back of my mind when using GORM/Hibernate is the fact that all to often the domain classes end up resembling the <a href="http://en.wikipedia.org/wiki/Anemic_Domain_Model">anæmic domain model anti-pattern</a> even to the extent of a design something like <a href="http://www.stateofflow.com/journal/57/object-disorientation">the cautionary tale of POTS</a>. I like to put a certain amount of business logic in my domain classes and give them a reasonably rich API for managing their state without violating encapsulation but there&#8217;s always an uncomfortable feeling that properties that really should be part of an object&#8217;s private state are hanging out in the wind so that the persistence framework can access them.</p>
+</div>
+    <footer>
+      <ul class="tag-list">
+          <li><a href="/tags/hibernate/">hibernate</a></li>
+          <li><a href="/tags/gorm/">gorm</a></li>
+          <li><a href="/tags/immutable/">immutable</a></li>
+      </ul>
+    </footer>
+  </article>
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>
+
+<div id="disqus_thread"></div>
+            <script type="text/javascript">
+            //<![CDATA[
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//adhockery.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            //]]>
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </script>

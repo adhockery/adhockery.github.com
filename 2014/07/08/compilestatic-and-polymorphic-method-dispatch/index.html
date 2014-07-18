@@ -1,0 +1,138 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery - @CompileStatic and polymorphic method dispatch</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+        <article>
+    <header>
+      <time datetime="2014-07-08T07:11:00">Jul  8 2014</time>
+      <h1>@CompileStatic and polymorphic method dispatch</h1>
+    </header>
+    <div class="paragraph">
+<p>I&#8217;m a big fan of Groovy&#8217;s <code>@CompileStatic</code> feature – so much so that I&#8217;ve updated the <em>Groovy class</em> template in IntelliJ IDEA to use it by default. I should stress I don&#8217;t do this because I believe non-statically compiled Groovy to be slow – it isn&#8217;t.</p>
+</div>
+<div class="paragraph">
+<p>Recently <a href="https://twitter.com/pledbrook/status/475986668840050688">Peter Ledbrook reminded me of one drawback</a> which is that method dispatch is statically bound when using <code>@CompileStatic</code> like it is in Java. This means that the behavior of calling polymorphic methods can change when argument types are not known at compile time.</p>
+</div>
+
+<div class="paragraph">
+<p>Here&#8217;s a simple example. What will this code print?</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">class Categorizer {
+
+  void accept(String s) { println "String: '$s'" }
+  void accept(Number n) { println "Number: $n" }
+  void accept(Object o) { println "Object: $o" }
+
+  void accept(Object... objects) {
+    objects.each {
+      accept(it)
+    }
+  }
+}
+
+new Categorizer().accept(
+  "a",
+  "${'b'}",
+  1,
+  true,
+  ["c", "d", 2] as Object[]
+)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This is straight up dynamic Groovy so we get this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>String: 'a'
+String: 'b'
+Number: 1
+Object: true
+String: 'c'
+String: 'd'
+Number: 2</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Dynamically compiled Groovy uses runtime method dispatch meaning that the version of <code>Categorizer.accept</code> to use for the statement <code>accept(it)</code> is determined at runtime based on the type of <code>it</code>.</p>
+</div>
+<div class="paragraph">
+<p>What happens to that output if we add <code>@CompileStatic</code> to the <code>Categorizer</code> class? The output changes to this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Object: a
+Object: b
+Object: 1
+Object: true
+Object: [c, d, 2]</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now the statement <code>accept(it)</code> is bound at <em>compile time</em> and there is no type information about <code>it</code>. The compiler&#8217;s only choice is to bind to <code>accept(Object)</code>.</p>
+</div>
+<div class="paragraph">
+<p>This is completely logical when you understand what the compiler is doing but it&#8217;s behavior that annoyed me back when I was using Java full time and I much prefer Groovy&#8217;s runtime dispatch.</p>
+</div>
+<div class="paragraph">
+<p>There is a compromise, though. Instead of full static compilation you can enable static type checking in the Groovy compiler using <code>@TypeChecked</code>. With <code>@TypeChecked</code> the call to <code>accept(it)</code> is dispatched at runtime and the output is the same as the original.</p>
+</div>
+    <footer>
+      <ul class="tag-list">
+          <li><a href="/tags/groovy/">groovy</a></li>
+          <li><a href="/tags/compilestatic/">compilestatic</a></li>
+          <li><a href="/tags/typechecked/">typechecked</a></li>
+      </ul>
+    </footer>
+  </article>
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>
+
+<div id="disqus_thread"></div>
+            <script type="text/javascript">
+            //<![CDATA[
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//adhockery.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            //]]>
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </script>

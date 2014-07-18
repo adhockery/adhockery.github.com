@@ -1,0 +1,144 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery - Spock Killer Features: The “old” method</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+        <article>
+    <header>
+      <time datetime="2012-02-15T06:46:00">Feb 15 2012</time>
+      <h1>Spock Killer Features: The “old” method</h1>
+    </header>
+    <div class="paragraph">
+<p>I use Spock almost exclusively to test Groovy or Java code these days. It&#8217;s got some fantastic features that other test frameworks don&#8217;t have. Some of them aren&#8217;t that well known or documented, though.</p>
+</div>
+<div class="paragraph">
+<p>The <code>old</code> method is possibly my favourite Spock feature. It&#8217;s a simple thing but really enhances test legibility. It&#8217;s also great for wowing developers new to Spock because it looks like black magic at first glance.</p>
+</div>
+
+<div class="paragraph">
+<p>Consider a simple test like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">when:
+myList &lt;&lt; 'foo'
+
+then:
+myList.size() == 1</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This is fine in simple cases, but what happens if <code>myList.size()</code> is in a less predictable state? I&#8217;ve used this technique for testing cache usage for instance; making assertions about hit &amp; miss counts and cache size. Those numbers are less predictable as they&#8217;ll be affected by other things (concurrency or side-effects of test setup, for example). Hardcoding expected values makes the tests brittle.</p>
+</div>
+<div class="paragraph">
+<p>We can improve things a little by comparing the value after the <code>when:</code> block with the value before it:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">given:
+def oldSize = myList.size()
+
+when:
+myList &lt;&lt; 'foo'
+
+then:
+myList.size() == oldSize + 1</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>With Spock&#8217;s <code>old</code> method there&#8217;s an even neater way, though:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">when:
+myList &lt;&lt; 'foo'
+
+then:
+myList.size() == old(myList.size()) + 1</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Wait, WTF is going on there? That&#8217;s voodoo!</p>
+</div>
+<div class="paragraph">
+<p>In fact Spock is using an AST transformation to execute the call to <code>old</code> <em>before</em> the <code>when:</code> block. If you step through the spec with the debugger in IntelliJ Idea you&#8217;ll see exactly what&#8217;s going on. The execution jumps to the line with <code>old</code> before the <code>when:</code> block lines, then visits it again afterwards.</p>
+</div>
+<div class="paragraph">
+<p>The <code>old</code> method returns the value an arbitrary statement had <em>before</em> the preceding <code>when:</code> block was executed. Because of this <code>old</code> can only be used in a <code>then:</code> block (or any subsequent <code>and:</code> blocks).</p>
+</div>
+<div class="paragraph">
+<p>There&#8217;s no limit to what you can do with <code>old</code>. I&#8217;ve used it in <em>Geb</em> specs to do things like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">given:
+to CocktailListPage
+
+when:
+to NewCocktailPage
+cocktail.name = 'Dirty Martini'
+cocktail.save.click()
+
+then:
+at CocktailListPage
+
+and:
+cocktailList.names == old(cocktailList.names) + ['Dirty Martini']</code></pre>
+</div>
+</div>
+    <footer>
+      <ul class="tag-list">
+          <li><a href="/tags/groovy/">groovy</a></li>
+          <li><a href="/tags/spock/">spock</a></li>
+          <li><a href="/tags/testing/">testing</a></li>
+      </ul>
+    </footer>
+  </article>
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>
+
+<div id="disqus_thread"></div>
+            <script type="text/javascript">
+            //<![CDATA[
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//adhockery.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            //]]>
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </script>

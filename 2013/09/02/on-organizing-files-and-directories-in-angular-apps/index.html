@@ -1,0 +1,147 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery - On organizing files and directories in Angular apps</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+        <article>
+    <header>
+      <time datetime="2013-09-02T10:07:00">Sep  2 2013</time>
+      <h1>On organizing files and directories in Angular apps</h1>
+    </header>
+    <div class="paragraph">
+<p>I&#8217;ve been working on an <a href="http://angularjs.org/">Angular JS</a> project for the past few weeks. It&#8217;s not the first time I&#8217;ve used Angular but it is the first time I&#8217;ve used the <a href="https://github.com/yeoman/generator-angular"><em>generator-angular</em></a> package for <a href="http://yeoman.io/">Yeoman</a>. Having the ability to quickly generate skeletons for new components is really nice but there&#8217;s one thing that rubs me up the wrong way – the way the genenerated code is organized on the file system.</p>
+</div>
+
+<div class="paragraph">
+<p>When I use a commands like</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="bash language-bash">yo angular:controller cocktail
+yo angular:service cocktail
+yo angular:directive cocktail</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>the generator will create the following files:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>.
+├── app
+|   └── scripts
+|       └── controllers
+|       |   └── cocktail.coffee
+|       └── directives
+|       |   └── cocktail.coffee
+|       └── services
+|           └── cocktail.coffee
+└── test
+    └── spec
+        └── controllers
+        |   └── cocktail.coffee
+        └── directives
+        |   └── cocktail.coffee
+        └── services
+            └── cocktail.coffee</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The commands group the generated components into subdirectories based on what <em>type of</em> component they are. So far I&#8217;ve gone along with it because – like any good programmer – I&#8217;m lazy. But as the project has grown (currently 6 controllers, 2 directives, 2 filters &amp; 7 services) it&#8217;s started to bother me more &amp; more. I&#8217;ve decided to spend an hour or so re-arranging things.</p>
+</div>
+<div class="paragraph">
+<p>Why? Well for a start the fact that if I have a controller a service and a set of directives for a logical domain concept – let&#8217;s stick with <em>cocktail</em> for now – they, and their tests will <em>all</em> be called <code>cocktail.coffee</code>. That makes for a lot of screwing around in Sublime Text trying to figure out which tab is which.</p>
+</div>
+<div class="paragraph">
+<p>That&#8217;s easy to deal with, though – I can specify a different name on the command line or rename the files. What I really don&#8217;t like is that those files which all deal with the same domain concept are scattered across 3 different sub-directories just because they are different artifact types. That to me is not a useful way to organize things. It doesn&#8217;t ease the task of the programmer trying to understand how the awesome <em>cocktail</em> functionality I&#8217;ve written works.</p>
+</div>
+<div class="paragraph">
+<p>Code should be organized by the domain concepts it deals with. That <em>does</em> aid comprehension. It&#8217;s indicative of what components are likely to be most (appropriately) coupled with one another. It helps you see inappropriate coupling when writing code. It allows you to use the spatial relationships between files to intuit something about the likely releationships between them. Directory depth becomes meaningful – it conveys a separation of abstraction (shallower) from detail (deeper).</p>
+</div>
+<div class="paragraph">
+<p>I&#8217;d far rather have a layout like</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>.
+├── app
+|   └── scripts
+|       └── cocktail
+|           └── cocktail-controller.coffee
+|           └── cocktail-directives.coffee
+|           └── cocktail-resource.coffee
+└── test
+    └── spec
+        └── cocktail
+            └── cocktail-controller.spec.coffee
+            └── cocktail-directives.spec.coffee
+            └── cocktail-resource.spec.coffee</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Not perfect by any means – http://www.codinghorror.com/blog/2012/07/new-programming-jargon.html[Smurf naming] is ugly and class names that start with the last component of the package name get picked up by certain Java static analysis tools and with good reason. At least everything to do with <em>cocktails</em> is in one place and I can tell by looking at the file name what components are in what files.</p>
+</div>
+<div class="paragraph">
+<p>I should point out that I don&#8217;t lay the blame for this at the door of the <em>generator-angular</em> developers. They&#8217;re following the convention laid out in the Angular documentation and countless examples such as <a href="http://briantford.com/blog/huuuuuge-angular-apps.html">Brian Ford&#8217;s very popular post on best practices for large Angular apps</a>. The blame is really mine for being too lazy to not move &amp; rename the files the generator creates, just create them manually or better yet patch the generator.</p>
+</div>
+<div class="paragraph">
+<p>The first time I recall seeing the "directory per artifact type" pattern for arranging files was around 2005 when I first did some work with Rails. A very similar layout was adopted by Grails which I&#8217;ve worked with a lot over the past 6 years. In early Grails releases the documentation tended to gloss over the possibility of using standard Java packages for Grails artifacts &amp; even now I often see package names such as <em>com.company.project.domain</em> containing all the domain classes and <em>com.company.project.controllers</em> containing all the controllers. No. Stop it.</p>
+</div>
+<div class="paragraph">
+<p>With Rails &amp; Grails you have to use the directory structure – controllers won&#8217;t behave like controllers if declared anywhere else, for example. In Grails you can overcome it by using sensible package names and an IDE that organizes your code by package rather than by directory. In an Angular JS project there are no restrictions, though. You can organize the code in any way that suits you.</p>
+</div>
+    <footer>
+      <ul class="tag-list">
+          <li><a href="/tags/angular/">angular</a></li>
+          <li><a href="/tags/js/">js</a></li>
+      </ul>
+    </footer>
+  </article>
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>
+
+<div id="disqus_thread"></div>
+            <script type="text/javascript">
+            //<![CDATA[
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//adhockery.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            //]]>
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </script>

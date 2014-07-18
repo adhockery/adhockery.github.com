@@ -1,0 +1,104 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery - A Gradle build for Grails plugins with test apps</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+        <article>
+    <header>
+      <time datetime="2010-01-17T20:35:00">Jan 17 2010</time>
+      <h1>A Gradle build for Grails plugins with test apps</h1>
+    </header>
+    <div class="paragraph">
+<p>There&#8217;s a fairly popular technique in Grails plugin development where the plugin has <em>test apps</em> stored in <code>test/projects/*</code>, each of which references the plugin by including <code>grails.plugin.location."my-plugin" = "../../.."</code> in its <em>BuildConfig.groovy</em>. Doing this allows you as a plugin developer to:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Automate tests for sample projects using the plugin with significantly different configurations.</p>
+</li>
+<li>
+<p>Test using domain classes, controllers, etc. that shouldn&#8217;t be packaged with the plugin.</p>
+</li>
+<li>
+<p>Test drive, changing code in both the test app and the plugin without the need to use <code>grails package-plugin</code> or <code>grails install-plugin</code> to pick up changes.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The downside is that to run all the plugin project&#8217;s tests it&#8217;s necessary to run the plugin&#8217;s own tests, then change directory into each of the test apps and run their tests. Continuous integration config is also fiddlier for the same reason.</p>
+</div>
+
+<div class="paragraph">
+<p>I wanted to find a way to automate this so I could run all my plugins' tests with a single command. I could write a <em>bash</em> script or an <em>Ant</em> build I guess, or even use <em>maven &lt;shudder&gt;</em>. However keeping things in Groovy-land I decided to try using <em><a href="http://www.gradle.org/">Gradle</a></em> which I&#8217;ve been meaning to look into for a while now. I saw <a href="http://skillsmatter.com/podcast/java-jee/gradle-deep-dive">Hans Dockter&#8217;s presentation</a> on <em>Gradle</em> at the <a href="http://skillsmatter.com/event/java-jee/groovy-grails-exchange-2009/wd-184">London Groovy &amp; Grails Exchange</a> back in December and was impressed with how terse and expressive the syntax is, especially compared to XML based formats. Unfortunately one thing <em>Gradle</em> doesn&#8217;t grok yet is Grails.</p>
+</div>
+<div class="paragraph">
+<p>The solution I&#8217;ve come up with is based on <a href="http://www.mail-archive.com/<a href="mailto:user@gradle.codehaus.org">user@gradle.codehaus.org</a>/msg01871.html">a post by Helmut Denk</a> on the <em>gradle-user</em> list. Gradle just uses <a href="http://ant.apache.org/manual/CoreTasks/exec.html">Ant&#8217;s exec task</a> to shell out and execute the appropriate Grails command. Combining this with Gradle&#8217;s multi-project build support I now have plugin builds that can be run with <code>gradle test</code> that will automatically descend into the test apps under <em>test/projects/*</em>.</p>
+</div>
+<div class="paragraph">
+<p>The <em>build.gradle</em> file at the root of the project defines <em>clean</em> and <em>test</em> tasks:
+The <em>test</em> task will run the plugin&#8217;s unit tests. The <em>clean</em> task is defined just once for all projects as there&#8217;s no difference in how it is done - a nice examply of Gradle&#8217;s <a href="http://en.wikipedia.org/wiki/Don&#8217;t_repeat_yourself">DRY</a>-ness.</p>
+</div>
+<div class="paragraph">
+<p>Then in <em>settings.gradle</em> I tell Gradle where to find the various sub-projects:
+Finally each test app has it&#8217;s own <em>build.gradle</em> that defines its <em>test</em> task:
+This is only necessary if the test apps run tests differently to the plugin - here my app is running integration rather than unit tests - otherwise I could have defined <em>test</em> in the same DRY manner as <em>clean</em>.</p>
+</div>
+<div class="paragraph">
+<p>The process is not as fast as it could be if Grails were wired in to Gradle properly. <code>gradle clean test</code> for the Springcache plugin and its two test apps takes just over 2 minutes on my MBP. Also, my Gradle-fu leaves a lot to be desired right now so I&#8217;m sure there are improvements that could be made with the way I&#8217;m handling the sub-projects. But, for the purposes of a pre-commit test run or Hudson build this works pretty well.</p>
+</div>
+    <footer>
+      <ul class="tag-list">
+          <li><a href="/tags/testing/">testing</a></li>
+          <li><a href="/tags/gradle/">gradle</a></li>
+          <li><a href="/tags/grails-plugins/">grails plugins</a></li>
+      </ul>
+    </footer>
+  </article>
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>
+
+<div id="disqus_thread"></div>
+            <script type="text/javascript">
+            //<![CDATA[
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//adhockery.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            //]]>
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </script>

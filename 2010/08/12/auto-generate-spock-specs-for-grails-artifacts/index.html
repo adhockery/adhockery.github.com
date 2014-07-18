@@ -1,0 +1,122 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery - Auto-generate Spock specs for Grails artifacts</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+        <article>
+    <header>
+      <time datetime="2010-08-12T22:46:00">Aug 12 2010</time>
+      <h1>Auto-generate Spock specs for Grails artifacts</h1>
+    </header>
+    <div class="paragraph">
+<p>When creating artifacts such as domain classes, controllers and tag libs Grails generates a <em>JUnit</em> test case. If, like me, you&#8217;re digging writing specifications with <a href="http://spockframework.org/">Spock</a> you&#8217;d probably rather have Grails generate one of those. The last thing I want is to manually transform every generated test case into a specification for every artifact I create.</p>
+</div>
+
+<div class="paragraph">
+<p>It&#8217;s very simple to create a <em>CreateUnitSpec</em> or <em>CreateIntegrationSpec</em> script with a template specification. Hooking in to the other types of artifact creation turned out to be fiddlier. Each <em>create-*</em> command calls a Closure called <em>createUnitTest</em>. Reassigning that Closure should be the solution. The trick is in figuring out where that can be done.</p>
+</div>
+<div class="paragraph">
+<p>Any time one of its <a href="http://gant.codehaus.org/">Gant</a> targets is invoked the Grails build system fires an event. You can respond to those events by declaring a closure called <code>event&lt;target name&gt;Start</code> in <code>scripts/_Events.groovy</code>. The only Gant target directly invoked when an artifact is created is called <em>'default'</em>. It is possible to intercept that although that means the event handler will be invoked any time <strong>any</strong> Gant target called <em>'default'</em> runs. For this purpose that&#8217;s no problem since we&#8217;re just overriding a closure in the build binding.</p>
+</div>
+<div class="paragraph">
+<p>The other factor is that the superclass for the unit test is specified by the individual <em>create-*</em> scripts (or defaulted to <em>GrailsUnitTestCase</em>). Rather than having to override those scripts as well, I&#8217;ve just mapped the non-standard unit test superclasses to the Spock equivalents.</p>
+</div>
+<div class="paragraph">
+<p>Here&#8217;s the code for your <code>_Events.groovy</code> script:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">eventDefaultStart = {
+    createUnitTest = { Map args = [:] -&gt;
+        def superClass
+        // map unit test superclass to Spock equivalent
+        switch(args["superClass"]) {
+            case "ControllerUnitTestCase":
+                superClass = "ControllerSpec"
+                break
+            case "TagLibUnitTestCase":
+                superClass = "TagLibSpec"
+                break
+            default:
+                superClass = "UnitSpec"
+        }
+        createArtifact name: args["name"], suffix: "${args['suffix']}Spec", type: "Spec", path: "test/unit", superClass: superClass
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The template specification should be placed in <code>src/templates/artifacts/Spec.groovy</code> and is simply:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">@artifact.package@import spock.lang.*
+import grails.plugin.spock.*
+
+class @artifact.name@ extends @artifact.superclass@ {
+    def "feature method"() {
+
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>It goes without saying that this is a slightly hairy and it would be great if Grails provided a proper hook for overriding the test generation. I can live with some fun-size evil in <em>_Events.groovy</em> for the sake of the convenience of getting template specs for all my artifacts, though.</p>
+</div>
+    <footer>
+      <ul class="tag-list">
+          <li><a href="/tags/events/">events</a></li>
+          <li><a href="/tags/spock/">spock</a></li>
+          <li><a href="/tags/scaffolding/">scaffolding</a></li>
+          <li><a href="/tags/grails-scripts/">grails scripts</a></li>
+      </ul>
+    </footer>
+  </article>
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>
+
+<div id="disqus_thread"></div>
+            <script type="text/javascript">
+            //<![CDATA[
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//adhockery.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            //]]>
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </script>

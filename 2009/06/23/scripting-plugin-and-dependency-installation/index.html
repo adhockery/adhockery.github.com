@@ -1,0 +1,86 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery - Scripting Plugin and Dependency Installation</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+        <article>
+    <header>
+      <time datetime="2009-06-23T18:17:00">Jun 23 2009</time>
+      <h1>Scripting Plugin and Dependency Installation</h1>
+    </header>
+    <div class="paragraph">
+<p>Another quick script that I find quite useful, particularly on continuous integration servers is my <a href="http://gist.github.com/134689">Prepare.groovy</a> script. It solves a couple of problems</p>
+</div>
+
+<div class="ulist">
+<ul>
+<li>
+<p>Some plugins are not as well behaved as others on installation, for example <a href="http://grails.org/plugin/functional-test">the Functional Testing plugin</a> automatically installs when <code>test-app</code> or <code>run-app</code> is installed but will then immediately crash with a <code>ClassNotFoundException</code> because the libraries it depends on are not on the classpath yet. Re-running the command will then work but if the commands are part of a CI build it&#8217;s probably already bombed out and reported a broken build.</p>
+</li>
+<li>
+<p><a href="http://grails.org/plugin/ivy">The Ivy plugin</a> is great but <code>test-app</code> and <code>run-app</code> won&#8217;t invoke its <code>get-dependencies</code> target to pull down libraries the way they will automatically install plugins.</p>
+</li>
+<li>
+<p>Sometimes the grails command you want the build to execute is supplied by a plugin so there&#8217;s no convenient way to run it directly from a brand new workspace because the plugin isn&#8217;t installed yet.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The script simply ensures all plugins are installed and then invokes the Ivy plugin&#8217;s <code>get-dependencies</code> target (only if the Ivy plugin is installed - it won&#8217;t blow up on you if you don&#8217;t use Ivy). At that point you should have a fully workable workspace and be able to run any grails command you like without your app complaining that some library or other isn&#8217;t present.</p>
+</div>
+    <footer>
+      <ul class="tag-list">
+          <li><a href="/tags/ivy/">ivy</a></li>
+          <li><a href="/tags/grails-scripts/">grails scripts</a></li>
+          <li><a href="/tags/grails-plugins/">grails plugins</a></li>
+      </ul>
+    </footer>
+  </article>
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>
+
+<div id="disqus_thread"></div>
+            <script type="text/javascript">
+            //<![CDATA[
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//adhockery.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            //]]>
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </script>

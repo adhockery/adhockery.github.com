@@ -1,0 +1,143 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery - Groovy gotcha: for loops and closure scope</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+        <article>
+    <header>
+      <time datetime="2013-03-29T12:30:00">Mar 29 2013</time>
+      <h1>Groovy gotcha: for loops and closure scope</h1>
+    </header>
+    <div class="paragraph">
+<p>You probably know that Groovy closures retain information about the scope in which they were created. The closure body can refer to values that were in scope where the closure was declared. There is a gotcha here that has bitten me a few times, though. That&#8217;s when closures are created in a <code>for</code> loop.</p>
+</div>
+<div class="paragraph">
+<p>Consider this example.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">def fns = []
+for (i in (1..5)) {
+    fns &lt;&lt; {-&gt;
+        println i
+    }
+}
+fns.each { it() }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>What will get printed to <em>sysout</em>? Give up? You can <a href="http://groovyconsole.appspot.com/script/920002">run the script on Groovy Web Console</a>.</p>
+</div>
+
+<div class="paragraph">
+<p>When the closures are run the value that is bound to the variable <code>i</code> is the value it had on the <em>final</em> iteration of the loop rather than the iteration where the closure was created. The closures' scopes have references to <code>i</code> and by the time any of the closures are executed <code>i</code> is <em>5</em>.</p>
+</div>
+<div class="paragraph">
+<p>Variables local to the loop body do not behave like this, obviously because each closure scope contains a reference to a different variable. Here&#8217;s another example where I&#8217;m using a local variable in the loop to store the square of the loop variable itself. What will be printed to <em>sysout</em> this time?</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">def fns = []
+for (i in (1..5)) {
+    def isq = i * i
+    fns &lt;&lt; {-&gt;
+        println "$i squared is $isq"
+    }
+}
+fns.each { it() }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can <a href="http://groovyconsole.appspot.com/script/928001">run this on the Groovy Web Console</a> if you like.</p>
+</div>
+<div class="paragraph">
+<p>I&#8217;ve run afoul of this a couple of times when augmenting Grails artifacts with new behavior in a plugin. Given what we know of loop variables &amp; closure scope consider what this code would do:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">for (domainClass in grailsApplication.domainClasses) {
+    domainClass.metaClass.getPropertyNames = {-&gt;
+        domainClass.persistentProperties*.name
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This kind of bug can be, to say the least, tricky to track down.</p>
+</div>
+<div class="paragraph">
+<p>What&#8217;s the solution? Should we always use <code>.each</code> rather than a <em>for</em> loop? Well, I kind of like <em>for</em> loops in many cases and there can be memory utilization differences (don&#8217;t take that to mean loops are "better" or "more efficient").</p>
+</div>
+<div class="paragraph">
+<p>If you simply alias the loop variable and refer to that alias in the closure body all will be well:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">def fns = []
+for (i in (1..5)) {
+    def myi = i
+    def isq = i * i
+    fns &lt;&lt; {-&gt;
+        println "$myi squared is $isq"
+    }
+}
+fns.each { it() }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here the output is exactly what we&#8217;d hope (if you don&#8217;t believe me <a href="http://groovyconsole.appspot.com/script/929001">run it on the Groovy Web Console</a>).</p>
+</div>
+    <footer>
+      <ul class="tag-list">
+          <li><a href="/tags/groovy/">groovy</a></li>
+      </ul>
+    </footer>
+  </article>
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>
+
+<div id="disqus_thread"></div>
+            <script type="text/javascript">
+            //<![CDATA[
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//adhockery.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            //]]>
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </script>

@@ -1,0 +1,113 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery - Is this a Dagger I see before me?</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+        <article>
+    <header>
+      <time datetime="2012-10-11T21:18:00">Oct 11 2012</time>
+      <h1>Is this a Dagger I see before me?</h1>
+    </header>
+    <div class="paragraph">
+<p>Recently <a href="https://twitter.com/marcinerdmann">Marcin Erdmann</a> and I decided to experiment with using <a href="https://github.com/square/dagger">Dagger</a> for dependency injection in a project at work. It&#8217;s a super-lightweight DI framework built by <a href="http://squareup.com">Square</a>.</p>
+</div>
+
+<div class="paragraph">
+<p>We felt the code we were working on was in danger of getting out of hand. In particular we found ourselves passing a lot of parameters <em>through</em> methods or classes as they were dependencies of objects being used or created deeper in the stack. Testability was suffering as objects and methods were becoming tightly coupled and we were ending up using excessive numbers of mocks &amp; test doubles.</p>
+</div>
+<div class="paragraph">
+<p>A pet hate of mine is having lots of noise in tests. It makes test maintenance really difficult later when it&#8217;s hard to remember which bits of setup are really relevant to the scenario under test.</p>
+</div>
+<div class="paragraph">
+<p>We felt that dependency injection would be a big help. Unfortunately we&#8217;re working on, of all things, an applet. Yeah, I know, 1995 called and wants its web technology back. Suffice to say we have our reasons. The technology may be a little old skool but it&#8217;s an interesting scenario in that size is a constraint. We can&#8217;t afford to integrate a large library or a big dependency graph. Spring is right out &amp; even the comparatively lightweight <a href="http://code.google.com/p/google-guice/">Guice</a> is a 544K jar.</p>
+</div>
+<div class="paragraph">
+<p>We&#8217;d both recently seen tweets about Dagger and decided to take a look. As I understand it Dagger targets Android development so similar size concerns apply. Although it&#8217;s pre 1.0 right now we quickly found that Dagger is pretty capable. We were able to add annotations to our classes to define dependencies, create a class annotated with <code>@Module</code> to provide those dependencies that needed special handling and inject <code>Provider</code> instances into classes that need to construct new instances of objects that have their own dependencies.</p>
+</div>
+<div class="paragraph">
+<p>We soon got to the point where we started to see things coming together as we were simplifying objects, removing coupling and deleting noise from tests.</p>
+</div>
+<div class="paragraph">
+<p>Some Dagger features I really liked:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>There&#8217;s no XML or incomprehensible stringly-typed DSLs to deal with.</p>
+</li>
+<li>
+<p>Tests aren&#8217;t dependent on Dagger and unit-level tests can usually ignore it completely.</p>
+</li>
+<li>
+<p>When you <em>do</em> want to use Dagger in a test it&#8217;s easy to extend the <code>Module</code> with test doubles standing in for some objects.</p>
+</li>
+<li>
+<p>Unsatisfied dependencies &amp; other problems are reported at <strong>compile</strong> time.</p>
+</li>
+<li>
+<p>It&#8217;s only necessary to define things in the <code>Module</code> when they can&#8217;t be constructed automatically by Dagger or need to be specific object instances (such as the applet itself in our scenario).</p>
+</li>
+<li>
+<p>Injecting <code>Provider&lt;V&gt;</code> where <code>V</code> is some kind of domain object that has dependencies of its own means the class using the <code>Provider</code> doesn&#8217;t need to know anything about the dependencies of <code>V</code> in order to construct new instances.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Best of all Dagger is only 81K and has a single dependency on the <code>javax.inject</code> framework (adding another 2.4K).</p>
+</div>
+    <footer>
+      <ul class="tag-list">
+          <li><a href="/tags/dagger/">dagger</a></li>
+          <li><a href="/tags/dependency-injection/">dependency injection</a></li>
+          <li><a href="/tags/java/">java</a></li>
+      </ul>
+    </footer>
+  </article>
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>
+
+<div id="disqus_thread"></div>
+            <script type="text/javascript">
+            //<![CDATA[
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//adhockery.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            //]]>
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </script>

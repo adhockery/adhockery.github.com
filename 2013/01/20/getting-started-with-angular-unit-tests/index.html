@@ -1,0 +1,185 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery - Getting started with Angular unit tests</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+        <article>
+    <header>
+      <time datetime="2013-01-20T05:54:00">Jan 20 2013</time>
+      <h1>Getting started with Angular unit tests</h1>
+    </header>
+    <div class="paragraph">
+<p>I&#8217;ve been pretty enthusiastic about <a href="http://angularjs.org/">Angular</a> for a while now but although I was encouraged by the consideration given to testing hadn&#8217;t really tried unit testing my Angular components. I&#8217;ve been using <a href="http://casperjs.org/">Casper</a> to test end-to-end which has been good enough for the experimental stuff I&#8217;d been doing with Angular. When I recently started working on a <em>real</em> app with a fairly complex Angular controller it felt like I needed to define the logic with some fine-grained unit tests.</p>
+</div>
+
+<div class="paragraph">
+<p>Although I&#8217;m very familiar with <a href="http://pivotal.github.com/jasmine/">Jasmine</a> I wasn&#8217;t quite sure where to start when using it to test Angular components. The Angular docs are a mixed bag, in places very thorough and in others a little lacking.</p>
+</div>
+<div class="paragraph">
+<p>The application I&#8217;m working on has a JavaScript file that defines the <em><a href="http://docs.angularjs.org/api/angular.module">module</a></em> and routing:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="javascript language-javascript">var myApp = angular.module('myApp', [])</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then the controller I want to write tests for is defined on that module in another .js file:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="javascript language-javascript">myApp.controller('MyController', function($scope) {
+
+    // ... controller code
+
+});</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>All the unit test examples I could find had controllers that were straightforward JavaScript classes rather than being constructed in this way. It wasn&#8217;t clear to me how I could construct a controller instance in the test.</p>
+</div>
+<div class="paragraph">
+<p>After some false starts I got going. I load all the following:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>angular.js</code></p>
+</li>
+<li>
+<p><code>angular-mocks.js</code></p>
+</li>
+<li>
+<p><code>app.js</code> (my module definition and routing)</p>
+</li>
+<li>
+<p><code>my-controller.js</code> (the controller class itself)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>In the test itself I then have <code>beforeEach</code> steps that use <a href="http://docs.angularjs.org/api/angular.mock.module"><code>angular.mock.module</code></a> to set up the module and <a href="http://docs.angularjs.org/api/angular.mock.inject"><code>angular.mock.inject</code></a> to wire up the controller with a scope (and I guess any other mock dependencies as I add them).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="javascript language-javascript">describe('MyController', function() {
+
+  beforeEach(angular.mock.module('myApp'));
+
+  beforeEach(angular.mock.inject(function($rootScope, $controller) {
+    this.scope = $rootScope.$new();
+    $controller('MyController', {
+      $scope: this.scope
+    });
+  }));
+
+});</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For brevity&#8217;s sake you can omit the <code>angular.mock</code> in front of <code>module</code> and <code>inject</code> as they are also attached to <code>window</code> for convenience.</p>
+</div>
+<div class="paragraph">
+<p>In the <em>inject</em> function I&#8217;m creating a new <a href="http://docs.angularjs.org/api/ng.$rootScope.Scope"><em>Scope</em></a> derived from the <code>$rootScope</code> provided by the mock injector and assigning it to a property on the spec itself so I can refer to it later. Then I create the controller using the <a href="http://docs.angularjs.org/api/ng.$controller"><code>$controller</code></a> service and wire the <em>Scope</em> into it.</p>
+</div>
+<div class="paragraph">
+<p>After that writing the tests themselves is proving to be pretty simple. I can directly access <code>this.scope</code> to set or get values and call functions defined by the controller.</p>
+</div>
+<div class="paragraph">
+<p>I&#8217;m running the tests using <a href="https://github.com/airportyh/testem">Testem</a> using the following config:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="yaml language-yaml">framework: jasmine
+before_tests: coffee -c test/unit/*.coffee
+src_files:
+- app/scripts/app.js
+- app/scripts/controllers/my-controller.js
+- test/unit/*.coffee
+serve_files:
+- app/scripts/vendor/angular.min.js
+- test/vendor/angular-mocks.js
+- app/scripts/app.js
+- app/scripts/controllers/my-controller.js
+- test/unit/*.js
+on_exit: find test/unit -name "*.js" -exec rm {} \;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>As you can see I&#8217;m writing the tests in CoffeeScript which I find makes for very readable Jasmine specs. So the test snippet I showed above actually looks like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="coffeescript language-coffeescript">describe 'MyController', -&gt;
+
+  beforeEach module('myApp')
+
+  beforeEach inject ($rootScope, $controller) -&gt;
+    @scope = $rootScope.$new()
+    $controller 'MyController',
+      $scope: @scope</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Testem automatically compiles the CoffeeScript tests in the <code>before_tests</code> step and destroys the generated JavaScript in the <code>on_exit</code> step.</p>
+</div>
+<div class="paragraph">
+<p>Once over the initial confusion about how to initialize things I&#8217;m now off &amp; running with writing unit tests.</p>
+</div>
+    <footer>
+      <ul class="tag-list">
+          <li><a href="/tags/testing/">testing</a></li>
+          <li><a href="/tags/angularjs/">angularjs</a></li>
+          <li><a href="/tags/jasmine/">jasmine</a></li>
+          <li><a href="/tags/coffeescript/">coffeescript</a></li>
+      </ul>
+    </footer>
+  </article>
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>
+
+<div id="disqus_thread"></div>
+            <script type="text/javascript">
+            //<![CDATA[
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//adhockery.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            //]]>
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </script>

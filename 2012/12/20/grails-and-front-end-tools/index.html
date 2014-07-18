@@ -1,0 +1,145 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery - Grails & front end tools</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+        <article>
+    <header>
+      <time datetime="2012-12-20T21:23:00">Dec 20 2012</time>
+      <h1>Grails & front end tools</h1>
+    </header>
+    <div class="paragraph">
+<p>Last week was the London Groovy &amp; Grails Exchange 2012 where I gave a talk called <a href="http://skillsmatter.com/podcast/groovy-grails/grails-for-hipsters">Grails for hipsters</a> about integrating Grails apps with some of the buzziest current tools &amp; techniques. Part of what I talked about was my approach to handling pre-processed front-end resources in Grails apps. In <a href="http://git.io/hipsteroid">the demo app</a> for my talk I used <a href="http://lesscss.org/">LESS</a> &amp; <a href="http://coffeescript.org/">CoffeeScript</a> but everything I discusses applies equally to <a href="http://sass-lang.com/">SASS</a>, <a href="http://learnboost.github.com/stylus/">Stylus</a>, <a href="http://www.typescriptlang.org/">TypeScript</a>, etc.</p>
+</div>
+
+<div class="paragraph">
+<p>I&#8217;ve been using external tools - specifically <a href="http://gruntjs.com/">Grunt</a> or <a href="http://incident57.com/codekit/">CodeKit</a> - to pre-process resources during development rather than using extensions of the <a href="http://grails.org/plugin/resources">Grails Resources plugin</a>. In my setup Resources is only aware of the final JavaScript &amp; CSS files.</p>
+</div>
+<div class="sect2">
+<h3 id="_handling_resource_graphs">Handling resource graphs</h3>
+<div class="paragraph">
+<p>The Resources plugin is very effective when handling individual JavaScript or CSS files but LESS confuses things with its ability to import other files. For example you can import a file containing common variables &amp; mixins into several different page specific LESS files. CoffeeScript has an import syntax too although it&#8217;s less frequently used.</p>
+</div>
+<div class="paragraph">
+<p>When using the <a href="http://grails.org/plugin/lesscss-resources">LESS CSS Resources plugin</a> you only declare the <em>importing</em> LESS file as a resource not the one being imported (or you would end up with duplicate sections in the resulting CSS resource bundle).</p>
+</div>
+<div class="paragraph">
+<p>If <code>page.less</code> contains <code>@import "common.less";</code> you want the CSS resource to be regenerated when <em>either</em> file changes during development. However, since the Resources plugin is only aware of <code>page.less</code> - the leaf node in the resource graph. It won&#8217;t respond to changes made in <code>common.less</code>.</p>
+</div>
+<div class="paragraph">
+<p>Pre-processing tools like CodeKit or Grunt <em>can</em> be aware of imports (or can just rapidly regenerate files when <em>anything</em> in the source path changes). The Resources plugin then spots that the compiled <code>.css</code> / <code>.js</code> file has changed and refreshes. I&#8217;m still using the plugin to handle bundling, concatenation &amp; minification which it does very well.</p>
+</div>
+<div class="paragraph">
+<p>I always set the Resources plugin to run in debug mode when running Grails apps in development mode. To do that you simply add this to <code>Config.groovy</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">environments {
+    development {
+        grails.resources.debug = true
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In debug mode Resources doesn&#8217;t bundle, concatenate or minify files &amp; reloading of changed resources is seamless.</p>
+</div>
+<div class="paragraph">
+<p>Could the Resources plugin do all this for us in the future? I guess it&#8217;s possible. It would need to understand dependencies for resource files so that changes in imported files were detected. The problem is that LESS, SASS, Stylus, CoffeeScript, etc. all have their own import mechanisms so they would need to be handled differently.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_speed">Speed</h3>
+<div class="paragraph">
+<p>Grunt and most other command-line pre-processors use the V8 JavaScript engine. It&#8217;s fast. Extensions to the Resources plugin mostly either use Java ports of the original tools or run the JavaScript in a Rhino container. I&#8217;ve certainly experienced lag between saving files and resources updating which is not the case when using external tools to watch and pre-process files.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_enhanced_workflow">Enhanced workflow</h3>
+<div class="paragraph">
+<p>CodeKit is particularly nice for developing CSS as it will apply changes with a CSS transition. I find this a great way to work on visual changes &amp; it&#8217;s finally enabled me to move beyond the "try stuff out in the browser dev tools panel then copy &amp; paste back to CSS" workflow that I&#8217;ve been using. On a big monitor I vertically split the screen between my editor &amp; the browser, as soon as I hit save in the editor CodeKit refreshes the browser &amp; I can see the changes transition into place. Sounds like a small thing but I&#8217;ve found it pretty revelatory.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_why_deploy_source_code">Why deploy source code?</h3>
+<div class="paragraph">
+<p>Only the generated CSS and JavaScript files are actually required for deployment. There&#8217;s really no need to bundle the original LESS or CoffeeScript in the application WAR file. These are purely development-time artefacts, equivalent to the Groovy &amp; Java source files in a Grails application. Why compile them each time during application startup?</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_tool_options">Tool options</h3>
+<div class="paragraph">
+<p>Grunt &amp; CodeKit are just two options for automatically processing files. There are a bunch of others; <a href="http://rubydoc.info/gems/guard/frames">Guard</a>, <a href="http://livereload.com/">LiveReload</a> or <a href="http://brunch.io/">Brunch</a> would all work well, for example.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_downsides">Downsides</h3>
+<div class="paragraph">
+<p>In my demo app I&#8217;m using <a href="http://handlebarsjs.com/">Handlebars</a> templates and they need to be compiled to JavaScript. Unfortunately CodeKit doesn&#8217;t currently do that which is why I added a Grunt build. There is a <a href="http://grails.org/plugin/handlebars-resources">handlebars-resources</a> Grails plugin but I haven&#8217;t tried using it yet.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_feedback">Feedback</h3>
+<div class="paragraph">
+<p>I&#8217;d love to hear any differing experiences. Are there people successfully Resources extensions to pre-process everything? Am I missing something with the way I&#8217;ve tried to do it in the past?</p>
+</div>
+</div>
+    <footer>
+      <ul class="tag-list">
+          <li><a href="/tags/grails/">grails</a></li>
+          <li><a href="/tags/css/">css</a></li>
+          <li><a href="/tags/javascript/">javascript</a></li>
+          <li><a href="/tags/grunt/">grunt</a></li>
+          <li><a href="/tags/codekit/">codekit</a></li>
+          <li><a href="/tags/handlebars/">handlebars</a></li>
+      </ul>
+    </footer>
+  </article>
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>
+
+<div id="disqus_thread"></div>
+            <script type="text/javascript">
+            //<![CDATA[
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//adhockery.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            //]]>
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </script>

@@ -1,0 +1,280 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery - Encapsulating page state and actions in Geb</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+        <article>
+    <header>
+      <time datetime="2010-11-30T13:47:00">Nov 30 2010</time>
+      <h1>Encapsulating page state and actions in Geb</h1>
+    </header>
+    <div class="paragraph">
+<p>Geb <em>Page</em> and <em>Module</em> classes are just regular Groovy classes. In addition to the <em>content</em> DSL you can declare methods just as you would in any other class. Those methods can use content properties directly. This is really useful for encapsulating state and actions in a reusable way.</p>
+</div>
+<div class="paragraph">
+<p>In this post I want to run through a couple of simple examples of re-usable <em>Module</em> classes that are enhanced with methods. Although the examples deal with <em>Module</em> classes everything here is equally applicable to <em>Page</em> classes.</p>
+</div>
+
+<div class="paragraph">
+<p>Page object methods tend to fall into two categories:</p>
+</div>
+<div class="paragraph">
+<p>Observers : report on some aspect of page state (e.g. whether a user is logged in or not). : have non-<em>void</em> return types (I prefer explicit return types on methods but <code>def</code> would work too). : can be used for making assertions.</p>
+</div>
+<div class="paragraph">
+<p>Actions : perform an action such as clicking a link or button. : will typically be <em>void</em> (note that it&#8217;s not necessary to return a <em>Page</em> instance or class from a navigation method in <em>Geb</em>). : throw <em>IllegalStateException</em> if the action is invalid in the current page state.</p>
+</div>
+<div class="paragraph">
+<p>First let&#8217;s consider an authentication module that can be used across every page in a site. The markup of the module can be completely different depending on whether a user is logged in or not. When not logged in a username/password form is shown:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="markup language-markup">&lt;aside id="auth"&gt;
+    &lt;fieldset&gt;
+        &lt;legend&gt;Log In&lt;/legend&gt;
+        &lt;form action="/auth/login" method="post" &gt;
+            &lt;label&gt;Username: &lt;input name="username"/&gt;&lt;/label&gt;
+            &lt;label&gt;Password: &lt;input type="password" name="password"&gt;&lt;/label&gt;
+            &lt;button name="login" type="submit"&gt;Log In&lt;/button&gt;
+        &lt;/form&gt;
+    &lt;/fieldset&gt;
+&lt;/aside&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When logged in, a welcome message is shown:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="markup language-markup">&lt;aside id="auth"&gt;
+    Welcome back &lt;span class="username"&gt;blackbeard&lt;/span&gt;
+    &lt;a href="/auth/logout"&gt;Log Out]&lt;/a&gt;
+&lt;/aside&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To model this I&#8217;ll create a Geb <em>Module</em> like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">class AuthModule extends Module {
+    static base = { $("aside#auth") }
+
+    static content = {
+        username(required: false) { $(".username").text() }
+        logoutButton(required: false, to: HomePage) { $("a[name=logout]") }
+        form(required: false) { $("form") }
+        loginButton(required: false, to: HomePage) { $("button[name=login]") }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>required: false</code> declaration is used to declare content properties that may or may not be on the page. The <code>username</code> and <code>logoutButton</code> properties are only present in the logged-in state and the <code>form</code> and <code>loginButton</code> properties are only present in the logged-out state.</p>
+</div>
+<div class="paragraph">
+<p>I can use the module in some tests like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">def "user can log in"() {
+    when:
+    authModule.form.username = "blackbeard"
+    authModule.form.password = "yohoho!"
+    authModule.loginButton.click()
+
+    then:
+    at HomePage
+    authModule.username == "blackbeard"
+}
+
+def "user can log out"() {
+    when:
+    authModule.logoutButton.click()
+
+    then:
+    at HomePage
+    authModule.username == null
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This is a good start but there are several assumptions and bits of page detail creeping into the test. The test is using the presence or absence of the <em>username</em> to determine if someone is logged in or not. That doesn&#8217;t lead to a very meaningful assertion in the test and is assuming things about the page detail. Likewise the login step is quite long-winded and likely to be repeated in a lot of tests. Not only that but it won&#8217;t work if a user is already logged in as the form fields won&#8217;t be present on the page.</p>
+</div>
+<div class="paragraph">
+<p>To encapsulate the module&#8217;s state and actions better I&#8217;ll add the following methods:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">boolean isLoggedIn() { username }
+
+void login(String username, String password = "password") {
+    if (loggedIn) throw new IllegalStateException("already logged in")
+    form.username = username
+    form.password = password
+    loginButton.click()
+}
+
+void logout() {
+    if (!loggedIn) throw new IllegalStateException("already logged out")
+    logoutButton.click()
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The methods declared by the module abstract some detail away very effectively. The <code>isLoggedIn</code> method means I can change the login detection mechanism later and just change the module&#8217;s method rather than a bunch of tests. The <code>login</code> and <code>logout</code> methods abstract away the <em>how</em> of logging in and out so the test can just deal with the <em>what</em>. I&#8217;ve used <em>IllegalStateException</em> for cases where a method is called when the module is not in the correct state. The tests now look much clearer:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">def "user can log in"() {
+    when:
+    authModule.login "blackbeard"
+
+    then:
+    at HomePage
+    authModule.username == "blackbeard"
+}
+
+def "user can log out"() {
+    when:
+    authModule.logout()
+
+    then:
+    at HomePage
+    !authModule.loggedIn
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Another good example of encapsulating state and behaviour like this is a typical pagination module that would appear on a list or search results page. The markup would look something like this (I&#8217;ve omitted the link <code>href</code> attributes for clarity):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="markup language-markup">&lt;nav class="pagination"&gt;
+    &lt;a class="prevLink"&gt;Previous&lt;/a&gt;
+    &lt;a class="step"&gt;1&lt;/a&gt;
+    &lt;span class="currentStep"&gt;2&lt;/span&gt;
+    &lt;a class="step"&gt;3&lt;/a&gt;
+    &lt;a class="nextLink"&gt;Next&lt;/a&gt;
+&lt;/nav&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <em>previous</em> and <em>next</em> links will only appear when there is a previous or next page and no links will be present at all if there is only a single page. The following <em>Module</em> class models the state and actions of this component:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">class Pagination extends Module {
+    static content = {
+        links(required: false) { $("a") }
+        currentPage(required: false) { $(".currentStep")?.text()?.toInteger() ?: 1 }
+        nextLink(required: false) { links.filter(".nextLink") }
+        previousLink(required: false) { links.filter(".prevLink") }
+    }
+
+    boolean isFirstPage() {
+        previousLink.empty
+    }
+
+    boolean isLastPage() {
+        nextLink.empty
+    }
+
+    void toPage(int pageNumber) {
+        def link = links.filter(text: "$pageNumber")
+        if (!link) throw new IllegalArgumentException("Page number $pageNumber not present in pagination")
+        link.click()
+    }
+
+    void nextPage() {
+        if (lastPage) throw new IllegalStateException("Already on the last page")
+        nextLink.click()
+    }
+
+    void previousPage() {
+        if (firstPage) throw new IllegalStateException("Already on the first page")
+        previousLink.click()
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Breaking the <em>Module</em> down in detail:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The <code>currentPage</code> property returns the current page number as an <code>int</code> and defaults to <code>1</code> if there is no pagination present in the page.</p>
+</li>
+<li>
+<p>The <code>isFirstPage</code> and <code>isLastPage</code> observer methods use the absence of the previous and next links respectively to determine if the current page is the first or last one.</p>
+</li>
+<li>
+<p>The <code>toPage</code> method finds a numbered link and clicks it, throwing <em>IllegalArgumentException</em> if no such link is present.</p>
+</li>
+<li>
+<p>The <code>nextPage</code> and <code>previousPage</code> action methods throw <em>IllegalStateException</em> if the relevant link is not on the page.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The <em>Pagination</em> class now neatly encapsulates the detail of the pagination elements and presents a higher-level façade to the tests.</p>
+</div>
+<div class="paragraph">
+<p>Fuller versions of the examples in this post can be found <a href="https://github.com/robfletcher/geb-examples">on GitHub</a>.</p>
+</div>
+    <footer>
+      <ul class="tag-list">
+          <li><a href="/tags/geb/">geb</a></li>
+          <li><a href="/tags/testing/">testing</a></li>
+      </ul>
+    </footer>
+  </article>
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>
+
+<div id="disqus_thread"></div>
+            <script type="text/javascript">
+            //<![CDATA[
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//adhockery.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            //]]>
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </script>

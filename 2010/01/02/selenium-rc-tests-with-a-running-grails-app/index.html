@@ -1,0 +1,73 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery - Selenium RC tests with a running Grails app</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+        <article>
+    <header>
+      <time datetime="2010-01-02T12:23:00">Jan  2 2010</time>
+      <h1>Selenium RC tests with a running Grails app</h1>
+    </header>
+    <div class="paragraph">
+<p>I <a href="http://blog.freeside.co/post/42902733548/selenium-rc-tests-with-a-remote-app">posted recently</a> about the new remote mode feature of the <a href="http://grails.org/plugin/selenium-rc">Selenium RC plugin</a>. One thing I forgot to mention is that this feature can also be used to run your Selenium tests interactively against a running app instance. You can start your app as normal using <code>grails run-app</code> then either open a second terminal or background the process (<em>Ctrl-Z</em> in a <em>bash</em> shell) then use <code>grails -Dselenium.remote=true test-app other:selenium _&lt;test name&gt;_</code> to run individual tests without stopping or re-starting the app. With the app running <em>development</em> mode you can effectively test-drive using Selenium tests and Grails' artefact reloading capabilities.</p>
+</div>
+
+<div class="paragraph">
+<p>One thing I should clarify is that direct domain class access will <em>not</em> work in remote mode. I&#8217;m thinking about ways to add <a href="http://grails.org/plugin/fixtures">fixtures</a> support to the Selenium RC plugin so there&#8217;s a good alternative approach that will work in remote mode.</p>
+</div>
+    <footer>
+      <ul class="tag-list">
+          <li><a href="/tags/selenium/">selenium</a></li>
+          <li><a href="/tags/testing/">testing</a></li>
+          <li><a href="/tags/grails-plugins/">grails plugins</a></li>
+      </ul>
+    </footer>
+  </article>
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>
+
+<div id="disqus_thread"></div>
+            <script type="text/javascript">
+            //<![CDATA[
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//adhockery.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            //]]>
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </script>

@@ -1,0 +1,214 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+        <article>
+    <header>
+      <time datetime="2013-05-21T13:49:01">May 21 2013</time>
+      <h2><a href="/2013/05/21/parameterized-specs-with-jasmine/">Parameterized specs with Jasmine</a></h2>
+    </header>
+    <div class="paragraph">
+<p>Spock&#8217;s <em>where</em> block makes testing similar conditions for a bunch of inputs very straightforward. Recently I was working on the Groovy language definition for the <a href="http://prismjs.com/">Prism syntax highlighter</a> and wanted something similar.</p>
+</div>
+
+    <a class="read-more" href="/2013/05/21/parameterized-specs-with-jasmine/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2013-04-26T13:58:00">Apr 26 2013</time>
+      <h2><a href="/2013/04/26/using-sass-and-compass-with-gradle/">Using SASS and Compass with Gradle</a></h2>
+    </header>
+    <div class="paragraph">
+<p>I recently started helping with the <a href="https://github.com/ratpack">Ratpack</a> website. It is (or will be) a Ratpack app &amp; built with Gradle. I started prototyping with a simple webapp created with <a href="http://yeoman.io/">Yeoman</a> and using <a href="http://sass-lang.com/">SASS</a> and <a href="http://compass-style.org/">Compass</a> for authoring CSS. When I migrated the work-in-progress into the <a href="https://github.com/ratpack/ratpack-site"><em>ratpack-site</em> application</a> I initially used <a href="http://naleid.com/blog/2013/01/24/calling-gruntjs-tasks-from-gradle/">Ted Naleid&#8217;s method</a> of calling Yeoman&#8217;s <a href="http://gruntjs.com/">Grunt</a> tasks from Gradle. Unfortunately this meant there were rather a lot of build dependencies. In order to build the app you would need Node.js, Ruby and the Compass gem installed. Peter Ledbrook pointed out this could frustrate potential contributors &amp; Marcin Erdmann <a href="https://twitter.com/marcinerdmann/status/325675229454155776">proved an example</a> of what he meant. Clearly I needed to simplify.</p>
+</div>
+
+    <a class="read-more" href="/2013/04/26/using-sass-and-compass-with-gradle/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2013-04-15T14:12:00">Apr 15 2013</time>
+      <h2><a href="/2013/04/15/grails-and-rest-url-mappings/">Grails and REST URL mappings</a></h2>
+    </header>
+    <div class="paragraph">
+<p>When building a REST-style API with Grails there&#8217;s <a href="http://grails.org/doc/1.3.7/guide/13.%20Web%20Services.html#13.1%20REST">a very handy way of configuring URL mappings</a>. For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">"/person/$id?"(resource: "person")</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>will map requests to <code>/myApp/person</code> to the different actions of <code>PersonController</code> according to the HTTP request method. The mappings are <code>GET</code>&#8594;_show_, <code>PUT</code>&#8594;_save_, <code>POST</code>&#8594;_update_, <code>DELETE</code>&#8594;_delete_.</p>
+</div>
+
+    <a class="read-more" href="/2013/04/15/grails-and-rest-url-mappings/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2013-04-09T20:35:28">Apr  9 2013</time>
+      <h2><a href="/2013/04/09/mongo-dynamic-attributes-and-grails-unit-tests/">Mongo dynamic attributes and Grails unit tests</a></h2>
+    </header>
+    <div class="paragraph">
+<p>When using <em>Mongo DB</em> with <em>GORM</em> it&#8217;s possible to assign to dynamic attributes of a domain class. However, you&#8217;ll find that when you write unit tests for code that uses this feature it isn&#8217;t supported. It&#8217;s easy to emulate, though.</p>
+</div>
+
+    <a class="read-more" href="/2013/04/09/mongo-dynamic-attributes-and-grails-unit-tests/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2013-03-29T15:42:07">Mar 29 2013</time>
+      <h2><a href="/2013/03/29/groovy-gotchas-overloading-the-assignment-operator/">Groovy gotchas: overloading the assignment operator</a></h2>
+    </header>
+    <div class="paragraph">
+<p>When assigning to a property of an object in Groovy using the assignment operator <code>=</code> Groovy will look for a bean property style setter method. For example <code>x.foo = y</code> is equivalent to <code>x.setFoo(y)</code>. Or is it?</p>
+</div>
+<div class="paragraph">
+<p>Since meta-methods can be overloaded with different parameter types what will be printed to <em>sysout</em> if we run this script? (Remember that Groovy - unlike Java - dispatches to the <em>most specific</em> applicable method signature).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">Object.metaClass.with {
+    setFoo = {
+        println "setFoo(Object)"
+    }
+    setFoo = { String s -&gt;
+        println "setFoo(String)"
+    }
+}
+
+def o = new Object()
+o.setFoo("foo")
+o.setFoo(o)
+o.foo = "foo"
+o.foo = o</code></pre>
+</div>
+</div>
+
+    <a class="read-more" href="/2013/03/29/groovy-gotchas-overloading-the-assignment-operator/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2013-03-29T12:30:00">Mar 29 2013</time>
+      <h2><a href="/2013/03/29/groovy-gotcha-for-loops-and-closure-scope/">Groovy gotcha: for loops and closure scope</a></h2>
+    </header>
+    <div class="paragraph">
+<p>You probably know that Groovy closures retain information about the scope in which they were created. The closure body can refer to values that were in scope where the closure was declared. There is a gotcha here that has bitten me a few times, though. That&#8217;s when closures are created in a <code>for</code> loop.</p>
+</div>
+<div class="paragraph">
+<p>Consider this example.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">def fns = []
+for (i in (1..5)) {
+    fns &lt;&lt; {-&gt;
+        println i
+    }
+}
+fns.each { it() }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>What will get printed to <em>sysout</em>? Give up? You can <a href="http://groovyconsole.appspot.com/script/920002">run the script on Groovy Web Console</a>.</p>
+</div>
+
+    <a class="read-more" href="/2013/03/29/groovy-gotcha-for-loops-and-closure-scope/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2013-03-22T00:16:00">Mar 22 2013</time>
+      <h2><a href="/2013/03/22/stateful-interactions-in-spock/">Stateful interactions in Spock</a></h2>
+    </header>
+    <div class="paragraph">
+<p>The Java mocking library <a href="http://jmock.org/">jMock</a> has <a href="http://jmock.org/states.html">a nice feature for dealing with verifying mock interactions in stateful circumstances</a>. I first came across it when reading <a href="http://www.growing-object-oriented-software.com/">Growing Object-Oriented Software Guided By Tests</a> (<em>GOOS</em>) by Steve Freeman &amp; Nat Pryce.</p>
+</div>
+<div class="paragraph">
+<p>I was curious as to whether I could implement something similar with <em>Spock</em>. There&#8217;s no syntactic support right now (although there is <a href="http://code.google.com/p/spock/issues/detail?id=130">an open issue</a>) but it&#8217;s not that complex to achieve something adequate.</p>
+</div>
+
+    <a class="read-more" href="/2013/03/22/stateful-interactions-in-spock/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2013-02-26T14:08:20">Feb 26 2013</time>
+      <h2><a href="/2013/02/26/grails-builds-on-travis-ci/">Grails builds on Travis CI</a></h2>
+    </header>
+    <div class="paragraph">
+<p><a href="https://travis-ci.org/">Travis CI</a> is a cloud based continuous integration service. It&#8217;s a great way to automate test runs for projects hosted on GitHub. Since the Grails wrapper was added to Grails in version 2.1 you can use Travis to build Grails apps.</p>
+</div>
+
+    <a class="read-more" href="/2013/02/26/grails-builds-on-travis-ci/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2013-02-17T07:23:32">Feb 17 2013</time>
+      <h2><a href="/2013/02/17/groovy-the-public-keyword/">Groovy & the public keyword</a></h2>
+    </header>
+    <div class="paragraph">
+<p>One of the first things you learn in Groovy is that unlike Java <code>public</code> is the default scope for properties and methods declared on classes. Most developers get into the habit of simply omitting the <code>public</code> keyword everywhere. But, is there any situation where it&#8217;s the right thing to use? Actually, yes.</p>
+</div>
+
+    <a class="read-more" href="/2013/02/17/groovy-the-public-keyword/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2013-02-13T16:21:30">Feb 13 2013</time>
+      <h2><a href="/2013/02/13/deprecating-grails-plugins/">Deprecating Grails plugins</a></h2>
+    </header>
+    <div class="paragraph">
+<p>I&#8217;ve written a number of Grails plugins and the fact is that some of them are effectively unsupported. I&#8217;ve only got so much time &amp; I&#8217;m juggling work, family, conference speaking, my own projects and open source. Any plugin development I do is going to be driven by the requirements of work or other projects, so even those plugins I still consider as supported might not get updated as often as some people would like.</p>
+</div>
+
+    <a class="read-more" href="/2013/02/13/deprecating-grails-plugins/">Read more…</a>
+  </article>
+  <hr>
+
+  <nav class="pagination">
+      <a rel="prev" href="/">Previous page</a>
+    <span>Page 2 of 11</span>
+      <a rel="next" href="/page/3/">Next page</a>
+  </nav>
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>

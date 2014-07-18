@@ -1,0 +1,220 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+        <article>
+    <header>
+      <time datetime="2010-05-03T21:59:00">May  3 2010</time>
+      <h2><a href="/2010/05/03/asynchronous-application-events-in-grails/">Asynchronous application events in Grails</a></h2>
+    </header>
+    <div class="paragraph">
+<p>On the project for my current client we&#8217;ve been using JMS in a rather naïve way for some time now. We&#8217;ve also experienced a certain amount of pain getting JMS and ActiveMQ configured correctly. However, all we&#8217;re really using JMS for is asynchronous event broadcasting. Essentially we have a handful actions such as flushing hardware caches and notifying external systems that take place when a document changes. We don&#8217;t want these things blocking the request thread when users save data.</p>
+</div>
+
+    <a class="read-more" href="/2010/05/03/asynchronous-application-events-in-grails/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2010-05-03T07:59:00">May  3 2010</time>
+      <h2><a href="/2010/05/03/selenium-rc-plugin-v1-0/">Selenium RC plugin v1.0</a></h2>
+    </header>
+    <div class="paragraph">
+<p>The Selenium RC plugin for Grails has hit version 1.0 with:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Firefox 3.6 support</p>
+</li>
+<li>
+<p>grabbing of screenshots on test failures</p>
+</li>
+<li>
+<p>the ability to call JavaScript user extensions on the <em>selenium</em> object as though they were regular Groovy methods</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>among other features. Check out the documentation at <a href="http://robfletcher.github.com/grails-selenium-rc">http://robfletcher.github.com/grails-selenium-rc</a> and install with <code>grails install-plugin selenium-rc</code>.</p>
+</div>
+    <a class="read-more" href="/2010/05/03/selenium-rc-plugin-v1-0/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2010-05-03T06:35:00">May  3 2010</time>
+      <h2><a href="/2010/05/03/building-your-app-on-hudson-with-multiple-grails/">Building your app on Hudson with Multiple Grails versions</a></h2>
+    </header>
+    <div class="paragraph">
+<p>For my Grails plugins I generally write a test project (or more than one). I thought it would be useful to be able to run these against multiple versions of Grails on my build server so I can spot any incompatibilities with the versions the plugin is supposed to support.</p>
+</div>
+<div class="paragraph">
+<p>Using <a href="http://hudson-ci.org/">Hudson</a> this turned out to be pretty straightforward.</p>
+</div>
+
+    <a class="read-more" href="/2010/05/03/building-your-app-on-hudson-with-multiple-grails/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2010-04-21T14:26:00">Apr 21 2010</time>
+      <h2><a href="/2010/04/21/a-grails-junit-4-test-template/">A Grails JUnit 4 test template</a></h2>
+    </header>
+    <div class="paragraph">
+<p>Grails 1.3 upgrades the bundles JUnit to the newer JUnit 4 API. However, the test template used to generate classes by the Grails <em>create-*</em> scripts is still very JUnit 3-ish. Here&#8217;s a replacement that will generate a skeleton test using JUnit 4 conventions:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">@artifact.package@import grails.test.*
+import org.junit.*
+import static org.junit.Assert.*
+import static org.hamcrest.CoreMatchers.*
+import static org.junit.matchers.JUnitMatchers.*
+
+class @artifact.name@ {
+    @Before void setUp() {
+    }
+
+    @After void tearDown() {
+    }
+
+    @Test void something() {
+
+    }
+}</code></pre>
+</div>
+</div>
+
+    <a class="read-more" href="/2010/04/21/a-grails-junit-4-test-template/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2010-03-17T06:53:00">Mar 17 2010</time>
+      <h2><a href="/2010/03/17/customising-collection-binding-in-grails/">Customising collection binding in Grails</a></h2>
+    </header>
+    <div class="paragraph">
+<p>Following up on my earlier post about <a href="http://blog.freeside.co/post/42902830038/using-a-custom-data-binder-with-grails-domain-objects">using custom <code>PropertyEditor</code> implementations to bind association properties</a> I started looking into the options for custom binding one-to-many associations.</p>
+</div>
+
+    <a class="read-more" href="/2010/03/17/customising-collection-binding-in-grails/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2010-03-11T17:50:00">Mar 11 2010</time>
+      <h2><a href="/2010/03/11/grails-plugins-on-hudson/">Grails plugins on Hudson</a></h2>
+    </header>
+    <div class="paragraph">
+<p><span class="image"><img src="http://4.bp.blogspot.com/_fh9xwLFYBUw/S5ks3ENs8yI/AAAAAAAACbU/vHE684-UsTI/s400/hudson.png" alt="image"></span>Yesterday I spent some time setting up <a href="http://hudson-ci.org/">Hudson</a> continuous integration build for my various Grails plugins. It was pretty straightforward but I&#8217;ve <a href="https://twitter.com/wangjammer5/statuses/10269319705">been asked</a> to document the steps involved.</p>
+</div>
+
+    <a class="read-more" href="/2010/03/11/grails-plugins-on-hudson/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2010-03-05T06:42:00">Mar  5 2010</time>
+      <h2><a href="/2010/03/05/page-fragment-caching-with-grails-springcache-plugin/">Page fragment caching with Grails Springcache plugin</a></h2>
+    </header>
+    <div class="paragraph">
+<p>Yesterday I released the new version of the Springcache plugin for Grails. The new feature this brings to the table is page fragment caching driven by annotations on controller actions. The feature is based on <a href="http://ehcache.org/documentation/web_caching.html">EhCache Web</a> and is even simpler and more powerful than the full page caching <a href="http://blog.freeside.co/post/42902815893/full-page-caching-in-grails-with-ehcache-web">I blogged about recently</a>.</p>
+</div>
+
+    <a class="read-more" href="/2010/03/05/page-fragment-caching-with-grails-springcache-plugin/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2010-02-25T13:04:00">Feb 25 2010</time>
+      <h2><a href="/2010/02/25/using-a-custom-data-binder-with-grails-domain-objects/">Using a custom data binder with Grails domain objects</a></h2>
+    </header>
+    <div class="paragraph">
+<p>Yesterday I read a <a href="http://blog.armbruster-it.de/2010/01/customizing-grails-data-binding-with-a-groovy-propertyeditor/">post by Stefan Armbruster</a> on how to register a custom data binder to lookup Grails domain objects by any arbitrary property. I wanted to go a little further so that I could not only bind existing domain instances but create new ones as well.</p>
+</div>
+
+    <a class="read-more" href="/2010/02/25/using-a-custom-data-binder-with-grails-domain-objects/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2010-02-23T12:47:00">Feb 23 2010</time>
+      <h2><a href="/2010/02/23/full-page-caching-in-grails-with-ehcache-web/">Full page caching in Grails with Ehcache-Web</a></h2>
+    </header>
+    <div class="paragraph">
+<p>I&#8217;m on the verge of releasing a new version of the <a href="http://grails.org/plugin/springcache">Springcache plugin</a> that will feature a pretty cool new annotation-driven page fragment caching feature based on <a href="http://ehcache.org/documentation/web_caching.html">Ehcache-web</a>. However one of the things that came up during discussions on the mailing list was full page caching. I mentioned that it was pretty straightforward and promised to blog about how to do it, so…</p>
+</div>
+
+    <a class="read-more" href="/2010/02/23/full-page-caching-in-grails-with-ehcache-web/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2010-01-17T20:35:00">Jan 17 2010</time>
+      <h2><a href="/2010/01/17/a-gradle-build-for-grails-plugins-with-test-apps/">A Gradle build for Grails plugins with test apps</a></h2>
+    </header>
+    <div class="paragraph">
+<p>There&#8217;s a fairly popular technique in Grails plugin development where the plugin has <em>test apps</em> stored in <code>test/projects/*</code>, each of which references the plugin by including <code>grails.plugin.location."my-plugin" = "../../.."</code> in its <em>BuildConfig.groovy</em>. Doing this allows you as a plugin developer to:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Automate tests for sample projects using the plugin with significantly different configurations.</p>
+</li>
+<li>
+<p>Test using domain classes, controllers, etc. that shouldn&#8217;t be packaged with the plugin.</p>
+</li>
+<li>
+<p>Test drive, changing code in both the test app and the plugin without the need to use <code>grails package-plugin</code> or <code>grails install-plugin</code> to pick up changes.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The downside is that to run all the plugin project&#8217;s tests it&#8217;s necessary to run the plugin&#8217;s own tests, then change directory into each of the test apps and run their tests. Continuous integration config is also fiddlier for the same reason.</p>
+</div>
+
+    <a class="read-more" href="/2010/01/17/a-gradle-build-for-grails-plugins-with-test-apps/">Read more…</a>
+  </article>
+  <hr>
+
+  <nav class="pagination">
+      <a rel="prev" href="/page/6/">Previous page</a>
+    <span>Page 7 of 11</span>
+      <a rel="next" href="/page/8/">Next page</a>
+  </nav>
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>

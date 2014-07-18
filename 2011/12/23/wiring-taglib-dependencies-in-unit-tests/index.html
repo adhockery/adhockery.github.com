@@ -1,0 +1,174 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery - Wiring taglib dependencies in Grails 2 unit tests</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+        <article>
+    <header>
+      <time datetime="2011-12-23T10:24:00">Dec 23 2011</time>
+      <h1>Wiring taglib dependencies in Grails 2 unit tests</h1>
+    </header>
+    <div class="paragraph">
+<p>Grails 2 has made a lot of improvements in unit testing support. One of the things I always used to find particularly painful was unit testing taglibs. Now when your test class is annotated with <code>@TestFor(MyTagLib)</code> you can use the <code>applyTemplate</code> method like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">expect:
+applyTemplate('&lt;my:tag/&gt;') == 'the expected output'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>However, one thing I found is that it&#8217;s quite tricky to wire a dependency in to the taglib instance that&#8217;s used by the <code>applyTemplate</code> method.</p>
+</div>
+
+<div class="paragraph">
+<p>Let&#8217;s imagine that <code>my:tag</code> makes a call to a Grails service for some reason. In the tag&#8217;s unit test you&#8217;ll need to wire in a mock or real instance of that service.</p>
+</div>
+<div class="paragraph">
+<p>Although like with the old <code>TagLibUnitTest</code> and <code>TagLibSpec</code> classes your test gets a field called <code>taglib</code> that doesn&#8217;t actually appear to be the instance that <code>applyTemplate</code> uses. This fails:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">void setup() {
+    tagLib.myService = new MyService()
+}
+
+void 'a taglib spec'() {
+    expect:
+    applyTemplate('&lt;my:tag/&gt;') == 'the expected output'
+    // blows up with NullPointerException when the tag tries to call the service
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Grails 2 unit test mixins provide a <code>defineBeans</code> method that allows you to add Spring beans to a mock application context using the <em>BeanBuilder</em> DSL. So, next I tried this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">void setup() {
+    defineBeans {
+        myService(MyService)
+    }
+}
+
+void 'a taglib spec'() {
+    expect:
+    applyTemplate('&lt;my:tag/&gt;') == 'the expected output'
+    // blows up with NullPointerException when the tag tries to call the service
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After some digging I discovered that you need to use <code>defineBeans</code> in <code>setupSpec</code> rather than <code>setup</code> for the wiring to work (I guess this would mean in <code>@BeforeClass</code> in a JUnit test). So this <em>does</em> work:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">void setupSpec() {
+    defineBeans {
+        myService(MyService)
+    }
+}
+
+void 'a taglib spec'() {
+    expect:
+    applyTemplate('&lt;my:tag/&gt;') == 'the expected output'
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>All very well so long as you don&#8217;t need to inject a specific instance of <em>MyService</em> into the tag. Unfortunately, often you will need to do exactly that so that you can wire in a stub or mock that your test can control. Also, Spock&#8217;s mocks can&#8217;t be created in <code>setupSpec</code> only in <code>setup</code> or the specification methods.</p>
+</div>
+<div class="paragraph">
+<p>The test does get an <code>applicationContext</code> variable, but that doesn&#8217;t have a method on its API to allow you to register an existing object as a bean. Spring&#8217;s <code>MockApplicationContext</code> does, and after some digging I found that there&#8217;s an instance of that available as <code>grailsApplication.mainContext</code>. However a bean added there doesn&#8217;t get picked up by the tag either:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">def mockService = Mock(MyService)
+
+void setup() {
+    grailsApplication.mainContext.registerBean('myService', mockService)
+}
+
+void 'a taglib spec'() {
+    expect:
+    applyTemplate('&lt;my:tag/&gt;') == 'the expected output'
+    // still blows up with NullPointerException when the tag tries to call the service
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Eventually I figured out that instead of registering your mock dependency in the application context you can instead get the correct taglib instance <em>from</em> the application context and then wire its dependencies directly. I use Spock&#8217;s mocks almost exclusively for this kind of thing, but the same technique should hold for any other mocking framework. What I ended up doing is this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">def mockService = Mock(MyService)
+
+void setup() {
+    def taglib = applicationContext.getBean(MyTagLib)
+    taglib.myService = mockService
+}
+
+void 'a taglib spec'() {
+    expect:
+    applyTemplate('&lt;my:tag/&gt;') == 'the expected output'
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Hopefully this is something that will get ironed out in a future Grails release but in the meantime hopefully this will be helpful for anyone who gets as stumped as I did.</p>
+</div>
+    <footer>
+      <ul class="tag-list">
+          <li><a href="/tags/grails/">grails</a></li>
+          <li><a href="/tags/testing/">testing</a></li>
+      </ul>
+    </footer>
+  </article>
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>
+
+<div id="disqus_thread"></div>
+            <script type="text/javascript">
+            //<![CDATA[
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//adhockery.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            //]]>
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </script>

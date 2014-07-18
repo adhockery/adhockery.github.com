@@ -1,0 +1,117 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery - Twitter Bootstrap & Semantics</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+        <article>
+    <header>
+      <time datetime="2012-02-02T11:07:00">Feb  2 2012</time>
+      <h1>Twitter Bootstrap & Semantics</h1>
+    </header>
+    <div class="paragraph">
+<p>There&#8217;s a lot to like about <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap</a>; it&#8217;s a fantastic resource for getting off the ground, particularly for getting a slick-looking admin interface up and running quickly. The recent changes to accommodate responsive layouts are really impressive. I&#8217;m particularly impressed with the way <a href="http://twitter.github.com/bootstrap/base-css.html#forms">horizontal forms</a> stack on smaller screens (failure to accommodate small screens in form design is something I&#8217;ve <a href="https://twitter.com/#!/rfletcherEW/status/161718223207804928">complained about before</a>). However, there are some things I&#8217;m less keen on…</p>
+</div>
+
+<div class="paragraph">
+<p>Looking at the markup it seems heavy and overly concerned with presentation. In <a href="http://twitter.github.com/bootstrap/examples/fluid.html">this example layout</a> links in the top navbar have no less than 4 <em>divs</em> between them and the top of the document. There are a lot of classes everywhere and almost all of them are concerned with presentation rather than semantics; <em>how</em> a <em>div</em> should look rather than what it represents. Classes like <code>row-fluid</code>, <code>span9</code> even the ubiquitous <code>btn</code> are slightly troubling as they&#8217;re bleeding presentation details into the markup.</p>
+</div>
+<div class="paragraph">
+<p>I get that these are to some extent practical considerations. Restyling all <code>button</code> elements would be disruptive for people who wanted to drop Bootstrap in to an existing site, for example. Maybe I&#8217;m being pedantic but I&#8217;ve worked on sites with severe div-itis and it makes things difficult both for maintenance and accommodating changes.</p>
+</div>
+<div class="paragraph">
+<p>I can&#8217;t help thinking that this…</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="markup language-markup">      &lt;/div&gt;&lt;!--/span--&gt;
+    &lt;/div&gt;&lt;!--/row--&gt;
+  &lt;/div&gt;&lt;!--/span--&gt;
+&lt;/div&gt;&lt;!--/row--&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>…is a code smell.</p>
+</div>
+<div class="paragraph">
+<p>Bootstrap is built with <em><a href="http://lesscss.org/">LESS</a></em> but (by default) compiles it down to CSS before any of your site&#8217;s code starts interacting with the Bootstrap framework.</p>
+</div>
+<div class="paragraph">
+<p><em>LESS</em> is great for structuring CSS better but I think its strengths go further.</p>
+</div>
+<div class="paragraph">
+<p>I recently came across <em><a href="http://semantic.gs/">The Semantic Grid System</a></em> which really leverages the power of <em>LESS</em> (or <em><a href="http://sass-lang.com/">SASS</a></em> or <em><a href="http://learnboost.github.com/stylus/">Stylus</a></em> if you prefer) . The <em>semantic.gs</em> provides mixins that you use on the components of your pages. It&#8217;s a full-blown responsive grid system with not a <code>column-container</code>, <code>row</code> or <code>grid-8</code> class anywhere in your markup. In fact, looking at the markup you wouldn&#8217;t know the content was being laid out on a grid. It&#8217;s all handled in your <em>LESS</em> file. Want your <em>services</em> and <em>clients</em> sections laid out as ⅔ width blocks with your <em>about me</em> section as a sidebar? Just declare:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="less language-less">section#services, section#clients {
+    .column(9);
+}
+
+aside#about-me {
+    .column(3);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Instead of adding a presentational class to elements in the markup you add a mixin to the element in the <em>LESS</em> file.</p>
+</div>
+<div class="paragraph">
+<p>Wait a minute… Isn&#8217;t that dangerously close to the separation of semantics and presentation that the invention of CSS promised us all those years ago?</p>
+</div>
+    <footer>
+      <ul class="tag-list">
+          <li><a href="/tags/html/">html</a></li>
+          <li><a href="/tags/semantics/">semantics</a></li>
+          <li><a href="/tags/bootstrap/">bootstrap</a></li>
+          <li><a href="/tags/css/">css</a></li>
+      </ul>
+    </footer>
+  </article>
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>
+
+<div id="disqus_thread"></div>
+            <script type="text/javascript">
+            //<![CDATA[
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//adhockery.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            //]]>
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </script>

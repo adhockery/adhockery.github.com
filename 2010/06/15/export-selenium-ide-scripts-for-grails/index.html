@@ -1,0 +1,116 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery - Export Selenium IDE scripts for Grails</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+        <article>
+    <header>
+      <time datetime="2010-06-15T14:18:00">Jun 15 2010</time>
+      <h1>Export Selenium IDE scripts for Grails</h1>
+    </header>
+    <div class="paragraph">
+<p>Thanks to the <a href="http://adam.goucher.ca/?p=1352">documentation</a> provided on <a href="http://adam.goucher.ca/">Adam Goucher&#8217;s blog</a> I&#8217;ve created a simple Firefox plugin that extends the <a href="http://seleniumhq.org/projects/ide/">Selenium IDE</a> and adds formatters that allow you to export a script as a <a href="http://robfletcher.github.com/grails-selenium-rc/docs/manual/index.html">Grails Selenium RC</a> test case. You have the option of JUnit 3 (extends <em>GroovyTestCase</em>, uses <em>assertEquals</em>) or JUnit 4 (doesn&#8217;t extend anything, uses annotations and <em>assertThat</em>) formats.</p>
+</div>
+
+<div class="paragraph">
+<p>I think everything is working. There are some things I&#8217;d still like to do:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Custom commands are currently exported as commented out which they don&#8217;t need to be given Grails Selenium RC test cases can call Javascript extension functions directly.</p>
+</li>
+<li>
+<p>I haven&#8217;t yet figured out how to output a command such as</p>
+<div class="paragraph">
+<p>selenium.waitForAlertPresent()</p>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>rather than</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">selenium.waitFor {
+    selenium.isAlertPresent()
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The Firefox plugin is available from <a href="http://bit.ly/daOJpD">Selenium HQ</a>. You will need to have Selenium IDE installed for it to work, obviously. Once installed you should find options</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><em>Export Test Case As &#8594; Grails Selenium RC (JUnit 3)</em></p>
+</li>
+<li>
+<p><em>Export Test Case As &#8594; Grails Selenium RC (JUnit 4)</em></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>have been added to Selenium IDE&#8217;s <em>File</em> menu.</p>
+</div>
+<div class="paragraph">
+<p>Whilst I would certainly not leave the exported test case as is it&#8217;s a quick way to get started. From the exported script you can easily refactor out some page objects or helper methods.</p>
+</div>
+    <footer>
+      <ul class="tag-list">
+          <li><a href="/tags/selenium/">selenium</a></li>
+          <li><a href="/tags/testing/">testing</a></li>
+          <li><a href="/tags/firefox/">firefox</a></li>
+          <li><a href="/tags/grails-plugins/">grails plugins</a></li>
+      </ul>
+    </footer>
+  </article>
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>
+
+<div id="disqus_thread"></div>
+            <script type="text/javascript">
+            //<![CDATA[
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//adhockery.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            //]]>
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </script>

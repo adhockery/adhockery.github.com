@@ -1,0 +1,277 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery - Decoupling from the DOM with Angular</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+        <article>
+    <header>
+      <time datetime="2013-09-12T01:13:00">Sep 12 2013</time>
+      <h1>Decoupling from the DOM with Angular</h1>
+    </header>
+    <div class="paragraph">
+<p>One piece of advice you&#8217;ll run into pretty soon when working with Angular is that you should never touch the DOM outside of a directive. Especially when test-driving your components this is pretty wise. The great strength of Angular is the declarative way in which the view (HTML) works with the view model (Angular controllers). It&#8217;s almost absurd how easy it is to unit test Angular controllers. Controller functions tend to act on <code>$scope</code> properties, trigger or respond to events and all those things are straightforward to replicate in unit tests.</p>
+</div>
+
+<div class="paragraph">
+<p>However, since Angular directives can <em>contain</em> controllers the temptation can be to write some pretty non-idiomatic Angular code by writing <em>view logic</em> that really belongs in a "pure" controller in a bloated directive that happily interacts with the DOM via the <a href="http://docs.angularjs.org/api/angular.element"><code>$element</code></a> injected into its controller in much the way a Backbone view might.</p>
+</div>
+<div class="paragraph">
+<p>I was recently building some fairly simple CRUD functionality for my current client. There&#8217;s a list of <em>products</em> and each has an <em>edit</em> button that pops up a <a href="http://getbootstrap.com/javascript/#modals">Bootstrap modal</a> containing a form with the <em>product</em> data.</p>
+</div>
+<div class="paragraph">
+<p>I initially built this using:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>a controller that is triggered by the URL route and displays the <em>product</em> list.</p>
+</li>
+<li>
+<p>a directive for the form with its own controller exporting scope properties representing the selected <em>product</em> and scope functions that handle things like clicking the <em>save</em> or <em>cancel</em> buttons.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The <em>product</em> list is displayed in a table and the form is declared after it:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="markup language-markup">&lt;table&gt;
+  &lt;tr ng-repeat="product in products"&gt;
+    &lt;!-- you get the idea --&gt;
+  &lt;/tr&gt;
+&lt;/table&gt;
+
+&lt;div class="modal" edit-product-form&gt;
+  &lt;!-- a form that contains things like... --&gt;
+  &lt;input ng-model="product.title"&gt;
+  &lt;!-- and other inputs and buttons --&gt;
+&lt;/div&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Each element in the <em>product</em> list contains an <em>edit</em> button:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="markup language-markup">&lt;button type="button" ng-click="edit(product)"&gt;Edit&lt;/button&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Clicking the button triggers an event using <a href="http://docs.angularjs.org/api/ng.$rootScope.Scope#$broadcast"><code>$scope.$broadcast</code></a>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="javascript language-javascript">$scope.edit = function(product) {
+  $scope.$broadcast('product:edit', product);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>That event is picked up by the <em>edit-product-form</em> directive. It places the <em>product</em> in its isolate scope – which automatically populates the form with the <em>product&#8217;s</em> properties – and pops up the modal:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="javascript language-javascript">angular.module('myApp').directive('edit-product-form', function() {
+  return {
+    restrict: 'A',
+    controller: ['$scope', '$element', function($scope, $element) {
+      $scope.$on('product:edit', function(event, product) {
+        $scope.product = product;
+        $element.modal('show');
+
+        //...</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <em>save</em> button handler in the directive sends another event back up the scope heirarchy using <a href="http://docs.angularjs.org/api/ng.$rootScope.Scope#$emit"><code>$scope.$emit</code></a> and hides the modal again.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="javascript language-javascript">$scope.save = function() {
+  $scope.product.$save(function() {
+    $scope.$emit('product:updated', $scope.product);
+    $element.modal('hide');
+  },
+  function() {
+    // display an error message
+  });
+};</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Fine, this works <strong>but</strong> it&#8217;s interacting with the Bootstrap modal jQuery plugin in an imperative way. When I want the modal to appear I <em>tell</em> it to appear explicitly. When I want it to disappear I <em>tell</em> it to hide. This is mixing up the logical action of placing the form data in the scope, saving changes and updating the list view with the specifics of <em>how</em> the form is displayed – with a Bootstrap modal dialog. The logic governing view state would be the same if showing and hiding the form were handled in a different way. I&#8217;ve violated the <a href="http://en.wikipedia.org/wiki/Separation_of_concerns"><em>separation of concerns</em></a>.</p>
+</div>
+<div class="paragraph">
+<p>To summarize the problems:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Unit testing the code requires at least a minimal DOM even for assertions purely concerned with the scope properties.</p>
+</li>
+<li>
+<p>If I want to use a similar modal elsewhere in the app I can&#8217;t re-use anything here unless you consider copy 'n paste to be reuse.</p>
+</li>
+<li>
+<p>If I want to use a different widget like <a href="http://foundation.zurb.com/docs/components/reveal.html">Foundation&#8217;s <em>Reveal</em></a> to show and hide the form I need to pick through – and be careful not to break – the code that governs the view state even though that&#8217;s a separate concern.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>We can do better.</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s pare things back to the simplest state – what am I trying to do here? I want to hide the "edit product" form until I have selected a product to edit, show the form while I&#8217;m working on that product then hide it again once I&#8217;m finished. The view state of <em>"user has selected a product"</em> is represented by the existence of a property called <code>$scope.product</code>. With no fancy presentation or slide in/out effects I could do this by just adding and removing that scope property at the appropriate time:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="javascript language-javascript">$scope.edit = function(product) {
+  $scope.product = product;
+};
+
+$scope.save = function() {
+  $scope.product.$save(function() {
+    delete($scope.product);
+  }, function() {
+    // display an error message
+  });
+};</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then in the view I can <em>declaratively</em> react to the presence or absence of the <code>product</code> property:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="markup language-markup">&lt;div ng-show="product"&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <a href="http://docs.angularjs.org/api/ng.directive:ngShow"><code>ng-show</code></a> directive hides the element unless there is a non-<code>null</code>, non-<code>undefined</code> property in the scope that matches its value.</p>
+</div>
+<div class="paragraph">
+<p>Simple. Now the view does the right thing based on state of the view model. You may or may not have noticed but I&#8217;ve done away with the directive for the edit form now – the <code>edit</code> and <code>save</code> functions can just appear as part of the controller that manages the <em>product</em> list. Arguably the directive is still useful for modulatity – especially if the form is complex – but crucially I don&#8217;t <em>need</em> it because I don&#8217;t <em>need</em> to imperatively interact with the DOM.</p>
+</div>
+<div class="paragraph">
+<p>I should be able to use a Bootstrap modal to hide and show the form instead of the basic <code>ng-show</code> directive <strong>without changing any of the controller code</strong>. The mechanism for showing and hiding the form is an implementation detail of the view that&#8217;s nothing to do with the view model. Managing that kind of separation of concerns is the promise of Angular in a nutshell.</p>
+</div>
+<div class="paragraph">
+<p>To do this I&#8217;ll add the Boostrap modal class to my view:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="markup language-markup">&lt;div class="modal fade" trigger="product"&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Don&#8217;t worry about the <code>trigger</code> attribute – I&#8217;ll get to that.</p>
+</div>
+<div class="paragraph">
+<p>Then I&#8217;ll create a new directive that is activated simply by the presence of the <code>modal</code> class on the element.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="javascript language-javascript">angular.module('myApp').directive('modal', function() {
+  return {
+    restrict: 'C',
+    controller: ['$scope', '$element', '$attrs', function($scope, $element, $attrs) {
+      $scope.$watch($attrs.trigger, function(newValue, oldValue) {
+        if (!!newValue &amp;&amp; !oldValue) {
+          $element.modal('show');
+        }
+        if (!!oldValue &amp;&amp; !newValue) {
+          $element.modal('hide');
+        }
+      });
+    }]
+  };
+});</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>restrict: 'C'</code> means the directive is activated by a class name that is the same as the directive name. In other words any element that has <code>class="modal"</code> will have this directive applied.</p>
+</div>
+<div class="paragraph">
+<p>The directive uses the <code>$scope.$watch</code> function to respond to changes in a scope property defined by the <code>trigger</code> attribute on the directive&#8217;s element. Note that <code>$scope.trigger</code> still works as is if, like me, you&#8217;re fussy about validity and declare the attribute as <code>data-trigger="product"</code>.</p>
+</div>
+<div class="paragraph">
+<p>The <code>$watch</code> callback is invoked every time the named scope property changes and is passed the previous and new values of that property. In this example I only care whether the property has changed from <code>null</code>/<code>undefined</code> to an object or vice-versa. I don&#8217;t want to call <code>$element.modal 'show'</code> again if the modal is already visible but <code>$scope.property</code> has just changed to point to a <em>different</em> object. (If you haven&#8217;t seen the <code>!!</code> operator in JavaScript before it&#8217;s simply a way of coercing any type to boolean).</p>
+</div>
+<div class="paragraph">
+<p>I&#8217;ve now got two components – a controller that purely interacts with scope properties and a directive that responds to scope changes and calls a jQuery plugin method.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Both those are very simple to unit test.</p>
+</li>
+<li>
+<p>Neither is coupled to the other except via the <code>trigger</code> attribute in the view.</p>
+</li>
+<li>
+<p>I can re-use the <em>modal</em> directive in similar scenarios elsewhere in the system by just adding <code>class="modal"</code> and an appropriate <code>trigger</code> attribute.</p>
+</li>
+<li>
+<p>If I want to use a different UI widget I only have to change the directive.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Learning to think about separation of concerns in this way is key to getting the most out of Angular. Remember controllers are for managing view <em>state</em> and directives are for managing the view <em>implementation</em>. If you find yourself mixing those concerns step back and think about how you can separate them. The resulting code will be easier to follow, easier to change and easier to test.</p>
+</div>
+    <footer>
+      <ul class="tag-list">
+          <li><a href="/tags/angular/">angular</a></li>
+          <li><a href="/tags/angularjs/">angularjs</a></li>
+      </ul>
+    </footer>
+  </article>
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>
+
+<div id="disqus_thread"></div>
+            <script type="text/javascript">
+            //<![CDATA[
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//adhockery.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            //]]>
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </script>

@@ -1,0 +1,594 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Blog Name</title>
+  <subtitle>Blog subtitle</subtitle>
+  <id>http://blog.url.com/</id>
+  <link href="http://blog.url.com/"/>
+  <link href="http://blog.url.com/feed.xml" rel="self"/>
+  <updated>2014-07-16T15:58:00+01:00</updated>
+  <author>
+    <name>Blog Author</name>
+  </author>
+  <entry>
+    <title>Closures and field visibility</title>
+    <link rel="alternate" href="http://blog.url.com/2014/07/16/closures-and-field-visibility/"/>
+    <id>http://blog.url.com/2014/07/16/closures-and-field-visibility/</id>
+    <published>2014-07-16T15:58:00+01:00</published>
+    <updated>2014-07-16T22:59:01+01:00</updated>
+    <author>
+      <name>Article Author</name>
+    </author>
+    <content type="html">&lt;div class="paragraph"&gt;
+&lt;p&gt;I find Groovy Closures can sometimes behave in ways that, once I think about it, make perfect sense but initially seem surprising. One example of this is the fact that closures &lt;em&gt;declared in a parent class&lt;/em&gt; cannot “see” private fields of that class when run in the context of a child class.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Take a look at this code&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="highlight"&gt;&lt;code class="groovy language-groovy"&gt;class Multiplier {
+
+  private int multiplier &lt;b&gt;(1)&lt;/b&gt;
+
+  Multiplier(int multiplier) {
+    this.multiplier = multiplier
+  }
+
+  List multiply(List values) {
+    values.collect {
+      it * multiplier &lt;b&gt;(2)&lt;/b&gt;
+    }
+  }
+}
+
+class Doubler extends Multiplier {
+  Doubler() { super(2) }
+}
+
+assert new Multiplier(3).multiply([1, 2, 3]) == [3, 6, 9] &lt;b&gt;(3)&lt;/b&gt;
+assert new Doubler().multiply([1, 2, 3]) == [2, 4, 6] &lt;b&gt;(4)&lt;/b&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="colist arabic"&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;The parent class has a private field &lt;code&gt;multiplier&lt;/code&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;It gets referenced in a closure in one of the parent class methods.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;When that method is called on an instance of the parent class all is well.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;When that method is called on an instance of a child class it results in &lt;code&gt;MissingPropertyException: No such property: multiplier for class: Doubler&lt;/code&gt;!&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;</content>
+  </entry>
+  <entry>
+    <title>@CompileStatic and polymorphic method dispatch</title>
+    <link rel="alternate" href="http://blog.url.com/2014/07/08/compilestatic-and-polymorphic-method-dispatch/"/>
+    <id>http://blog.url.com/2014/07/08/compilestatic-and-polymorphic-method-dispatch/</id>
+    <published>2014-07-08T07:11:00+01:00</published>
+    <updated>2014-07-18T06:14:28+01:00</updated>
+    <author>
+      <name>Article Author</name>
+    </author>
+    <content type="html">&lt;div class="paragraph"&gt;
+&lt;p&gt;I&amp;#8217;m a big fan of Groovy&amp;#8217;s &lt;code&gt;@CompileStatic&lt;/code&gt; feature – so much so that I&amp;#8217;ve updated the &lt;em&gt;Groovy class&lt;/em&gt; template in IntelliJ IDEA to use it by default. I should stress I don&amp;#8217;t do this because I believe non-statically compiled Groovy to be slow – it isn&amp;#8217;t.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Recently &lt;a href="https://twitter.com/pledbrook/status/475986668840050688"&gt;Peter Ledbrook reminded me of one drawback&lt;/a&gt; which is that method dispatch is statically bound when using &lt;code&gt;@CompileStatic&lt;/code&gt; like it is in Java. This means that the behavior of calling polymorphic methods can change when argument types are not known at compile time.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Here&amp;#8217;s a simple example. What will this code print?&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="highlight"&gt;&lt;code class="groovy language-groovy"&gt;class Categorizer {
+
+  void accept(String s) { println "String: '$s'" }
+  void accept(Number n) { println "Number: $n" }
+  void accept(Object o) { println "Object: $o" }
+
+  void accept(Object... objects) {
+    objects.each {
+      accept(it)
+    }
+  }
+}
+
+new Categorizer().accept(
+  "a",
+  "${'b'}",
+  1,
+  true,
+  ["c", "d", 2] as Object[]
+)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;This is straight up dynamic Groovy so we get this:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre&gt;String: 'a'
+String: 'b'
+Number: 1
+Object: true
+String: 'c'
+String: 'd'
+Number: 2&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Dynamically compiled Groovy uses runtime method dispatch meaning that the version of &lt;code&gt;Categorizer.accept&lt;/code&gt; to use for the statement &lt;code&gt;accept(it)&lt;/code&gt; is determined at runtime based on the type of &lt;code&gt;it&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;What happens to that output if we add &lt;code&gt;@CompileStatic&lt;/code&gt; to the &lt;code&gt;Categorizer&lt;/code&gt; class? The output changes to this:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre&gt;Object: a
+Object: b
+Object: 1
+Object: true
+Object: [c, d, 2]&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Now the statement &lt;code&gt;accept(it)&lt;/code&gt; is bound at &lt;em&gt;compile time&lt;/em&gt; and there is no type information about &lt;code&gt;it&lt;/code&gt;. The compiler&amp;#8217;s only choice is to bind to &lt;code&gt;accept(Object)&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;This is completely logical when you understand what the compiler is doing but it&amp;#8217;s behavior that annoyed me back when I was using Java full time and I much prefer Groovy&amp;#8217;s runtime dispatch.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;There is a compromise, though. Instead of full static compilation you can enable static type checking in the Groovy compiler using &lt;code&gt;@TypeChecked&lt;/code&gt;. With &lt;code&gt;@TypeChecked&lt;/code&gt; the call to &lt;code&gt;accept(it)&lt;/code&gt; is dispatched at runtime and the output is the same as the original.&lt;/p&gt;
+&lt;/div&gt;</content>
+  </entry>
+  <entry>
+    <title>Enabling Groovy’s “invokedynamic” support in Gradle</title>
+    <link rel="alternate" href="http://blog.url.com/2014/06/24/enabling-groovys-invokedynamic-support-in-gradle/"/>
+    <id>http://blog.url.com/2014/06/24/enabling-groovys-invokedynamic-support-in-gradle/</id>
+    <published>2014-06-24T15:46:00+01:00</published>
+    <updated>2014-07-13T08:33:13+01:00</updated>
+    <author>
+      <name>Article Author</name>
+    </author>
+    <content type="html">&lt;div class="paragraph"&gt;
+&lt;p&gt;I posted &lt;a href="/post/89759686171/gradle-and-groovys-invoke-dynamic-support"&gt;previously&lt;/a&gt; about configuring a Gradle project to ensure that only the &lt;em&gt;indy&lt;/em&gt; version of Groovy (that is the variant that supports Java 7&amp;#8217;s &lt;em&gt;invokedynamic&lt;/em&gt; bytecode instruction) is included in the dependency graph. However, just including that version of the Groovy jar is &lt;strong&gt;not&lt;/strong&gt; enough to make your Groovy code compile in such a way that it uses &lt;em&gt;invokedynamic&lt;/em&gt;.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;div class="paragraph"&gt;
+&lt;p&gt;In addition to including the right version of the jar you need to configure Gradle&amp;#8217;s &lt;code&gt;GroovyCompile&lt;/code&gt; task like this:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="title"&gt;build.gradle&lt;/div&gt;
+&lt;div class="content"&gt;
+&lt;pre class="highlight"&gt;&lt;code class="groovy language-groovy"&gt;tasks.withType(GroovyCompile) {
+  groovyOptions.optimizationOptions.indy = true
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;If you want to check the code is being compiled correctly the easiest way I&amp;#8217;ve found to do so is to use &lt;code&gt;javap&lt;/code&gt; to read the bytecode form a class file and see if there are any &lt;em&gt;invokedynamic&lt;/em&gt; instructions. Here&amp;#8217;s an example:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="highlight"&gt;&lt;code class="bash language-bash"&gt;javap -v -cp build/classes/test co.freeside.jdbi.time.LocalDateSpec | grep invokedynamic&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;If the class is compiled with the &lt;em&gt;indy&lt;/em&gt; option set you&amp;#8217;ll see some output. Here&amp;#8217;s what I get from that class:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre&gt; 3: invokedynamic #46,  0             // InvokeDynamic #0:init:(Ljava/lang/Class;Ljava/lang/String;)Ljava/lang/Object;
+ 8: invokedynamic #52,  0             // InvokeDynamic #1:cast:(Ljava/lang/Object;)Lorg/skife/jdbi/v2/tweak/ResultSetMapper;
+ 2: invokedynamic #62,  0             // InvokeDynamic #2:getProperty:(Ljava/lang/Class;)Ljava/lang/Object;
+ 7: invokedynamic #52,  0             // InvokeDynamic #1:cast:(Ljava/lang/Object;)Lorg/skife/jdbi/v2/tweak/ResultSetMapper;
+ 3: invokedynamic #70,  0             // InvokeDynamic #3:getProperty:(Lco/freeside/jdbi/time/LocalDateSpec;)Ljava/lang/Object;
+ 8: invokedynamic #76,  0             // InvokeDynamic #4:invoke:(Ljava/lang/Class;Ljava/lang/Object;)Ljava/lang/Object;
+13: invokedynamic #79,  0             // InvokeDynamic #1:cast:(Ljava/lang/Object;)Ljava/time/LocalDate;
+32: invokedynamic #95,  0             // InvokeDynamic #1:cast:(Lgroovy/lang/GString;)Ljava/lang/String;
+35: invokedynamic #95,  0             // InvokeDynamic #1:cast:(Lgroovy/lang/GString;)Ljava/lang/String;
+32: invokedynamic #95,  0             // InvokeDynamic #1:cast:(Lgroovy/lang/GString;)Ljava/lang/String;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Of course, bear in mind that not all classes will contain any &lt;em&gt;invokedynamic&lt;/em&gt; instructions. If you&amp;#8217;ve used &lt;code&gt;@CompileStatic&lt;/code&gt; for example method calls are not dispatched dynamically.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;&lt;strong&gt;Edit:&lt;/strong&gt; &lt;a href="https://twitter.com/CedricChampeau/status/481451226790645760"&gt;Cédric Champeau pointed out&lt;/a&gt; that you should use JDK 7u60 or above to avoid any potential &lt;em&gt;invokedynamic&lt;/em&gt; related bugs.&lt;/p&gt;
+&lt;/div&gt;</content>
+  </entry>
+  <entry>
+    <title>Gradle and Groovy’s Invoke Dynamic support</title>
+    <link rel="alternate" href="http://blog.url.com/2014/06/24/gradle-and-groovys-invoke-dynamic-support/"/>
+    <id>http://blog.url.com/2014/06/24/gradle-and-groovys-invoke-dynamic-support/</id>
+    <published>2014-06-24T15:32:00+01:00</published>
+    <updated>2014-07-13T08:33:47+01:00</updated>
+    <author>
+      <name>Article Author</name>
+    </author>
+    <content type="html">&lt;div class="paragraph"&gt;
+&lt;p&gt;Since version 2.0 the Groovy distribution has included an alternate artifact that enables &lt;a href="http://docs.oracle.com/javase/7/docs/technotes/guides/vm/multiple-language-support.html#invokedynamic"&gt;invoke dynamic&lt;/a&gt; support.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;div class="paragraph"&gt;
+&lt;p&gt;You can include that in a Gradle project by specifying a dependency like this:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="title"&gt;build.gradle&lt;/div&gt;
+&lt;div class="content"&gt;
+&lt;pre class="highlight"&gt;&lt;code class="groovy language-groovy"&gt;compile "org.codehaus.groovy:groovy-all:2.3.3:indy"&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;However if you have other libraries that depend on groovy they may pull in the regular version transitively giving you two versions of Groovy in your dependency graph. This happens to me a lot with Spock which depends on &lt;em&gt;groovy-all:2.0.5&lt;/em&gt;. For example I probably have a dependency like this as well:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="title"&gt;build.gradle&lt;/div&gt;
+&lt;div class="content"&gt;
+&lt;pre class="highlight"&gt;&lt;code class="groovy language-groovy"&gt;testCompile "org.spockframework:spock-core:0.7-groovy-2.0"&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;I noticed that the &lt;em&gt;External Libraries&lt;/em&gt; section of the project tree in &lt;em&gt;IntelliJ IDEA&lt;/em&gt; contained two &lt;em&gt;groovy-all&lt;/em&gt; jars. One is &lt;em&gt;groovy-all-2.3.3&lt;/em&gt; and the other is &lt;em&gt;groovy-all-2.3.3-indy&lt;/em&gt;. That&amp;#8217;s not good. I only want the &lt;em&gt;indy&lt;/em&gt; version.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;To debug where the dependency is coming from you can use Gradle&amp;#8217;s &lt;code&gt;dependencyInsight&lt;/code&gt; target like this:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="highlight"&gt;&lt;code class="bash language-bash"&gt;gradle dependencyInsight --dependency groovy-all&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;By default the &lt;code&gt;dependencyInsight&lt;/code&gt; only searches the &lt;em&gt;compile&lt;/em&gt; configuration and you may well see nothing there. You can search other configurations by adding an argument on the command line. For example:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="highlight"&gt;&lt;code class="bash language-bash"&gt;gradle dependencyInsight --dependency groovy-all --configuration testCompile&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;The output from the command looks like this:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre&gt;:dependencyInsight
+org.codehaus.groovy:groovy-all:2.3.3 (conflict resolution)
+\--- compile
+
+org.codehaus.groovy:groovy-all:2.0.5 -&amp;gt; 2.3.3
+\--- org.spockframework:spock-core:0.7-groovy-2.0
+     \--- testCompile&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Here we can see &lt;em&gt;groovy-all&lt;/em&gt; version &lt;em&gt;2.3.3&lt;/em&gt; explicitly included as a &lt;em&gt;compile&lt;/em&gt; dependency &lt;strong&gt;and&lt;/strong&gt; pulled in transitively by Spock. Gradle&amp;#8217;s conflict resolution has selected version &lt;em&gt;2.3.3&lt;/em&gt; but what the output doesn&amp;#8217;t show us is the variant. It doesn&amp;#8217;t appear to be possible to tell whether the &lt;em&gt;indy&lt;/em&gt; or regular flavor of &lt;em&gt;groovy-all&lt;/em&gt; is pulled in.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;To fix this I first tried forcing the version with:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="title"&gt;build.gradle&lt;/div&gt;
+&lt;div class="content"&gt;
+&lt;pre class="highlight"&gt;&lt;code class="groovy language-groovy"&gt;configurations.all {
+  resolutionStrategy {
+    force "org.codehaus.groovy:groovy-all:2.3.3:indy"
+  }
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;The &lt;code&gt;dependencyInsight&lt;/code&gt; output changed a little:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre&gt;:dependencyInsight
+org.codehaus.groovy:groovy-all:2.3.3 (forced)
+\--- compile
+
+org.codehaus.groovy:groovy-all:2.0.5 -&amp;gt; 2.3.3
+\--- org.spockframework:spock-core:0.7-groovy-2.0
+     \--- testCompile&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;However, I could still see both versions of &lt;em&gt;groovy-all&lt;/em&gt; in IDEA&amp;#8217;s project tree. It looks like the &lt;em&gt;force&lt;/em&gt; resolution strategy doesn&amp;#8217;t take into account the variant you request.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Unfortunately the only way to get evict the regular &lt;em&gt;groovy-all&lt;/em&gt; jar from the dependency tree seems to be to explicitly exclude it from every dependency that pulls it in transitively. For example:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="title"&gt;build.gradle&lt;/div&gt;
+&lt;div class="content"&gt;
+&lt;pre class="highlight"&gt;&lt;code class="groovy language-groovy"&gt;testCompile("org.spockframework:spock-core:0.7-groovy-2.0") {
+  exclude module: "groovy-all"
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Finally the extra jar is gone from IDEA.&lt;/p&gt;
+&lt;/div&gt;</content>
+  </entry>
+  <entry>
+    <title>Static analysis and strictness</title>
+    <link rel="alternate" href="http://blog.url.com/2014/06/22/static-analysis-and-strictness/"/>
+    <id>http://blog.url.com/2014/06/22/static-analysis-and-strictness/</id>
+    <published>2014-06-22T08:27:00+01:00</published>
+    <updated>2014-07-13T08:34:00+01:00</updated>
+    <author>
+      <name>Article Author</name>
+    </author>
+    <content type="html">&lt;div class="paragraph"&gt;
+&lt;p&gt;Let me be clear – static analysis tools like Checkstyle and Codenarc are useful tools. But…&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;I don&amp;#8217;t think you should have overly strict enforcement. There is a small class of static analysis rules that are unambiguous – you&amp;#8217;re not using that &lt;code&gt;import&lt;/code&gt;, that &lt;code&gt;if&lt;/code&gt; block doesn&amp;#8217;t have braces – but there is a large class of rules that exist in a grey area. Is that method really unused or is it invoked reflectively somewhere? Yes, generally we should declare constants for magic numbers but is it really necessary for the prime seed of a hash code method?&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;div class="paragraph"&gt;
+&lt;p&gt;I think the only sane thing to do with those kinds of rule is to enforce them as warnings. What are the alternatives?&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="olist arabic"&gt;
+&lt;ol class="arabic"&gt;
+&lt;li&gt;
+&lt;p&gt;Clutter up the code with &lt;code&gt;@SuppressWarning&lt;/code&gt; annotations. If you&amp;#8217;re doing this I think you&amp;#8217;ve lost sight of why you&amp;#8217;re using static analysis in the first place. You&amp;#8217;re making the code harder to read in the interests of detecting errors that can be hard to spot in cluttered code? Er… ok.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Put file name and line number references in a rule exceptions file. That&amp;#8217;s going to be a nuisance to maintain over time and can easily accumulate a cruft of references to rule violations that no longer exist in the code.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;The counter-argument is that warnings can build up in the report until it&amp;#8217;s hard to see the wood for the trees. Okay, but if you really have &lt;em&gt;that many&lt;/em&gt; violations I think you need to reconsider how much you care about or believe in some of those rules. Turn off or change the configuration of rules you disagree with or break as often as not.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;It&amp;#8217;s not a terrible idea to set a threshold on the number of warnings allowed before the build will fail as a cue to revisit your rule settings.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Static analysis is useful but don&amp;#8217;t let it be a straight jacket. Use it as a guide by all means but remember sometimes it&amp;#8217;s wrong and you know better.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;&lt;strong&gt;Edit:&lt;/strong&gt; Gus Power &lt;a href="https://twitter.com/guspower/status/480656135696183296"&gt;tweeted me a response&lt;/a&gt; to this post that I think hits the nail on the head:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="quoteblock"&gt;
+&lt;blockquote&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;one of those approaches that easily becomes conformity / police enforcement + noisy vs. personally helpful / useful indication&lt;/p&gt;
+&lt;/div&gt;
+&lt;/blockquote&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Static analysis is good when it&amp;#8217;s a tool for helping you write better code. It&amp;#8217;s bad when it&amp;#8217;s a “process”-step you&amp;#8217;re not allowed to disagree with or justify exceptions to or it becomes more of a hinderance than a help.&lt;/p&gt;
+&lt;/div&gt;</content>
+  </entry>
+  <entry>
+    <title>Decoupling from the DOM with Angular</title>
+    <link rel="alternate" href="http://blog.url.com/2013/09/12/decoupling-from-the-dom-with-angular/"/>
+    <id>http://blog.url.com/2013/09/12/decoupling-from-the-dom-with-angular/</id>
+    <published>2013-09-12T01:13:00+01:00</published>
+    <updated>2014-07-13T08:34:10+01:00</updated>
+    <author>
+      <name>Article Author</name>
+    </author>
+    <content type="html">&lt;div class="paragraph"&gt;
+&lt;p&gt;One piece of advice you&amp;#8217;ll run into pretty soon when working with Angular is that you should never touch the DOM outside of a directive. Especially when test-driving your components this is pretty wise. The great strength of Angular is the declarative way in which the view (HTML) works with the view model (Angular controllers). It&amp;#8217;s almost absurd how easy it is to unit test Angular controllers. Controller functions tend to act on &lt;code&gt;$scope&lt;/code&gt; properties, trigger or respond to events and all those things are straightforward to replicate in unit tests.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;div class="paragraph"&gt;
+&lt;p&gt;However, since Angular directives can &lt;em&gt;contain&lt;/em&gt; controllers the temptation can be to write some pretty non-idiomatic Angular code by writing &lt;em&gt;view logic&lt;/em&gt; that really belongs in a "pure" controller in a bloated directive that happily interacts with the DOM via the &lt;a href="http://docs.angularjs.org/api/angular.element"&gt;&lt;code&gt;$element&lt;/code&gt;&lt;/a&gt; injected into its controller in much the way a Backbone view might.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;I was recently building some fairly simple CRUD functionality for my current client. There&amp;#8217;s a list of &lt;em&gt;products&lt;/em&gt; and each has an &lt;em&gt;edit&lt;/em&gt; button that pops up a &lt;a href="http://getbootstrap.com/javascript/#modals"&gt;Bootstrap modal&lt;/a&gt; containing a form with the &lt;em&gt;product&lt;/em&gt; data.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;I initially built this using:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="ulist"&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;a controller that is triggered by the URL route and displays the &lt;em&gt;product&lt;/em&gt; list.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;a directive for the form with its own controller exporting scope properties representing the selected &lt;em&gt;product&lt;/em&gt; and scope functions that handle things like clicking the &lt;em&gt;save&lt;/em&gt; or &lt;em&gt;cancel&lt;/em&gt; buttons.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;The &lt;em&gt;product&lt;/em&gt; list is displayed in a table and the form is declared after it:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="highlight"&gt;&lt;code class="markup language-markup"&gt;&amp;lt;table&amp;gt;
+  &amp;lt;tr ng-repeat="product in products"&amp;gt;
+    &amp;lt;!-- you get the idea --&amp;gt;
+  &amp;lt;/tr&amp;gt;
+&amp;lt;/table&amp;gt;
+
+&amp;lt;div class="modal" edit-product-form&amp;gt;
+  &amp;lt;!-- a form that contains things like... --&amp;gt;
+  &amp;lt;input ng-model="product.title"&amp;gt;
+  &amp;lt;!-- and other inputs and buttons --&amp;gt;
+&amp;lt;/div&amp;gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Each element in the &lt;em&gt;product&lt;/em&gt; list contains an &lt;em&gt;edit&lt;/em&gt; button:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="highlight"&gt;&lt;code class="markup language-markup"&gt;&amp;lt;button type="button" ng-click="edit(product)"&amp;gt;Edit&amp;lt;/button&amp;gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Clicking the button triggers an event using &lt;a href="http://docs.angularjs.org/api/ng.$rootScope.Scope#$broadcast"&gt;&lt;code&gt;$scope.$broadcast&lt;/code&gt;&lt;/a&gt;:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="highlight"&gt;&lt;code class="javascript language-javascript"&gt;$scope.edit = function(product) {
+  $scope.$broadcast('product:edit', product);
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;That event is picked up by the &lt;em&gt;edit-product-form&lt;/em&gt; directive. It places the &lt;em&gt;product&lt;/em&gt; in its isolate scope – which automatically populates the form with the &lt;em&gt;product&amp;#8217;s&lt;/em&gt; properties – and pops up the modal:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="highlight"&gt;&lt;code class="javascript language-javascript"&gt;angular.module('myApp').directive('edit-product-form', function() {
+  return {
+    restrict: 'A',
+    controller: ['$scope', '$element', function($scope, $element) {
+      $scope.$on('product:edit', function(event, product) {
+        $scope.product = product;
+        $element.modal('show');
+
+        //...&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;The &lt;em&gt;save&lt;/em&gt; button handler in the directive sends another event back up the scope heirarchy using &lt;a href="http://docs.angularjs.org/api/ng.$rootScope.Scope#$emit"&gt;&lt;code&gt;$scope.$emit&lt;/code&gt;&lt;/a&gt; and hides the modal again.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="highlight"&gt;&lt;code class="javascript language-javascript"&gt;$scope.save = function() {
+  $scope.product.$save(function() {
+    $scope.$emit('product:updated', $scope.product);
+    $element.modal('hide');
+  },
+  function() {
+    // display an error message
+  });
+};&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Fine, this works &lt;strong&gt;but&lt;/strong&gt; it&amp;#8217;s interacting with the Bootstrap modal jQuery plugin in an imperative way. When I want the modal to appear I &lt;em&gt;tell&lt;/em&gt; it to appear explicitly. When I want it to disappear I &lt;em&gt;tell&lt;/em&gt; it to hide. This is mixing up the logical action of placing the form data in the scope, saving changes and updating the list view with the specifics of &lt;em&gt;how&lt;/em&gt; the form is displayed – with a Bootstrap modal dialog. The logic governing view state would be the same if showing and hiding the form were handled in a different way. I&amp;#8217;ve violated the &lt;a href="http://en.wikipedia.org/wiki/Separation_of_concerns"&gt;&lt;em&gt;separation of concerns&lt;/em&gt;&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;To summarize the problems:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="ulist"&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Unit testing the code requires at least a minimal DOM even for assertions purely concerned with the scope properties.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;If I want to use a similar modal elsewhere in the app I can&amp;#8217;t re-use anything here unless you consider copy 'n paste to be reuse.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;If I want to use a different widget like &lt;a href="http://foundation.zurb.com/docs/components/reveal.html"&gt;Foundation&amp;#8217;s &lt;em&gt;Reveal&lt;/em&gt;&lt;/a&gt; to show and hide the form I need to pick through – and be careful not to break – the code that governs the view state even though that&amp;#8217;s a separate concern.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;We can do better.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Let&amp;#8217;s pare things back to the simplest state – what am I trying to do here? I want to hide the "edit product" form until I have selected a product to edit, show the form while I&amp;#8217;m working on that product then hide it again once I&amp;#8217;m finished. The view state of &lt;em&gt;"user has selected a product"&lt;/em&gt; is represented by the existence of a property called &lt;code&gt;$scope.product&lt;/code&gt;. With no fancy presentation or slide in/out effects I could do this by just adding and removing that scope property at the appropriate time:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="highlight"&gt;&lt;code class="javascript language-javascript"&gt;$scope.edit = function(product) {
+  $scope.product = product;
+};
+
+$scope.save = function() {
+  $scope.product.$save(function() {
+    delete($scope.product);
+  }, function() {
+    // display an error message
+  });
+};&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Then in the view I can &lt;em&gt;declaratively&lt;/em&gt; react to the presence or absence of the &lt;code&gt;product&lt;/code&gt; property:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="highlight"&gt;&lt;code class="markup language-markup"&gt;&amp;lt;div ng-show="product"&amp;gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;The &lt;a href="http://docs.angularjs.org/api/ng.directive:ngShow"&gt;&lt;code&gt;ng-show&lt;/code&gt;&lt;/a&gt; directive hides the element unless there is a non-&lt;code&gt;null&lt;/code&gt;, non-&lt;code&gt;undefined&lt;/code&gt; property in the scope that matches its value.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Simple. Now the view does the right thing based on state of the view model. You may or may not have noticed but I&amp;#8217;ve done away with the directive for the edit form now – the &lt;code&gt;edit&lt;/code&gt; and &lt;code&gt;save&lt;/code&gt; functions can just appear as part of the controller that manages the &lt;em&gt;product&lt;/em&gt; list. Arguably the directive is still useful for modulatity – especially if the form is complex – but crucially I don&amp;#8217;t &lt;em&gt;need&lt;/em&gt; it because I don&amp;#8217;t &lt;em&gt;need&lt;/em&gt; to imperatively interact with the DOM.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;I should be able to use a Bootstrap modal to hide and show the form instead of the basic &lt;code&gt;ng-show&lt;/code&gt; directive &lt;strong&gt;without changing any of the controller code&lt;/strong&gt;. The mechanism for showing and hiding the form is an implementation detail of the view that&amp;#8217;s nothing to do with the view model. Managing that kind of separation of concerns is the promise of Angular in a nutshell.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;To do this I&amp;#8217;ll add the Boostrap modal class to my view:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="highlight"&gt;&lt;code class="markup language-markup"&gt;&amp;lt;div class="modal fade" trigger="product"&amp;gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Don&amp;#8217;t worry about the &lt;code&gt;trigger&lt;/code&gt; attribute – I&amp;#8217;ll get to that.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Then I&amp;#8217;ll create a new directive that is activated simply by the presence of the &lt;code&gt;modal&lt;/code&gt; class on the element.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="highlight"&gt;&lt;code class="javascript language-javascript"&gt;angular.module('myApp').directive('modal', function() {
+  return {
+    restrict: 'C',
+    controller: ['$scope', '$element', '$attrs', function($scope, $element, $attrs) {
+      $scope.$watch($attrs.trigger, function(newValue, oldValue) {
+        if (!!newValue &amp;amp;&amp;amp; !oldValue) {
+          $element.modal('show');
+        }
+        if (!!oldValue &amp;amp;&amp;amp; !newValue) {
+          $element.modal('hide');
+        }
+      });
+    }]
+  };
+});&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;The &lt;code&gt;restrict: 'C'&lt;/code&gt; means the directive is activated by a class name that is the same as the directive name. In other words any element that has &lt;code&gt;class="modal"&lt;/code&gt; will have this directive applied.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;The directive uses the &lt;code&gt;$scope.$watch&lt;/code&gt; function to respond to changes in a scope property defined by the &lt;code&gt;trigger&lt;/code&gt; attribute on the directive&amp;#8217;s element. Note that &lt;code&gt;$scope.trigger&lt;/code&gt; still works as is if, like me, you&amp;#8217;re fussy about validity and declare the attribute as &lt;code&gt;data-trigger="product"&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;The &lt;code&gt;$watch&lt;/code&gt; callback is invoked every time the named scope property changes and is passed the previous and new values of that property. In this example I only care whether the property has changed from &lt;code&gt;null&lt;/code&gt;/&lt;code&gt;undefined&lt;/code&gt; to an object or vice-versa. I don&amp;#8217;t want to call &lt;code&gt;$element.modal 'show'&lt;/code&gt; again if the modal is already visible but &lt;code&gt;$scope.property&lt;/code&gt; has just changed to point to a &lt;em&gt;different&lt;/em&gt; object. (If you haven&amp;#8217;t seen the &lt;code&gt;!!&lt;/code&gt; operator in JavaScript before it&amp;#8217;s simply a way of coercing any type to boolean).&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;I&amp;#8217;ve now got two components – a controller that purely interacts with scope properties and a directive that responds to scope changes and calls a jQuery plugin method.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="ulist"&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Both those are very simple to unit test.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Neither is coupled to the other except via the &lt;code&gt;trigger&lt;/code&gt; attribute in the view.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;I can re-use the &lt;em&gt;modal&lt;/em&gt; directive in similar scenarios elsewhere in the system by just adding &lt;code&gt;class="modal"&lt;/code&gt; and an appropriate &lt;code&gt;trigger&lt;/code&gt; attribute.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;If I want to use a different UI widget I only have to change the directive.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Learning to think about separation of concerns in this way is key to getting the most out of Angular. Remember controllers are for managing view &lt;em&gt;state&lt;/em&gt; and directives are for managing the view &lt;em&gt;implementation&lt;/em&gt;. If you find yourself mixing those concerns step back and think about how you can separate them. The resulting code will be easier to follow, easier to change and easier to test.&lt;/p&gt;
+&lt;/div&gt;</content>
+  </entry>
+</feed>

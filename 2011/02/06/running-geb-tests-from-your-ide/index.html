@@ -1,0 +1,92 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery - Running Geb tests from your IDE</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+        <article>
+    <header>
+      <time datetime="2011-02-06T15:02:00">Feb  6 2011</time>
+      <h1>Running Geb tests from your IDE</h1>
+    </header>
+    <div class="paragraph">
+<p>A frequent complaint about functional testing in Grails is that the start up / shut down cycle time of the app makes prototyping a functional test prohibitive. There has been some recent progress in this are with Luke Daley&#8217;s <a href="http://www.grails.org/plugin/functional-test-development">Functional test development plugin</a> but it would be really nice to be able to just run functional tests from inside your IDE in the same way as a similar unit test.</p>
+</div>
+
+<div class="paragraph">
+<p>With Geb and IntelliJ Idea at least this is actually pretty straightforward (I&#8217;m sure the same thing is possible with Eclipse/STS I&#8217;m just not familiar enough with it).</p>
+</div>
+<div class="paragraph">
+<p>Geb&#8217;s dependence on the Grails lifecycle is pretty minimal so the tests can run without needing any magic to happen in any <em>_Events</em> scripts (unlike the Selenium RC plugin where this would be significantly more difficult). One extra step <em>is</em> required; the Grails Geb plugin normally picks up its base URL from Grails configuration and the test will not be running in the same JVM as the Grails app if it runs from the IDE so configuration will not be available. Just add the following method to your test that extends <em>GebTests</em> or <em>GebSpec</em> (or add it to a base class):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">@Override String getBaseUrl() {
+    super.baseUrl ?: "http://localhost:8080"
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now Geb will use the Grails configured base URL if it <em>is</em> in the same JVM as the app or default to <code>http://localhost:8080</code> otherwise (obviously you need to change that default if that&#8217;s not the host or port where your app runs).</p>
+</div>
+<div class="paragraph">
+<p>You can then just run up the app from the command line, open the test in IntelliJ and hit Ctrl + Shift + F10 to run it. When the test completes the app is still running so you can make changes &amp; run again with minimal turnaround time. Since the app is running in development mode you can make application changes without a server restart as well.</p>
+</div>
+<div class="paragraph">
+<p>IntelliJ Idea&#8217;s test integration is pretty good and it even groks Spock specifications. You can also debug and step through the test. The only downside is that you can&#8217;t directly access domain classes or other application components in the test as they are only available from the app&#8217;s JVM.</p>
+</div>
+    <footer>
+      <ul class="tag-list">
+          <li><a href="/tags/geb/">geb</a></li>
+          <li><a href="/tags/testing/">testing</a></li>
+          <li><a href="/tags/intellij/">intellij</a></li>
+      </ul>
+    </footer>
+  </article>
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>
+
+<div id="disqus_thread"></div>
+            <script type="text/javascript">
+            //<![CDATA[
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//adhockery.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            //]]>
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </script>

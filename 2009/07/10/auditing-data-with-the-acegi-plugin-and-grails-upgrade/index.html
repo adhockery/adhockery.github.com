@@ -1,0 +1,121 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery - Auditing data with the Acegi plugin and Grails upgrade pain</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+        <article>
+    <header>
+      <time datetime="2009-07-10T09:02:00">Jul 10 2009</time>
+      <h1>Auditing data with the Acegi plugin and Grails upgrade pain</h1>
+    </header>
+    <div class="paragraph">
+<p>I&#8217;m in the middle of trying to upgrade our app (again). We&#8217;re running on Grails 1.1 now and I&#8217;m attempting to get us to 1.1.1 and from there to 1.2-M1. As Marc Palmer <a href="http://www.anyware.co.uk/2005/2009/07/03/grails-12m1-and-why-you-need-to-download-it-now/">points out</a> the more people using it the more likely it is that 1.2 final will be rock solid.</p>
+</div>
+
+<div class="paragraph">
+<p>The problem that&#8217;s biting us right now is <a href="http://jira.codehaus.org/browse/GRAILS-4453">GRAILS-4453</a> (or, more accurately, <a href="http://opensource.atlassian.com/projects/hibernate/browse/HHH-2763">HHH-2763</a>). We&#8217;re using <a href="http://grails.org/doc/1.1.x/guide/5.%20Object%20Relational%20Mapping%20(GORM).html#5.5.1%20Events%20and%20Auto%20Timestamping">Grails' Hibernate events support</a> to track the user that created and last updated assets in our system. This isn&#8217;t just us being anal, the site editors frequently search the data using those criteria so it&#8217;s an essential feature.</p>
+</div>
+<div class="paragraph">
+<p>In Grails 1.1 this is simplicity itself. The following code goes in the domain class and that&#8217;s all there is to it:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">User createdBy
+User updatedBy
+
+def authenticateService
+
+def beforeInsert = {
+  createdBy = authenticateService.userDomain()
+}
+
+def beforeUpdate = {
+  updatedBy = authenticateService.userDomain()
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Yes, it is quite <em>exciting</em> that you&#8217;re able to inject a service into a domain class instance. GORM only maps explicitly typed properties to the database so anything declared using <code>def</code> is effectively transient.</p>
+</div>
+<div class="paragraph">
+<p>Unfortunately Grails 1.1.1 includes a newer version of Hibernate that introduces a particularly horrible problem. When saving any update to our domain object now we&#8217;re faced with the error: <code>collection [User.authorities] was not processed by flush()</code>. The problem appears to be that the <code>User</code> instance attached to <code>createdBy</code> cannot be flushed when the <code>beforeUpdate</code> closure executes because it has a lazy-loaded collection of authorities. Even declaring the authorities collection as <code>lazy: false</code> doesn&#8217;t help as the relationship is a bi-directional many-to-many - each <code>Authority</code> also has a collection of all the <code>User`s who have been granted that role. Given that for the purposes of displaying data to the audience of our site this audit data doesn't matter a damn I really don't want to be eager fetching it. Also, given the nature of the User-Authority relationship, casual eager fetching could result in rather a lot of data being loaded in to memory (the `User</code>, his roles, all the other users with that role, all <em>their</em> roles&#8230;)</p>
+</div>
+<div class="paragraph">
+<p>Our options seem to be:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Explicitly eager fetch the <code>User</code> data in places where the owning object will get updated. Since the domain class in question is the root of a heirarchy of 13 sub-classes (things this project has taught me #63: never do this) and varieties get updated by a service or two, at least one controller and one Quartz and several hundred Selenium test fixtures, it&#8217;s going to be a massive PITA and just as bad to remove if/when HHH-2763 ever gets fixed.</p>
+</li>
+<li>
+<p>Break referential integrity and store username or id rather than an actual domain object relationship. This feels horribly wrong and is likely to cause problems down the line.</p>
+</li>
+<li>
+<p>Store the created/updated information as a domain object of its own. This would make the query to find data by who created or updated it more complex (although not impossibly so) and might actually be prone to the same original bug</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>I don&#8217;t know if anyone might have come across this problem and has some kind of workaround (preferably one that isn&#8217;t an evil hack). I&#8217;d really appreciate any pointers.</p>
+</div>
+<div class="paragraph">
+<p><em>*Update:*</em> This is fixed in Grails 1.2-M2</p>
+</div>
+    <footer>
+      <ul class="tag-list">
+          <li><a href="/tags/acegi/">acegi</a></li>
+          <li><a href="/tags/events/">events</a></li>
+          <li><a href="/tags/grails-upgrade/">grails upgrade</a></li>
+          <li><a href="/tags/hibernate/">hibernate</a></li>
+      </ul>
+    </footer>
+  </article>
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>
+
+<div id="disqus_thread"></div>
+            <script type="text/javascript">
+            //<![CDATA[
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//adhockery.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            //]]>
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </script>

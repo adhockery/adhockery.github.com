@@ -1,0 +1,204 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery - Fear & loathing in functional testing land</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+        <article>
+    <header>
+      <time datetime="2011-11-24T00:59:00">Nov 24 2011</time>
+      <h1>Fear & loathing in functional testing land</h1>
+    </header>
+    <div class="paragraph">
+<p>As projects grow the two things I&#8217;ve repeatedly found to be particularly painful have been functional testing and data fixtures. I might write up some thoughts on data fixtures another time but what follows is a brain-dump of my troubled relationship with functional testing.</p>
+</div>
+<div class="paragraph">
+<p><em>Disclaimers:</em> I have more questions than answers and I&#8217;m completely open to the idea that <em>I&#8217;m doing it all wrong</em>. I&#8217;m not trying to diss any tool or technique here. I have spent a lot of time over the last few years writing functional test coverage so I think I at least have some perspective on the issues if no clue how to solve them.</p>
+</div>
+
+<div class="paragraph">
+<p>When I say functional testing I mean in the <a href="http://grails.org/doc/latest/guide/9.%20Testing.html#9.3%20Functional%20Testing">GOOS</a> approach of working outside in; starting with a (failing) functional test that defines the desired behaviour in a user-centric way and building in to the low-level implementation with its unit tests then back out to watch the original end-to-end test (hopefully) pass.</p>
+</div>
+<div class="sect2">
+<h3 id="_why_is_functional_testing_difficult">Why is functional testing difficult?</h3>
+<div class="sect3">
+<h4 id="_test_development_cadence">Test development cadence</h4>
+<div class="paragraph">
+<p>The main issue I find when constructing functional tests is what I&#8217;ll call the <em>test development cadence</em>; that is the time it takes to go round the loop (and sub-loops) of</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>write a bit of test</p>
+</li>
+<li>
+<p>watch it fail</p>
+</li>
+<li>
+<p>write some code to make it work</p>
+</li>
+<li>
+<p>watch it still fail</p>
+</li>
+<li>
+<p>figure out if your expectation is wrong or your code doesn&#8217;t work</p>
+</li>
+<li>
+<p>fix it</p>
+</li>
+<li>
+<p>repeat last 3 steps <em>n</em> times</p>
+</li>
+<li>
+<p>watch it pass</p>
+</li>
+<li>
+<p><a href="http://s3.amazonaws.com/kym-assets/entries/icons/original/000/006/548/211092_242669842430795_4056741_n.jpg?1313963401">celebrate</a></p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>With a unit test that time is typically fast, a keystroke in an IDE and the results are available in at most a couple of seconds. Functional tests are considerably slower. Even assuming you can optimise so that the application is running and you can run the test from an IDE then Selenium has to start up a browser instance, queries execute, views need to render, etc. In the worst case you&#8217;re switching to the terminal and using <code>grails test-app functional: Blarg</code> or equivalent then waiting for the webapp to start up before the test can even start to run and shut down again before the report is generated.</p>
+</div>
+<div class="paragraph">
+<p>A slow test development cadence leads to distraction (checking <em>Twitter</em>, making coffee, getting drawn into a discussion of the finer points of mixing an <em>old fashioned</em>, etc.) and distraction leads to context-switching which slows things still further.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_test_diagnostics">Test diagnostics</h4>
+<div class="paragraph">
+<p><em>GOOS</em> makes a great point about the importance of test diagnostics suggesting that the <a href="http://en.wikipedia.org/wiki/Test-driven_development"><em>TDD</em></a> mantra of <a href="http://jamesshore.com/Blog/Red-Green-Refactor.html">power assert</a> output its not always clear whether the functionality didn&#8217;t work or the expectation is incorrect. Selenese is by no means great in this regard (a humble <code>Condition timed out</code> isn&#8217;t much help) but at least you can step back with the Selenium IDE and watch the damn thing not working much more easily.</p>
+</div>
+<div class="paragraph">
+<p>Bad test diagnostics coupled with a slow test development cadence make for a horrible experience.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_the_quest_for_the_functional_testing_holy_grail">The quest for the functional testing holy grail</h3>
+<div class="paragraph">
+<p>The <em>most productive</em> I&#8217;ve ever been when writing functional tests has been when using <a href="http://seleniumhq.org/projects/ide/">Selenium IDE</a>. That&#8217;s quite an admission for someone who&#8217;s spent a considerable amount of time &amp; energy over the last few years trying to find or build something better!</p>
+</div>
+<div class="paragraph">
+<p>The test development cadence is fast. Really fast. When you&#8217;re writing tests with Selenium IDE (and I do mean <strong>write</strong> them, I&#8217;ve almost never used the recording functionality) the app is running, the browser is running and you can execute the test, a portion of the test or an individual command very quickly. You can step through the test, set breakpoints, etc. When using a framework like Grails that lets you make changes to the app without restarting you can rock along pretty rapidly.</p>
+</div>
+<div class="paragraph">
+<p>That said, the downsides are not inconsiderable:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Abstraction is typically poor; you&#8217;re dealing with fine details of page structure (DOM element ids, CSS selectors) and copy 'n pasting sequences of commands that would in a sane world be defined as functions or macros. You <em>can</em> write custom JavaScript commands but with considerable limitations such as the fact that any <em>wait for x</em> step must be the last thing the command does. Lack of abstraction means lack of maintainability. As the project goes on any change in page rendering probably means picking apart a bunch of tests that fail not because the functionality they are testing has stopped working but because the implementation of that functionality has changed.</p>
+</li>
+<li>
+<p>Atomicity is difficult. Because each test probably requires a few lines of setup it&#8217;s tempting for developers to add new assertions to an existing test. This violates the principle of having a single (logical) assertion per test. Part of the problem I think is that with Java, Groovy, Ruby, etc. each <em>file</em> can contain multiple tests whereas with Selenese each file is a single test script. The right thing to do is to have lots of small Selenese test files but it&#8217;s tempting to fall into the trap of munging tests together into the testing equivalent of a <a href="http://en.wikipedia.org/wiki/Run-on_sentence">run-on sentence</a>. One of the worst side-effects of this is that as a test suite grows it becomes really hard to identify <em>where</em> certain features are tested and to find redundancy or obsolete tests.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Despite these significant failings <em>writing</em> tests in Selenium IDE is very effective. Maintaining a suite of such tests is another matter. Working on a long-running project the failings of Selenese tests start to increase logarithmically. The reason I created the <a href="http://robfletcher.github.com/grails-selenium-rc/docs/manual/index.html">Grails Selenium RC plugin</a> was to try to build something I could use in future projects that would combat the failings of Selenese. I wanted to use a <em>real</em> language with selection and iteration and to be able to build a robust abstraction so that tests are not dealing with the fine details of page markup. <a href="http://www.gebish.org/">Geb</a> is another step along this road. It provides a nice way of defining page objects and modules and handles things like tracking which page class is the <em>current</em> one and how and when that should change.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_what_do_i_want_from_a_functional_testing_tool_language">What do I want from a functional testing tool/language?</h3>
+<div class="paragraph">
+<p>I&#8217;m convinced that the goal of writing tests in the same language as the application is a pretty vapid one. Working inside one&#8217;s comfort zone is all very well but too many times I&#8217;ve seen things tested using Selenium or Geb that would be better tested with a unit-level JavaScript test. I&#8217;m guilty of this myself. I&#8217;m a better Groovy coder than I am a JavaScript coder so it&#8217;s easy initially to break out a new Geb spec than a new Jasmine spec. Functional testing tools are <em>really bad</em> at testing fine-grained JavaScript behaviour, though. These sort of tests are really flaky, false negatives are a fact of life. They&#8217;re wastefully slow as well. JavaScript unit tests are <em>fast</em>, faster than Groovy unit tests. As a Grails developer I&#8217;ve looked enviously at how fast tests run in Rails apps but that&#8217;s nothing compared to watching a couple of hundred <a href="http://pivotal.github.com/jasmine/">Jasmine</a> tests run in under a second. To get back to the point, I have no problem with writing my functional tests in something other than Groovy if I can hit my goals of productivity and maintainability.</p>
+</div>
+<div class="paragraph">
+<p>I was at one time convinced that the ability to use loops and conditional statements in Groovy made it a more suitable testing language than Selenese but honestly, how often are such constructs really required for tests? The The single most essential thing for a maintainable suite of functional tests is the ability to create a decent abstraction. Without that you&#8217;ll be building brittle tests that fail when the implementation changes 100 times more often than they fail because the functionality they&#8217;re testing is actually broken.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_abstraction_is_key">Abstraction is key</h3>
+<div class="paragraph">
+<p>The abstraction layer needs to be powerful but simple. I&#8217;ve seen test suites crippled by badly written page object models and I&#8217;m starting to feel that the whole idea is too formalized. Building Geb content definitions with deeply nested layers of <code>Module</code> types is time consuming &amp; difficult. With Selenium RC there&#8217;s not even the page transition logic Geb provides so you end up having to write that as well (probably getting it wrong or implementing it in several different ways in different places).</p>
+</div>
+<div class="paragraph">
+<p>I can&#8217;t help thinking the page object model approach is coming at the problem from the wrong angle. Instead of abstracting the UI shouldn&#8217;t we be abstracting the behaviour? After all the goal is to have tests that describe how users interact with the application rather than how the various components that make up the application relate to one another. I&#8217;d rather have a rusty toolbox of lightweight macros and UI module definitions than a glittering palace of a page component model that I find awkward to use, extend or change. The abstraction has to be there - when I change the implementation I don&#8217;t want to spend half a day finding and fixing 100 subtly different CSS selectors scattered throughout the tests - but I don&#8217;t think it has to be particularly deep.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_where_do_i_go_from_here">Where do I go from here?</h3>
+<div class="sect3">
+<h4 id="_a_better_selenese">A better Selenese?</h4>
+<div class="paragraph">
+<p>An interesting possibility for creating better Selenese tests is the <a href="http://ttwhy.org/code/ui-doc.html">UI-Element extension library</a> that allows a UI abstraction layer to be built on top of Selenese. It also introduces the concept of <em>rollup rules</em> (paramaterized macros) that are a more powerful way of abstracting command sequences than custom Selenese commands. From what I&#8217;ve seen the tool support in Selenium IDE looks impressive too. I need an opportunity to use <em>UI-Element</em> seriously but it certainly appears promising.</p>
+</div>
+<div class="paragraph">
+<p>The most impressive Selenium extension I&#8217;ve seen is Steve Cresswell&#8217;s <a href="https://github.com/energizedwork/selenium-ide-nle">Natural Language Extensions</a> that layers something like <a href="http://jbehave.org/">JBehave</a>'s feature definition language on top of Selenese. <a href="http://energizedwork.com/">Energized Work</a> used this on a couple of projects (unfortunately not ones I was involved with) and I&#8217;ve heard great stories of how it enabled really rich cooperation between developers, QA and project stakeholders. I was pleasantly surprised with how simple the underlying code appeared to be given the radical difference in the test language.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_other_options">Other options?</h4>
+<div class="paragraph">
+<p>The tools I really need to look into are:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="http://cukes.info/">Cucumber</a> which syntactically looks like the answer to my prayers. I want to see how fast the test development cadence is. Since there&#8217;s now <a href="https://github.com/cucumber/cucumber-jvm/">a pure JVM implementation</a> I really have no excuse for not getting up to speed with it pronto.</p>
+</li>
+<li>
+<p><a href="http://funcunit.com/">FuncUnit</a> is much lower level and I&#8217;m not sure how easy it would be to build an effective abstraction layer that kept the tests readable and maintainable but it&#8217;s fast and runs right in the browser which are potentially compelling advantages.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+    <footer>
+      <ul class="tag-list">
+          <li><a href="/tags/geb/">geb</a></li>
+          <li><a href="/tags/selenium/">selenium</a></li>
+          <li><a href="/tags/testing/">testing</a></li>
+          <li><a href="/tags/functional-testing/">functional testing</a></li>
+          <li><a href="/tags/spock/">spock</a></li>
+      </ul>
+    </footer>
+  </article>
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>
+
+<div id="disqus_thread"></div>
+            <script type="text/javascript">
+            //<![CDATA[
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//adhockery.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            //]]>
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </script>

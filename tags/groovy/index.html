@@ -1,0 +1,218 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+      <header>
+  <h1>Articles tagged <em>‘groovy’</em></h1>
+</header>
+
+  <article>
+    <header>
+      <time datetime="2014-07-08T07:11:00">Jul  8 2014</time>
+      <h2><a href="/2014/07/08/compilestatic-and-polymorphic-method-dispatch/">@CompileStatic and polymorphic method dispatch</a></h2>
+    </header>
+    <div class="paragraph">
+<p>I&#8217;m a big fan of Groovy&#8217;s <code>@CompileStatic</code> feature – so much so that I&#8217;ve updated the <em>Groovy class</em> template in IntelliJ IDEA to use it by default. I should stress I don&#8217;t do this because I believe non-statically compiled Groovy to be slow – it isn&#8217;t.</p>
+</div>
+<div class="paragraph">
+<p>Recently <a href="https://twitter.com/pledbrook/status/475986668840050688">Peter Ledbrook reminded me of one drawback</a> which is that method dispatch is statically bound when using <code>@CompileStatic</code> like it is in Java. This means that the behavior of calling polymorphic methods can change when argument types are not known at compile time.</p>
+</div>
+
+    <a class="read-more" href="/2014/07/08/compilestatic-and-polymorphic-method-dispatch/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2014-06-24T15:46:00">Jun 24 2014</time>
+      <h2><a href="/2014/06/24/enabling-groovys-invokedynamic-support-in-gradle/">Enabling Groovy’s “invokedynamic” support in Gradle</a></h2>
+    </header>
+    <div class="paragraph">
+<p>I posted <a href="/post/89759686171/gradle-and-groovys-invoke-dynamic-support">previously</a> about configuring a Gradle project to ensure that only the <em>indy</em> version of Groovy (that is the variant that supports Java 7&#8217;s <em>invokedynamic</em> bytecode instruction) is included in the dependency graph. However, just including that version of the Groovy jar is <strong>not</strong> enough to make your Groovy code compile in such a way that it uses <em>invokedynamic</em>.</p>
+</div>
+
+    <a class="read-more" href="/2014/06/24/enabling-groovys-invokedynamic-support-in-gradle/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2014-06-24T15:32:00">Jun 24 2014</time>
+      <h2><a href="/2014/06/24/gradle-and-groovys-invoke-dynamic-support/">Gradle and Groovy’s Invoke Dynamic support</a></h2>
+    </header>
+    <div class="paragraph">
+<p>Since version 2.0 the Groovy distribution has included an alternate artifact that enables <a href="http://docs.oracle.com/javase/7/docs/technotes/guides/vm/multiple-language-support.html#invokedynamic">invoke dynamic</a> support.</p>
+</div>
+
+    <a class="read-more" href="/2014/06/24/gradle-and-groovys-invoke-dynamic-support/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2013-03-29T15:42:07">Mar 29 2013</time>
+      <h2><a href="/2013/03/29/groovy-gotchas-overloading-the-assignment-operator/">Groovy gotchas: overloading the assignment operator</a></h2>
+    </header>
+    <div class="paragraph">
+<p>When assigning to a property of an object in Groovy using the assignment operator <code>=</code> Groovy will look for a bean property style setter method. For example <code>x.foo = y</code> is equivalent to <code>x.setFoo(y)</code>. Or is it?</p>
+</div>
+<div class="paragraph">
+<p>Since meta-methods can be overloaded with different parameter types what will be printed to <em>sysout</em> if we run this script? (Remember that Groovy - unlike Java - dispatches to the <em>most specific</em> applicable method signature).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">Object.metaClass.with {
+    setFoo = {
+        println "setFoo(Object)"
+    }
+    setFoo = { String s -&gt;
+        println "setFoo(String)"
+    }
+}
+
+def o = new Object()
+o.setFoo("foo")
+o.setFoo(o)
+o.foo = "foo"
+o.foo = o</code></pre>
+</div>
+</div>
+
+    <a class="read-more" href="/2013/03/29/groovy-gotchas-overloading-the-assignment-operator/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2013-03-29T12:30:00">Mar 29 2013</time>
+      <h2><a href="/2013/03/29/groovy-gotcha-for-loops-and-closure-scope/">Groovy gotcha: for loops and closure scope</a></h2>
+    </header>
+    <div class="paragraph">
+<p>You probably know that Groovy closures retain information about the scope in which they were created. The closure body can refer to values that were in scope where the closure was declared. There is a gotcha here that has bitten me a few times, though. That&#8217;s when closures are created in a <code>for</code> loop.</p>
+</div>
+<div class="paragraph">
+<p>Consider this example.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">def fns = []
+for (i in (1..5)) {
+    fns &lt;&lt; {-&gt;
+        println i
+    }
+}
+fns.each { it() }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>What will get printed to <em>sysout</em>? Give up? You can <a href="http://groovyconsole.appspot.com/script/920002">run the script on Groovy Web Console</a>.</p>
+</div>
+
+    <a class="read-more" href="/2013/03/29/groovy-gotcha-for-loops-and-closure-scope/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2013-02-17T07:23:32">Feb 17 2013</time>
+      <h2><a href="/2013/02/17/groovy-the-public-keyword/">Groovy & the public keyword</a></h2>
+    </header>
+    <div class="paragraph">
+<p>One of the first things you learn in Groovy is that unlike Java <code>public</code> is the default scope for properties and methods declared on classes. Most developers get into the habit of simply omitting the <code>public</code> keyword everywhere. But, is there any situation where it&#8217;s the right thing to use? Actually, yes.</p>
+</div>
+
+    <a class="read-more" href="/2013/02/17/groovy-the-public-keyword/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2012-08-29T17:29:00">Aug 29 2012</time>
+      <h2><a href="/2012/08/29/derived-values-in-spock-where-tables/">Derived values in Spock where tables</a></h2>
+    </header>
+    <div class="paragraph">
+<p>When using <code>where</code> blocks in Spock there are two forms; assigning iterable values to a variable, e.g. <code>crew &lt;&lt; ['Mal', 'Kaylee', 'Jayne']</code> or using a datatable. In the first form I always knew you could use assigned values, for example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">where:
+crew &lt;&lt; ['Mal', 'Kaylee', 'Jayne']
+nameLength = crew.length()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note the assignment operator used rather than the left shift on the second line there.</p>
+</div>
+
+    <a class="read-more" href="/2012/08/29/derived-values-in-spock-where-tables/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2012-02-15T06:46:00">Feb 15 2012</time>
+      <h2><a href="/2012/02/15/spock-killer-features-the-old-method/">Spock Killer Features: The “old” method</a></h2>
+    </header>
+    <div class="paragraph">
+<p>I use Spock almost exclusively to test Groovy or Java code these days. It&#8217;s got some fantastic features that other test frameworks don&#8217;t have. Some of them aren&#8217;t that well known or documented, though.</p>
+</div>
+<div class="paragraph">
+<p>The <code>old</code> method is possibly my favourite Spock feature. It&#8217;s a simple thing but really enhances test legibility. It&#8217;s also great for wowing developers new to Spock because it looks like black magic at first glance.</p>
+</div>
+
+    <a class="read-more" href="/2012/02/15/spock-killer-features-the-old-method/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2009-11-21T14:17:00">Nov 21 2009</time>
+      <h2><a href="/2009/11/21/why-do-strings-behave-like-a-collection/">Why do Strings behave like a Collection?</a></h2>
+    </header>
+    <div class="paragraph">
+<p>Mostly I love Groovy but every now and then some behaviour gets on my nerves. For example, why do the iterator methods on String behave as though it was a collections of characters rather than an Object? If I define a method with a dynamic-typed parameter like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">void printNames(names) {
+    names.each {
+        println it
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Passing a collection of Strings results in each String being printed. Passing a single String results in each character of the String being printed separately. I would have thought that the Object behaviour was a more appropriate default here (iterators on Object are called once passing the object itself). After all the <code>.chars</code> property is available if you really want to represent a String as a collection of characters.</p>
+</div>
+
+    <a class="read-more" href="/2009/11/21/why-do-strings-behave-like-a-collection/">Read more…</a>
+  </article>
+  <hr>
+
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>

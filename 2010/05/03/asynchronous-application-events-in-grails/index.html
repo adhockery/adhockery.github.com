@@ -1,0 +1,163 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery - Asynchronous application events in Grails</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+        <article>
+    <header>
+      <time datetime="2010-05-03T21:59:00">May  3 2010</time>
+      <h1>Asynchronous application events in Grails</h1>
+    </header>
+    <div class="paragraph">
+<p>On the project for my current client we&#8217;ve been using JMS in a rather naïve way for some time now. We&#8217;ve also experienced a certain amount of pain getting JMS and ActiveMQ configured correctly. However, all we&#8217;re really using JMS for is asynchronous event broadcasting. Essentially we have a handful actions such as flushing hardware caches and notifying external systems that take place when a document changes. We don&#8217;t want these things blocking the request thread when users save data.</p>
+</div>
+
+<div class="paragraph">
+<p>After wrestling with JMS one too many times we decided to take a look at Spring&#8217;s event framework instead. It turns out it&#8217;s extremely easy to use for these kinds of asynchronous notifications in a Grails application.</p>
+</div>
+<div class="paragraph">
+<p>Essentially any artefact can publish an event to the Spring application context. A simple publishing service can be implemented like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">import org.springframework.context.*
+
+class EventService implements ApplicationContextAware {
+
+    boolean transactional = false
+
+    ApplicationContext applicationContext
+
+    void publish(ApplicationEvent event) {
+        println "Raising event '$event' in thread ${Thread.currentThread().id}"
+        applicationContext.publishEvent(event)
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>So a Grails domain class can then do something like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">def eventService
+
+void afterInsert() {
+    eventService.publish(new DocumentEvent(this, "created"))
+}
+
+void afterUpdate() {
+    eventService.publish(new DocumentEvent(this, "updated"))
+}
+
+void afterDelete() {
+    eventService.publish(new DocumentEvent(this, "deleted"))
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Grails services make ideal <a href="http://static.springsource.org/spring/docs/3.0.x/javadoc-api/org/springframework/context/ApplicationListener.html"><em>ApplicationListener</em></a> implementations. As services are singleton Spring beans they are automatically discovered by Spring&#8217;s event system without any configuration required. For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">import org.springframework.context.*
+
+class EventLoggingService implements ApplicationListener&lt;DocumentEvent&gt; {
+
+    boolean transactional = false
+
+    void onApplicationEvent(DocumentEvent event) {
+        println "Recieved event '$event' in thread ${Thread.currentThread().id}"
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Of course, multiple listeners can respond to the same events.</p>
+</div>
+<div class="paragraph">
+<p>If you run the code you will notice that by default Spring&#8217;s event system processes events synchronously. The <em>EventService</em> and <em>ApplicationListener</em> will print out the same Thread <em>id</em>. This is not ideal if any of the listener implementations might take any time. Luckily it&#8217;s easy to override the <a href="http://static.springsource.org/spring/docs/3.0.x/javadoc-api/org/springframework/context/event/ApplicationEventMulticaster.html"><em>ApplicationEventMulticaster</em></a> bean in <code>resources.groovy</code> so that it uses a thread pool:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">import java.util.concurrent.*
+import org.springframework.context.event.*
+
+beans = {
+    applicationEventMulticaster(SimpleApplicationEventMulticaster) {
+        taskExecutor = Executors.newCachedThreadPool()
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Running the code again will show the event being published in one thread and consumed in another. If you have multiple listeners each one will be executed in its own thread.</p>
+</div>
+<div class="paragraph">
+<p>Oddly, I would have thought it was possible to override the <em>taskExecutor</em> property of the default <em>ApplicationEventMulticaster</em> in <code>Config.groovy</code> using Grails' <a href="http://grails.org/doc/latest/guide/14.%20Grails%20and%20Spring.html#14.6%20Property%20Override%20Configuration">property override configuration</a>, but I found the following didn&#8217;t work:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">beans {
+    applicationEventMulticaster {
+        taskExecutor = Executors.newCachedThreadPool()
+    }
+}</code></pre>
+</div>
+</div>
+    <footer>
+      <ul class="tag-list">
+          <li><a href="/tags/asynchronous/">asynchronous</a></li>
+          <li><a href="/tags/events/">events</a></li>
+          <li><a href="/tags/spring/">spring</a></li>
+      </ul>
+    </footer>
+  </article>
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>
+
+<div id="disqus_thread"></div>
+            <script type="text/javascript">
+            //<![CDATA[
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//adhockery.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            //]]>
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </script>

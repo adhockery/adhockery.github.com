@@ -1,0 +1,148 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery - Styling with HTML5 form validation</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+        <article>
+    <header>
+      <time datetime="2011-03-25T00:10:00">Mar 25 2011</time>
+      <h1>Styling with HTML5 form validation</h1>
+    </header>
+    <div class="paragraph">
+<p>HTML5 specifies a number of enhancements to form inputs that are gradually being implemented by newer browsers. Among the enhancements is support for some level of automatic form validation. When inputs have invalid values the browser may refuse to submit the form. Currently Opera, Safari, Chrome and Firefox 4 have some support for this. IE8 does not. I haven&#8217;t experimented with IE9 yet.</p>
+</div>
+
+<div class="paragraph">
+<p>Let&#8217;s look at <a href="http://inputvalidation.s3-website-us-east-1.amazonaws.com/">an example</a>. A simple registration form has inputs for the <em>name</em>, <em>email</em> and <em>website</em> of a prospective user. Of these <em>name</em> and <em>email</em> are required. The input elements are as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="markup language-markup">&lt;input type="text" name="name" required&gt;
+&lt;input type="email" name="email" required&gt;
+&lt;input type="url" name="website"&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>required</code> attribute is new in HTML5 as are the input types <code>email</code> and <code>url</code>. All of these have implications for validation. Additionally the new input types, whilst they appear just like regular text inputs in desktop browsers are great for mobile users as they are given optimised virtual keyboard layouts.</p>
+</div>
+<div class="paragraph">
+<p>CSS3 has <code>:invalid</code>, <code>:required</code> and <code>:optional</code> pseudo-classes that are supported by current versions of Firefox, Chrome, Safari and Opera. Some browsers also refuse to submit the form if a <code>required</code> field is not filled in or invalid values are entered in <code>url</code> or <code>email</code> type fields. Obviously without appropriate feedback this could be a pretty disastrous user experience and thankfully even the Webkit browsers which until recently were blocking form submission without feedback are now handling things better.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><em>Firefox 4</em>, <em>Opera 11.01</em> and <em>Chrome 10.0.648.204</em> all block form submission if there is an empty <code>required</code> field or invalid value and display a message next to the first such field.</p>
+</li>
+<li>
+<p><em>Safari 5.0.4</em> will apply <code>:invalid</code> CSS rules but allows the form to be submitted.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Applying styles to invalid fields is pretty easy. For example to highlight invalid fields with a red border and background:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="css language-css">input {
+    border: 1px solid #ccc;
+}
+
+input:invalid {
+    background: #fff3f3;
+    border-color: #f66;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can also combine the <code>:invalid</code> pseudo-class in combination with others. For example to highlight focused fields with a fancy CSS3 box-shadow:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="css language-css">input:focus {
+    border-color: #99f;
+    outline: none;
+     -moz-box-shadow: 0 0 0.25em #99f;
+  -webkit-box-shadow: 0 0 0.25em #99f;
+          box-shadow: 0 0 0.25em #99f;
+}
+
+input:focus:invalid {
+     -moz-box-shadow: 0 0 0.25em #f66;
+  -webkit-box-shadow: 0 0 0.25em #f66;
+          box-shadow: 0 0 0.25em #f66;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>It&#8217;s worth noting that Firefox 4 automatically adds a red box-shadow to invalid fields (and not just focused ones). To turn it off you can specify:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="css language-css">input:invalid {
+    -moz-box-shadow: none;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Of course, the browsers that display messages when they refuse to submit a form do so with different text and different visual effects so creating a consistent cross-browser look and feel with both client and server side validation messages is going to be an interesting challenge.</p>
+</div>
+    <footer>
+      <ul class="tag-list">
+          <li><a href="/tags/css/">css</a></li>
+          <li><a href="/tags/opera/">opera</a></li>
+          <li><a href="/tags/chrome/">chrome</a></li>
+          <li><a href="/tags/html5/">html5</a></li>
+          <li><a href="/tags/safari/">safari</a></li>
+          <li><a href="/tags/firefox/">firefox</a></li>
+          <li><a href="/tags/webkit/">webkit</a></li>
+      </ul>
+    </footer>
+  </article>
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>
+
+<div id="disqus_thread"></div>
+            <script type="text/javascript">
+            //<![CDATA[
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//adhockery.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            //]]>
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </script>

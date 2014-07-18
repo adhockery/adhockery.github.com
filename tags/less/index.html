@@ -1,0 +1,114 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+      <header>
+  <h1>Articles tagged <em>‘less’</em></h1>
+</header>
+
+  <article>
+    <header>
+      <time datetime="2013-07-09T14:28:00">Jul  9 2013</time>
+      <h2><a href="/2013/07/09/semantic-color-names-in-less-and-sass-stylesheets/">Semantic color names in LESS and Sass stylesheets</a></h2>
+    </header>
+    <div class="paragraph">
+<p>Most people using Sass or LESS will define variables for the palette of colors in their page. Something like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="scss language-scss">$blackish: #231f20;
+$purple: #561e31;
+$pink: #da2770;
+$off-white: #efefef;
+
+.header {
+    background-color: $blackish;
+    color: $off-white;
+}
+
+a {
+    color: $purple;
+    &amp;:hover, &amp;:active {
+        color: $pink;
+    }
+}
+
+blockquote {
+    background-color: $blackish;
+    color: $purple;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This is good as far as it goes. Tweaking colors in the page is pretty easy as they only have to be changed in the variable definition.</p>
+</div>
+<div class="paragraph">
+<p>That said, I think there are a couple of problems here.</p>
+</div>
+
+    <a class="read-more" href="/2013/07/09/semantic-color-names-in-less-and-sass-stylesheets/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2012-10-16T13:14:00">Oct 16 2012</time>
+      <h2><a href="/2012/10/16/less-vs-sass-variable-scopes/">LESS vs SASS variable scopes</a></h2>
+    </header>
+    <div class="paragraph">
+<p>Google for something like <em>"LESS vs SASS"</em> and you will find the general consensus seems to be that SASS comes out ahead. Take a look at <a href="http://wrangl.com/sass-v-less">this summary</a>, for example.</p>
+</div>
+<div class="paragraph">
+<p>I&#8217;m not going to argue that in some respects SASS isn&#8217;t more powerful but there&#8217;s one particular thing - variable scoping - that I think LESS handles better.</p>
+</div>
+
+    <a class="read-more" href="/2012/10/16/less-vs-sass-variable-scopes/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2012-10-15T12:56:00">Oct 15 2012</time>
+      <h2><a href="/2012/10/15/less-with-modernizr-and-media-queries/">LESS with Modernizr and media queries</a></h2>
+    </header>
+    <div class="paragraph">
+<p>One of the main advantages of <a href="http://lesscss.org/">LESS</a> is <a href="http://lesscss.org/#-nested-rules">nesting</a> rules for components in a structure that mirrors the DOM. However, when using <a href="http://modernizr.com/">Modernizr</a> you create override rules based on classes present on the root <code>html</code> tag. It would be nice to declare those override rules alongside the other rules for the same components. The same concern applies when using media queries. Luckily, there <em>is</em> a way to do this.</p>
+</div>
+
+    <a class="read-more" href="/2012/10/15/less-with-modernizr-and-media-queries/">Read more…</a>
+  </article>
+  <hr>
+
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>

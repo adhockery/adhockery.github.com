@@ -1,0 +1,178 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery - Querying By Association With Grails Criteria</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+        <article>
+    <header>
+      <time datetime="2009-04-01T12:46:00">Apr  1 2009</time>
+      <h1>Querying By Association With Grails Criteria</h1>
+    </header>
+    <div class="paragraph">
+<p>A common requirement is to select all instances of a domain class where one of its many-to-many associations contains a particular instance of another domain class. Consider these domain classes where a <code>Ship</code> has a crew composed of <code>Pirate`s and any particular `Pirate</code> can be a part of the crew of several <code>Ship</code>s:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">class Ship {
+   static hasMany = [crew: CrewMember]
+   String name
+}
+
+class CrewMember {
+   static belongsTo = [ship: Ship]
+   Pirate pirate
+}
+
+class Pirate {
+   String name
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>How can we use a criteria query to find all the <code>Ship</code> instances where a particular <code>Pirate</code> is a member of the crew?</p>
+</div>
+
+<div class="paragraph">
+<p>You might think it&#8217;s pretty simple, surely:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">Ship.withCriteria {
+   crew {
+       eq('pirate', blackbeard)
+   }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>However, this has a curious side-effect. For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">Ship.withSession {session -&gt;
+   blackbeard = new Pirate(name: 'Blackbeard')
+   jack = new Pirate(name: 'Calico Jack')
+   bart = new Pirate(name: 'Black Bart')
+   [blackbeard, jack, bart]*.save()
+
+   def ship1 = new Ship(name: "Queen Anne's Revenge")
+   ship1.addToCrew new CrewMember(pirate: blackbeard)
+   ship1.addToCrew new CrewMember(pirate: jack)
+
+   def ship2 = new Ship(name: "Royal Fortune")
+   ship2.addToCrew new CrewMember(pirate: blackbeard)
+   ship2.addToCrew new CrewMember(pirate: bart)
+
+   def ship3 = new Ship(name: "The Treasure")
+   ship3.addToCrew new CrewMember(pirate: jack)
+   ship3.addToCrew new CrewMember(pirate: bart)
+
+   [ship1, ship2, ship3]*.save()
+
+   session.flush()
+   session.clear()
+}
+
+def blackbeardsShips = Ship.withCriteria {
+   crew {
+       eq('pirate', blackbeard)
+   }
+}
+blackbeardsShips.each {
+   println "$it.name: ${it.crew.pirate.name.join(', ')}"
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You might expect the output to be:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Queen Anne's Revenge: Blackbeard, Calico Jack
+Royal Fortune: Blackbeard, Black Bart</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>but it is actually:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Queen Anne's Revenge: Blackbeard
+Royal Fortune: Blackbeard</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The criteria query has restricted the content of the associations to only the ones matching the <code>eq('pirate', blackbeard)</code> criterion. This is quite a problem as it may well not be immediately obvious that it&#8217;s happened and even using <code>ships*.refresh()</code> (which would be a horrible hack, especially if we were likely to get more than a couple of results) doesn&#8217;t seem to restore the missing entries. I don&#8217;t think there <em>is</em> any criterion that does a <em>contains</em> type match for a persistent collection. My guess is this problem isn&#8217;t a Grails thing but a Hibernate thing - Grails' <a href="http://grails.org/doc/1.1.x/ref/Domain%20Classes/createCriteria.html"><code>HibernateCriteriaBuilder</code></a> is a very thin layer over Hibernate itself.</p>
+</div>
+<div class="paragraph">
+<p>In <em>this</em> example there is an alternative as the association is bi-directional. We can query from the other side of the association:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">def blackbeardsShips = CrewMember.withCriteria {
+   projections {
+       property('ship')
+   }
+   eq('pirate', blackbeard)
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If the association wasn&#8217;t bidirectional this wouldn&#8217;t be possible and we&#8217;d probably have to resort to using HQL to make the query exhibit the correct behaviour.</p>
+</div>
+    <footer>
+      <ul class="tag-list">
+          <li><a href="/tags/criteria-queries/">criteria queries</a></li>
+          <li><a href="/tags/gorm/">gorm</a></li>
+          <li><a href="/tags/hibernate/">hibernate</a></li>
+      </ul>
+    </footer>
+  </article>
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>
+
+<div id="disqus_thread"></div>
+            <script type="text/javascript">
+            //<![CDATA[
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//adhockery.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            //]]>
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </script>

@@ -1,0 +1,169 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery - Testing with embedded Vert.x</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+        <article>
+    <header>
+      <time datetime="2012-05-09T00:47:00">May  9 2012</time>
+      <h1>Testing with embedded Vert.x</h1>
+    </header>
+    <div class="paragraph">
+<p>I blogged recently about <a href="http://blog.freeside.co/post/41774661851/testing-callbacks-with-spock-mocks">using Spock to test APIs that use callbacks</a>. The post came out of some work I&#8217;ve been doing with <a href="http://vertx.io/">Vert.x</a>. Although the tests I wrote worked, I found them rather mock-heavy and felt I wasn&#8217;t using the Vert.x API as idiomatically as I could have been.</p>
+</div>
+
+<div class="paragraph">
+<p>Next I tried <a href="http://vertx.io/manual.html#vertx-embedded">creating an embedded <code>Vertx</code> instance</a> in my test and sending messages to my component over the real event bus. This is surprisingly easy and worked well.</p>
+</div>
+<div class="paragraph">
+<p>The embedded API doesn&#8217;t allow you to deploy <em>verticles</em> or start <a href="http://vertx.io/manual.html#busmods">busmods</a> as they are intended to run in isolated classloaders. You <em>can</em> use the event bus, though.</p>
+</div>
+<div class="paragraph">
+<p>For example consider the following component that handles event bus messages and looks up documents using Vert.x&#8217;s <a href="http://vertx.io/mods_manual.html#mongodb-persistor">Mongo DB persistor</a>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">class MyComponent {
+    EventBus eventBus
+
+    void read(Message message) {
+        eventBus.send('mongo.persistor', [action: 'find-one', matcher: [id: message.body.id]]) { reply -&gt;
+            if (reply.body.status == 'ok') {
+                if (reply.body.results) message.reply status: 'found', title: reply.body.results[0].title
+                else message.reply status: 'not-found'
+            } else {
+                message.reply status: 'error', message: 'o noes something went wrong'
+            }
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To test this first I initialized the Vert.x instance and registered my component as a handler on the event bus. I&#8217;m waiting until Vert.x calls back to indicate that the handler is registered successfully then storing the handler&#8217;s <em>id</em> so that I can easily clean it up after the test:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">@Shared def vertx = Vertx.newVertx()
+def component = new MyComponent(eventBus: vertx.eventBus)
+def handlerIds = new Stack()
+
+void setup() {
+    registerHandler 'my.component', component.&amp;read
+}
+
+private void registerHandler(String address, Closure handler) {
+    def readyLatch = new CountDownLatch(1)
+    handlerIds &lt;&lt; vertx.eventBus.registerHandler(address, handler) {
+        readyLatch.countDown()
+    }
+    assert readyLatch.await(1, SECONDS)
+}
+
+void cleanup() {
+    while (!handlerIds.empty()) {
+        vertx.eventBus.unregisterSimpleHandler handlerIds.pop()
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Vert.x&#8217;s Groovy API uses closures for all handlers on the event bus so I&#8217;ve used <a href="http://mrhaki.blogspot.co.uk/2009/08/groovy-goodness-turn-methods-into.html">Groovy&#8217;s <code>.&amp;</code> operator</a> to turn the method on my component into a closure.</p>
+</div>
+<div class="paragraph">
+<p>Then I added a <a href="https://code.google.com/p/spock/wiki/Interactions">Spock Mock</a> to represent the Mongo DB persistor that my component will send messages to. This also needs to be registered on the event bus:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">def persistor = Mock(Handler)
+
+void setup() {
+    // ...
+    registerHandler 'mongo.persistor', persistor.&amp;handle
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Finally, a feature method to test what happens when the requested document does not exist in the Mongo DB datastore:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">void 'read calls back with not-found status if there is nothing in the database'() {
+    given:
+    persistor.handle(_) &gt;&gt; { Message message -&gt;
+        message.reply status: 'ok', results: []
+    }
+
+    and:
+    def reply = new BlockingVariable&lt;Message&gt;()
+
+    when:
+    vertx.eventBus.send 'my.component', [id: '1234'], reply.&amp;set
+
+    then:
+    reply.get().body.status == 'not-found'
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The mock persistor executes its own callback. Realistically I&#8217;d want to use a better matcher for the persistor mock there, but I&#8217;ve used a wildcard for simplicity in the example. Note that the <code>reply</code> spy is an instance of <code>spock.util.concurrent.BlockingVariable</code> as I need to ensure the assertion blocks until the callback is actually executed.</p>
+</div>
+<div class="paragraph">
+<p>This is fine for scenarios where I&#8217;m validating the component&#8217;s interaction with the persistor. For more complex tests for things like data integrity I&#8217;m going to need to figure out a way to wire up real collaborators like the Mongo persistor rather than using a mock. If I figure out a neat way of doing so I&#8217;ll post again.</p>
+</div>
+    <footer>
+      <ul class="tag-list">
+          <li><a href="/tags/vertx/">vertx</a></li>
+          <li><a href="/tags/testing/">testing</a></li>
+          <li><a href="/tags/spock/">spock</a></li>
+      </ul>
+    </footer>
+  </article>
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>
+
+<div id="disqus_thread"></div>
+            <script type="text/javascript">
+            //<![CDATA[
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//adhockery.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            //]]>
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </script>

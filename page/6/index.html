@@ -1,0 +1,196 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+        <article>
+    <header>
+      <time datetime="2011-02-06T15:02:00">Feb  6 2011</time>
+      <h2><a href="/2011/02/06/running-geb-tests-from-your-ide/">Running Geb tests from your IDE</a></h2>
+    </header>
+    <div class="paragraph">
+<p>A frequent complaint about functional testing in Grails is that the start up / shut down cycle time of the app makes prototyping a functional test prohibitive. There has been some recent progress in this are with Luke Daley&#8217;s <a href="http://www.grails.org/plugin/functional-test-development">Functional test development plugin</a> but it would be really nice to be able to just run functional tests from inside your IDE in the same way as a similar unit test.</p>
+</div>
+
+    <a class="read-more" href="/2011/02/06/running-geb-tests-from-your-ide/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2010-11-30T13:47:00">Nov 30 2010</time>
+      <h2><a href="/2010/11/30/encapsulating-page-state-and-actions-in-geb/">Encapsulating page state and actions in Geb</a></h2>
+    </header>
+    <div class="paragraph">
+<p>Geb <em>Page</em> and <em>Module</em> classes are just regular Groovy classes. In addition to the <em>content</em> DSL you can declare methods just as you would in any other class. Those methods can use content properties directly. This is really useful for encapsulating state and actions in a reusable way.</p>
+</div>
+<div class="paragraph">
+<p>In this post I want to run through a couple of simple examples of re-usable <em>Module</em> classes that are enhanced with methods. Although the examples deal with <em>Module</em> classes everything here is equally applicable to <em>Page</em> classes.</p>
+</div>
+
+    <a class="read-more" href="/2010/11/30/encapsulating-page-state-and-actions-in-geb/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2010-11-26T00:17:00">Nov 26 2010</time>
+      <h2><a href="/2010/11/26/modelling-repeating-structures-with-geb-page-objects/">Modelling repeating structures with Geb page objects</a></h2>
+    </header>
+    <div class="paragraph">
+<p><a href="http://geb.codehaus.org/">Geb</a> is the hot new thing in Grails functional testing. One of its most powerful features is the concise DSL for defining page objects. The reasons for using page objects are <a href="http://code.google.com/p/selenium/wiki/PageObjects">well</a> <a href="http://robfletcher.github.com/grails-selenium-rc/docs/manual/guide/4.%20Using%20Page%20Objects.html">enumerated</a> <a href="http://geb.codehaus.org/manual/latest/pages.html#the_page_object_pattern_why">elsewhere</a> but the basic point is to allow your tests to interact with pages in a manner agnostic of the detail of their structure. This is both practical (you can change markup structure without having to fix numerous tests that only fail because they were tightly coupled to that structure) and aesthetic (your tests read more like a user&#8217;s interaction with the page - the <em>what</em> rather than the <em>how</em>).</p>
+</div>
+<div class="paragraph">
+<p>I want to put together a few short blog posts dealing with patterns that I find useful for defining page objects and modules in Geb. As I go I&#8217;ll keep adding to a very simple Grails project showing working examples which is <a href="https://github.com/robfletcher/geb-examples/">available on GitHub</a>.</p>
+</div>
+<div class="paragraph">
+<p>In this post I want to talk about repeating data structures such as lists and tables and how to model them effectively.</p>
+</div>
+
+    <a class="read-more" href="/2010/11/26/modelling-repeating-structures-with-geb-page-objects/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2010-09-24T13:48:00">Sep 24 2010</time>
+      <h2><a href="/2010/09/24/stubbing-access-to-the-g-message-tag-in-unit-tests/">Stubbing access to the g:message tag in unit tests</a></h2>
+    </header>
+    <div class="paragraph">
+<p>Grails controllers and tag libs can access any tag as though it were a method. The most common use for this is probably accessing i18n messages via the <code>[g:message][1]</code> tag. However, because tag access is magic wired up by Grails it&#8217;s not available in unit tests without some effort.</p>
+</div>
+<div class="paragraph">
+<p>This is a perennial nuisance. Not exactly difficult to solve and yet something I find myself solving over and over in different tests and different projects.</p>
+</div>
+<div class="paragraph">
+<p>I&#8217;ve come up with what I think is a pretty good and re-usable solution. It allows you to specify messages if you want to, or just use the message code if it&#8217;s not something you care about in a particular test. As an aside, at a unit test level, I think testing that the correct message <em>code</em> is being used is probably the right thing to do; I&#8217;d leave testing actual message text to end-to-end tests.</p>
+</div>
+
+    <a class="read-more" href="/2010/09/24/stubbing-access-to-the-g-message-tag-in-unit-tests/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2010-08-12T22:46:00">Aug 12 2010</time>
+      <h2><a href="/2010/08/12/auto-generate-spock-specs-for-grails-artifacts/">Auto-generate Spock specs for Grails artifacts</a></h2>
+    </header>
+    <div class="paragraph">
+<p>When creating artifacts such as domain classes, controllers and tag libs Grails generates a <em>JUnit</em> test case. If, like me, you&#8217;re digging writing specifications with <a href="http://spockframework.org/">Spock</a> you&#8217;d probably rather have Grails generate one of those. The last thing I want is to manually transform every generated test case into a specification for every artifact I create.</p>
+</div>
+
+    <a class="read-more" href="/2010/08/12/auto-generate-spock-specs-for-grails-artifacts/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2010-07-10T14:30:00">Jul 10 2010</time>
+      <h2><a href="/2010/07/10/rendering-grails-joda-time-date-inputs-cross-browser/">Rendering Grails Joda-Time date inputs cross browser with HTML5, jQuery and Modernizr</a></h2>
+    </header>
+    <div class="paragraph">
+<p>Yesterday I released a new version of the Grails <a href="http://grails.org/plugin/joda-time">Joda Time plugin</a> that includes support for the various new <a href="http://diveintohtml5.org/forms.html#type-date">date and time input types</a> in the HTML5 standard. Right now only <a href="http://opera.com">Opera</a> supports these types with proper date-picker type controls, the other browsers just render them as text inputs. However this doesn&#8217;t mean you can&#8217;t or shouldn&#8217;t start using them right away. There&#8217;s a very handy JavaScript library called <a href="http://www.modernizr.com/">Modernizr</a> that you can use to detect the features supported by the client&#8217;s browser and render alternatives using script. In this post I&#8217;m going to walk through how to combine the Joda-Time plugin, Modernizr and the <a href="http://jqueryui.com/demos/datepicker/">jQuery datepicker</a> to render an HTML5 <em>date</em> input field that will bind to a <em>LocalDate</em> property on a domain object.</p>
+</div>
+
+    <a class="read-more" href="/2010/07/10/rendering-grails-joda-time-date-inputs-cross-browser/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2010-06-29T16:27:00">Jun 29 2010</time>
+      <h2><a href="/2010/06/29/acyclic-relationship-validation-in-grails/">Acyclic relationship validation in Grails</a></h2>
+    </header>
+    <div class="paragraph">
+<p>A common domain class use-case is for a self-referential relationship that must not be circular (a <a href="http://en.wikipedia.org/wiki/Directed_acyclic_graph">directed acyclic graph</a>). For example, a <em>Person</em> class may have a <em>parent</em> property that is a many-to-one relationship with another <em>Person</em> instance. However a given <em>Person</em> cannot be his own <em>parent</em> or ancestor.</p>
+</div>
+
+    <a class="read-more" href="/2010/06/29/acyclic-relationship-validation-in-grails/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2010-06-24T06:57:00">Jun 24 2010</time>
+      <h2><a href="/2010/06/24/defaulting-joda-time-hibernate-types-with-grails/">Defaulting Joda Time Hibernate Types with Grails</a></h2>
+    </header>
+    <div class="paragraph">
+<p>Grails 1.2 added the ability to define default Hibernate mappings that apply to all GORM classes. It turns out this is incredibly useful if you&#8217;re using Joda-Time types instead of <em>java.util.Date</em> in your domain objects. Previously you had to specify the Hibernate user type for every single field, like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">import org.joda.time.*
+import org.joda.time.contrib.hibernate.*
+
+DateTime dateCreated
+DateTime lastUpdated
+LocalDate birthday
+
+static mapping = {
+    dateCreated type: PersistentDateTime
+    lastUpdated type: PersistentDateTime
+    birthday type: PersistentLocalDate
+}</code></pre>
+</div>
+</div>
+
+    <a class="read-more" href="/2010/06/24/defaulting-joda-time-hibernate-types-with-grails/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2010-06-15T14:18:00">Jun 15 2010</time>
+      <h2><a href="/2010/06/15/export-selenium-ide-scripts-for-grails/">Export Selenium IDE scripts for Grails</a></h2>
+    </header>
+    <div class="paragraph">
+<p>Thanks to the <a href="http://adam.goucher.ca/?p=1352">documentation</a> provided on <a href="http://adam.goucher.ca/">Adam Goucher&#8217;s blog</a> I&#8217;ve created a simple Firefox plugin that extends the <a href="http://seleniumhq.org/projects/ide/">Selenium IDE</a> and adds formatters that allow you to export a script as a <a href="http://robfletcher.github.com/grails-selenium-rc/docs/manual/index.html">Grails Selenium RC</a> test case. You have the option of JUnit 3 (extends <em>GroovyTestCase</em>, uses <em>assertEquals</em>) or JUnit 4 (doesn&#8217;t extend anything, uses annotations and <em>assertThat</em>) formats.</p>
+</div>
+
+    <a class="read-more" href="/2010/06/15/export-selenium-ide-scripts-for-grails/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2010-05-28T13:27:00">May 28 2010</time>
+      <h2><a href="/2010/05/28/grails-spring-events-plugin/">Grails Spring Events Plugin</a></h2>
+    </header>
+    <div class="paragraph">
+<p>Following on from <a href="http://blog.freeside.co/post/42902948889/asynchronous-application-events-in-grails">my previous post</a> I&#8217;ve developed a Grails plugin that packages the asynchronous events behaviour up and adds some extra useful functionality.</p>
+</div>
+
+    <a class="read-more" href="/2010/05/28/grails-spring-events-plugin/">Read more…</a>
+  </article>
+  <hr>
+
+  <nav class="pagination">
+      <a rel="prev" href="/page/5/">Previous page</a>
+    <span>Page 6 of 11</span>
+      <a rel="next" href="/page/7/">Next page</a>
+  </nav>
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>

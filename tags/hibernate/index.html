@@ -1,0 +1,163 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+      <header>
+  <h1>Articles tagged <em>‘hibernate’</em></h1>
+</header>
+
+  <article>
+    <header>
+      <time datetime="2009-07-10T09:02:00">Jul 10 2009</time>
+      <h2><a href="/2009/07/10/auditing-data-with-the-acegi-plugin-and-grails-upgrade/">Auditing data with the Acegi plugin and Grails upgrade pain</a></h2>
+    </header>
+    <div class="paragraph">
+<p>I&#8217;m in the middle of trying to upgrade our app (again). We&#8217;re running on Grails 1.1 now and I&#8217;m attempting to get us to 1.1.1 and from there to 1.2-M1. As Marc Palmer <a href="http://www.anyware.co.uk/2005/2009/07/03/grails-12m1-and-why-you-need-to-download-it-now/">points out</a> the more people using it the more likely it is that 1.2 final will be rock solid.</p>
+</div>
+
+    <a class="read-more" href="/2009/07/10/auditing-data-with-the-acegi-plugin-and-grails-upgrade/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2009-06-13T06:25:00">Jun 13 2009</time>
+      <h2><a href="/2009/06/13/querying-by-association-redux/">Querying by Association Redux</a></h2>
+    </header>
+    <div class="paragraph">
+<p>A couple of months back I <a href="http://blog.freeside.co/post/42902379524/querying-by-association-with-grails-criteria">posted</a> about the problems with criteria queries where you want results with a collection property that <em>contains</em> some value.</p>
+</div>
+<div class="paragraph">
+<p>Last night I was reading through my new copy of <a href="http://blogs.bytecode.com.au/glen/">Glen Smith</a> and Peter Ledbrook&#8217;s <a href="http://www.amazon.co.uk/Grails-Action-Glen-Smith/dp/1933988932">Grails In Action</a> and my eye was caught by a particular example where they use aliases in a criteria query. Sure enough a quick test this morning confirms that this is the solution to the problem.</p>
+</div>
+
+    <a class="read-more" href="/2009/06/13/querying-by-association-redux/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2009-04-28T14:55:00">Apr 28 2009</time>
+      <h2><a href="/2009/04/28/grails-upgrade/">Grails Upgrade</a></h2>
+    </header>
+    <div class="paragraph">
+<p>We&#8217;ve just finished upgrading our sites to <a href="http://www.grails.org/1.1+Release+Notes">Grails 1.1</a> and I thought it would be worth sharing some of the <a href="http://omfg.biz/">fun</a> we had with the process.</p>
+</div>
+
+    <a class="read-more" href="/2009/04/28/grails-upgrade/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2009-04-15T02:49:00">Apr 15 2009</time>
+      <h2><a href="/2009/04/15/when-is-a-pirate-not-a-pirate-when-its-a/">When is a Pirate not a Pirate? When it’s a HibernateProxy</a></h2>
+    </header>
+    <div class="paragraph">
+<p>At work we&#8217;re in the middle of upgrading <a href="http://showbiz.sky.com/">the</a> <a href="http://tv.sky.com/">Sky</a> <a href="http://movies.sky.com/">Entertainment</a> <a href="http://sky1.sky.com/">sites</a> from Grails 1.0.3 to Grails 1.1 - a long blog post will follow with a tale of our woes! One of the changes in Grails 1.1 is that one-to-one domain associations are now lazy by default. This raised an interesting problem for us as it meant we were now sometimes dealing with <a href="http://www.hibernate.org/hib_docs/v3/api/org/hibernate/proxy/HibernateProxy.html">HibernateProxy</a> instances where before we weren&#8217;t.</p>
+</div>
+
+    <a class="read-more" href="/2009/04/15/when-is-a-pirate-not-a-pirate-when-its-a/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2009-04-01T12:46:00">Apr  1 2009</time>
+      <h2><a href="/2009/04/01/querying-by-association-with-grails-criteria/">Querying By Association With Grails Criteria</a></h2>
+    </header>
+    <div class="paragraph">
+<p>A common requirement is to select all instances of a domain class where one of its many-to-many associations contains a particular instance of another domain class. Consider these domain classes where a <code>Ship</code> has a crew composed of <code>Pirate`s and any particular `Pirate</code> can be a part of the crew of several <code>Ship</code>s:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">class Ship {
+   static hasMany = [crew: CrewMember]
+   String name
+}
+
+class CrewMember {
+   static belongsTo = [ship: Ship]
+   Pirate pirate
+}
+
+class Pirate {
+   String name
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>How can we use a criteria query to find all the <code>Ship</code> instances where a particular <code>Pirate</code> is a member of the crew?</p>
+</div>
+
+    <a class="read-more" href="/2009/04/01/querying-by-association-with-grails-criteria/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2009-03-03T13:31:00">Mar  3 2009</time>
+      <h2><a href="/2009/03/03/persisting-datetime-with-zone-information/">Persisting DateTime with zone information</a></h2>
+    </header>
+    <div class="paragraph">
+<p>I was stuck a while ago trying to figure out how to map <a href="http://joda-time.sourceforge.net/contrib/hibernate/apidocs/org/joda/time/contrib/hibernate/PersistentDateTimeTZ.html"><code>PersistentDateTimeTZ</code></a> in a GORM class. It&#8217;s an implementation of Hibernate&#8217;s <a href="http://www.hibernate.org/hib_docs/v3/api/org/hibernate/usertype/UserType.html"><code>UserType</code></a> interface that persists a Joda <a href="http://joda-time.sourceforge.net/api-release/org/joda/time/DateTime.html"><code>DateTime</code></a> value using 2 columns - one for the actual timestamp and one for the time zone. The <code>DateTime</code> class contains time zone information but a SQL timestamp column is time zone agnostic so you can lose data when the value is saved (the same exact problem exists when persisting <code>java.util.Date</code> values).</p>
+</div>
+
+    <a class="read-more" href="/2009/03/03/persisting-datetime-with-zone-information/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2009-03-02T17:28:00">Mar  2 2009</time>
+      <h2><a href="/2009/03/02/why-would-i-ever-want-to-disable-the-l2-cache/">Why would I ever want to disable the L2 cache?</a></h2>
+    </header>
+    <div class="paragraph">
+<p>This question came up when pairing last week. We were going through our code-base adding the <a href="http://grails.org/doc/1.1.x/ref/Database%20Mapping/cache.html">cache directive</a> to a bunch of our domain classes. Grails is all about sensible defaults and it seems slightly odd that the level 2 cache is configured by default in <code>DataSource.groovy</code> but not actually <em>used</em> unless <code>cache(true)</code> is added to the mapping closure in each domain class. I wonder if anyone has any ideas why it might ever be a bad idea to use the L2 cache?</p>
+</div>
+
+    <a class="read-more" href="/2009/03/02/why-would-i-ever-want-to-disable-the-l2-cache/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2009-03-01T11:21:00">Mar  1 2009</time>
+      <h2><a href="/2009/03/01/hibernate-pogos-immutability-and-encapsulation/">Hibernate POGOs, Immutability and Encapsulation</a></h2>
+    </header>
+    <div class="paragraph">
+<p>I had a confusing experience this morning. I&#8217;m working on a simple web based game as a learning exercise.</p>
+</div>
+
+    <a class="read-more" href="/2009/03/01/hibernate-pogos-immutability-and-encapsulation/">Read more…</a>
+  </article>
+  <hr>
+
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>

@@ -1,0 +1,204 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery - Semantic color names in LESS and Sass stylesheets</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+        <article>
+    <header>
+      <time datetime="2013-07-09T14:28:00">Jul  9 2013</time>
+      <h1>Semantic color names in LESS and Sass stylesheets</h1>
+    </header>
+    <div class="paragraph">
+<p>Most people using Sass or LESS will define variables for the palette of colors in their page. Something like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="scss language-scss">$blackish: #231f20;
+$purple: #561e31;
+$pink: #da2770;
+$off-white: #efefef;
+
+.header {
+    background-color: $blackish;
+    color: $off-white;
+}
+
+a {
+    color: $purple;
+    &amp;:hover, &amp;:active {
+        color: $pink;
+    }
+}
+
+blockquote {
+    background-color: $blackish;
+    color: $purple;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This is good as far as it goes. Tweaking colors in the page is pretty easy as they only have to be changed in the variable definition.</p>
+</div>
+<div class="paragraph">
+<p>That said, I think there are a couple of problems here.</p>
+</div>
+
+<div class="paragraph">
+<p>First, if we significantly change the color palette used in the design – or re-use the same components in a page with a different palette – the variable names become misleading. Either we need to change <code>$pink</code> to <code>$light-green</code> everywhere or we&#8217;ll be listening to a lot of expletives from the next poor sap who tries to understand the stylesheet. Second, because we&#8217;ve used variable names descriptive of the colors themselves rather than the role they play it can be confusing trying to consistently apply the palette across the whole stylesheet. Imagine you&#8217;re adding a <code>button</code> that you want to style with colors consistent with the links in the rest of the page; now was that <code>$pink</code> with <code>$purple</code> on hover?</p>
+</div>
+<div class="paragraph">
+<p>A practive I&#8217;ve adopted is to define a palette with variables named like this but then <em>not reference them directly</em> in the actual CSS rules. Instead I create intermediate variables with names reflecting the context in which they are used then reference <em>those</em>. For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="scss language-scss">$blackish: #231f20;
+$purple: #561e31;
+$pink: #da2770;
+$off-white: #efefef;
+
+$header-background: $blackish;
+$header-text: $off-white;
+$link-text: $purple;
+$link-text-active: $pink;
+$quote-background: $blackish;
+$quote-text: $purple;
+
+.header {
+    background-color: $header-background;
+    color: $header-text;
+}
+
+a {
+    color: $link-text;
+    &amp;:hover, &amp;:active {
+        color: $link-text-active;
+    }
+}
+
+blockquote {
+    background-color: $quote-background;
+    color: $quote-text;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>It&#8217;s slightly more verbose but has a number of advantages:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>It&#8217;s easier to understand the role the color plays in the design when you&#8217;re writing new rules.</p>
+</li>
+<li>
+<p>It frees you to swap color combinations around to experiment with applying your palette in different ways.</p>
+</li>
+<li>
+<p>You can refer to the same color with different semantic names in different places (like <code>$link-text</code> and <code>$quote-text</code> in the example) and change easily change those colors independently in each context later.</p>
+</li>
+<li>
+<p>You can define a palette in an external file and load a different one for different pages or sites by changing an <code>@import</code> directive but still re-use common elements of your design – great if you&#8217;re developing white-label sites.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Semantic color names can also be local in scope. Sections of the page that use variations on the palette – such as a sidebar that has a dark background and different link colors can have some variables defined locally (be careful you don&#8217;t overwrite variables from the outer scope when doing this with Sass).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="scss language-scss">$background: $off-white;
+$text: $blackish;
+
+.content {
+    background-color: $background;
+    color: $text;
+}
+
+.sidebar {
+    $sidebar-background: $blackish;
+    $sidebar-text: $pink;
+
+    background-color: $sidebar-background;
+    color: $sidebar-text;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A big practical advantage is when you&#8217;re defining multiple rules to support browsers with different capabilities. For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="scss language-scss">$button-background: $blackish;
+$button-text: $pink;
+
+button {
+    background-color: $button-background;
+    color: $button-text;
+
+    .rgba &amp; {
+        background-color: transparentize($button-background, .25);
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here I&#8217;m using a <em>Modernizr</em>-like rule to progressively-enhance for browsers that support RGBA colors – buttons will have a slightly transparent background. If I was referring to <code>$blackish</code> directly there and later got an updated design where buttons are now purple I&#8217;d have to fix up both variable references. Two references are manageable but those kind of changes can get pretty out-of-hand when you&#8217;re dealing with a reasonably complex design. With my approach to color variables you&#8217;re also much less likely to miss a reference (which would be fun to unpick 6 months later; <em>Why is this one different? Is that a mistake? Is there a reason this button is black when the browser supports HTML5 video but purple otherwise?</em>)</p>
+</div>
+<div class="paragraph">
+<p>This approach does require some discipline but the payoff comes down the line when you have to make design changes or apply components in a different context.</p>
+</div>
+    <footer>
+      <ul class="tag-list">
+          <li><a href="/tags/sass/">sass</a></li>
+          <li><a href="/tags/less/">less</a></li>
+          <li><a href="/tags/dry/">dry</a></li>
+      </ul>
+    </footer>
+  </article>
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>
+
+<div id="disqus_thread"></div>
+            <script type="text/javascript">
+            //<![CDATA[
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//adhockery.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            //]]>
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </script>

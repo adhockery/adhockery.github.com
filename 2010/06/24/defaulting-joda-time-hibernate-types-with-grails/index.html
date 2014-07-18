@@ -1,0 +1,102 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery - Defaulting Joda Time Hibernate Types with Grails</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+        <article>
+    <header>
+      <time datetime="2010-06-24T06:57:00">Jun 24 2010</time>
+      <h1>Defaulting Joda Time Hibernate Types with Grails</h1>
+    </header>
+    <div class="paragraph">
+<p>Grails 1.2 added the ability to define default Hibernate mappings that apply to all GORM classes. It turns out this is incredibly useful if you&#8217;re using Joda-Time types instead of <em>java.util.Date</em> in your domain objects. Previously you had to specify the Hibernate user type for every single field, like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">import org.joda.time.*
+import org.joda.time.contrib.hibernate.*
+
+DateTime dateCreated
+DateTime lastUpdated
+LocalDate birthday
+
+static mapping = {
+    dateCreated type: PersistentDateTime
+    lastUpdated type: PersistentDateTime
+    birthday type: PersistentLocalDate
+}</code></pre>
+</div>
+</div>
+
+<div class="paragraph">
+<p>Now you can just add this to your <em>Config.groovy</em> once and do away with the type mappings in the individual classes:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">grails.gorm.default.mapping = {
+    "user-type" type: PersistentDateTime, class: DateTime
+    "user-type" type: PersistentLocalDate, class: LocalDate
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Correction:</strong> I had previously posted that the method call in the default mapping DSL could be anything, but on further investigation it turns out it has to be <em>user-type</em>. Apologies for the error.</p>
+</div>
+<div class="paragraph">
+<p>I&#8217;ll look into the possibility of the Joda-Time plugin doing this itself to make things even easier.</p>
+</div>
+    <footer>
+      <ul class="tag-list">
+          <li><a href="/tags/joda-time/">joda time</a></li>
+          <li><a href="/tags/gorm/">gorm</a></li>
+      </ul>
+    </footer>
+  </article>
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>
+
+<div id="disqus_thread"></div>
+            <script type="text/javascript">
+            //<![CDATA[
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//adhockery.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            //]]>
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </script>

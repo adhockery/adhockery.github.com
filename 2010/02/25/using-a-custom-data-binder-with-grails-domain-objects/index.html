@@ -1,0 +1,118 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery - Using a custom data binder with Grails domain objects</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+        <article>
+    <header>
+      <time datetime="2010-02-25T13:04:00">Feb 25 2010</time>
+      <h1>Using a custom data binder with Grails domain objects</h1>
+    </header>
+    <div class="paragraph">
+<p>Yesterday I read a <a href="http://blog.armbruster-it.de/2010/01/customizing-grails-data-binding-with-a-groovy-propertyeditor/">post by Stefan Armbruster</a> on how to register a custom data binder to lookup Grails domain objects by any arbitrary property. I wanted to go a little further so that I could not only bind existing domain instances but create new ones as well.</p>
+</div>
+
+<div class="paragraph">
+<p>For example, let&#8217;s say I have <em>Artist</em> and <em>Album</em> domain classes where <em>Artist hasMany Albums</em> and <em>Album belongsTo Artist</em>. <em>Artist</em> has a <em>name</em> property that is unique. On my <em>create album</em> page I want to be able to type in the artist name and have the <em>save</em> action in the controller automatically lookup an existing <em>Artist</em> instance or create a new one if it doesn&#8217;t exist. Doing this I don&#8217;t want to have to add or change anything in the <em>save</em> action itself - I could theoretically use dynamic scaffolding.</p>
+</div>
+<div class="paragraph">
+<p>Adapting Stefan&#8217;s <em>PropertyEditor</em> implementation I created this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">import java.beans.PropertyEditorSupport
+import org.apache.commons.lang.StringUtils
+
+class DomainClassLookupPropertyEditor extends PropertyEditorSupport {
+
+    Class domainClass
+    String property
+
+    String getAsText() {
+        value."$property"
+    }
+
+    void setAsText(String text) {
+        value = domainClass."findBy${StringUtils.capitalize(property)}"(text)
+        if (!value) {
+            value = domainClass.newInstance((property): text)
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The crucial change is the <code>if (!value)</code> block which creates the new instance and populates the relevant property.</p>
+</div>
+<div class="paragraph">
+<p>To make everything work I just need to:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Add the <em>PropertyEditorRegistrar</em> and place it in <code>resources.groovy</code> as per Stefan&#8217;s post.</p>
+</li>
+<li>
+<p>Have a text input or autocompleter with the name <em>"artist"</em> in my <em>create album</em> form.</p>
+</li>
+<li>
+<p>Add <code>artist cascade: "save-update"</code> to the <em>mapping</em> block in <em>Album</em> so that when the <em>Album</em> is saved the new <em>Album</em> will get saved as well.</p>
+</li>
+</ol>
+</div>
+    <footer>
+      <ul class="tag-list">
+          <li><a href="/tags/data-binding/">data binding</a></li>
+          <li><a href="/tags/spring/">spring</a></li>
+          <li><a href="/tags/gorm/">gorm</a></li>
+      </ul>
+    </footer>
+  </article>
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>
+
+<div id="disqus_thread"></div>
+            <script type="text/javascript">
+            //<![CDATA[
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//adhockery.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            //]]>
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </script>

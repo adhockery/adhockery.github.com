@@ -1,0 +1,105 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery - Static analysis and strictness</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+        <article>
+    <header>
+      <time datetime="2014-06-22T08:27:00">Jun 22 2014</time>
+      <h1>Static analysis and strictness</h1>
+    </header>
+    <div class="paragraph">
+<p>Let me be clear – static analysis tools like Checkstyle and Codenarc are useful tools. But…</p>
+</div>
+<div class="paragraph">
+<p>I don&#8217;t think you should have overly strict enforcement. There is a small class of static analysis rules that are unambiguous – you&#8217;re not using that <code>import</code>, that <code>if</code> block doesn&#8217;t have braces – but there is a large class of rules that exist in a grey area. Is that method really unused or is it invoked reflectively somewhere? Yes, generally we should declare constants for magic numbers but is it really necessary for the prime seed of a hash code method?</p>
+</div>
+
+<div class="paragraph">
+<p>I think the only sane thing to do with those kinds of rule is to enforce them as warnings. What are the alternatives?</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Clutter up the code with <code>@SuppressWarning</code> annotations. If you&#8217;re doing this I think you&#8217;ve lost sight of why you&#8217;re using static analysis in the first place. You&#8217;re making the code harder to read in the interests of detecting errors that can be hard to spot in cluttered code? Er… ok.</p>
+</li>
+<li>
+<p>Put file name and line number references in a rule exceptions file. That&#8217;s going to be a nuisance to maintain over time and can easily accumulate a cruft of references to rule violations that no longer exist in the code.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>The counter-argument is that warnings can build up in the report until it&#8217;s hard to see the wood for the trees. Okay, but if you really have <em>that many</em> violations I think you need to reconsider how much you care about or believe in some of those rules. Turn off or change the configuration of rules you disagree with or break as often as not.</p>
+</div>
+<div class="paragraph">
+<p>It&#8217;s not a terrible idea to set a threshold on the number of warnings allowed before the build will fail as a cue to revisit your rule settings.</p>
+</div>
+<div class="paragraph">
+<p>Static analysis is useful but don&#8217;t let it be a straight jacket. Use it as a guide by all means but remember sometimes it&#8217;s wrong and you know better.</p>
+</div>
+<div class="paragraph">
+<p><strong>Edit:</strong> Gus Power <a href="https://twitter.com/guspower/status/480656135696183296">tweeted me a response</a> to this post that I think hits the nail on the head:</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>one of those approaches that easily becomes conformity / police enforcement + noisy vs. personally helpful / useful indication</p>
+</div>
+</blockquote>
+</div>
+<div class="paragraph">
+<p>Static analysis is good when it&#8217;s a tool for helping you write better code. It&#8217;s bad when it&#8217;s a “process”-step you&#8217;re not allowed to disagree with or justify exceptions to or it becomes more of a hinderance than a help.</p>
+</div>
+    <footer>
+      <ul class="tag-list">
+      </ul>
+    </footer>
+  </article>
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>
+
+<div id="disqus_thread"></div>
+            <script type="text/javascript">
+            //<![CDATA[
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//adhockery.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            //]]>
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </script>

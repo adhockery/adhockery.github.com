@@ -1,0 +1,94 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery - Testing Grails Apps With Selenium-RC</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+        <article>
+    <header>
+      <time datetime="2009-09-14T16:00:00">Sep 14 2009</time>
+      <h1>Testing Grails Apps With Selenium-RC</h1>
+    </header>
+    <div class="paragraph">
+<p>I <a href="http://blog.freeside.co/post/42902576958/thoughts-on-testing">mentioned in my last post</a> that I&#8217;d started to think we were going about <a href="http://seleniumhq.org/">Selenium</a> testing all wrong. For years I&#8217;ve been writing Selenium tests using the <a href="http://seleniumhq.org/projects/ide/">Selenium IDE</a>, so the tests are in HTML files. When doing pre-commit testing and on CI the tests are run with the <code>HtmlTestRunner</code>. This technique is fine and well - developing tests with the IDE is fast and they can be easily worked on an re-tested in the IDE until they are correct. However, some things have always bothered me and Adam Goucher&#8217;s thoughts on <a href="http://adam.goucher.ca/?p=1198">the Selenium Value Chain</a> crystallised some of those suspicions.</p>
+</div>
+
+<div class="paragraph">
+<p>So what are the big advantages of using <a href="http://seleniumhq.org/projects/remote-control/">Selenium RC</a> over just the IDE and <code>HtmlTestRunner</code>?</p>
+</div>
+<div class="sect2">
+<h3 id="_test_design">Test design</h3>
+<div class="paragraph">
+<p>Selenium tests written in HTML tend to either become an amorphous blob, not testing one simple thing or proliferate to the point of having hundreds of small test files. With Selenium RC you can write Selenium test classes with multiple test case methods just as you would unit tests. Each test case can be neat, self-contained and share set up with other test cases in the same class. Also by abstracting out common command sequences into utility methods you can start to develop a higher level DSL for testing your application. In HTML tests this can be done by writing extension functions in Javascript but it&#8217;s not as straightforward.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_data_fixtures">Data fixtures</h3>
+<div class="paragraph">
+<p>Data set up is the biggest headache when writing Selenium tests in HTML. You can&#8217;t drop out of <em>selenese</em> and set up a couple of domain objects so you end up either trying to run all your tests against a monolithic data fixture (a Sisyphean task if any of your tests make modifications to the data) or write some sort of URL endpoints that can set up and tear down data. We&#8217;ve done the latter and it&#8217;s resulted in the single most bloated, horrible, misused bit of code in our app. Fixtures get re-used by other tests because they set up approximately appropriate data - until some change requires a change in the fixture and suddenly a bunch of unrelated tests fail. Selenium RC tests don&#8217;t have this problem; you&#8217;re in Groovy-land so you can access domain classes directly and use the invaluable <a href="http://grails.org/plugin/build-test-data">build-test-data plugin</a> to set data up.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_data_verification">Data verification</h3>
+<div class="paragraph">
+<p>I mentioned previously the <a href="http://blog.freeside.co/post/42902576958/thoughts-on-testing#false-moniker">anti-pattern of false moniker testing</a> and HTML based Selenium tests are terrible for this. If you have a test that creates some data, how do you verify it has done it correctly? The only way is to scrape the data on another screen - <em>e.g.</em> a CRUD list or show view. Ugh! With Selenium RC you can read the data from the database with standard Grails domain classes and verify your expectations directly.</p>
+</div>
+<div class="paragraph">
+<p>I started experimenting over the weekend with getting Selenium RC tests written in Groovy to run using <code>grails test-app -functional</code>. It turns out to be really fairly straightforward and I&#8217;ve <a href="http://github.com/robfletcher/grails-selenium-rc">put some alpha code up on GitHub</a>.</p>
+</div>
+</div>
+    <footer>
+      <ul class="tag-list">
+          <li><a href="/tags/selenium/">selenium</a></li>
+          <li><a href="/tags/testing/">testing</a></li>
+          <li><a href="/tags/grails-plugins/">grails plugins</a></li>
+      </ul>
+    </footer>
+  </article>
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>
+
+<div id="disqus_thread"></div>
+            <script type="text/javascript">
+            //<![CDATA[
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//adhockery.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            //]]>
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </script>

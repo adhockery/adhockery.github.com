@@ -1,0 +1,180 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+        <article>
+    <header>
+      <time datetime="2010-01-04T21:22:00">Jan  4 2010</time>
+      <h2><a href="/2010/01/04/upgrading-grails-1-1-1-2/">Upgrading Grails 1.1 -> 1.2</a></h2>
+    </header>
+    <div class="paragraph">
+<p>We&#8217;ve just successfully upgraded our app from Grails 1.1 to <a href="http://www.grails.org/1.2+Release+Notes">1.2</a> and pushed it to our QA environment. I thought I&#8217;d write up some of the issues we encountered in case anyone is bashing their heads against them.</p>
+</div>
+
+    <a class="read-more" href="/2010/01/04/upgrading-grails-1-1-1-2/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2010-01-02T12:23:00">Jan  2 2010</time>
+      <h2><a href="/2010/01/02/selenium-rc-tests-with-a-running-grails-app/">Selenium RC tests with a running Grails app</a></h2>
+    </header>
+    <div class="paragraph">
+<p>I <a href="http://blog.freeside.co/post/42902733548/selenium-rc-tests-with-a-remote-app">posted recently</a> about the new remote mode feature of the <a href="http://grails.org/plugin/selenium-rc">Selenium RC plugin</a>. One thing I forgot to mention is that this feature can also be used to run your Selenium tests interactively against a running app instance. You can start your app as normal using <code>grails run-app</code> then either open a second terminal or background the process (<em>Ctrl-Z</em> in a <em>bash</em> shell) then use <code>grails -Dselenium.remote=true test-app other:selenium _&lt;test name&gt;_</code> to run individual tests without stopping or re-starting the app. With the app running <em>development</em> mode you can effectively test-drive using Selenium tests and Grails' artefact reloading capabilities.</p>
+</div>
+
+    <a class="read-more" href="/2010/01/02/selenium-rc-tests-with-a-running-grails-app/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2010-01-01T14:33:00">Jan  1 2010</time>
+      <h2><a href="/2010/01/01/using-gmock-to-complement-grails-mockdomain/">Using GMock to complement Grails mockDomain</a></h2>
+    </header>
+    <div class="paragraph">
+<p>Since Grails 1.1 we&#8217;ve had pretty good <a href="http://grails.org/doc/latest/guide/single.html#9.%20Testing">unit testing support</a> via <em>GrailsUnitTestCase</em> and its sub-classes. The <em>mockDomain</em> method is particularly useful for simulating the various enhancements Grails adds to domain classes. However, there are some domain class capabilities, such as criteria queries and the new <a href="http://grails.org/doc/latest/ref/Domain%20Classes/namedQueries.html">named queries</a>, that can&#8217;t really be simulated by <em>mockDomain</em>.</p>
+</div>
+
+    <a class="read-more" href="/2010/01/01/using-gmock-to-complement-grails-mockdomain/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2009-12-29T12:18:00">Dec 29 2009</time>
+      <h2><a href="/2009/12/29/selenium-rc-tests-with-a-remote-app/">Selenium RC tests with a remote app</a></h2>
+    </header>
+    <div class="paragraph">
+<p>I&#8217;ve just released a new snapshot of the <a href="http://grails.org/plugin/selenium-rc">Selenium RC plugin</a>. The main new feature is the ability to run your Selenium tests against a running instance of your application instead of having the application start and stop as part of the test phase. A number of people have requested this. It&#8217;s really useful for CI environments where you may want to start the app up on a different server from where the tests are being run.</p>
+</div>
+
+    <a class="read-more" href="/2009/12/29/selenium-rc-tests-with-a-remote-app/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2009-12-12T16:49:00">Dec 12 2009</time>
+      <h2><a href="/2009/12/12/new-springcache-plugin-version/">New Springcache Plugin Version</a></h2>
+    </header>
+    <div class="paragraph">
+<p>After <a href="http://blog.freeside.co/post/42902700224/springcache-plugin-status">saying it might take me a while</a> I got stuck in and rewrote the Springcache plugin from scratch. The new version is up now. The plugin now requires Grails 1.2.0-M3 or greater as it&#8217;s reliant on Spring 3.0.</p>
+</div>
+
+    <a class="read-more" href="/2009/12/12/new-springcache-plugin-version/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2009-11-26T22:56:00">Nov 26 2009</time>
+      <h2><a href="/2009/11/26/springcache-plugin-status/">Springcache Plugin Status</a></h2>
+    </header>
+    <div class="paragraph">
+<p>A couple of people have asked me about the <a href="http://grails.org/plugin/springcache">Springcache plugin</a> and Grails 1.2. Currently the plugin is not compatible with 1.2-M3 and onwards. The reason for this is that the spring-modules-cache library that the plugin depends on is not compatible with Spring 3.0 which is used by the newest versions of Grails. Not only that but the <a href="https://springmodules.dev.java.net/">spring-modules project</a> has been discontinued altogether. There is <a href="http://github.com/astubbs/spring-modules">a fork of it on Github</a> but that doesn&#8217;t look terribly active either. This means that at some point I&#8217;m going to have to sit down and write some code to bring the annotation driven caching inside the plugin itself and drop the spring-modules dependency. However, just to compound things the <a href="http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/ch08s09.html#aop-autoproxy-metadata">Spring documentation on the relevant area</a> hasn&#8217;t been updated yet and still references the classes that have been removed from the API which is what&#8217;s causing the incompatibility in the first place!</p>
+</div>
+
+    <a class="read-more" href="/2009/11/26/springcache-plugin-status/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2009-11-21T14:17:00">Nov 21 2009</time>
+      <h2><a href="/2009/11/21/why-do-strings-behave-like-a-collection/">Why do Strings behave like a Collection?</a></h2>
+    </header>
+    <div class="paragraph">
+<p>Mostly I love Groovy but every now and then some behaviour gets on my nerves. For example, why do the iterator methods on String behave as though it was a collections of characters rather than an Object? If I define a method with a dynamic-typed parameter like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">void printNames(names) {
+    names.each {
+        println it
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Passing a collection of Strings results in each String being printed. Passing a single String results in each character of the String being printed separately. I would have thought that the Object behaviour was a more appropriate default here (iterators on Object are called once passing the object itself). After all the <code>.chars</code> property is available if you really want to represent a String as a collection of characters.</p>
+</div>
+
+    <a class="read-more" href="/2009/11/21/why-do-strings-behave-like-a-collection/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2009-11-21T06:45:00">Nov 21 2009</time>
+      <h2><a href="/2009/11/21/slides-from-ggug/">Slides from GGUG</a></h2>
+    </header>
+    <div class="paragraph">
+<p>I gave a talk last night at the <a href="http://skillsmatter.com/event/ajax-ria/testing-grails-applications-with-selenium-rc">London Groovy &amp; Grails User Group</a> about the <a href="http://grails.org/plugin/selenium-rc">Selenium RC plugin</a> and how to use it. I pitched the talk assuming that people were somewhat familiar with <a href="http://seleniumhq.org/docs/">Selenium</a> and had probably used the <a href="http://seleniumhq.org/projects/ide/">Selenium IDE</a>. I&#8217;m not sure if that was the right way to go but the talk went pretty well and people seemed interested in what I had to say. I ended up talking a lot about the <a href="http://code.google.com/p/webdriver/wiki/PageObjects">page object pattern</a> and how awesome it is for building manageable suites of Selenium tests.</p>
+</div>
+
+    <a class="read-more" href="/2009/11/21/slides-from-ggug/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2009-11-05T20:58:00">Nov  5 2009</time>
+      <h2><a href="/2009/11/05/grails-selenium-rc-plugin-released/">Grails Selenium RC Plugin Released</a></h2>
+    </header>
+    <div class="paragraph">
+<p>I&#8217;ve finally got the first release of the Selenium RC plugin out of the door. Just run <code>grails install-plugin selenium-rc</code> to install.</p>
+</div>
+<div class="paragraph">
+<p>For anyone unfamiliar with <a href="http://selenium-rc.seleniumhq.org/">Selenium RC</a> basically the plugin allows you to write and run Selenium tests in Groovy to functionally test Grails apps using a real browser. The tests run in the functional phase using <code>grails test-app</code> or <code>grails test-app -functional</code>.</p>
+</div>
+
+    <a class="read-more" href="/2009/11/05/grails-selenium-rc-plugin-released/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2009-11-02T17:24:00">Nov  2 2009</time>
+      <h2><a href="/2009/11/02/talk-on-selenium-rc-testing-in-grails/">Talk on Selenium RC Testing In Grails</a></h2>
+    </header>
+    <div class="paragraph">
+<p>I&#8217;ll be delivering a short talk about testing Grails apps with the <a href="http://github.com/robfletcher/grails-selenium-rc">Selenium RC plugin</a> I&#8217;m <a href="http://blog.freeside.co/post/42902592328/testing-grails-apps-with-selenium-rc">working on</a> at the <a href="http://skillsmatter.com/user-group/java-jee/ggug">London Groovy and Grails User Group</a> on 20th November. Details are <a href="http://skillsmatter.com/event/java-jee/testing-grails-applications-with-selenium-rc">here</a>.</p>
+</div>
+
+    <a class="read-more" href="/2009/11/02/talk-on-selenium-rc-testing-in-grails/">Read more…</a>
+  </article>
+  <hr>
+
+  <nav class="pagination">
+      <a rel="prev" href="/page/7/">Previous page</a>
+    <span>Page 8 of 11</span>
+      <a rel="next" href="/page/9/">Next page</a>
+  </nav>
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>

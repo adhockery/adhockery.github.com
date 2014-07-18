@@ -1,0 +1,97 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery - New Springcache Plugin Version</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+        <article>
+    <header>
+      <time datetime="2009-12-12T16:49:00">Dec 12 2009</time>
+      <h1>New Springcache Plugin Version</h1>
+    </header>
+    <div class="paragraph">
+<p>After <a href="http://blog.freeside.co/post/42902700224/springcache-plugin-status">saying it might take me a while</a> I got stuck in and rewrote the Springcache plugin from scratch. The new version is up now. The plugin now requires Grails 1.2.0-M3 or greater as it&#8217;s reliant on Spring 3.0.</p>
+</div>
+
+<div class="paragraph">
+<p>The plugin allows you to declare caching and flushing behaviour on service methods (well, any Spring bean methods, but services are typical) using <code>@Cacheable</code> and <code>@CacheFlush</code> annotations. This is really useful for service methods that perform long-running or expensive tasks such as retrieving data from web services, network resources, etc. The plugin is less appropriate for service methods that retrieve data using GORM/Hibernate as you could just use the 2nd level cache, although there&#8217;s nothing stopping you doing so if it makes sense in your domain.</p>
+</div>
+<div class="paragraph">
+<p>The documentation and source code are in the usual places. Here&#8217;s a quick summary of the changes and new features:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>No longer depends on the (discontinued and non-Spring 3 compatible) <a href="https://springmodules.dev.java.net/">spring-modules-cache</a> library.</p>
+</li>
+<li>
+<p>No more mapcache, the plugin now uses <a href="http://ehcache.org/">ehcache</a> by default.</p>
+</li>
+<li>
+<p>Only ehcache is supported directly but it&#8217;s really easy to implement an adapter for other caching libraries if you need to.</p>
+</li>
+<li>
+<p>Slightly simplified configuration. Some minor tweaks will be needed if you&#8217;re upgrading from an earlier version of the plugin.</p>
+</li>
+<li>
+<p>Bean names are now prefixed with <em>"springcache"</em> so they&#8217;re much less likely to clash with other things in your Spring context.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>There has been some interest in some new features such as a taglib for caching chunks of views which I may start looking at shortly.</p>
+</div>
+    <footer>
+      <ul class="tag-list">
+          <li><a href="/tags/grails-plugins/">grails plugins</a></li>
+          <li><a href="/tags/caching/">caching</a></li>
+      </ul>
+    </footer>
+  </article>
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>
+
+<div id="disqus_thread"></div>
+            <script type="text/javascript">
+            //<![CDATA[
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//adhockery.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            //]]>
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </script>

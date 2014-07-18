@@ -1,0 +1,108 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+      <header>
+  <h1>Articles tagged <em>‘gradle’</em></h1>
+</header>
+
+  <article>
+    <header>
+      <time datetime="2014-06-24T15:46:00">Jun 24 2014</time>
+      <h2><a href="/2014/06/24/enabling-groovys-invokedynamic-support-in-gradle/">Enabling Groovy’s “invokedynamic” support in Gradle</a></h2>
+    </header>
+    <div class="paragraph">
+<p>I posted <a href="/post/89759686171/gradle-and-groovys-invoke-dynamic-support">previously</a> about configuring a Gradle project to ensure that only the <em>indy</em> version of Groovy (that is the variant that supports Java 7&#8217;s <em>invokedynamic</em> bytecode instruction) is included in the dependency graph. However, just including that version of the Groovy jar is <strong>not</strong> enough to make your Groovy code compile in such a way that it uses <em>invokedynamic</em>.</p>
+</div>
+
+    <a class="read-more" href="/2014/06/24/enabling-groovys-invokedynamic-support-in-gradle/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2014-06-24T15:32:00">Jun 24 2014</time>
+      <h2><a href="/2014/06/24/gradle-and-groovys-invoke-dynamic-support/">Gradle and Groovy’s Invoke Dynamic support</a></h2>
+    </header>
+    <div class="paragraph">
+<p>Since version 2.0 the Groovy distribution has included an alternate artifact that enables <a href="http://docs.oracle.com/javase/7/docs/technotes/guides/vm/multiple-language-support.html#invokedynamic">invoke dynamic</a> support.</p>
+</div>
+
+    <a class="read-more" href="/2014/06/24/gradle-and-groovys-invoke-dynamic-support/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2013-04-26T13:58:00">Apr 26 2013</time>
+      <h2><a href="/2013/04/26/using-sass-and-compass-with-gradle/">Using SASS and Compass with Gradle</a></h2>
+    </header>
+    <div class="paragraph">
+<p>I recently started helping with the <a href="https://github.com/ratpack">Ratpack</a> website. It is (or will be) a Ratpack app &amp; built with Gradle. I started prototyping with a simple webapp created with <a href="http://yeoman.io/">Yeoman</a> and using <a href="http://sass-lang.com/">SASS</a> and <a href="http://compass-style.org/">Compass</a> for authoring CSS. When I migrated the work-in-progress into the <a href="https://github.com/ratpack/ratpack-site"><em>ratpack-site</em> application</a> I initially used <a href="http://naleid.com/blog/2013/01/24/calling-gruntjs-tasks-from-gradle/">Ted Naleid&#8217;s method</a> of calling Yeoman&#8217;s <a href="http://gruntjs.com/">Grunt</a> tasks from Gradle. Unfortunately this meant there were rather a lot of build dependencies. In order to build the app you would need Node.js, Ruby and the Compass gem installed. Peter Ledbrook pointed out this could frustrate potential contributors &amp; Marcin Erdmann <a href="https://twitter.com/marcinerdmann/status/325675229454155776">proved an example</a> of what he meant. Clearly I needed to simplify.</p>
+</div>
+
+    <a class="read-more" href="/2013/04/26/using-sass-and-compass-with-gradle/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2010-01-17T20:35:00">Jan 17 2010</time>
+      <h2><a href="/2010/01/17/a-gradle-build-for-grails-plugins-with-test-apps/">A Gradle build for Grails plugins with test apps</a></h2>
+    </header>
+    <div class="paragraph">
+<p>There&#8217;s a fairly popular technique in Grails plugin development where the plugin has <em>test apps</em> stored in <code>test/projects/*</code>, each of which references the plugin by including <code>grails.plugin.location."my-plugin" = "../../.."</code> in its <em>BuildConfig.groovy</em>. Doing this allows you as a plugin developer to:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Automate tests for sample projects using the plugin with significantly different configurations.</p>
+</li>
+<li>
+<p>Test using domain classes, controllers, etc. that shouldn&#8217;t be packaged with the plugin.</p>
+</li>
+<li>
+<p>Test drive, changing code in both the test app and the plugin without the need to use <code>grails package-plugin</code> or <code>grails install-plugin</code> to pick up changes.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The downside is that to run all the plugin project&#8217;s tests it&#8217;s necessary to run the plugin&#8217;s own tests, then change directory into each of the test apps and run their tests. Continuous integration config is also fiddlier for the same reason.</p>
+</div>
+
+    <a class="read-more" href="/2010/01/17/a-gradle-build-for-grails-plugins-with-test-apps/">Read more…</a>
+  </article>
+  <hr>
+
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>

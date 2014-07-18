@@ -1,0 +1,165 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+      <header>
+  <h1>Articles tagged <em>‘spring’</em></h1>
+</header>
+
+  <article>
+    <header>
+      <time datetime="2011-08-26T17:19:00">Aug 26 2011</time>
+      <h2><a href="/2011/08/26/grails-gotcha-beware-head-requests-when-rendering/">Grails Gotcha: Beware HEAD requests when rendering binary output in controllers</a></h2>
+    </header>
+    <div class="paragraph">
+<p>Although most Grails controllers render HTML, JSON or XML output it is possible to use them to render binary data as well. We use a controller to render images uploaded by editors into our content management interface. The theory is simple enough, instead of using the <code>render</code> dynamic method or returning a <em>model</em> the controller action just writes bytes directly to the HTTP response stream. Our action looked something like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">def show = {
+    def image = Image.read(params.id)
+    if (image) {
+        response.contentType = image.contentType
+        response.outputStream.withStream { stream -&gt;
+            stream &lt;&lt; image.bytes
+        }
+    } else {
+        response.sendError SC_NOT_FOUND
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This seemed to work well enough. However when writing a test I noticed an odd thing. I was using <a href="http://groovy.codehaus.org/modules/http-builder/doc/rest.html">RESTClient</a> to scrape resource URLs out of and make a <em>HEAD</em> request against them to ensure the URLs were valid. Javascript and CSS files were working fine but all the non-static images in the page were getting 404s.</p>
+</div>
+
+    <a class="read-more" href="/2011/08/26/grails-gotcha-beware-head-requests-when-rendering/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2011-08-18T21:42:00">Aug 18 2011</time>
+      <h2><a href="/2011/08/18/data-driven-variation-with-spock/">Data-driven variation with Spock</a></h2>
+    </header>
+    <div class="paragraph">
+<p>Spock&#8217;s <code>where:</code> block is commonly used with a <a href="https://github.com/robfletcher/grails-enhanced-scaffolding/blob/master/test/projects/scaffolding-example/test/functional/scaffolding/InputTypesSpec.groovy#L18">data table</a> but can also be driven by any <code>Iterable</code> data. It&#8217;s worth bearing in mind that the data driving the <code>where:</code> block doesn&#8217;t have to be hardcoded, it can be dynamic. For example, today we implemented a spec to ensure that every table in our database schema has a primary key (because it&#8217;s required by <a href="http://ha-jdbc.sourceforge.net/">HA-JDBC</a> and not automatically added by GORM on join tables).</p>
+</div>
+
+    <a class="read-more" href="/2011/08/18/data-driven-variation-with-spock/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2011-08-02T13:01:00">Aug  2 2011</time>
+      <h2><a href="/2011/08/02/avoiding-accidental-i18n-in-grails/">Avoiding accidental i18n in Grails</a></h2>
+    </header>
+    <div class="paragraph">
+<p>We’re developing an app that’s exclusively for a UK audience so i18n really isn’t an issue for us. However recently we got bitten by some i18n creeping in where we didn’t want it. Specifically, when using Grails’ <code>g:dateFormat</code> tag the default behaviour is to format the date according to the <code>Locale</code> specified in the user’s <code>Accept-Language</code> header. Even though we are explicitly specifying a format pattern for the date Java is aware of localized day names for some languages so the output can vary. The result is that on a page full of English text there suddenly appears a Spanish or Swedish day name. What makes things worse is that as we use server-side content caching and a CDN if a user with a non-English <code>Accept-Language</code> header is the first to see a particular page or bit of dynamically retrieved content then the cache is primed and until it expires <em>everyone</em> will see the non-English day name text. The solution in a Grails app is as simple as replacing Spring’s standard <code>localeResolver</code> bean with an instance of <code>FixedLocaleResolver</code>. Just add the following to <em>grails-app/conf/spring/resources.groovy</em>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">localeResolver(org.springframework.web.servlet.i18n.FixedLocaleResolver, Locale.UK)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This changes the way Spring works out the request locale and any locale-aware tags should just fall into place.</p>
+</div>
+    <a class="read-more" href="/2011/08/02/avoiding-accidental-i18n-in-grails/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2010-05-28T13:27:00">May 28 2010</time>
+      <h2><a href="/2010/05/28/grails-spring-events-plugin/">Grails Spring Events Plugin</a></h2>
+    </header>
+    <div class="paragraph">
+<p>Following on from <a href="http://blog.freeside.co/post/42902948889/asynchronous-application-events-in-grails">my previous post</a> I&#8217;ve developed a Grails plugin that packages the asynchronous events behaviour up and adds some extra useful functionality.</p>
+</div>
+
+    <a class="read-more" href="/2010/05/28/grails-spring-events-plugin/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2010-05-03T21:59:00">May  3 2010</time>
+      <h2><a href="/2010/05/03/asynchronous-application-events-in-grails/">Asynchronous application events in Grails</a></h2>
+    </header>
+    <div class="paragraph">
+<p>On the project for my current client we&#8217;ve been using JMS in a rather naïve way for some time now. We&#8217;ve also experienced a certain amount of pain getting JMS and ActiveMQ configured correctly. However, all we&#8217;re really using JMS for is asynchronous event broadcasting. Essentially we have a handful actions such as flushing hardware caches and notifying external systems that take place when a document changes. We don&#8217;t want these things blocking the request thread when users save data.</p>
+</div>
+
+    <a class="read-more" href="/2010/05/03/asynchronous-application-events-in-grails/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2010-02-25T13:04:00">Feb 25 2010</time>
+      <h2><a href="/2010/02/25/using-a-custom-data-binder-with-grails-domain-objects/">Using a custom data binder with Grails domain objects</a></h2>
+    </header>
+    <div class="paragraph">
+<p>Yesterday I read a <a href="http://blog.armbruster-it.de/2010/01/customizing-grails-data-binding-with-a-groovy-propertyeditor/">post by Stefan Armbruster</a> on how to register a custom data binder to lookup Grails domain objects by any arbitrary property. I wanted to go a little further so that I could not only bind existing domain instances but create new ones as well.</p>
+</div>
+
+    <a class="read-more" href="/2010/02/25/using-a-custom-data-binder-with-grails-domain-objects/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2009-11-26T22:56:00">Nov 26 2009</time>
+      <h2><a href="/2009/11/26/springcache-plugin-status/">Springcache Plugin Status</a></h2>
+    </header>
+    <div class="paragraph">
+<p>A couple of people have asked me about the <a href="http://grails.org/plugin/springcache">Springcache plugin</a> and Grails 1.2. Currently the plugin is not compatible with 1.2-M3 and onwards. The reason for this is that the spring-modules-cache library that the plugin depends on is not compatible with Spring 3.0 which is used by the newest versions of Grails. Not only that but the <a href="https://springmodules.dev.java.net/">spring-modules project</a> has been discontinued altogether. There is <a href="http://github.com/astubbs/spring-modules">a fork of it on Github</a> but that doesn&#8217;t look terribly active either. This means that at some point I&#8217;m going to have to sit down and write some code to bring the annotation driven caching inside the plugin itself and drop the spring-modules dependency. However, just to compound things the <a href="http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/ch08s09.html#aop-autoproxy-metadata">Spring documentation on the relevant area</a> hasn&#8217;t been updated yet and still references the classes that have been removed from the API which is what&#8217;s causing the incompatibility in the first place!</p>
+</div>
+
+    <a class="read-more" href="/2009/11/26/springcache-plugin-status/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2009-03-10T09:30:00">Mar 10 2009</time>
+      <h2><a href="/2009/03/10/internationalizing-domain-classes-and-enums/">Internationalizing Domain Classes and Enums</a></h2>
+    </header>
+    <div class="paragraph">
+<p>It&#8217;s common to provide a <code>toString</code> implementation on a domain object that may well end up being used in the view. However, this doesn&#8217;t allow for internationalization in the view. A good solution that I&#8217;ve used a number of times is to have classes implement Spring&#8217;s <a href="http://static.springframework.org/spring/docs/2.5.x/api/org/springframework/context/MessageSourceResolvable.html">MessageSourceResolvable</a> interface.</p>
+</div>
+
+    <a class="read-more" href="/2009/03/10/internationalizing-domain-classes-and-enums/">Read more…</a>
+  </article>
+  <hr>
+
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>

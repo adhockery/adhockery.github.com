@@ -1,0 +1,202 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery - Rendering Grails Joda-Time date inputs cross browser with HTML5, jQuery and Modernizr</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+        <article>
+    <header>
+      <time datetime="2010-07-10T14:30:00">Jul 10 2010</time>
+      <h1>Rendering Grails Joda-Time date inputs cross browser with HTML5, jQuery and Modernizr</h1>
+    </header>
+    <div class="paragraph">
+<p>Yesterday I released a new version of the Grails <a href="http://grails.org/plugin/joda-time">Joda Time plugin</a> that includes support for the various new <a href="http://diveintohtml5.org/forms.html#type-date">date and time input types</a> in the HTML5 standard. Right now only <a href="http://opera.com">Opera</a> supports these types with proper date-picker type controls, the other browsers just render them as text inputs. However this doesn&#8217;t mean you can&#8217;t or shouldn&#8217;t start using them right away. There&#8217;s a very handy JavaScript library called <a href="http://www.modernizr.com/">Modernizr</a> that you can use to detect the features supported by the client&#8217;s browser and render alternatives using script. In this post I&#8217;m going to walk through how to combine the Joda-Time plugin, Modernizr and the <a href="http://jqueryui.com/demos/datepicker/">jQuery datepicker</a> to render an HTML5 <em>date</em> input field that will bind to a <em>LocalDate</em> property on a domain object.</p>
+</div>
+
+<div class="sect2">
+<h3 id="_install_the_joda_time_plugin">Install the Joda-Time plugin</h3>
+<div class="paragraph">
+<p>If you don&#8217;t currently have version 1.1+ of the Joda-Time plugin installed, run <code>grails install-plugin joda-time</code>.</p>
+</div>
+<div class="paragraph">
+<p>Once the plugin is installed you will need to enable HTML5 support so that data binding will use the HTML5 date/time formats. Simply add the following to your <em>Config.groovy</em></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>jodatime.format.html5 = true</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_create_a_domain_class_with_a_localdate_property">Create a domain class with a LocalDate property</h3>
+<div class="paragraph">
+<p>For this example I&#8217;ll create a simple domain class representing a person:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">import org.joda.time.*
+import org.joda.time.contrib.hibernate.*
+
+class Person {
+    String name
+    LocalDate birthdate
+    static mapping = {
+        birthdate type: PersistentLocalDate
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you have default mappings set up (which the Joda-Time plugin will attempt to do for you when it installs) then you can omit the <em>mapping</em> block but I&#8217;ve included it for completeness.</p>
+</div>
+<div class="paragraph">
+<p>Execute <code>grails generate-all Person</code> to create a controller and scaffolded views for the <em>Person</em> class. Finally change the <em>create.gsp</em> and <em>edit.gsp</em> files to use an HTML5 input instead of the standard Grails date picker tag. Replace the <code>&lt;g:datePicker name="birthdate"…</code> with this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="markup language-markup">&lt;joda:dateField name="birthdate" value="${personInstance.birthdate}"/&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In the unlikely event that all your site&#8217;s visitors are using Opera then your work is done at this point. However right now anyone using another browser will have to type in the <em>birthdate</em> value in the correct format in order to get the forms to submit properly which isn&#8217;t the friendliest user experience.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_install_jquery_and_jquery_ui">Install jQuery and jQuery-UI</h3>
+<div class="paragraph">
+<p>You can include jQuery and jQuery-UI by simply downloading the JavaScript files into your app, or linking to them on Google. Alternatively you can use the Grails plugins. If you want to go the plugin route this is what you will need to do. First install the plugins:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="bash language-bash">grails install-plugin jquery-ui</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The jQuery plugin is installed automatically by the jQuery-UI plugin.</p>
+</div>
+<div class="paragraph">
+<p>Then you will need to add the libraries to your SiteMesh template (or you could include it just on the relevant pages, it doesn&#8217;t matter). Add the following in the <em>head</em> section:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="markup language-markup">&lt;g:javascript library="jquery" plugin="jquery"/&gt;
+&lt;jqui:resources components="datepicker" mode="normal" /&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_install_modernizr">Install Modernizr</h3>
+<div class="paragraph">
+<p>Download Modernizr and put it in <em>web-app/js/modernizr</em>. You can link to the script direct from there or define a library by adding this to <em>BootStrap.groovy</em>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">import org.codehaus.groovy.grails.plugins.web.taglib.JavascriptTagLib
+
+class BootStrap {
+    def init = { servletContext -&gt;
+         JavascriptTagLib.LIBRARY_MAPPINGS.modernizr = ["modernizr/modernizr-1.5.min"]
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then include Modernizr in your SiteMesh template by adding the following in the <em>head</em> section:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="markup language-markup">&lt;g:javascript library="modernizr"/&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To get Modernizr to work its magic you should add a <code>class="no-js"</code> to the <em>html</em> element at the top of your SiteMesh template. Modernizr will replace this when the document loads with a whole bunch of classes that it uses to detect the various features supported by the browser.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_bind_the_jquery_ui_datepicker_to_the_field">Bind the jQuery-UI datepicker to the field</h3>
+<div class="paragraph">
+<p>The last step is to ensure that any time a user hits the page with a browser that doesn&#8217;t support a native widget for the <em>date</em> input type they get a jQuery datepicker instead. To do this create a JavaScript file and link to it from your SiteMesh template or the pages using <em>date</em> inputs. The script simply needs to contain the following code:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="javascript language-javascript">$(document).ready(function() {
+    if (!Modernizr.inputtypes.date) {
+        $("input[type=date]").datepicker({dateFormat: $.datepicker.W3C});
+    }
+});</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>What this does is create a function that runs on page load that uses Modernizr to determine if the <em>date</em> input type is supported and if not initialises a jQuery-UI datepicker for <em>every</em> <code>&lt;input type="date"…</code> found in the page. The <code>dateFormat</code> argument ensures the jQuery widget will update the input with the correct date format when a value is selected.</p>
+</div>
+<div class="paragraph">
+<p>It&#8217;s that simple. Now the <em>create</em> and <em>edit person</em> pages will use the native <em>date</em> input widget when the visitor&#8217;s browser supports one and the jQuery widget when it doesn&#8217;t.</p>
+</div>
+<div class="paragraph">
+<p>So how does it look? Here&#8217;s a screenshot of the page in Firefox when a visitor has focused the <em>date</em> input: <span class="image"><img src="http://3.bp.blogspot.com/<em>fh9xwLFYBUw/TDh2YQnv0KI/AAAAAAAACoQ/3ToRH0Ga3iI/s320/firefox.png" alt="image"></span> Here&#8217;s the same thing rendered in Opera using the native datepicker widget (yes, you could be forgiven for thinking the jQuery version is prettier): <span class="image"><img src="http://4.bp.blogspot.com/_fh9xwLFYBUw/TDh2akA7KeI/AAAAAAAACoY/73k5rC-uWww/s320/opera.png" alt="image"></span> With a little adaptation the same thing can be done for the other input types; _month</em>, <em>week</em>, <em>time</em>, <em>datetime</em> and <em>datetime-local</em>. Of those <em>month</em> should work perfectly by adding this to your script:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="javascript language-javascript">if (!Modernizr.inputtypes.month) {
+    $("input[type=month]").datepicker({dateFormat: 'yy-mm');
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Other types would require different widgets to enable users to input the time portion of the value. There are several jQuery based options available. Of course, instead of jQuery you could use <a href="http://developer.yahoo.com/yui/calendar/">YUI</a>, <a href="http://script.aculo.us/">script.aculo.us</a> or any other date/time widgets. I&#8217;ve gone with jQuery because I&#8217;m familiar with it and the initialisation is beautifully simple even if you&#8217;ve got a number of different inputs on a page.</p>
+</div>
+</div>
+    <footer>
+      <ul class="tag-list">
+          <li><a href="/tags/html5/">html5</a></li>
+          <li><a href="/tags/joda-time/">joda time</a></li>
+          <li><a href="/tags/jquery/">jquery</a></li>
+      </ul>
+    </footer>
+  </article>
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>
+
+<div id="disqus_thread"></div>
+            <script type="text/javascript">
+            //<![CDATA[
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//adhockery.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            //]]>
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </script>

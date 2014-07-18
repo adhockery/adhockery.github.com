@@ -1,0 +1,208 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery - Querying by Association Redux</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+        <article>
+    <header>
+      <time datetime="2009-06-13T06:25:00">Jun 13 2009</time>
+      <h1>Querying by Association Redux</h1>
+    </header>
+    <div class="paragraph">
+<p>A couple of months back I <a href="http://blog.freeside.co/post/42902379524/querying-by-association-with-grails-criteria">posted</a> about the problems with criteria queries where you want results with a collection property that <em>contains</em> some value.</p>
+</div>
+<div class="paragraph">
+<p>Last night I was reading through my new copy of <a href="http://blogs.bytecode.com.au/glen/">Glen Smith</a> and Peter Ledbrook&#8217;s <a href="http://www.amazon.co.uk/Grails-Action-Glen-Smith/dp/1933988932">Grails In Action</a> and my eye was caught by a particular example where they use aliases in a criteria query. Sure enough a quick test this morning confirms that this is the solution to the problem.</p>
+</div>
+
+<div class="paragraph">
+<p>To recap. If I have these domain classes:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">class Pirate {
+    String name
+    static belongsTo = Ship
+    static hasMany = [ships: Ship]
+}
+
+class Ship {
+    String name
+    static hasMany = [crew: Pirate]
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>and I want to query for all the <em>Ships</em> containing a particular <em>Pirate</em> I would probably try to do this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">def ships = Ship.withCriteria {
+    crew {
+        eq("name", "Blackbeard")
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Unfortunately, while I end up with the correct <em>Ship</em> instances, each of their <em>crew</em> collections only contains the item(s) that matched the criteria regardless of any others that may actually exist.</p>
+</div>
+<div class="paragraph">
+<p>Using an alias we <em>can</em> do this type of query without resorting to HQL:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">def ships = Ship.withCriteria {
+    createAlias("crew", "c")
+    eq("c.name", "Blackbeard")
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A complete test case that proves the point using the domain classes above is:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">class PirateTests extends GroovyTestCase {
+
+    void setUp() {
+        Ship.withSession {session -&gt;
+            def blackbeard = new Pirate(name: "Blackbeard")
+            def jack = new Pirate(name: "Calico Jack")
+            def bart = new Pirate(name: "Black Bart")
+            [blackbeard, jack, bart]*.save()
+
+            def ship1 = new Ship(name: "Queen Anne's Revenge")
+            ship1.addToCrew blackbeard
+            ship1.addToCrew jack
+
+            def ship2 = new Ship(name: "Royal Fortune")
+            ship2.addToCrew blackbeard
+            ship2.addToCrew bart
+
+            def ship3 = new Ship(name: "The Treasure")
+            ship3.addToCrew jack
+            ship3.addToCrew bart
+
+            [ship1, ship2, ship3]*.save()
+
+            session.flush()
+            session.clear()
+        }
+    }
+
+    void testQueryByAssoc() {
+        def ships = Ship.withCriteria {
+            crew {
+                eq("name", "Blackbeard")
+            }
+            order("name", "asc")
+        }
+
+        assertEquals 2, ships.size()
+        assertEquals "Queen Anne's Revenge, Royal Fortune", ships.name.join(", ")
+        assertEquals "Expected 2 crew but found ${ships[0].crew.name}", 2, ships[0].crew.size()
+        assertEquals "Expected 2 crew but found ${ships[1].crew.name}", 2, ships[1].crew.size()
+    }
+
+    void testQueryByAssocUsingAlias() {
+        def ships = Ship.withCriteria {
+            createAlias("crew", "c")
+            eq("c.name", "Blackbeard")
+            order("name", "asc")
+        }
+
+        assertEquals 2, ships.size()
+        assertEquals "Queen Anne's Revenge, Royal Fortune", ships.name.join(", ")
+        assertEquals "Expected 2 crew but found ${ships[0].crew.name}", 2, ships[0].crew.size()
+        assertEquals "Expected 2 crew but found ${ships[1].crew.name}", 2, ships[1].crew.size()
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The first test fails as each <em>Ship</em> returned by the query only has Blackbeard in the crew despite the fact that they were created and saved with 2 crew members each. The second test retrieves the correct results.</p>
+</div>
+<div class="paragraph">
+<p>Logging out the SQL generated by the Hibernate queries shows the difference in what it&#8217;s doing under the hood. The first (incorrect) query is:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="sql language-sql">select * from ship
+left outer join ship_crew on ship.id = ship_crew.ship_id
+left outer join pirate on ship_crew.pirate_id = pirate.id
+where pirate.name = ?
+order by ship.name asc</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The second (correct) query is:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="sql language-sql">select * from ship
+inner join ship_crew on ship.id = ship_crew.ship_id
+inner join pirate on ship_crew.pirate_id = pirate.id
+where pirate.name = ?
+order by ship.name asc</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>So the first query is using left outer joins and the second is using inner joins. Running those queries directly in <a href="http://squirrel-sql.sourceforge.net/">SQuirreL</a> returns basically the same result set so the discrepancy must be in how Hibernate treats the results. It seems Hibernate has populated the <em>Ship</em> instance <em>and</em> its <em>crew</em> collection after the first query and therefore considers the collection to be initialized, although actually the data in the result set was not the complete collection. In contrast, after the second query you can see the individual SQL select statements as the lazy-loading fires when the assertions are done, so Hibernate obviously only populated the root <em>Ship</em> instance from the query results and is treating the collection property as uninitialized.</p>
+</div>
+    <footer>
+      <ul class="tag-list">
+          <li><a href="/tags/criteria-queries/">criteria queries</a></li>
+          <li><a href="/tags/gorm/">gorm</a></li>
+          <li><a href="/tags/hibernate/">hibernate</a></li>
+      </ul>
+    </footer>
+  </article>
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>
+
+<div id="disqus_thread"></div>
+            <script type="text/javascript">
+            //<![CDATA[
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//adhockery.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            //]]>
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </script>

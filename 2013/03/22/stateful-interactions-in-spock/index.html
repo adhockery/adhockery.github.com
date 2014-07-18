@@ -1,0 +1,158 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery - Stateful interactions in Spock</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+        <article>
+    <header>
+      <time datetime="2013-03-22T00:16:00">Mar 22 2013</time>
+      <h1>Stateful interactions in Spock</h1>
+    </header>
+    <div class="paragraph">
+<p>The Java mocking library <a href="http://jmock.org/">jMock</a> has <a href="http://jmock.org/states.html">a nice feature for dealing with verifying mock interactions in stateful circumstances</a>. I first came across it when reading <a href="http://www.growing-object-oriented-software.com/">Growing Object-Oriented Software Guided By Tests</a> (<em>GOOS</em>) by Steve Freeman &amp; Nat Pryce.</p>
+</div>
+<div class="paragraph">
+<p>I was curious as to whether I could implement something similar with <em>Spock</em>. There&#8217;s no syntactic support right now (although there is <a href="http://code.google.com/p/spock/issues/detail?id=130">an open issue</a>) but it&#8217;s not that complex to achieve something adequate.</p>
+</div>
+
+<div class="paragraph">
+<p>I got a basic version working using action closures. To directly translate the example from the <em>jMock</em> documentation you&#8217;d do this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">given: "a turtle"
+def turtle = Mock(Turtle)
+
+and: "pen starts up"
+def pen = "up"
+
+// … when block with tested action
+
+then: "turtle draws a right angle"
+with(turtle) {
+    1 * penDown() &gt;&gt; { pen = "down" }
+    1 * forward(10) &gt;&gt; { assert pen == "down" }
+    1 * turn(90) &gt;&gt; { assert pen == "down" }
+    1 * forward(10) &gt;&gt; { asset pen == "down" }
+    1 * penUp() &gt;&gt; { pen = "up" }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The first and last interactions change the current state of the <code>pen</code> and the middle three assert that <em>pen</em> is in a particular state <em>when the interaction occurs</em>. For example if <code>turtle.forward(10)</code> occurs when <code>pen</code> is not <code>"down"</code> then the assertion in the closure will cause the test to fail. As it&#8217;s a Groovy assertion we&#8217;d also get a good diagnostic of the error.</p>
+</div>
+<div class="paragraph">
+<p>The assertions on the state transitions are a bit redundant here. Perhaps a more useful approach is found in the way the examples in <em>GOOS</em> work. There the state changes are modelled with stubs. Using that approach the previous example could be rewritten as:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">given: "a turtle"
+def turtle = Mock(Turtle)
+
+and: "pen starts up"
+def pen = "up"
+
+and: "pen may be repositioned"
+with(turtle) {
+    penDown() &gt;&gt; { pen = "down" }
+    penUp() &gt;&gt; { pen = "up" }
+}
+
+// … when block with tested action
+
+then: "turtle draws a right angle"
+with(turtle) {
+    1 * forward(10) &gt;&gt; { assert pen == "down" }
+    1 * turn(90) &gt;&gt; { assert pen == "down" }
+    1 * forward(10) &gt;&gt; { asset pen == "down" }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>It&#8217;s clearer what&#8217;s going on now. However, I&#8217;m not particularly keen on the explicit <code>assert</code> keywords. I&#8217;d also rather use an enum than a string to model the state. Wrapping the state transitions and verifications up into a small <a href="https://gist.github.com/robfletcher/5217772"><code>StateMachine</code></a> class makes sense. After doing that we end up with this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">given: "a turtle"
+def turtle = Mock(Turtle)
+
+and: "pen starts up"
+def pen = new StateMachine("pen", UP)
+
+and: "pen may be repositioned"
+with(turtle) {
+    penDown() &gt;&gt; { pen.becomes(DOWN) }
+    penUp() &gt;&gt; { pen.becomes(UP) }
+}
+
+// … when block with tested action
+
+then: "turtle draws a right angle"
+with(turtle) {
+    1 * forward(10) &gt;&gt; { pen.is(DOWN) }
+    1 * turn(90) &gt;&gt; { pen.is(DOWN) }
+    1 * forward(10) &gt;&gt; { pen.is(DOWN) }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>I&#8217;m reasonably happy with the result. It&#8217;s not often that this style of interaction testing is useful but it does crop up from time to time.</p>
+</div>
+<div class="paragraph">
+<p>You can also consider using <a href="http://docs.spockframework.org/en/latest/interaction_based_testing.html#invocation-order">strict invocation order</a> to model this kind of stateful interaction but it&#8217;s not necessarily clearer and would prevent the use of stubs for the state transitions.</p>
+</div>
+    <footer>
+      <ul class="tag-list">
+          <li><a href="/tags/spock/">spock</a></li>
+          <li><a href="/tags/testing/">testing</a></li>
+      </ul>
+    </footer>
+  </article>
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>
+
+<div id="disqus_thread"></div>
+            <script type="text/javascript">
+            //<![CDATA[
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//adhockery.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            //]]>
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </script>

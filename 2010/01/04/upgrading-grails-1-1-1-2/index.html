@@ -1,0 +1,177 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery - Upgrading Grails 1.1 -> 1.2</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+        <article>
+    <header>
+      <time datetime="2010-01-04T21:22:00">Jan  4 2010</time>
+      <h1>Upgrading Grails 1.1 -> 1.2</h1>
+    </header>
+    <div class="paragraph">
+<p>We&#8217;ve just successfully upgraded our app from Grails 1.1 to <a href="http://www.grails.org/1.2+Release+Notes">1.2</a> and pushed it to our QA environment. I thought I&#8217;d write up some of the issues we encountered in case anyone is bashing their heads against them.</p>
+</div>
+
+<div class="sect2">
+<h3 id="_custom_constraints_that_execute_queries">Custom constraints that execute queries</h3>
+<div class="paragraph">
+<p>Grails 1.2 now executes domain object validation on any unsaved objects when the Hibernate session flushes. One upshot of this is that if you have a custom constraint that executes a query you can end up with a <em>StackOverflowError</em>; the query causes the session to flush, causing the object to be validated, causing the query to run, causing the session to flush, etc.</p>
+</div>
+<div class="paragraph">
+<p>The solution is to use one of the new domain class dynamic methods <em><a href="http://grails.org/doc/latest/ref/Domain%20Classes/withNewSession.html">withNewSession</a></em> to execute the query in a separate Hibernate session.</p>
+</div>
+<div class="paragraph">
+<p>For example, we have a domain class where only a single instance can exist in a <em>live</em> state. A simple <em><a href="http://grails.org/doc/latest/ref/Constraints/unique.html">unique</a></em> constraint won&#8217;t work as any number of instances can exist in other states. The final constraint looks something like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">static constraints = {
+    state validator: { value, self -&gt;
+        boolean valid = true
+        if (value == State.LIVE) {
+            Homepage.withNewSession {
+                valid = Homepage.countByStateAndIdNotEqual(State.LIVE, self.id) == 0
+            }
+        }
+        return valid
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_errors_set_outside_constraints">Errors set outside constraints</h3>
+<div class="paragraph">
+<p>The new validation on flush behaviour also caused us a more subtle and difficult to trace problem. One of our controllers checks that a date/time property on a domain class instance is in the future when the instance is saved. Doing this in a constraint isn&#8217;t desirable as it makes it awkward to set up test data or re-save instances in other contexts - the rule really only applies to the domain class when the user creates or updates it on the one particular form.</p>
+</div>
+<div class="paragraph">
+<p>The validation code in the controller looks something like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">domainInstance.validate()
+if (domainInstance.goLiveTime &lt; new Date()) {
+    domainInstance.rejectValue "goLiveTime", "min.notMet"
+}
+if (!domainInstance.hasErrors() &amp;&amp; domainInstance.save()) {
+    // redirect
+} else {
+    // re-render form with errors
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When upgrading one of our Selenium tests started failing as, although the save was failing, the error message did not get rendered on the form. What was happening is that at the end of the controller action the entity was not saved as it had errors but Hibernate attempted to flush and triggered re-validation which wiped out the error the controller had set.</p>
+</div>
+<div class="paragraph">
+<p>If <em><a href="http://grails.org/doc/latest/ref/Domain%20Classes/save.html">save</a></em> had been called and validation failed then the object would have been made read-only so Hibernate would not attempt to flush it. My solution was to do this explicitly in the <em>else</em> block before rendering the form using <code>[GrailsHibernateUtil.setObjectToReadOnly(domainInstance, sessionFactory)][5]</code>. It&#8217;s certainly not ideal that the controller should be aware of this kind of low-level detail so some refactoring is in order here, but it solved the problem.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_specifying_fetch_modes_on_associations_in_criteria_queries">Specifying fetch modes on associations in criteria queries</h3>
+<div class="paragraph">
+<p>We have one particularly nasty query that retrieves a domain object instance and loads an entire hierarchy of associations using several <code>[fetchMode "property", FetchMode.JOIN][6]</code> in the criteria query. For example if <em>Author</em> has many <em>books</em> and each <em>Book</em> has many <em>chapters</em> the query previously looked like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">Author.withCriteria {
+    // some criteria
+    fetchMode "books", FetchMode.JOIN
+    fetchMode "chapters", FetchMode.JOIN
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This always seemed syntactically odd as it appears that <em>chapters</em> is a property of <em>Author</em> when it is in fact a property of each member of <em>Author.books</em>. In Grails 1.2 the syntax makes much more sense as you nest the <em>fetchMode</em> declarations just as you would other criteria. So the example above would become:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">Author.withCriteria {
+    // some criteria
+    fetchMode "books", FetchMode.JOIN
+    books {
+        fetchMode "chapters", FetchMode.JOIN
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_date_binding_format">Date binding format</h3>
+<div class="paragraph">
+<p>Date binding now uses a fixed format of <em>yyyy-MM-dd HH:mm:ss.S</em> rather than the short format of the request locale. We have a couple of forms where dates are entered as text rather than using a date picker or rich control and the users (and our tests) expect to be able to enter dates as <em>dd/MM/yy</em>. In order to keep this functionality working I had to create a class that implements <em><a href="http://static.springsource.org/spring/docs/3.0.x/javadoc-api/org/springframework/beans/PropertyEditorRegistrar.html">PropertyEditorRegistrar</a></em> and deploy it in <em>grails-app/conf/spring/resources.groovy</em>. The class registers a custom date editor using the required format.</p>
+</div>
+<div class="paragraph">
+<p>Because the custom property editor registration happens on a per-request basis it would be simple to use the same technique to allow users to enter dates in the locale format they are used to (Americans with their crazy month-day-year format and everyone else with something sensible, for example).</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_setting_string_values_in_em_g_set_em_tags">Setting String values in <em>g:set</em> tags</h3>
+<div class="paragraph">
+<p>One of the main features of Grails 1.2 is the enhanced GSP rendering performance. One way this was achieved as I understand it is that mutable streams are used rather than immutable <em>String</em> instances where possible. One minor change I had to make to support this was changing <em>g:set</em> tags in the format <code>&lt;g:set var="name"&gt;${value}&lt;/g:set&gt;</code> to `&lt;g:set var="name" value="${value}"/&gt;`Variable created in the first manner are now instances of <em><a href="http://grails.org/doc/latest/api/org/codehaus/groovy/grails/web/util/StreamCharBuffer.html">StreamCharBuffer</a></em> rather than <em>java.lang.String</em> which sometimes caused problems when they were used later.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_flash_scope_and_null_values">Flash scope and null values</h3>
+<div class="paragraph">
+<p>The <em><a href="http://grails.org/doc/latest/ref/Controllers/flash.html">flash</a></em> scope object available to controllers is now an instance of <em>ConcurrentHashMap</em> which means none of its keys can map to <em>null</em>. There were a few places where we were setting <em>flash.message</em> to the result of a method call that might return <em>null</em>. I simply ensured the empty string was used instead.</p>
+</div>
+<div class="paragraph">
+<p>Ultimately the upgrade took a lot less time and effort than when we went from Grails 1.0.3 to 1.1 and we thankfully didn&#8217;t encounter any blocking issues. The impression I have is that the platform&#8217;s really maturing nicely. Will be cool to start using some of the new features of 1.2 in the next few weeks.</p>
+</div>
+</div>
+    <footer>
+      <ul class="tag-list">
+          <li><a href="/tags/gorm/">gorm</a></li>
+          <li><a href="/tags/grails-upgrade/">grails upgrade</a></li>
+      </ul>
+    </footer>
+  </article>
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>
+
+<div id="disqus_thread"></div>
+            <script type="text/javascript">
+            //<![CDATA[
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//adhockery.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            //]]>
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </script>

@@ -1,0 +1,210 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery - Using SASS and Compass with Gradle</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+        <article>
+    <header>
+      <time datetime="2013-04-26T13:58:00">Apr 26 2013</time>
+      <h1>Using SASS and Compass with Gradle</h1>
+    </header>
+    <div class="paragraph">
+<p>I recently started helping with the <a href="https://github.com/ratpack">Ratpack</a> website. It is (or will be) a Ratpack app &amp; built with Gradle. I started prototyping with a simple webapp created with <a href="http://yeoman.io/">Yeoman</a> and using <a href="http://sass-lang.com/">SASS</a> and <a href="http://compass-style.org/">Compass</a> for authoring CSS. When I migrated the work-in-progress into the <a href="https://github.com/ratpack/ratpack-site"><em>ratpack-site</em> application</a> I initially used <a href="http://naleid.com/blog/2013/01/24/calling-gruntjs-tasks-from-gradle/">Ted Naleid&#8217;s method</a> of calling Yeoman&#8217;s <a href="http://gruntjs.com/">Grunt</a> tasks from Gradle. Unfortunately this meant there were rather a lot of build dependencies. In order to build the app you would need Node.js, Ruby and the Compass gem installed. Peter Ledbrook pointed out this could frustrate potential contributors &amp; Marcin Erdmann <a href="https://twitter.com/marcinerdmann/status/325675229454155776">proved an example</a> of what he meant. Clearly I needed to simplify.</p>
+</div>
+
+<div class="paragraph">
+<p>SASS, particularly with Compass, is great for CSS authoring. Mixins &amp; functions like <a href="http://compass-style.org/reference/compass/utilities/color/contrast/"><code>contrasted</code></a> or <a href="http://compass-style.org/reference/compass/helpers/image-dimensions/"><code>image-height</code></a> and the <a href="http://compass-style.org/reference/compass/typography/vertical_rhythm/">vertical rhythm</a> support have become invaluable to me. However, they are Ruby gems with no ports to other languages.</p>
+</div>
+<div class="paragraph">
+<p>I wanted to at least try to get it working before giving up and using LESS. I found a few posts where people had done something similar but mostly they were either half-complete, using older Gradle syntax or exhibiting the same dependency problems I already had. They did give me the idea to use JRuby to run SASS, though.</p>
+</div>
+<div class="paragraph">
+<p>I came across several solutions that advised either packaging desired gems in a jar file or actually re-packing the JRuby jar with additional gems installed. Neither of these appealed to me. I didn&#8217;t want to publish new binary artifacts or untangle any potential licensing issues. It seemed to me that I should be able to use JRuby to install the gems I needed somewhere local to the build and then refer to them.</p>
+</div>
+<div class="sect2">
+<h3 id="installing-ruby-gems">Installing Ruby gems</h3>
+<div class="paragraph">
+<p>First I created a Gradle task called <em>installGems</em> to install the <em>compass</em> gem. This uses the Gradle <em>JavaExec</em> task to run <code>gem install</code> using JRuby and specifies the path to install the gems as <code>.jruby/gems</code>. That directory is also the task&#8217;s <em>output</em> so that further tasks can depend on it as part of the incremental build.</p>
+</div>
+<div class="paragraph">
+<p>JRuby itself is added to a new dependency scope since I&#8217;m only using it for running build tasks, not as part of the application itself.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">configurations {
+    jruby
+}
+
+dependencies {
+    jruby 'org.jruby:jruby-complete:1.7.3'
+}
+
+ext {
+    gemsDir = file('.jruby/gems')
+}
+
+task installGems(type: JavaExec) {
+    outputs.dir gemsDir
+
+    classpath = configurations.jruby
+    main = "org.jruby.Main"
+    args "-S gem install -i $gemsDir --no-rdoc --no-ri compass".tokenize()
+
+    doFirst {
+        gemsDir.mkdirs()
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Initially I installed the gems under <code>build</code> but that would mean any time <code>gradle clean</code> is run they will be deleted. Since they are not particularly fast to install and shouldn&#8217;t change I moved them elsewhere.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="compiling-sass">Compiling SASS</h3>
+<div class="paragraph">
+<p>Next I created a <em>compileSass</em> task. The trick is to supply two environment variables; <em>GEM_PATH</em> which tells JRuby where to look for installed gems and <em>PATH</em> pointing to the <code>.jruby/gems/bin</code> directory where the <em>compass</em> executable is installed.</p>
+</div>
+<div class="paragraph">
+<p>The <em>compileSass</em> task&#8217;s <em>inputs</em> are the <em>outputs</em> of <em>installGems</em> – meaning <em>installGems</em> is run automatically if necessary – along with the directories containing my <em>.scss</em> files, images and JavaScript. The task&#8217;s <em>output</em> is the directory with the compiled CSS.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">ext {
+    cssDir = file(/* output dir where CSS should go */)
+    sassDir = file(/* location of .sass / .scss files */)
+    imagesDir = file(/* location of images */)
+    javascriptsDir = file(/* location of javascripts */)
+}
+
+task compileSass(type: JavaExec) {
+    outputs.dir cssDir
+    inputs.files installGems
+    inputs.dir sassDir
+    inputs.dir imagesDir
+    inputs.dir javascriptsDir
+
+    classpath = configurations.jruby
+    main = "org.jruby.Main"
+    args "-S compass compile --sass-dir $sassDir --css-dir $cssDir --images-dir $imagesDir --javascripts-dir $javascriptsDir --relative-assets"
+    environment 'GEM_PATH', gemsDir
+    environment 'PATH', "$gemsDir/bin"
+
+    doFirst {
+        cssDir.mkdirs()
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>I also added <em>compileSass</em> into the task dependency chain so it would automatically run when needed:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">processResources.inputs.files compileSass
+clean.dependsOn cleanCompileSass</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>I then created my own <em>JRubyExec</em> task type that extends <em>JavaExec</em> to bundle together some of the commonalities between <em>installGems</em> and <em>compileSass</em>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="watching-for-changes">Watching for changes</h3>
+<div class="paragraph">
+<p>The next step was to use the <code>compass watch</code> command to automatically recompile SASS changes while the application is running. The <em>ratpack-site</em> app uses the <a href="http://www.gradle.org/docs/current/userguide/application_plugin.html">Gradle application plugin</a> to provide a <em>run</em> task. I needed to create a background thread that runs <code>compass watch</code>. I couldn&#8217;t figure out how to re-use my <em>JRubyExec</em> task here as I needed to use the imperative style of calling <code>project.javaexec</code> so I&#8217;ve ended up with some duplication. It does work, though, which is the main thing.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">task watchSass {
+    doFirst {
+        cssDir.mkdirs()
+
+        Thread.start {
+            project.javaexec {
+                classpath = configurations.jruby
+                main = 'org.jruby.Main'
+                args "-X-C -S compass watch --sass-dir $sassDir --css-dir $cssDir --images-dir $imagesDir --javascripts-dir $javascriptsDir --relative-assets".tokenize()
+                environment 'GEM_PATH', gemsDir
+                environment 'PATH', "$gemsDir/bin"
+            }
+        }
+    }
+}
+run.dependsOn watchSass</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="performance-tuning">Performance tuning</h3>
+<div class="paragraph">
+<p>Once everything was working I spent a little time performance tuning. The JRuby wiki has <a href="https://github.com/jruby/jruby/wiki/PerformanceTuning#java-virtual-machine-jvm-settings">some tips about JVM flags</a> useful for JRuby execution &amp; I added <code>-client -XX:+TieredCompilation -XX:TieredStopAtLevel=1</code> which improved things a little. Following <a href="http://blog.headius.com/2010/03/jruby-startup-time-tips.html">a tip found on Charles Nutter&#8217;s blog</a> I also added <code>-X-C</code> to the JRuby command itself which disables the JRuby JIT compiler which also seemed to help a little.</p>
+</div>
+<div class="paragraph">
+<p>Compiling SASS this way is still slower than using native Ruby – either standalone or via Grunt – but it&#8217;s not painfully slow and the tradeoff in terms of build simplicity is worth it.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="next-steps">Next steps</h3>
+<div class="paragraph">
+<p>This is not a perfect or finished solution. It contains some duplication, a mixture of declarative and imperative task styles, no proper <em>sourceSet</em> for SASS. When time permits I&#8217;d like to get this bundled up as a proper Gradle plugin or possibly two – one for generic JRuby execution and another specifically for SASS.</p>
+</div>
+<div class="paragraph">
+<p>I should also point out that Marcin Erdmann and Luke Daley were a big help in getting this soluton working. My Gradle-fu is shaky at best and they helped me a lot with declaring the incremental build properly and getting the background thread for the <em>watchSass</em> task working.</p>
+</div>
+</div>
+    <footer>
+      <ul class="tag-list">
+          <li><a href="/tags/gradle/">gradle</a></li>
+          <li><a href="/tags/sass/">sass</a></li>
+      </ul>
+    </footer>
+  </article>
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>
+
+<div id="disqus_thread"></div>
+            <script type="text/javascript">
+            //<![CDATA[
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//adhockery.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            //]]>
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </script>

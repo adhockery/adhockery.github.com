@@ -1,0 +1,82 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery - Grails Selenium RC Plugin Released</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+        <article>
+    <header>
+      <time datetime="2009-11-05T20:58:00">Nov  5 2009</time>
+      <h1>Grails Selenium RC Plugin Released</h1>
+    </header>
+    <div class="paragraph">
+<p>I&#8217;ve finally got the first release of the Selenium RC plugin out of the door. Just run <code>grails install-plugin selenium-rc</code> to install.</p>
+</div>
+<div class="paragraph">
+<p>For anyone unfamiliar with <a href="http://selenium-rc.seleniumhq.org/">Selenium RC</a> basically the plugin allows you to write and run Selenium tests in Groovy to functionally test Grails apps using a real browser. The tests run in the functional phase using <code>grails test-app</code> or <code>grails test-app -functional</code>.</p>
+</div>
+
+<div class="paragraph">
+<p>In terms of compatibility there is a very minor issue with Safari and some slightly more annoying ones with IE - all of which the plugin&#8217;s default configuration will work around for you. Unfortunately Firefox 3.5 on OSX Snow Leopard doesn&#8217;t want to play at all due to an <a href="http://jira.openqa.org/browse/SRC-743">open Selenium bug</a>. Firefox on other platforms, Google Chrome and Opera all appear to be 100% compatible.</p>
+</div>
+<div class="paragraph">
+<p>I&#8217;ve tried to make writing the tests themselves as similar to regular Grails unit and integration testing as possible. Not only that, if you have the <a href="http://grails.org/plugin/spock">Spock plugin</a> installed you can write your Selenium tests as Spock Specifications.</p>
+</div>
+<div class="paragraph">
+<p>Documentation is <a href="http://grails.org/plugin/selenium-rc">here</a>, source code is on <a href="http://github.com/robfletcher/grails-selenium-rc">GitHub</a> and issues and feature requests can be raised on <a href="http://jira.codehaus.org/browse/GRAILSPLUGINS/component/14229">Codehaus' JIRA</a>. I&#8217;ve got plenty of things to work on for future releases such as Selenium Grid integration and automatic screen-grabbing when assertions fail.</p>
+</div>
+    <footer>
+      <ul class="tag-list">
+          <li><a href="/tags/selenium/">selenium</a></li>
+          <li><a href="/tags/testing/">testing</a></li>
+          <li><a href="/tags/grails-plugins/">grails plugins</a></li>
+      </ul>
+    </footer>
+  </article>
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>
+
+<div id="disqus_thread"></div>
+            <script type="text/javascript">
+            //<![CDATA[
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//adhockery.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            //]]>
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </script>

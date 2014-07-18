@@ -1,0 +1,88 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery - Dynamic templates in Angular routes</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+        <article>
+    <header>
+      <time datetime="2013-02-11T22:37:00">Feb 11 2013</time>
+      <h1>Dynamic templates in Angular routes</h1>
+    </header>
+    <div class="paragraph">
+<p>We&#8217;re building an application where content can be published using different layouts selected by an editor. In Angular this translates to a situation where the same route &amp; controller will need to display content from the same <code>$http</code> endpoint using a range of different templates. The name of the template is included in the JSON data returned by the <code>$http</code> endpoint so it&#8217;s not known at the time the route is triggered.</p>
+</div>
+
+<div class="paragraph">
+<p>Since Angular route definitions are static (at time of writing anyway – there is <a href="https://github.com/angular/angular.js/pull/1524">a proposal to allow <code>templateUrl</code> to be declared as a function</a>) it wasn&#8217;t clear how we could do this. We experimented with responding to <code>routeChanged</code> events or implementing our own version of <code>$routeProvider</code> without finding a solution we were happy with.</p>
+</div>
+<div class="paragraph">
+<p>I figured this wasn&#8217;t such an unusual requirement &amp; went looking for an existing solution. I came across <a href="https://groups.google.com/forum/m/?fromgroups#!topic/angular/YXmGKO7bz3Q">a very useful thread on Google Groups</a>. The solution it suggests is simple; instead of a <code>templateUrl</code> the route uses a <code>template</code> containing an <code>ng-include</code> directive that uses a scope property for its path.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="javascript language-javascript">.when('/:articleSlug', {
+    controller: 'ArticleCtrl',
+    template: '&lt;article ng-include="templateUrl"&gt;&lt;/article&gt;'
+});</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In the controller we can simply assign <code>$scope.templateUrl</code> when the <code>$http</code> endpoint&#8217;s promise is resolved. Angular&#8217;s binding magic does the rest and the template is rendered.</p>
+</div>
+<div class="paragraph">
+<p>This works really well. There are no additional HTTP requests, we&#8217;re not reinventing the wheel and it&#8217;s pretty clear what is going on.</p>
+</div>
+    <footer>
+      <ul class="tag-list">
+          <li><a href="/tags/angular/">angular</a></li>
+      </ul>
+    </footer>
+  </article>
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>
+
+<div id="disqus_thread"></div>
+            <script type="text/javascript">
+            //<![CDATA[
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//adhockery.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            //]]>
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </script>

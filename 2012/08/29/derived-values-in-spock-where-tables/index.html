@@ -1,0 +1,137 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery - Derived values in Spock where tables</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+        <article>
+    <header>
+      <time datetime="2012-08-29T17:29:00">Aug 29 2012</time>
+      <h1>Derived values in Spock where tables</h1>
+    </header>
+    <div class="paragraph">
+<p>When using <code>where</code> blocks in Spock there are two forms; assigning iterable values to a variable, e.g. <code>crew &lt;&lt; ['Mal', 'Kaylee', 'Jayne']</code> or using a datatable. In the first form I always knew you could use assigned values, for example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">where:
+crew &lt;&lt; ['Mal', 'Kaylee', 'Jayne']
+nameLength = crew.length()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note the assignment operator used rather than the left shift on the second line there.</p>
+</div>
+
+<div class="paragraph">
+<p>I had always assumed that this option went out of the window when using a data table. Values in the columns can&#8217;t reference other columns after all. But <a href="http://blog.proxerd.pl/">Marcin Erdmann</a> pointed out to me that it is in fact possible to still used derived values with data tables, like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">where:
+name     | position
+'Mal'    | 'captain'
+'Kaylee' | 'mechanic'
+'Jayne'  | 'PR officer'
+
+nameLength = crew.length()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You just add additional variables after the data table. This doesn&#8217;t seem to be documented anywhere but works just fine.</p>
+</div>
+<div class="paragraph">
+<p>One way in which I find this particularly useful is in composing good text for <code>@Unroll</code> expressions. For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">@Unroll
+void '#name is the #status #position on the ship'() {
+    expect:
+    // something interesting
+
+    where:
+    name     | position     | deceased
+    'Mal'    | 'captain'    | false
+    'Kaylee' | 'mechanic'   | false
+    'Jayne'  | 'PR officer' | false
+    'Wash'   | 'pilot'      | true
+
+    status = deceased ? 'former' : 'current'
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here the <code>where</code> block variable <em>status</em> is probably not used in the body of the spec itself but just helps to make the unrolled description in the test report more readable. When the test runs the test names in the report will be:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>Mal is the current Captain on the ship</code></p>
+</li>
+<li>
+<p><code>Kaylee is the current Mechanic on the ship</code></p>
+</li>
+<li>
+<p><code>Jayne is the current PR officer on the ship</code></p>
+</li>
+<li>
+<p><code>Wash is the former pilot on the ship</code></p>
+</li>
+</ul>
+</div>
+    <footer>
+      <ul class="tag-list">
+          <li><a href="/tags/spock/">spock</a></li>
+          <li><a href="/tags/groovy/">groovy</a></li>
+          <li><a href="/tags/testing/">testing</a></li>
+      </ul>
+    </footer>
+  </article>
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>
+
+<div id="disqus_thread"></div>
+            <script type="text/javascript">
+            //<![CDATA[
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//adhockery.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            //]]>
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </script>

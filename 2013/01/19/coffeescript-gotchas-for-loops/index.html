@@ -1,0 +1,131 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery - CoffeeScript Gotchas: for loops</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+        <article>
+    <header>
+      <time datetime="2013-01-19T17:20:00">Jan 19 2013</time>
+      <h1>CoffeeScript Gotchas: for loops</h1>
+    </header>
+    <div class="paragraph">
+<p>I was caught out by a subtle difference between JavaScript and CoffeeScript yesterday.</p>
+</div>
+
+<div class="paragraph">
+<p>In JavaScript you may be used to iterating over the properties of an object using a <em>for…in</em> loop. For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="javascript language-javascript">var language = {
+    name: 'JavaScript',
+    syntaxFamily: 'C'
+};
+
+for (prop in language) {
+    console.log(prop, language[prop]);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>prop</code> variable in the loop is assigned the name of each property in the <code>language</code> object in turn.</p>
+</div>
+<div class="paragraph">
+<p>When translating some code that uses a <em>for…in</em> loop to CoffeeScript I produced something equivalent to this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="coffeescript language-coffeescript">language =
+  name: 'CoffeeScript'
+  syntaxFamily: 'Ruby'
+
+for prop in language
+  console.log "#{prop} '#{language[prop]}"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>At first glance that looks equivalent but there&#8217;s an important difference lurking. Run it and you&#8217;ll see nothing gets logged to the console.</p>
+</div>
+<div class="paragraph">
+<p>Here&#8217;s the generated JavaScript. The problem is pretty obvious:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="javascript language-javascript">var language, prop, _i, _len;
+
+language = {
+  name: 'CoffeeScript',
+  syntaxFamily: 'Ruby'
+};
+
+for (_i = 0, _len = language.length; _i &lt; _len; _i++) {
+  prop = language[_i];
+  console.log("" + prop + " '" + language[prop]);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <em>for…in</em> loop in CoffeeScript assumes iteration with a numeric index; it&#8217;s used for iterating over arrays. The correct CoffeeScript syntax is <code>for prop of language</code> - that&#8217;s <strong>of</strong> not <strong>in</strong>.</p>
+</div>
+<div class="paragraph">
+<p>Of course, for even more idiomatic CoffeeScript we can have multiple loop variables and in this example it might be appropriate to postfix the loop.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="coffeescript language-coffeescript">console.log "#{prop} '#{value}" for prop, value of language</code></pre>
+</div>
+</div>
+    <footer>
+      <ul class="tag-list">
+          <li><a href="/tags/coffeescript/">coffeescript</a></li>
+      </ul>
+    </footer>
+  </article>
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>
+
+<div id="disqus_thread"></div>
+            <script type="text/javascript">
+            //<![CDATA[
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//adhockery.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            //]]>
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </script>

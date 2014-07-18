@@ -1,0 +1,183 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery - Grails plugins on Hudson</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+        <article>
+    <header>
+      <time datetime="2010-03-11T17:50:00">Mar 11 2010</time>
+      <h1>Grails plugins on Hudson</h1>
+    </header>
+    <div class="paragraph">
+<p><span class="image"><img src="http://4.bp.blogspot.com/_fh9xwLFYBUw/S5ks3ENs8yI/AAAAAAAACbU/vHE684-UsTI/s400/hudson.png" alt="image"></span>Yesterday I spent some time setting up <a href="http://hudson-ci.org/">Hudson</a> continuous integration build for my various Grails plugins. It was pretty straightforward but I&#8217;ve <a href="https://twitter.com/wangjammer5/statuses/10269319705">been asked</a> to document the steps involved.</p>
+</div>
+
+<div class="paragraph">
+<p>Each plugin has one or more test applications under <code>test/projects</code> each of which has <code>grails.plugin.location.whatever = "../../.."</code> in <code>BuildConfig.groovy</code>. So each plugin CI build needs to run not only the plugin&#8217;s own unit tests but any integration and/or functional tests included in the test apps as well.</p>
+</div>
+<div class="sect2">
+<h3 id="_hudson_plugins">Hudson plugins</h3>
+<div class="paragraph">
+<p>I installed the essential plugins I would need:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The <a href="http://wiki.hudson-ci.org/display/HUDSON/Grails+Plugin">Grails plugin</a> makes building Grails projects much easier and allows you to build against multiple versions of Grails.</p>
+</li>
+<li>
+<p>The <a href="http://wiki.hudson-ci.org/display/HUDSON/Git+Plugin">Git plugin</a> enables Hudson to pull from a Git repository such as GitHub.</p>
+</li>
+<li>
+<p>The <a href="http://wiki.hudson-ci.org/display/HUDSON/Github+Plugin">GitHub plugin</a> adds links to the GitHub project in the Hudson build.</p>
+</li>
+<li>
+<p>The <a href="http://wiki.hudson-ci.org/display/HUDSON/ChuckNorris+Plugin">Chuck Norris plugin</a> encourages you to keep your tests from failing.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_configuring_grails">Configuring Grails</h3>
+<div class="paragraph">
+<p>Under <em>Manage Hudson &#8594; Configure System</em> there is a <em>Grails Builder</em> section where I entered the name and path of the various versions of Grails installed on the build box.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_connecting_to_github">Connecting to GitHub</h3>
+<div class="paragraph">
+<p>In the project configuration:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>I pasted the GitHub project URL in the <em>Github project</em> field (shown if you have the GitHub plugin installed).</p>
+</li>
+<li>
+<p>Under <em>Source Code Management</em> I selected <em>Git</em> then pasted the read-only repository URL into the <em>URL of repository</em> field.</p>
+</li>
+<li>
+<p>I entered <em>master</em> in the <em>Branch Specifier</em> field as I&#8217;ve seen Hudson do odd things picking up changes from other branches before. I don&#8217;t really need this behaviour and haven&#8217;t had time to investigate it further yet.</p>
+</li>
+<li>
+<p>I ticked <em>Poll SCM</em> under <em>Build Triggers</em> then set a cron expression of <code>*/5 * * * *</code> so Hudson will poll GitHub every 5 minutes.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_grails_build_steps">Grails build steps</h3>
+<div class="paragraph">
+<p>Select <em>Build with Grails</em> from the <em>Add build step</em> drop down, then:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Select the <em>Grails Installation</em> you want to use.</p>
+</li>
+<li>
+<p>Enter the <em>Targets</em> to run. These are the Grails commands that Hudson will execute. For example, I entered <code>"test-app unit: -clean --non-interactive" package-plugin</code> for the to run unit tests then package the plugin. The quotes allow arguments to be passed to individual targets so I&#8217;m telling the <em>test-app</em> phase to build clean and run non-interactively (i.e. Grails won&#8217;t ask about things like installing or uninstalling plugins).</p>
+</li>
+<li>
+<p>The other fields can be left blank for now.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Add further Grails build steps for test applications. The only difference in configuring these is that the targets will likely be different and <em>Project Base Directory</em> needs to be set to the relative path where the test apps lives, e.g. <code>test/projects/content-caching</code></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_isolating_each_build">Isolating each build</h3>
+<div class="paragraph">
+<p>One thing I found is that it&#8217;s probably a good idea to specify separate working directory for each build. I found that simultaneous builds would stomp over each other&#8217;s compiled classes otherwise. This is particularly an issue for me where I have a build for the <em>Selenium RC</em> plugin whilst one of the test apps for the <em>Springcache</em> plugin uses the latest <em>Selenium RC</em> release to run tests.</p>
+</div>
+<div class="paragraph">
+<p>Hudson provides various <a href="http://wiki.hudson-ci.org/display/HUDSON/Building+a+software+project#Buildingasoftwareproject-HudsonSetEnvironmentVariables">environment variables</a> so I just set <em>grails.work.dir</em> to <code>/tmp/.grails/${JOB_NAME}</code> in every case.</p>
+</div>
+<div class="paragraph">
+<p>The other consideration is the port that Grails applications will use. If you are running any kind of functional tests the Grails application will start and it each Hudson job needs to use a separate server port or simultaneous jobs will experience port contention. The server port is also configured in the Grails build step. I&#8217;ve just assigned a different one to each job but I couldn&#8217;t think of a particularly clever way to automate the port assignment.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_test_reports">Test reports</h3>
+<div class="paragraph">
+<p>Under <em>Post-build Actions</em> I ticked <em>Publish JUnit test result report</em> then entered a comma-separated set of paths to the XML reports generated by each build step. For example, the <em>Springcache</em> plugin has the following reports configured:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>target/test-reports/*.xml,test/projects/springcache-test/target/test-reports/*.xml,test/projects/content-caching/target/test-reports/*.xml</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>That&#8217;s picking up the root plugin&#8217;s unit test reports and the reports generated by the <em>springcache-test</em> and <em>content-caching</em> test applications. Hudson does a good job of merging these together into a unified test report.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_running_tests_that_need_a_browser">Running tests that need a browser</h3>
+<div class="paragraph">
+<p>Some of my tests use <em>Selenium RC</em> which drives a real browser. Given that Hudson is running on a headless box I had to get the display exported to a box with an X Windows environment.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_still_to_do">Still to do</h3>
+<div class="paragraph">
+<p>Right now all the plugins are building against Grails 1.2.1 only so the next task is to set up parallel builds using Grails 1.3-RC1. Ideally I would like to use Hudson&#8217;s multi-configuration project capability to do that but I haven&#8217;t had a chance to look into it yet. I&#8217;d also like to use Gradle to build the various project with one build step but I&#8217;d lose the convenience in switching Grails versions that the Hudson Grails plugin gives me.</p>
+</div>
+</div>
+    <footer>
+      <ul class="tag-list">
+          <li><a href="/tags/continuous-integration/">continuous integration</a></li>
+          <li><a href="/tags/hudson/">hudson</a></li>
+          <li><a href="/tags/grails-plugins/">grails plugins</a></li>
+      </ul>
+    </footer>
+  </article>
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>
+
+<div id="disqus_thread"></div>
+            <script type="text/javascript">
+            //<![CDATA[
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//adhockery.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            //]]>
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </script>

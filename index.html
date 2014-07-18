@@ -1,0 +1,202 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+        <article>
+    <header>
+      <time datetime="2014-07-16T15:58:00">Jul 16 2014</time>
+      <h2><a href="/2014/07/16/closures-and-field-visibility/">Closures and field visibility</a></h2>
+    </header>
+    <div class="paragraph">
+<p>I find Groovy Closures can sometimes behave in ways that, once I think about it, make perfect sense but initially seem surprising. One example of this is the fact that closures <em>declared in a parent class</em> cannot “see” private fields of that class when run in the context of a child class.</p>
+</div>
+
+    <a class="read-more" href="/2014/07/16/closures-and-field-visibility/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2014-07-08T07:11:00">Jul  8 2014</time>
+      <h2><a href="/2014/07/08/compilestatic-and-polymorphic-method-dispatch/">@CompileStatic and polymorphic method dispatch</a></h2>
+    </header>
+    <div class="paragraph">
+<p>I&#8217;m a big fan of Groovy&#8217;s <code>@CompileStatic</code> feature – so much so that I&#8217;ve updated the <em>Groovy class</em> template in IntelliJ IDEA to use it by default. I should stress I don&#8217;t do this because I believe non-statically compiled Groovy to be slow – it isn&#8217;t.</p>
+</div>
+<div class="paragraph">
+<p>Recently <a href="https://twitter.com/pledbrook/status/475986668840050688">Peter Ledbrook reminded me of one drawback</a> which is that method dispatch is statically bound when using <code>@CompileStatic</code> like it is in Java. This means that the behavior of calling polymorphic methods can change when argument types are not known at compile time.</p>
+</div>
+
+    <a class="read-more" href="/2014/07/08/compilestatic-and-polymorphic-method-dispatch/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2014-06-24T15:46:00">Jun 24 2014</time>
+      <h2><a href="/2014/06/24/enabling-groovys-invokedynamic-support-in-gradle/">Enabling Groovy’s “invokedynamic” support in Gradle</a></h2>
+    </header>
+    <div class="paragraph">
+<p>I posted <a href="/post/89759686171/gradle-and-groovys-invoke-dynamic-support">previously</a> about configuring a Gradle project to ensure that only the <em>indy</em> version of Groovy (that is the variant that supports Java 7&#8217;s <em>invokedynamic</em> bytecode instruction) is included in the dependency graph. However, just including that version of the Groovy jar is <strong>not</strong> enough to make your Groovy code compile in such a way that it uses <em>invokedynamic</em>.</p>
+</div>
+
+    <a class="read-more" href="/2014/06/24/enabling-groovys-invokedynamic-support-in-gradle/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2014-06-24T15:32:00">Jun 24 2014</time>
+      <h2><a href="/2014/06/24/gradle-and-groovys-invoke-dynamic-support/">Gradle and Groovy’s Invoke Dynamic support</a></h2>
+    </header>
+    <div class="paragraph">
+<p>Since version 2.0 the Groovy distribution has included an alternate artifact that enables <a href="http://docs.oracle.com/javase/7/docs/technotes/guides/vm/multiple-language-support.html#invokedynamic">invoke dynamic</a> support.</p>
+</div>
+
+    <a class="read-more" href="/2014/06/24/gradle-and-groovys-invoke-dynamic-support/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2014-06-22T08:27:00">Jun 22 2014</time>
+      <h2><a href="/2014/06/22/static-analysis-and-strictness/">Static analysis and strictness</a></h2>
+    </header>
+    <div class="paragraph">
+<p>Let me be clear – static analysis tools like Checkstyle and Codenarc are useful tools. But…</p>
+</div>
+<div class="paragraph">
+<p>I don&#8217;t think you should have overly strict enforcement. There is a small class of static analysis rules that are unambiguous – you&#8217;re not using that <code>import</code>, that <code>if</code> block doesn&#8217;t have braces – but there is a large class of rules that exist in a grey area. Is that method really unused or is it invoked reflectively somewhere? Yes, generally we should declare constants for magic numbers but is it really necessary for the prime seed of a hash code method?</p>
+</div>
+
+    <a class="read-more" href="/2014/06/22/static-analysis-and-strictness/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2013-09-12T01:13:00">Sep 12 2013</time>
+      <h2><a href="/2013/09/12/decoupling-from-the-dom-with-angular/">Decoupling from the DOM with Angular</a></h2>
+    </header>
+    <div class="paragraph">
+<p>One piece of advice you&#8217;ll run into pretty soon when working with Angular is that you should never touch the DOM outside of a directive. Especially when test-driving your components this is pretty wise. The great strength of Angular is the declarative way in which the view (HTML) works with the view model (Angular controllers). It&#8217;s almost absurd how easy it is to unit test Angular controllers. Controller functions tend to act on <code>$scope</code> properties, trigger or respond to events and all those things are straightforward to replicate in unit tests.</p>
+</div>
+
+    <a class="read-more" href="/2013/09/12/decoupling-from-the-dom-with-angular/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2013-09-02T14:48:00">Sep  2 2013</time>
+      <h2><a href="/2013/09/02/unit-testing-angular-directives-that-use-controller-and/">Unit testing Angular directives that use controller and templateUrl</a></h2>
+    </header>
+    <div class="paragraph">
+<p>I spent an hour or so this morning figuring out how to unit test an Angular directive that uses a controller and a template loaded from a file (as opposed to inline). There&#8217;s a useful example in the <a href="https://github.com/vojtajina/ng-directive-testing">ng-directive-testing</a> repository but I thought a quick summary would be useful (as much to remind me the next time I have to do it as anything). Also the examples there test by interacting with DOM elements rather than directly with the directive&#8217;s scope.</p>
+</div>
+
+    <a class="read-more" href="/2013/09/02/unit-testing-angular-directives-that-use-controller-and/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2013-09-02T10:07:00">Sep  2 2013</time>
+      <h2><a href="/2013/09/02/on-organizing-files-and-directories-in-angular-apps/">On organizing files and directories in Angular apps</a></h2>
+    </header>
+    <div class="paragraph">
+<p>I&#8217;ve been working on an <a href="http://angularjs.org/">Angular JS</a> project for the past few weeks. It&#8217;s not the first time I&#8217;ve used Angular but it is the first time I&#8217;ve used the <a href="https://github.com/yeoman/generator-angular"><em>generator-angular</em></a> package for <a href="http://yeoman.io/">Yeoman</a>. Having the ability to quickly generate skeletons for new components is really nice but there&#8217;s one thing that rubs me up the wrong way – the way the genenerated code is organized on the file system.</p>
+</div>
+
+    <a class="read-more" href="/2013/09/02/on-organizing-files-and-directories-in-angular-apps/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2013-07-26T13:57:00">Jul 26 2013</time>
+      <h2><a href="/2013/07/26/gr8conf-us-debrief/">GR8Conf US debrief</a></h2>
+    </header>
+    <div class="paragraph">
+<p>I just got back from my second GR8Conf US in Minneapolis. Despite the jet-lag it was well worth it.</p>
+</div>
+
+    <a class="read-more" href="/2013/07/26/gr8conf-us-debrief/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2013-07-09T14:28:00">Jul  9 2013</time>
+      <h2><a href="/2013/07/09/semantic-color-names-in-less-and-sass-stylesheets/">Semantic color names in LESS and Sass stylesheets</a></h2>
+    </header>
+    <div class="paragraph">
+<p>Most people using Sass or LESS will define variables for the palette of colors in their page. Something like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="scss language-scss">$blackish: #231f20;
+$purple: #561e31;
+$pink: #da2770;
+$off-white: #efefef;
+
+.header {
+    background-color: $blackish;
+    color: $off-white;
+}
+
+a {
+    color: $purple;
+    &amp;:hover, &amp;:active {
+        color: $pink;
+    }
+}
+
+blockquote {
+    background-color: $blackish;
+    color: $purple;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This is good as far as it goes. Tweaking colors in the page is pretty easy as they only have to be changed in the variable definition.</p>
+</div>
+<div class="paragraph">
+<p>That said, I think there are a couple of problems here.</p>
+</div>
+
+    <a class="read-more" href="/2013/07/09/semantic-color-names-in-less-and-sass-stylesheets/">Read more…</a>
+  </article>
+  <hr>
+
+  <nav class="pagination">
+      <a disabled>Previous page</a>
+    <span>Page 1 of 11</span>
+      <a rel="next" href="/page/2/">Next page</a>
+  </nav>
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>

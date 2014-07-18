@@ -1,0 +1,116 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery - Building your app on Hudson with Multiple Grails versions</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+        <article>
+    <header>
+      <time datetime="2010-05-03T06:35:00">May  3 2010</time>
+      <h1>Building your app on Hudson with Multiple Grails versions</h1>
+    </header>
+    <div class="paragraph">
+<p>For my Grails plugins I generally write a test project (or more than one). I thought it would be useful to be able to run these against multiple versions of Grails on my build server so I can spot any incompatibilities with the versions the plugin is supposed to support.</p>
+</div>
+<div class="paragraph">
+<p>Using <a href="http://hudson-ci.org/">Hudson</a> this turned out to be pretty straightforward.</p>
+</div>
+
+<div class="paragraph">
+<p>You will need all the Grails versions you want to test against installed on your Hudson box. I put them in <code>/opt</code> so replace that with wherever you have them in the steps below. Also, if you want the builds to run in parallel and will be running any functional tests you&#8217;ll need the <a href="http://wiki.hudson-ci.org/display/HUDSON/Port+Allocator+Plugin">Hudson Port Allocator plugin</a>.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Start by creating a new job in Hudson and choosing <em>"Build multi-configuration project"</em>.</p>
+</li>
+<li>
+<p>The configuration dialog has an extra section <em>"Configuration Matrix"</em> where you can set up the different config combinations that will run. We&#8217;re just interested in varying the Grails version so check the <em>"Axes"</em> and create a new axis named <em>"GRAILS_VERSION"</em> with the different versions you want in the <em>"values"</em> box, e.g. "<code>1.2.0 1.2.1 1.2.2 1.3.0.RC2</code>"</p>
+</li>
+<li>
+<p>Set up your source code repository and build triggers as you would for any other project.</p>
+</li>
+<li>
+<p>If you want to run the builds in parallel and are running any functional tests you will need to make sure that Grails starts up on a unique port. In the <em>"Build environment"</em> section add a new <em>"Plain TCP port"</em> named <em>"GRAILS_PORT"</em>. If you&#8217;re running anything else that needs a port such as a Selenium server you&#8217;ll need one for that as well.</p>
+</li>
+<li>
+<p>Add an <em>"Execute shell"</em> build step. Unfortunately the Hudson Grails plugin does not allow you to use a variable to specify the Grails version so you&#8217;ll have to go old-school:</p>
+<div class="paragraph">
+<p>export GRAILS_HOME=/opt/grails-latexmath:[$GRAILS_VERSION export PATH=$]GRAILS_HOME/bin:latexmath:[$PATH # assign Grails a unique port (you can skip this if you&#8217;re only running unit/integration tests) export JAVA_OPTS="$]JAVA_OPTS -Dserver.port=$GRAILS_PORT" grails clean grails upgrade --non-interactive grails test-app --non-interactive</p>
+</div>
+</li>
+<li>
+<p>Check <em>"Publish JUnit test result report"</em> in the <em>"Post-build Actions"</em> section and specify <code>target/test-reports/*.xml</code> as the <em>"Test report XMLs"</em></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>When you run the Hudson job you should see it kick off one sub-job for each Grails version. Each will check out the project, upgrade it to the relevant Grails version and run the tests.</p>
+</div>
+<div class="paragraph">
+<p>I have my plugin test projects triggered by the plugin build and have them grab the plugin zip itself from the archived artefacts in the plugin&#8217;s Hudson job. So I&#8217;ve added this before the <code>grails test-app</code> step:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="bash language-bash">grails install-plugin http://my.hudson.server/hudson/job/my-plugin/lastSuccessfulBuild/artifact/my-plugin-1.0.zip --non-interactive</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>There&#8217;s a <a href="http://jira.codehaus.org/browse/GRAILS-6223">bug</a> in Grails 1.3.0.RC2 that means you will need to split this into a <code>wget</code> followed by installing the zip from a file path rather than a URL. This is fixed in trunk so won&#8217;t be a problem in Grails 1.3 final.</p>
+</div>
+<div class="paragraph">
+<p>If you&#8217;re using SVN I think you may need to revert any changes the <code>grails upgrade</code> has made to <code>application.properties</code>, etc. otherwise you&#8217;ll get merge conflicts on the next run. This does not seem to be a problem with Git.</p>
+</div>
+    <footer>
+      <ul class="tag-list">
+          <li><a href="/tags/hudson/">hudson</a></li>
+      </ul>
+    </footer>
+  </article>
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>
+
+<div id="disqus_thread"></div>
+            <script type="text/javascript">
+            //<![CDATA[
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//adhockery.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            //]]>
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </script>

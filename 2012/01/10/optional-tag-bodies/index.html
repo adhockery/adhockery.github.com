@@ -1,0 +1,95 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery - Optional tag bodies</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+        <article>
+    <header>
+      <time datetime="2012-01-10T19:56:00">Jan 10 2012</time>
+      <h1>Optional tag bodies</h1>
+    </header>
+    <div class="paragraph">
+<p>Sometimes you may want to implement a Grails GSP tag that has an optional body. Grails tag closures take one or two arguments, the first a map of the attributes passed to the tag the second a <em>Closure</em> representing the tag body. Even if the tag was not invoked with a body the second argument is not <em>null</em> so doing this does not work:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">def myTag = { attrs, body -&gt;
+    if (!body) {
+        // render a default body
+    } else {
+        // render the supplied tag body
+    }
+}</code></pre>
+</div>
+</div>
+
+<div class="paragraph">
+<p>It turns out that if the tag did not have a body the argument passed to the <em>Closure</em> is always the same constant, so what you <em>can</em> do is:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">import org.codehaus.groovy.grails.web.pages.GroovyPage
+
+def myTag = { attrs, body -&gt;
+    if (body.is(GroovyPage.EMPTY_BODY_CLOSURE)) {
+        // render a default body
+    } else {
+        // render the supplied tag body
+    }
+}</code></pre>
+</div>
+</div>
+    <footer>
+      <ul class="tag-list">
+          <li><a href="/tags/grails/">grails</a></li>
+      </ul>
+    </footer>
+  </article>
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>
+
+<div id="disqus_thread"></div>
+            <script type="text/javascript">
+            //<![CDATA[
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//adhockery.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            //]]>
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </script>

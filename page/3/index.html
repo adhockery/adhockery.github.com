@@ -1,0 +1,174 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+        <article>
+    <header>
+      <time datetime="2013-02-11T22:37:00">Feb 11 2013</time>
+      <h2><a href="/2013/02/11/dynamic-templates-in-angular-routes/">Dynamic templates in Angular routes</a></h2>
+    </header>
+    <div class="paragraph">
+<p>We&#8217;re building an application where content can be published using different layouts selected by an editor. In Angular this translates to a situation where the same route &amp; controller will need to display content from the same <code>$http</code> endpoint using a range of different templates. The name of the template is included in the JSON data returned by the <code>$http</code> endpoint so it&#8217;s not known at the time the route is triggered.</p>
+</div>
+
+    <a class="read-more" href="/2013/02/11/dynamic-templates-in-angular-routes/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2013-02-05T16:13:00">Feb  5 2013</time>
+      <h2><a href="/2013/02/05/css-background-transformations/">CSS background transformations</a></h2>
+    </header>
+    <div class="paragraph">
+<p>CSS3 includes a bunch of <code>transform</code> options allowing things like rotation &amp; distortion of element boxes. I wanted to apply that to achieve an effect inspired by <a href="https://www.google.com/images?q=googie+signage">mid 20th Century <em>Googie</em> signage</a>.</p>
+</div>
+<div class="paragraph">
+<p>My goal was to distort just the background behind an element whilst leaving the text alone. The text should also be able to "escape" from the background, for example letters can overflow beyond the background.</p>
+</div>
+<div class="paragraph">
+<p>Naturally, being a CSS purist I also wanted to do all this without introducing non-semantic extra elements into the document.</p>
+</div>
+
+    <a class="read-more" href="/2013/02/05/css-background-transformations/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2013-02-03T07:53:00">Feb  3 2013</time>
+      <h2><a href="/2013/02/03/ad-hockery-on-tumblr/">Ad-Hockery on Tumblr</a></h2>
+    </header>
+    <div class="paragraph">
+<p>There&#8217;s nothing more boring than an <em>"I moved my blog"</em> post but a couple of people have actually asked me to write up something about why I chose Tumblr &amp; how I used <a href="http://gruntjs.com/">Grunt</a> to help me build the theme. So – sorry – here&#8217;s my <em>"I moved my blog"</em> post…</p>
+</div>
+
+    <a class="read-more" href="/2013/02/03/ad-hockery-on-tumblr/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2013-01-20T05:54:00">Jan 20 2013</time>
+      <h2><a href="/2013/01/20/getting-started-with-angular-unit-tests/">Getting started with Angular unit tests</a></h2>
+    </header>
+    <div class="paragraph">
+<p>I&#8217;ve been pretty enthusiastic about <a href="http://angularjs.org/">Angular</a> for a while now but although I was encouraged by the consideration given to testing hadn&#8217;t really tried unit testing my Angular components. I&#8217;ve been using <a href="http://casperjs.org/">Casper</a> to test end-to-end which has been good enough for the experimental stuff I&#8217;d been doing with Angular. When I recently started working on a <em>real</em> app with a fairly complex Angular controller it felt like I needed to define the logic with some fine-grained unit tests.</p>
+</div>
+
+    <a class="read-more" href="/2013/01/20/getting-started-with-angular-unit-tests/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2013-01-19T17:20:00">Jan 19 2013</time>
+      <h2><a href="/2013/01/19/coffeescript-gotchas-for-loops/">CoffeeScript Gotchas: for loops</a></h2>
+    </header>
+    <div class="paragraph">
+<p>I was caught out by a subtle difference between JavaScript and CoffeeScript yesterday.</p>
+</div>
+
+    <a class="read-more" href="/2013/01/19/coffeescript-gotchas-for-loops/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2012-12-20T21:23:00">Dec 20 2012</time>
+      <h2><a href="/2012/12/20/grails-and-front-end-tools/">Grails & front end tools</a></h2>
+    </header>
+    <div class="paragraph">
+<p>Last week was the London Groovy &amp; Grails Exchange 2012 where I gave a talk called <a href="http://skillsmatter.com/podcast/groovy-grails/grails-for-hipsters">Grails for hipsters</a> about integrating Grails apps with some of the buzziest current tools &amp; techniques. Part of what I talked about was my approach to handling pre-processed front-end resources in Grails apps. In <a href="http://git.io/hipsteroid">the demo app</a> for my talk I used <a href="http://lesscss.org/">LESS</a> &amp; <a href="http://coffeescript.org/">CoffeeScript</a> but everything I discusses applies equally to <a href="http://sass-lang.com/">SASS</a>, <a href="http://learnboost.github.com/stylus/">Stylus</a>, <a href="http://www.typescriptlang.org/">TypeScript</a>, etc.</p>
+</div>
+
+    <a class="read-more" href="/2012/12/20/grails-and-front-end-tools/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2012-10-28T14:36:00">Oct 28 2012</time>
+      <h2><a href="/2012/10/28/jerry-a-jquery-like-api-for-dom-parsing/">Jerry: a jQuery like API for DOM parsing</a></h2>
+    </header>
+    <div class="paragraph">
+<p>When unit testing things that produce HTML output (such as some Grails taglibs) there are some common pitfalls. Comparing large chunks of markup with an expected string is very brittle; whitespace and attribute ordering becomes significant. Often people end up using regular expressions or assertions like <code>assert output.contains('&lt;div id="foo"&gt;')</code>. Whilst it may be a bit more maintainable this doesn&#8217;t really test correct DOM structure which is often important and again, attribute order can be a problem.</p>
+</div>
+
+    <a class="read-more" href="/2012/10/28/jerry-a-jquery-like-api-for-dom-parsing/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2012-10-16T13:14:00">Oct 16 2012</time>
+      <h2><a href="/2012/10/16/less-vs-sass-variable-scopes/">LESS vs SASS variable scopes</a></h2>
+    </header>
+    <div class="paragraph">
+<p>Google for something like <em>"LESS vs SASS"</em> and you will find the general consensus seems to be that SASS comes out ahead. Take a look at <a href="http://wrangl.com/sass-v-less">this summary</a>, for example.</p>
+</div>
+<div class="paragraph">
+<p>I&#8217;m not going to argue that in some respects SASS isn&#8217;t more powerful but there&#8217;s one particular thing - variable scoping - that I think LESS handles better.</p>
+</div>
+
+    <a class="read-more" href="/2012/10/16/less-vs-sass-variable-scopes/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2012-10-15T12:56:00">Oct 15 2012</time>
+      <h2><a href="/2012/10/15/less-with-modernizr-and-media-queries/">LESS with Modernizr and media queries</a></h2>
+    </header>
+    <div class="paragraph">
+<p>One of the main advantages of <a href="http://lesscss.org/">LESS</a> is <a href="http://lesscss.org/#-nested-rules">nesting</a> rules for components in a structure that mirrors the DOM. However, when using <a href="http://modernizr.com/">Modernizr</a> you create override rules based on classes present on the root <code>html</code> tag. It would be nice to declare those override rules alongside the other rules for the same components. The same concern applies when using media queries. Luckily, there <em>is</em> a way to do this.</p>
+</div>
+
+    <a class="read-more" href="/2012/10/15/less-with-modernizr-and-media-queries/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2012-10-11T21:18:00">Oct 11 2012</time>
+      <h2><a href="/2012/10/11/is-this-a-dagger-i-see-before-me/">Is this a Dagger I see before me?</a></h2>
+    </header>
+    <div class="paragraph">
+<p>Recently <a href="https://twitter.com/marcinerdmann">Marcin Erdmann</a> and I decided to experiment with using <a href="https://github.com/square/dagger">Dagger</a> for dependency injection in a project at work. It&#8217;s a super-lightweight DI framework built by <a href="http://squareup.com">Square</a>.</p>
+</div>
+
+    <a class="read-more" href="/2012/10/11/is-this-a-dagger-i-see-before-me/">Read more…</a>
+  </article>
+  <hr>
+
+  <nav class="pagination">
+      <a rel="prev" href="/page/2/">Previous page</a>
+    <span>Page 3 of 11</span>
+      <a rel="next" href="/page/4/">Next page</a>
+  </nav>
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>

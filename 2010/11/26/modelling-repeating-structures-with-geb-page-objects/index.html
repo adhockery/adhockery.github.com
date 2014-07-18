@@ -1,0 +1,247 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery - Modelling repeating structures with Geb page objects</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+        <article>
+    <header>
+      <time datetime="2010-11-26T00:17:00">Nov 26 2010</time>
+      <h1>Modelling repeating structures with Geb page objects</h1>
+    </header>
+    <div class="paragraph">
+<p><a href="http://geb.codehaus.org/">Geb</a> is the hot new thing in Grails functional testing. One of its most powerful features is the concise DSL for defining page objects. The reasons for using page objects are <a href="http://code.google.com/p/selenium/wiki/PageObjects">well</a> <a href="http://robfletcher.github.com/grails-selenium-rc/docs/manual/guide/4.%20Using%20Page%20Objects.html">enumerated</a> <a href="http://geb.codehaus.org/manual/latest/pages.html#the_page_object_pattern_why">elsewhere</a> but the basic point is to allow your tests to interact with pages in a manner agnostic of the detail of their structure. This is both practical (you can change markup structure without having to fix numerous tests that only fail because they were tightly coupled to that structure) and aesthetic (your tests read more like a user&#8217;s interaction with the page - the <em>what</em> rather than the <em>how</em>).</p>
+</div>
+<div class="paragraph">
+<p>I want to put together a few short blog posts dealing with patterns that I find useful for defining page objects and modules in Geb. As I go I&#8217;ll keep adding to a very simple Grails project showing working examples which is <a href="https://github.com/robfletcher/geb-examples/">available on GitHub</a>.</p>
+</div>
+<div class="paragraph">
+<p>In this post I want to talk about repeating data structures such as lists and tables and how to model them effectively.</p>
+</div>
+
+<div class="paragraph">
+<p>A <em>content</em> property in a Geb <code>Page</code> or <code>Module</code> can be any type; whatever is returned from the defining closure. This will frequently be a Geb <code>Navigator</code> instance or a <code>String</code> but can be whatever is useful for the tests you&#8217;re writing. A good rule of thumb is that the test should be dealing with as simplified a view of the data as possible. All the complexity of traversing HTML elements and manipulating them into a useful form should be hidden away in the page objects and modules. When handling repeating data structures such as <code>ol</code> or <code>table</code> elements you probably want to be able to treat the content as a <code>List</code> so that tests can use Groovy features such as iterator methods, indexing and slicing to make very expressive assertions.</p>
+</div>
+<div class="sect2">
+<h3 id="simple-repeating-structures">Simple repeating structures</h3>
+<div class="paragraph">
+<p>For example, imagine we want to verify an <code>ol</code> element like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="markup language-markup">&lt;ol id="recent-books"&gt;
+    &lt;li&gt;Zero History&lt;/li&gt;
+    &lt;li&gt;Surface Detail&lt;/li&gt;
+    &lt;li&gt;The Machine of Death&lt;/li&gt;
+&lt;/ol&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The most useful type would probably be a <code>List&lt;String&gt;</code> which we can get easily enough by defining our content like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">static content = {
+    recentBooks { $("ol#recent-books li")*.text() }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This is then very easy to use in a test:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">expect:
+recentBooks == ["Zero History", "Surface Detail", "The Machine of Death"]</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="complex-repeating-structures-using-modules">Complex repeating structures using Modules</h3>
+<div class="paragraph">
+<p>A more complex example of a repeating structure is a table, where each row contains several fields. Here we can use a Geb <code>Module</code> to represent each row, with content properties to get data from each cell. Let&#8217;s say we want to verify the contents of the following table of search results:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="markup language-markup">&lt;table id="book-results"&gt;
+    &lt;thead&gt;
+        &lt;tr&gt;
+            &lt;th&gt;Title&lt;/th&gt;
+            &lt;th&gt;Author&lt;/th&gt;
+            &lt;th&gt;Format&lt;/th&gt;
+            &lt;th&gt;Price&lt;/th&gt;
+            &lt;th&gt;Release Date&lt;/th&gt;
+        &lt;/tr&gt;
+    &lt;/thead&gt;
+    &lt;tbody&gt;
+        &lt;tr&gt;
+            &lt;td&gt;Zero History&lt;/td&gt;
+            &lt;td&gt;William Gibson&lt;/td&gt;
+            &lt;td&gt;Hardback&lt;/td&gt;
+            &lt;td&gt;£12.29&lt;/td&gt;
+            &lt;td&gt;2 Sep 2010&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;td&gt;Zero History&lt;/td&gt;
+            &lt;td&gt;William Gibson&lt;/td&gt;
+            &lt;td&gt;Kindle&lt;/td&gt;
+            &lt;td&gt;£11.99&lt;/td&gt;
+            &lt;td&gt;2 Sep 2010&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;td&gt;Spook Country&lt;/td&gt;
+            &lt;td&gt;William Gibson&lt;/td&gt;
+            &lt;td&gt;Paperback&lt;/td&gt;
+            &lt;td&gt;£5.00&lt;/td&gt;
+            &lt;td&gt;31 Jul 2008&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;td&gt;Pattern Recognition&lt;/td&gt;
+            &lt;td&gt;William Gibson&lt;/td&gt;
+            &lt;td&gt;Paperback&lt;/td&gt;
+            &lt;td&gt;£4.99&lt;/td&gt;
+            &lt;td&gt;24 Jun 2004&lt;/td&gt;
+        &lt;/tr&gt;
+    &lt;/tbody&gt;
+&lt;/table&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We can define our module like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">static content = {
+    bookResults { i -&gt; module BookRow, $("table#book-results tbody tr", i) }
+}
+
+class BookRow extends Module {
+    static content = {
+        cell { i -&gt; $("td", i) }
+        title { cell(0).text() }
+        author { cell(1).text() }
+        format { cell(2).text() }
+        price { cell(3).text()[1..-1].toDouble() }
+        releaseDate { cell(4).text() }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>bookResults</code> content closure takes a row number parameter and uses it to select the corresponding <code>tr</code> from the body of the table and use that to construct a module. The module itself defines content properties with meaningful names that map to the text in each cell.</p>
+</div>
+<div class="paragraph">
+<p>This isn&#8217;t bad as far as it goes. We can use the module pretty effectively in tests like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">expect:
+bookResults(0).title == "Zero History"
+bookResults(3).price == 4.99</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>However, <code>bookResults</code> isn&#8217;t a <code>List</code>. We can&#8217;t easily get all the book titles at once or make an assertion that all the authors are the same or find the lowest price. Even querying how many rows there are would require an additional content property or method to retrieve <code>$("tbody tr").size()</code>. The table is a repeating data structure and it would be nice to treat it as one!</p>
+</div>
+<div class="paragraph">
+<p>This ought to be possible bearing in mind 3 things:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The type of a content property is simply whatever you return from the defining closure, there&#8217;s no reason we can&#8217;t return a <code>List&lt;BookRow&gt;</code>.</p>
+</li>
+<li>
+<p>There&#8217;s nothing special about the expression that constructs the module itself: <code>module BookRow, $("tbody tr", i)</code> is just a call to a method called <code>module</code> passing a <code>Class&lt;? extends Module&gt;</code> which is the module type we want and a <code>Navigator</code> pointing to the module&#8217;s root element.</p>
+</li>
+<li>
+<p>The Geb <code>Navigator</code> class returned by the <code>$</code> expression implements <code>Iterable&lt;Navigator&gt;</code> and can be treated like a <code>List</code> of all the selected HTML elements.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>In fact we can get a <code>List&lt;BookRow&gt;</code> easily enough if we redefine the <code>bookResults</code> property like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">static content = {
+    bookResults {
+        $("tbody tr").collect {
+            module BookRow, it
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The key here is that we iterate over the <code>tr</code> elements inside the content definition collecting a new <code>BookRow</code> instance for each one. Now the page object doesn&#8217;t require the test to pass in the index of the row it&#8217;s interested in. This enables our test to do some much more powerful and interesting things:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">expect:
+bookResults.size() == 4
+bookResults[0].title == "Zero History"
+bookResults.title.unique() == ["Zero History", "Spook Country", "Pattern Recognition"]
+bookResults.every { it.author == "William Gibson" }
+bookResults[2..3].every { it.format == "Paperback" }
+bookResults.price.sum() == 34.27</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>I&#8217;ve tried to show a couple of reasonably simple examples here. Others are easy to imagine; a <code>Map</code> representing the <code>dt</code> and <code>dd</code> elements inside an HTML definition list, a list of modules representing a group of labelled radio buttons or news items with images and links, a tree-like multi-level navigation structure, etc.</p>
+</div>
+</div>
+    <footer>
+      <ul class="tag-list">
+          <li><a href="/tags/geb/">geb</a></li>
+          <li><a href="/tags/testing/">testing</a></li>
+      </ul>
+    </footer>
+  </article>
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>
+
+<div id="disqus_thread"></div>
+            <script type="text/javascript">
+            //<![CDATA[
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//adhockery.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            //]]>
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </script>

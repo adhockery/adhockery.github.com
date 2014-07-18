@@ -1,0 +1,143 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery - JavaScript’s history object, pushState and the back button</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+        <article>
+    <header>
+      <time datetime="2011-02-22T22:31:00">Feb 22 2011</time>
+      <h1>JavaScript’s history object, pushState and the back button</h1>
+    </header>
+    <div class="paragraph">
+<p>I&#8217;m not sure if it&#8217;s the immaturity of the browser support or my general uselessness but I&#8217;ve been having some trouble with the JavaScript <em>history</em> API.</p>
+</div>
+
+<div class="paragraph">
+<p>I won&#8217;t try to explain the <em>history</em> API here, it&#8217;s pretty well covered at <a href="https://developer.mozilla.org/en/DOM/Manipulating_the_browser_history">Mozilla Developer Network</a> and <a href="http://dev.w3.org/html5/spec-author-view/history.html">W3</a>. The basics are simple enough:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The API provides two methods; <a href="http://dev.w3.org/html5/spec/history.html#dom-history-pushstate"><code>pushState</code></a> which allows you to add a new entry to the browser history and <a href="http://dev.w3.org/html5/spec/history.html#dom-history-replacestate"><code>replaceState</code></a> which modifies the current history entry.</p>
+</li>
+<li>
+<p>New entries added to history using <code>pushState</code> can be navigated via the browser&#8217;s <em>back</em> and <em>forward</em> buttons and a <code>popstate</code> event is fired on the <code>window</code> object when this happens.</p>
+</li>
+<li>
+<p>Both methods allow you to attach arbitrary data to the history entry that you can use to reconstruct the appropriate page state when the user uses the <em>back</em> or <em>forward</em> buttons.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>I imagine a pretty typical use-case is what I&#8217;ve been trying to do with the pagination and sorting on the list pages of <em>Grails</em> scaffolding. Instead of pagination links and column headers causing a full page reload when clicked I intercept the click event and send an AJAX request getting back a page fragment I can use to update the list in the page. Easy enough, however without the <em>history</em> API it will break the back and forward buttons and make deep linking impossible. This isn&#8217;t an acceptable option so in true <a href="http://en.wikipedia.org/wiki/Progressive_enhancement">progressive enhancement</a> style I&#8217;ve used <a href="http://www.modernizr.com/">Modernizr</a> and only apply the AJAX behaviour if the browser supports the <em>history</em> API.</p>
+</div>
+<div class="paragraph">
+<p>The essence of the script involved is this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="javascript language-javascript">var links =     //... pagination and sorting links
+var container = //... the region of the page that will be updated with AJAX
+
+// override clicks on the links
+links.live('click', function() {
+    // grab the link's URL
+    var url = $(this).attr('href');
+    // add a new history entry
+    history.pushState({ path: url }, '', url);
+    // load the page fragment into the container with AJAX
+    container.load(url);
+    // prevent the link click bubbling
+    return false;
+});
+
+// handle the back and forward buttons
+$(window).bind('popstate', function(event) {
+    // if the event has our history data on it, load the page fragment with AJAX
+    var state = event.originalEvent.state;
+    if (state) {
+        container.load(state.path);
+    }
+});
+
+// when the page first loads update the history entry with the URL
+// needed to recreate the 'first' page with AJAX
+history.replaceState({ path: window.location.href }, '');</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>At first glance this works pretty nicely. In browsers that support <em>history</em> (right now that&#8217;s just Chrome, Safari and its mobile variants) paginating and sorting the list does not refresh the entire page but the browser&#8217;s location bar <em>is</em> updated so copy-pasting or bookmarking the URL will give a valid link to the current page. What&#8217;s more, the back and forward buttons can be used to step back through the list pages just as if we reloaded the whole page. In non-<em>history</em>-compliant browsers the list page behaves just like it always did; the links reload the entire page.</p>
+</div>
+<div class="paragraph">
+<p>Unfortunately there&#8217;s a problem that was <a href="https://github.com/robfletcher/grails-scaffolding/issues#issue/2">reported to me on GitHub</a> shortly after I uploaded a demo of my scaffolding work. Where everything falls down is when you paginate the list, follow a link off the page (or just use a bookmark or type in a URL), then use the <em>back</em> button to return to it. In Chrome and iPad/iPhone variants of Safari the browser displays just the page fragment from the last AJAX call, losing all the surrounding page along with styling, scripts, etc.</p>
+</div>
+<div class="paragraph">
+<p>Where things get very odd is that adding a <code>Cache-Control: no-cache</code> header to the AJAX responses makes the problem disappear, presumably because the browser then doesn&#8217;t cache the AJAX response and has to use the historical URL to reload the entire page. Remember, in good progressive enhancement style the URL for the full page or the fragment is the same. The server uses the <code>X-Requested-With</code> header to decide whether to return a fragment or the whole page. Obviously, forgoing caching is hardly an acceptable compromise but it&#8217;s interesting in that it reveals what the browser is doing. It can&#8217;t, surely, be right for the browser to treat a page fragment the same as a full document!</p>
+</div>
+<div class="paragraph">
+<p>Curiously in <em>desktop</em> Safari this doesn&#8217;t happen and the full page is loaded as you would hope. Looking at the <em>User-Agent</em> header it looks like Safari is using an older version of WebKit (<em>533.19.4</em> rather than <em>534.13</em>).</p>
+</div>
+<div class="paragraph">
+<p>You can see the behaviour in my <a href="http://scaffolding.elasticbeanstalk.com/">scaffolding sample app</a>. I also ran into the exact same issue today at work whilst trying to add history navigation to <a href="http://skyliving.sky.com/celebrity/find-a-celebrity">this page</a> (which is a good example of why you&#8217;d want to use <em>history</em> in the first place). I don&#8217;t think it&#8217;s just me, either. The same problem can be seen with the demo linked from <a href="http://js-html5.com/post/3014620142/history-api">this post</a> about the <em>history</em> API.</p>
+</div>
+<div class="paragraph">
+<p>If there are any JavaScript experts out there who can point out my obvious incompetence here, that would be great. Otherwise I guess I&#8217;ll have to wait for updates to WebKit to hopefully fix the issue before I can start applying this technique with confidence.</p>
+</div>
+    <footer>
+      <ul class="tag-list">
+          <li><a href="/tags/chrome/">chrome</a></li>
+          <li><a href="/tags/html5/">html5</a></li>
+          <li><a href="/tags/safari/">safari</a></li>
+          <li><a href="/tags/webkit/">webkit</a></li>
+          <li><a href="/tags/javascript/">javascript</a></li>
+      </ul>
+    </footer>
+  </article>
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>
+
+<div id="disqus_thread"></div>
+            <script type="text/javascript">
+            //<![CDATA[
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//adhockery.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            //]]>
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </script>

@@ -1,0 +1,172 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery - Testing callbacks with Spock mocks</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+        <article>
+    <header>
+      <time datetime="2012-05-01T12:50:00">May  1 2012</time>
+      <h1>Testing callbacks with Spock mocks</h1>
+    </header>
+    <div class="paragraph">
+<p>I&#8217;ve been doing some work with <a href="http://vertx.io/">vert.x</a> over the last few days and trying to develop components that are test-driven. Like any asynchronous framework rather than having methods that return a value you pass a callback Closure that gets invoked at some point in the future with the result. This makes it tricky to write unit tests that mock out collaborators as you might in a traditional app.</p>
+</div>
+
+<div class="paragraph">
+<p>For example, a simple REST server that saves some data might make a call like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">void post(request) {
+    def album = [artist: request.params.artist, title: request.params.title]
+    eventBus.send('mongodb', [action: 'save', collection: 'albums', document: album]) { reply -&gt;
+        if (reply.body.status == 'ok') {
+            request.response.statusCode = 200
+            request.response.end 'Updated OK'
+        } else {
+            request.response.statusCode = 500
+            request.response.end "Update failed: $reply.body.message"
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The the Closure passed to <code>eventBus.send</code> will be called once the <em>save</em> action has been completed and depending on the result the correct HTTP status and message will get returned to the client.</p>
+</div>
+<div class="paragraph">
+<p>In a unit test we might want to use a mock <em>eventBus</em> but we&#8217;re not calling a method that returns a value; how do we get the mock to invoke the callback? It&#8217;s not a well documented feature but using a <a href="http://code.google.com/p/spock/wiki/Interactions"><em>Spock</em> mock</a> you can get to the arguments passed to a mocked method using a Closure like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">void 'the server returns HTTP_OK if the save succeeds'() {
+    given:
+    server.eventBus = Mock(EventBus)
+
+    when: 'the server gets invoked'
+    // for this example let's assume the request has been set up
+    server.post(request)
+
+    then: 'the save is executed'
+    1 * server.eventBus.send(_, _, _) &gt;&gt; { address, params, callback -&gt;
+        callback([body: [status: 'ok']])
+    }
+
+    and: 'HTTP_OK is returned to the client'
+    request.response.statusCode == 200
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In a real test you&#8217;d want to use stricter matching on the mock interaction, but using Spock&#8217;s <code>_</code> wildcard for the final callback parameter is the right thing to do.</p>
+</div>
+<div class="paragraph">
+<p>What about testing a method that accepts a callback Closure directly? I&#8217;ve found that using a mock works fine there too. Imagine we&#8217;re writing a test for this method:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">void parse(input, Closure callback) {
+    try {
+        // do some complex processing
+        callback(status: 'ok', result: output)
+    } catch (e) {
+        callback(status: 'error')
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>It does some work and then invokes a callback. How can we test that the parameters passed to the callback Closure are correct?</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">void 'callback is invoked with parse output'() {
+    given:
+    def callback = Mock(Closure)
+
+    when:
+    parser.parse('my input data', callback)
+
+    then:
+    1 * callback.call([status: 'ok', result: 'my expected output'])
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This works pretty well. The only downside is that if <code>callback</code> is called with the wrong arguments or not called at all you get the same output in your test results:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Too few invocations for:
+
+1 * callback.call([status: 'ok', result: 'my expected output'])   (0 invocations)</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For more helpful output you can use a Closure to trap the arguments passed to the callback like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">then:
+1 * callback.call(_) &gt;&gt; { args -&gt;
+    assert args[0].status == 'ok'
+    assert args[0].result == 'my expected output'
+}</code></pre>
+</div>
+</div>
+    <footer>
+      <ul class="tag-list">
+          <li><a href="/tags/spock/">spock</a></li>
+          <li><a href="/tags/vertx/">vertx</a></li>
+          <li><a href="/tags/testing/">testing</a></li>
+      </ul>
+    </footer>
+  </article>
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>
+
+<div id="disqus_thread"></div>
+            <script type="text/javascript">
+            //<![CDATA[
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//adhockery.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            //]]>
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </script>

@@ -1,0 +1,93 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery - Selenium RC tests with a remote app</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+        <article>
+    <header>
+      <time datetime="2009-12-29T12:18:00">Dec 29 2009</time>
+      <h1>Selenium RC tests with a remote app</h1>
+    </header>
+    <div class="paragraph">
+<p>I&#8217;ve just released a new snapshot of the <a href="http://grails.org/plugin/selenium-rc">Selenium RC plugin</a>. The main new feature is the ability to run your Selenium tests against a running instance of your application instead of having the application start and stop as part of the test phase. A number of people have requested this. It&#8217;s really useful for CI environments where you may want to start the app up on a different server from where the tests are being run.</p>
+</div>
+
+<div class="paragraph">
+<p>All you need to do is set <code>selenium.remote = true</code> in your <em>SeleniumConfig.groovy</em> and set <code>selenium.url</code> to the root URL of the server where the app is running. Once this is done you can run tests as normal (note: when remote mode is used Selenium tests run in the <em>other</em> phase rather than the <em>functional</em> phase).</p>
+</div>
+<div class="paragraph">
+<p>The <em>really</em> useful thing is that <em>SeleniumConfig.groovy</em> can contain environment blocks just as other Grails config files can. This means you can enable remote mode in your CI environment but continue to test as normal locally. For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">selenium {
+    remote = false
+    // etc.
+}
+
+environments {
+    hudson {
+        selenium.remote = true
+        selenium.url = "http://my.test.server/"
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The plugin release is a snapshot so you need to specify the version explictly: <code>grails install-plugin selenium-rc 0.2-SNAPSHOT</code> and you need to be using Grails 1.2.</p>
+</div>
+    <footer>
+      <ul class="tag-list">
+          <li><a href="/tags/selenium/">selenium</a></li>
+          <li><a href="/tags/grails-plugins/">grails plugins</a></li>
+      </ul>
+    </footer>
+  </article>
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>
+
+<div id="disqus_thread"></div>
+            <script type="text/javascript">
+            //<![CDATA[
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//adhockery.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            //]]>
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </script>

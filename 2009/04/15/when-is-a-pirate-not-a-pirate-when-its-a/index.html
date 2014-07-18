@@ -1,0 +1,239 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery - When is a Pirate not a Pirate? When it’s a HibernateProxy</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+        <article>
+    <header>
+      <time datetime="2009-04-15T02:49:00">Apr 15 2009</time>
+      <h1>When is a Pirate not a Pirate? When it’s a HibernateProxy</h1>
+    </header>
+    <div class="paragraph">
+<p>At work we&#8217;re in the middle of upgrading <a href="http://showbiz.sky.com/">the</a> <a href="http://tv.sky.com/">Sky</a> <a href="http://movies.sky.com/">Entertainment</a> <a href="http://sky1.sky.com/">sites</a> from Grails 1.0.3 to Grails 1.1 - a long blog post will follow with a tale of our woes! One of the changes in Grails 1.1 is that one-to-one domain associations are now lazy by default. This raised an interesting problem for us as it meant we were now sometimes dealing with <a href="http://www.hibernate.org/hib_docs/v3/api/org/hibernate/proxy/HibernateProxy.html">HibernateProxy</a> instances where before we weren&#8217;t.</p>
+</div>
+
+<div class="paragraph">
+<p>For example, let&#8217;s imagine we have a <em>Pet</em> domain class that is has an owner that is a <em>Person</em> and there exists another domain class, <em>Pirate</em> that is a specialisation of <em>Person</em>:</p>
+</div>
+<div class="listingblock">
+<div class="title">Pet.groovy</div>
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">class Pet {
+    String type
+    String name
+    Person owner
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Person.groovy</div>
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">class Person {
+
+    String name
+
+    boolean equals(Object o) {
+        if (this.is(o)) return true
+        if (o == null) return false
+        if (!(o instanceof Person)) return false
+        return name == o.name
+    }
+
+    // hashCode and toString ommitted
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Pirate.groovy</div>
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">class Pirate extends Person {
+
+    String nickname
+
+    boolean equals(Object o) {
+        if (!super.equals(o)) return false
+        if (!(o instanceof Pirate)) return false
+        return nickname == o.nickname
+    }
+
+    // hashCode and toString ommitted
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We want to test that either a regular <em>Person</em> or a <em>Pirate</em> can own a <em>Pet</em>. To do so we write an integration test like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">void testAssignPersonAsPetOwner() {
+    Person terry = new Person(name: 'Terry Elbow')
+    Pet rex = new Pet(type: 'Dog', name: 'Rex', owner: terry)
+    Pet.withSession {session -&gt;
+        assert terry.save(flush: true)
+        assert rex.save(flush: true)
+        session.clear()
+    }
+    assertEquals(terry, Pet.findByName('Rex').owner)
+}
+
+void testAssignPirateAsPetOwner() {
+    Person longJohn = new Pirate(name: 'John Silver', nickname: 'Long John')
+    Pet capnFlint = new Pet(type: 'Parrot', name: "Cap'n Flint", owner: longJohn)
+    Pet.withSession {session -&gt;
+        assert longJohn.save(flush: true)
+        assert capnFlint.save(flush: true)
+        session.clear()
+    }
+    assertEquals(longJohn, Pet.findByName("Cap'n Flint").owner)
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Simple enough. In both cases we just create a <em>Pet</em> and its owner, ensure they save properly, then assert that the owner is correct when we read the <em>Pet</em> back from the database. However the second test, where we assign a <em>Pirate</em> as the owner, fails. The final assertion fails with the message:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>expected:&lt;Pirate[Long John]&gt; but was:&lt;Pirate[Long John]&gt;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Great&#8230; what?</p>
+</div>
+<div class="paragraph">
+<p>When we read the <em>Pet</em> instance back from the database the <em>owner</em> association is set to lazy load so <code>Pet.findByName("Cap'n Flint").owner</code> is a <em>HibernateProxy</em>. The failure is caused by the fact that as <em>owner</em> is declared as being of type <em>Person</em> the proxy generated extends <em>Person</em> and therefore the instanceof check in <em>Pirate</em>'s equals method fails&#8230;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">if (!(o instanceof Pirate)) return false</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In our case <em>o</em> is an instance of <em>Person</em> and an instance of <em>HibernateProxy</em> which if loaded would yield an instance of <em>Pirate</em> but is not itself an instance of <em>Pirate</em>.</p>
+</div>
+<div class="paragraph">
+<p>Our options at this point seem to be&#8230;</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Set <em>owner</em> to eager fetch.</p>
+</li>
+<li>
+<p>Remove the instanceof check from the <em>equals</em> implementation in <em>Pirate</em></p>
+</li>
+<li>
+<p>Initialise the <em>HibernateProxy</em> so <em>equals</em> is working with the real object</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>The first option is just admitting defeat! Loading objects from the database when it&#8217;s not necessary is wasteful and we don&#8217;t want to go creating that kind of tech debt just to get our test working. The second option is not acceptable as it would mean the <em>equals</em> implementation on <em>Pirate</em> would violate the <a href="http://java.sun.com/javase/6/docs/api/java/lang/Object.html#equals(java.lang.Object)">general contract of <em>equals</em></a> as <code>aPerson == aPirate</code> would return <em>false</em> but <code>aPirate == aPerson</code> would throw <em>MissingPropertyException</em> when it tried to execute the line:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">return nickname == o.nickname</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This leaves us with figuring out a way to initialise the proxy so we&#8217;re always dealing with real objects. You may think it&#8217;s an undesirable side-effect of the <em>equals</em> implementation to potentially force a database read but consider that it will do so anyway to perform the comparison of the <em>nickname</em> property.</p>
+</div>
+<div class="paragraph">
+<p>There is a convenience <a href="http://www.hibernate.org/hib_docs/v3/api/org/hibernate/Hibernate.html#initialize(java.lang.Object)"><em>initialize</em></a> method in <em>org.hibernate.Hibernate</em> that can force a proxy to load, but it is <em>void</em> so our <em>equals</em> method would still have a reference to the <em>HibernateProxy</em> that is not actually an instance of <em>Pirate</em>. What we need to do is:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">if (o instanceof org.hibernate.proxy.HibernateProxy) {
+    o = o.hibernateLazyInitializer.implementation
+}
+if (!(o instanceof Pirate)) return false</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>As it turns out we can&#8217;t do this directly in the <em>equals</em> implementation. It appears that <a href="http://groovy.codehaus.org/groovy-jdk/java/lang/Object.html#getAt(java.lang.String%20property)"><em>getAt(String)</em></a> is overridden in <em>HibernateProxy</em>'s meta class so we get the error:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>No such property: hibernateLazyInitializer for class: Person_$$_javassist_0</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>As luck would have it Grails has a utility method for doing exactly what we want and as it&#8217;s written in Java no amount of meta class trickery will hide the <em>hibernateLazyInitializer</em> property from it. Our final, working <em>equals</em> implementation for <em>Pirate</em> looks like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">boolean equals(Object o) {
+    if (!super.equals(o)) return false
+    if (o instanceof HibernateProxy) {
+        o = GrailsHibernateUtil.unwrapProxy(o)
+    }
+    if (!(o instanceof Pirate)) return false
+    return nickname == o.nickname
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Note:</strong> this is a simple example so we&#8217;ll gloss over the fact that <em>Pirate</em>'s <em>equals</em> isn&#8217;t symmetric as</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">new Person(name: 'X') == new Pirate(name: 'X', nickname: 'Y')</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>returns <em>true</em> while flipping the operands causes it to return <em>false</em>. The problem and the solution apply any time inheritance and lazy-loading run up against class checking whether via instanceof, <a href="http://java.sun.com/javase/6/docs/api/java/lang/Class.html#isAssignableFrom(java.lang.Class)"><em>Class.isAssignableFrom</em></a>, switch statements using a Class as a case, etc.</p>
+</div>
+    <footer>
+      <ul class="tag-list">
+          <li><a href="/tags/gorm/">gorm</a></li>
+          <li><a href="/tags/hibernate/">hibernate</a></li>
+      </ul>
+    </footer>
+  </article>
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>
+
+<div id="disqus_thread"></div>
+            <script type="text/javascript">
+            //<![CDATA[
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//adhockery.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            //]]>
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </script>

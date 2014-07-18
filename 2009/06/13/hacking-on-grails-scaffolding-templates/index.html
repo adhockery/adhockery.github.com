@@ -1,0 +1,175 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery - Hacking on Grails scaffolding templates</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+        <article>
+    <header>
+      <time datetime="2009-06-13T05:51:00">Jun 13 2009</time>
+      <h1>Hacking on Grails scaffolding templates</h1>
+    </header>
+    <div class="paragraph">
+<p>Grails scaffolding is a fantastic mechanism for getting you up and running quickly. I love the fact that you can provide your own implementation of <em>some</em> controller actions or views and scaffolding will just fill in the gaps. That way you can start hand-crafting things when complexity increases past a certain point but still have Grails do a bunch of work for you.</p>
+</div>
+
+<div class="paragraph">
+<p>I&#8217;d done some customising of scaffolding templates before for the <a href="http://grails.org/plugin/joda-time">Joda Time plugin</a> but recently started playing with them again with a view to creating some I could re-use for future projects. Because scaffolding templates are not only used for dynamic views but also provide the basis of generated views that you go on to customise it&#8217;s worth having a solid baseline. A couple of things I wanted to do were:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Mark up create and edit forms without using tables</p>
+</li>
+<li>
+<p>Provide automatic indication of mandatory fields</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="http://4.bp.blogspot.com/_fh9xwLFYBUw/SjMixEDGEpI/AAAAAAAACVg/wcr4gaTX2zc/s320/createpirate.png" alt="image"></span> I&#8217;m pretty happy with the result. This is how a standard create form now appears. The grab is from Safari 4 but the rendering is all but consistent across Firefox 3 on my Ubuntu box, Safari 4 on my Mac and even IE6, IE7, Google Chrome and Opera 9 on the Windows XP <a href="http://www.virtualbox.org/">VirtualBox</a> instances I use for cross-browser testing.</p>
+</div>
+<div class="sect2">
+<h3 id="_forms_without_tables">Forms Without Tables</h3>
+<div class="paragraph">
+<p>Each form element is simply:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="markup language-markup">&lt;label for="${p.name}"&gt;Property Name&lt;/label&gt;
+${renderEditor(p)}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Which is reasonable semantic markup. Styling it cross-browser took me a while (I know just enough CSS to make me dangerous) but with a few helpful pointers from our resident front-end guru <a href="http://www.codecouch.com/author/jeff/">Jeff</a> I was able to achieve that with a lot less browser-specific tweaking than I would have thought would be necessary.</p>
+</div>
+<div class="paragraph">
+<p>The necessary CSS is just:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="css language-css">.prop {
+    margin: 1em 0;
+}
+label {
+    display: inline-block;
+    margin-right: 1.5em;
+    text-align: right;
+    width: 8em;
+}
+input, select {
+    vertical-align: middle;
+}
+textarea {
+    vertical-align: top;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Making the label <code>inline-block</code> meant I can apply a width to it so all the fields will line up nicely but also keeps the label inline so I can then use <code>vertical-align</code> on the input to centre it on the text line of the label. The results are consistent cross-browser. Most solutions I&#8217;ve seen around the internet are horribly inconsistent between browsers (and operating systems with different font rendering) and often rely on nasty pixel-perfect margin and padding tweaks to try to align things nicely. That approach rapidly becomes a game of whack-a-mole as a tweak that fixes some alignment on IE will screw it up on Opera, fixing that will make Firefox do something odd, etc.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_automatically_indicating_mandatory_fields">Automatically Indicating Mandatory Fields</h3>
+<div class="paragraph">
+<p>A polite form should really indicate to the user what fields are mandatory and it turns out this isn&#8217;t hard to achieve automatically in Grails scaffolded views. The scaffolding templates already use the <a href="http://grails.org/doc/1.1.x/api/org/codehaus/groovy/grails/validation/ConstrainedProperty.html">constrained properties</a> of the domain class to determine whether to display a form field for each property. It&#8217;s a very small step to use the <em>isNullable()</em> and in the case of String properties <em>isBlank()</em> methods to decide whether to render a mandatory indicator.</p>
+</div>
+<div class="paragraph">
+<p>I simply output a span with an asterisk inside the label then styled it with:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="css language-css">label {
+    /* other label properties as above */
+    position: relative;
+}
+label .mandatory {
+    color: #c00;
+    position: absolute;
+    right: -1.25em;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The absolute positioning takes the asterisk out of the flow of the page so the labels and inputs line up neatly regardless of whether there&#8217;s an asterisk or not and the <code>right: -1.25em</code> shoves it over into the space of the label&#8217;s right margin. Positioning the asterisk perfectly in between the label and the input is tricky and not reliable cross browser. On IE the asterisk is too far to the right.</p>
+</div>
+<div class="paragraph">
+<p>I tried other techniques such as disabling the label&#8217;s right margin when the asterisk is present and setting the asterisk&#8217;s span to the exact same size the margin would have been. Unfortunately it seems 1.5em as an element width is not <em>quite</em> the same thing as 1.5em as a right margin so the alignment of the labels and inputs was thrown off. Absolute positioning is necessary to maintain that alignment which is far more important to the eye than pixel-perfect placement of the asterisk itself.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_source_code">Source Code</h3>
+<div class="paragraph">
+<p>Here&#8217;s the source code. Any suggestions for improvements would be very welcome. I based the templates on <a href="http://marceloverdijk.blogspot.com/">Marcel Overdijk</a>'s excellent <a href="http://grails.org/plugin/i18n-templates">i18n-templates</a>, the only differences are in the rendering of the form fields and the surrounding <em>fieldset</em>.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="http://snipt.org/kTp">web-app/css/forms.css</a> (needs to be added to grails-app/views/layouts/main.gsp)</p>
+</li>
+<li>
+<p><a href="http://snipt.org/kUj">src/templates/scaffolding/create.gsp</a></p>
+</li>
+<li>
+<p><a href="http://snipt.org/kUm">src/templates/scaffolding/edit.gsp</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Something this exercise has driven home for me is that when it comes to cross-browser styling less is definitely more. Taking away <em>everything</em>, <a href="http://www.codecouch.com/2007/04/how-to-get-consistent-font-sizes-across-all-browsers/">setting the font size consistently cross-browser</a>, then gradually building up with the simplest markup and styling possible yields the best results.</p>
+</div>
+</div>
+    <footer>
+      <ul class="tag-list">
+          <li><a href="/tags/css/">css</a></li>
+          <li><a href="/tags/scaffolding/">scaffolding</a></li>
+      </ul>
+    </footer>
+  </article>
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>
+
+<div id="disqus_thread"></div>
+            <script type="text/javascript">
+            //<![CDATA[
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//adhockery.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            //]]>
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </script>

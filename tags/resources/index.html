@@ -1,0 +1,117 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+      <header>
+  <h1>Articles tagged <em>‘resources’</em></h1>
+</header>
+
+  <article>
+    <header>
+      <time datetime="2011-08-26T17:19:00">Aug 26 2011</time>
+      <h2><a href="/2011/08/26/grails-gotcha-beware-head-requests-when-rendering/">Grails Gotcha: Beware HEAD requests when rendering binary output in controllers</a></h2>
+    </header>
+    <div class="paragraph">
+<p>Although most Grails controllers render HTML, JSON or XML output it is possible to use them to render binary data as well. We use a controller to render images uploaded by editors into our content management interface. The theory is simple enough, instead of using the <code>render</code> dynamic method or returning a <em>model</em> the controller action just writes bytes directly to the HTTP response stream. Our action looked something like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">def show = {
+    def image = Image.read(params.id)
+    if (image) {
+        response.contentType = image.contentType
+        response.outputStream.withStream { stream -&gt;
+            stream &lt;&lt; image.bytes
+        }
+    } else {
+        response.sendError SC_NOT_FOUND
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This seemed to work well enough. However when writing a test I noticed an odd thing. I was using <a href="http://groovy.codehaus.org/modules/http-builder/doc/rest.html">RESTClient</a> to scrape resource URLs out of and make a <em>HEAD</em> request against them to ensure the URLs were valid. Javascript and CSS files were working fine but all the non-static images in the page were getting 404s.</p>
+</div>
+
+    <a class="read-more" href="/2011/08/26/grails-gotcha-beware-head-requests-when-rendering/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2011-08-18T21:42:00">Aug 18 2011</time>
+      <h2><a href="/2011/08/18/data-driven-variation-with-spock/">Data-driven variation with Spock</a></h2>
+    </header>
+    <div class="paragraph">
+<p>Spock&#8217;s <code>where:</code> block is commonly used with a <a href="https://github.com/robfletcher/grails-enhanced-scaffolding/blob/master/test/projects/scaffolding-example/test/functional/scaffolding/InputTypesSpec.groovy#L18">data table</a> but can also be driven by any <code>Iterable</code> data. It&#8217;s worth bearing in mind that the data driving the <code>where:</code> block doesn&#8217;t have to be hardcoded, it can be dynamic. For example, today we implemented a spec to ensure that every table in our database schema has a primary key (because it&#8217;s required by <a href="http://ha-jdbc.sourceforge.net/">HA-JDBC</a> and not automatically added by GORM on join tables).</p>
+</div>
+
+    <a class="read-more" href="/2011/08/18/data-driven-variation-with-spock/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2011-08-02T13:01:00">Aug  2 2011</time>
+      <h2><a href="/2011/08/02/avoiding-accidental-i18n-in-grails/">Avoiding accidental i18n in Grails</a></h2>
+    </header>
+    <div class="paragraph">
+<p>We’re developing an app that’s exclusively for a UK audience so i18n really isn’t an issue for us. However recently we got bitten by some i18n creeping in where we didn’t want it. Specifically, when using Grails’ <code>g:dateFormat</code> tag the default behaviour is to format the date according to the <code>Locale</code> specified in the user’s <code>Accept-Language</code> header. Even though we are explicitly specifying a format pattern for the date Java is aware of localized day names for some languages so the output can vary. The result is that on a page full of English text there suddenly appears a Spanish or Swedish day name. What makes things worse is that as we use server-side content caching and a CDN if a user with a non-English <code>Accept-Language</code> header is the first to see a particular page or bit of dynamically retrieved content then the cache is primed and until it expires <em>everyone</em> will see the non-English day name text. The solution in a Grails app is as simple as replacing Spring’s standard <code>localeResolver</code> bean with an instance of <code>FixedLocaleResolver</code>. Just add the following to <em>grails-app/conf/spring/resources.groovy</em>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">localeResolver(org.springframework.web.servlet.i18n.FixedLocaleResolver, Locale.UK)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This changes the way Spring works out the request locale and any locale-aware tags should just fall into place.</p>
+</div>
+    <a class="read-more" href="/2011/08/02/avoiding-accidental-i18n-in-grails/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2011-05-21T21:59:00">May 21 2011</time>
+      <h2><a href="/2011/05/21/resources-plugin-and-modular-web-components-for-grails/">Resources plugin and modular web components for Grails apps</a></h2>
+    </header>
+    <div class="paragraph">
+<p>I recently gave a talk on <a href="http://www.eu2011.gr8conf.org/talk/progressive-uis"><em>Building progressive UIs with Grails</em></a> at <a href="http://www.eu2011.gr8conf.org/">gr8conf</a> in Copenhagen and was really pleased with the feedback &amp; comments I received afterwards. There was a question asked at the end that I felt in retrospect I could have answered better, though. I had mentioned that the Grails <a href="http://grails.org/doc/latest/guide/6.%20The%20Web%20Layer.html#6.7%20Ajax">AJAX tags</a> were something that should be avoided as they write script blocks directly into the page and event handlers directly onto HTML elements. I was pitching an approach based on a clean separation of clean semantic markup and script enhancements and inline script violates that separation.</p>
+</div>
+
+    <a class="read-more" href="/2011/05/21/resources-plugin-and-modular-web-components-for-grails/">Read more…</a>
+  </article>
+  <hr>
+
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>

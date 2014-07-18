@@ -1,0 +1,209 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+      <header>
+  <h1>Articles tagged <em>‘testing’</em></h1>
+</header>
+
+  <article>
+    <header>
+      <time datetime="2010-04-21T14:26:00">Apr 21 2010</time>
+      <h2><a href="/2010/04/21/a-grails-junit-4-test-template/">A Grails JUnit 4 test template</a></h2>
+    </header>
+    <div class="paragraph">
+<p>Grails 1.3 upgrades the bundles JUnit to the newer JUnit 4 API. However, the test template used to generate classes by the Grails <em>create-*</em> scripts is still very JUnit 3-ish. Here&#8217;s a replacement that will generate a skeleton test using JUnit 4 conventions:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">@artifact.package@import grails.test.*
+import org.junit.*
+import static org.junit.Assert.*
+import static org.hamcrest.CoreMatchers.*
+import static org.junit.matchers.JUnitMatchers.*
+
+class @artifact.name@ {
+    @Before void setUp() {
+    }
+
+    @After void tearDown() {
+    }
+
+    @Test void something() {
+
+    }
+}</code></pre>
+</div>
+</div>
+
+    <a class="read-more" href="/2010/04/21/a-grails-junit-4-test-template/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2010-01-17T20:35:00">Jan 17 2010</time>
+      <h2><a href="/2010/01/17/a-gradle-build-for-grails-plugins-with-test-apps/">A Gradle build for Grails plugins with test apps</a></h2>
+    </header>
+    <div class="paragraph">
+<p>There&#8217;s a fairly popular technique in Grails plugin development where the plugin has <em>test apps</em> stored in <code>test/projects/*</code>, each of which references the plugin by including <code>grails.plugin.location."my-plugin" = "../../.."</code> in its <em>BuildConfig.groovy</em>. Doing this allows you as a plugin developer to:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Automate tests for sample projects using the plugin with significantly different configurations.</p>
+</li>
+<li>
+<p>Test using domain classes, controllers, etc. that shouldn&#8217;t be packaged with the plugin.</p>
+</li>
+<li>
+<p>Test drive, changing code in both the test app and the plugin without the need to use <code>grails package-plugin</code> or <code>grails install-plugin</code> to pick up changes.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The downside is that to run all the plugin project&#8217;s tests it&#8217;s necessary to run the plugin&#8217;s own tests, then change directory into each of the test apps and run their tests. Continuous integration config is also fiddlier for the same reason.</p>
+</div>
+
+    <a class="read-more" href="/2010/01/17/a-gradle-build-for-grails-plugins-with-test-apps/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2010-01-02T12:23:00">Jan  2 2010</time>
+      <h2><a href="/2010/01/02/selenium-rc-tests-with-a-running-grails-app/">Selenium RC tests with a running Grails app</a></h2>
+    </header>
+    <div class="paragraph">
+<p>I <a href="http://blog.freeside.co/post/42902733548/selenium-rc-tests-with-a-remote-app">posted recently</a> about the new remote mode feature of the <a href="http://grails.org/plugin/selenium-rc">Selenium RC plugin</a>. One thing I forgot to mention is that this feature can also be used to run your Selenium tests interactively against a running app instance. You can start your app as normal using <code>grails run-app</code> then either open a second terminal or background the process (<em>Ctrl-Z</em> in a <em>bash</em> shell) then use <code>grails -Dselenium.remote=true test-app other:selenium _&lt;test name&gt;_</code> to run individual tests without stopping or re-starting the app. With the app running <em>development</em> mode you can effectively test-drive using Selenium tests and Grails' artefact reloading capabilities.</p>
+</div>
+
+    <a class="read-more" href="/2010/01/02/selenium-rc-tests-with-a-running-grails-app/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2010-01-01T14:33:00">Jan  1 2010</time>
+      <h2><a href="/2010/01/01/using-gmock-to-complement-grails-mockdomain/">Using GMock to complement Grails mockDomain</a></h2>
+    </header>
+    <div class="paragraph">
+<p>Since Grails 1.1 we&#8217;ve had pretty good <a href="http://grails.org/doc/latest/guide/single.html#9.%20Testing">unit testing support</a> via <em>GrailsUnitTestCase</em> and its sub-classes. The <em>mockDomain</em> method is particularly useful for simulating the various enhancements Grails adds to domain classes. However, there are some domain class capabilities, such as criteria queries and the new <a href="http://grails.org/doc/latest/ref/Domain%20Classes/namedQueries.html">named queries</a>, that can&#8217;t really be simulated by <em>mockDomain</em>.</p>
+</div>
+
+    <a class="read-more" href="/2010/01/01/using-gmock-to-complement-grails-mockdomain/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2009-11-05T20:58:00">Nov  5 2009</time>
+      <h2><a href="/2009/11/05/grails-selenium-rc-plugin-released/">Grails Selenium RC Plugin Released</a></h2>
+    </header>
+    <div class="paragraph">
+<p>I&#8217;ve finally got the first release of the Selenium RC plugin out of the door. Just run <code>grails install-plugin selenium-rc</code> to install.</p>
+</div>
+<div class="paragraph">
+<p>For anyone unfamiliar with <a href="http://selenium-rc.seleniumhq.org/">Selenium RC</a> basically the plugin allows you to write and run Selenium tests in Groovy to functionally test Grails apps using a real browser. The tests run in the functional phase using <code>grails test-app</code> or <code>grails test-app -functional</code>.</p>
+</div>
+
+    <a class="read-more" href="/2009/11/05/grails-selenium-rc-plugin-released/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2009-11-02T17:24:00">Nov  2 2009</time>
+      <h2><a href="/2009/11/02/talk-on-selenium-rc-testing-in-grails/">Talk on Selenium RC Testing In Grails</a></h2>
+    </header>
+    <div class="paragraph">
+<p>I&#8217;ll be delivering a short talk about testing Grails apps with the <a href="http://github.com/robfletcher/grails-selenium-rc">Selenium RC plugin</a> I&#8217;m <a href="http://blog.freeside.co/post/42902592328/testing-grails-apps-with-selenium-rc">working on</a> at the <a href="http://skillsmatter.com/user-group/java-jee/ggug">London Groovy and Grails User Group</a> on 20th November. Details are <a href="http://skillsmatter.com/event/java-jee/testing-grails-applications-with-selenium-rc">here</a>.</p>
+</div>
+
+    <a class="read-more" href="/2009/11/02/talk-on-selenium-rc-testing-in-grails/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2009-09-14T16:00:00">Sep 14 2009</time>
+      <h2><a href="/2009/09/14/testing-grails-apps-with-selenium-rc/">Testing Grails Apps With Selenium-RC</a></h2>
+    </header>
+    <div class="paragraph">
+<p>I <a href="http://blog.freeside.co/post/42902576958/thoughts-on-testing">mentioned in my last post</a> that I&#8217;d started to think we were going about <a href="http://seleniumhq.org/">Selenium</a> testing all wrong. For years I&#8217;ve been writing Selenium tests using the <a href="http://seleniumhq.org/projects/ide/">Selenium IDE</a>, so the tests are in HTML files. When doing pre-commit testing and on CI the tests are run with the <code>HtmlTestRunner</code>. This technique is fine and well - developing tests with the IDE is fast and they can be easily worked on an re-tested in the IDE until they are correct. However, some things have always bothered me and Adam Goucher&#8217;s thoughts on <a href="http://adam.goucher.ca/?p=1198">the Selenium Value Chain</a> crystallised some of those suspicions.</p>
+</div>
+
+    <a class="read-more" href="/2009/09/14/testing-grails-apps-with-selenium-rc/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2009-09-11T02:56:00">Sep 11 2009</time>
+      <h2><a href="/2009/09/11/thoughts-on-testing/">Thoughts on Testing</a></h2>
+    </header>
+    <div class="paragraph">
+<p>These are some of the practices I try to live by when writing test coverage. Some of the detail may be <a href="http://grails.org/">Grails</a>-centric since that&#8217;s been my development platform of choice for the last couple of years, but the gist of the points is generally applicable.</p>
+</div>
+
+    <a class="read-more" href="/2009/09/11/thoughts-on-testing/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2009-04-28T14:55:00">Apr 28 2009</time>
+      <h2><a href="/2009/04/28/grails-upgrade/">Grails Upgrade</a></h2>
+    </header>
+    <div class="paragraph">
+<p>We&#8217;ve just finished upgrading our sites to <a href="http://www.grails.org/1.1+Release+Notes">Grails 1.1</a> and I thought it would be worth sharing some of the <a href="http://omfg.biz/">fun</a> we had with the process.</p>
+</div>
+
+    <a class="read-more" href="/2009/04/28/grails-upgrade/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2009-03-31T14:55:00">Mar 31 2009</time>
+      <h2><a href="/2009/03/31/joda-time-and-grails-auto-timestamping/">Joda-Time and Grails Auto-Timestamping</a></h2>
+    </header>
+    <div class="paragraph">
+<p>The <a href="http://grails.org/JodaTime+Plugin">Joda-Time Plugin docs</a> state that <a href="http://grails.org/doc/1.1.x/guide/5.%20Object%20Relational%20Mapping%20(GORM).html#5.5.1%20Events%20and%20Auto%20Timestamping">Grails' auto-timestamping</a> works with Joda-Time properties which is the case. However, when testing it can be useful to take advantage of Joda Time&#8217;s <a href="http://joda-time.sourceforge.net/api-release/org/joda/time/DateTimeUtils.html"><code>DateTimeUtils</code></a> class to mock the current time. This enables you to have new <code>DateTime</code> objects, for example, use a predictable timestamp. Unfortunately it doesn&#8217;t play nicely with Grails' auto-timestamping which under the covers uses <code>System.currentTimeMillis()</code>.</p>
+</div>
+
+    <a class="read-more" href="/2009/03/31/joda-time-and-grails-auto-timestamping/">Read more…</a>
+  </article>
+  <hr>
+
+  <nav class="pagination">
+      <a rel="prev" href="/tags/testing/page/2/">Previous page</a>
+    <span>Page 3 of 3</span>
+      <a disabled>Next page</a>
+  </nav>
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>

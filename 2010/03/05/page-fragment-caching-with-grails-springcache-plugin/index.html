@@ -1,0 +1,94 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery - Page fragment caching with Grails Springcache plugin</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+        <article>
+    <header>
+      <time datetime="2010-03-05T06:42:00">Mar  5 2010</time>
+      <h1>Page fragment caching with Grails Springcache plugin</h1>
+    </header>
+    <div class="paragraph">
+<p>Yesterday I released the new version of the Springcache plugin for Grails. The new feature this brings to the table is page fragment caching driven by annotations on controller actions. The feature is based on <a href="http://ehcache.org/documentation/web_caching.html">EhCache Web</a> and is even simpler and more powerful than the full page caching <a href="http://blog.freeside.co/post/42902815893/full-page-caching-in-grails-with-ehcache-web">I blogged about recently</a>.</p>
+</div>
+
+<div class="paragraph">
+<p>With the page fragment caching feature you can:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Define <code>@Cacheable</code> and <code>@CacheFlush</code> annotations on controller actions.</p>
+</li>
+<li>
+<p>Have SiteMesh decorate cached and uncached output alike.</p>
+</li>
+<li>
+<p>Use SiteMesh to mix dynamic page sections with cached sections.</p>
+</li>
+<li>
+<p>Use SiteMesh and <code>&lt;g:include&gt;</code> to have multiple areas of the page that are cached and flushed independently of one another.</p>
+</li>
+<li>
+<p>Cache the output of controller actions that use content negotiation separately according to the requested format.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>There are some examples in the <a href="http://grails.org/plugin/springcache">plugin documentation</a> and the <a href="http://github.com/robfletcher/grails-springcache">plugin source code</a> has <a href="http://github.com/robfletcher/grails-springcache/tree/master/test/projects/content-caching/">a test project</a> with a variety of page fragment caching mechanisms used and tested.</p>
+</div>
+    <footer>
+      <ul class="tag-list">
+          <li><a href="/tags/grails-plugins/">grails plugins</a></li>
+          <li><a href="/tags/caching/">caching</a></li>
+      </ul>
+    </footer>
+  </article>
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>
+
+<div id="disqus_thread"></div>
+            <script type="text/javascript">
+            //<![CDATA[
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//adhockery.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            //]]>
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </script>

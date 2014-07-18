@@ -1,0 +1,226 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery - Ad-Hockery on Tumblr</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+        <article>
+    <header>
+      <time datetime="2013-02-03T07:53:00">Feb  3 2013</time>
+      <h1>Ad-Hockery on Tumblr</h1>
+    </header>
+    <div class="paragraph">
+<p>There&#8217;s nothing more boring than an <em>"I moved my blog"</em> post but a couple of people have actually asked me to write up something about why I chose Tumblr &amp; how I used <a href="http://gruntjs.com/">Grunt</a> to help me build the theme. So – sorry – here&#8217;s my <em>"I moved my blog"</em> post…</p>
+</div>
+
+<div class="paragraph">
+<p>I&#8217;ve been using <a href="http://octopress.org/">Octopress</a> for my blog for a while now &amp; I&#8217;ve been very happy with it. However, I recently acquired an iPad mini &amp; I&#8217;d like to be able to use that to compose &amp; publish blog posts. Whilst composing is no problem using an app like <a href="http://bywordapp.com/">Byword</a> I need a unix terminal to publish posts when they&#8217;re ready.</p>
+</div>
+<div class="paragraph">
+<p>I started looking for a new blogging service that:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Lets me post <strong>and</strong> edit with <a href="http://daringfireball.net/projects/markdown/">markdown</a>. No hand rolled HTML &amp; no crappy WYSIWYG editor.</p>
+</li>
+<li>
+<p>Doesn&#8217;t require me to host anything myself.</p>
+</li>
+<li>
+<p>Allows to keep my domain.</p>
+</li>
+<li>
+<p>Allows me to customize the template in a reasonably sane way.</p>
+</li>
+<li>
+<p>Supports syntax highlighting. Gist embedding is all very well but gets missed by search bots &amp; mobilizers unless a <code>noscript</code> tag is present. I&#8217;d rather just use a regular <code>pre &gt; code</code> block.</p>
+</li>
+<li>
+<p>Enables me to compose &amp; publish posts with my iPad.</p>
+</li>
+<li>
+<p>Lets me migrate posts from Octopress. Manually is fine as there aren&#8217;t <em>that</em> many &amp; they&#8217;re already markdown formatted.</p>
+</li>
+<li>
+<p>Lets me keep the same post URLs or specify redirects.</p>
+</li>
+<li>
+<p>Supports Disqus comments.</p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="the-candidates">The candidates</h3>
+<div class="sect3">
+<h4 id="blogger-and-wordpress.com">Blogger and Wordpress.com</h4>
+<div class="paragraph">
+<p>No markdown support. No thanks.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="posterous"><a href="https://posterous.com/">Posterous</a></h4>
+<div class="paragraph">
+<p>The future seems in doubt after being acquired by Twitter. Worse, Posterous doesn&#8217;t allow linking to external scripts which means no Google Code Prettify &amp; I&#8217;d lose all my Disqus comments.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="calepin"><a href="http://calepin.co/">Calepin</a></h4>
+<div class="paragraph">
+<p>Recently there&#8217;s been a trend for Dropbox based micro-blogging services &amp; the first I came across was Calepin. Whilst I was impressed by the simplicity of the setup it does <em>not</em> let you customize your blog template. I get why &amp; I think it&#8217;s a cool service but it&#8217;s not for me.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="skrivr-and-markbox"><a href="http://skrivr.com/">Skrivr</a> and <a href="http://www.markbox.io/">Markbox</a></h4>
+<div class="paragraph">
+<p>Invite-only (I&#8217;m still waiting :-().</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="scriptogram"><a href="http://scriptogr.am/">Scriptogram</a></h4>
+<div class="paragraph">
+<p>Scriptogram seemed like a good fit. Posts are just markdown files in a Dropbox folder. They use a YAML header similar to the one used by Octopress to specify the timestamp, URL slug, tags and so on.</p>
+</div>
+<div class="paragraph">
+<p>Editing the blog template is a little less convenient, though. It&#8217;s similar to Tumblr&#8217;s mechanism where you edit the HTML template and CSS in the browser. In reality this means editing in a text editor then copy &amp; pasting into the browser. It&#8217;s not ideal but not a total disaster either. However, I found a few limitations with the Scriptogram templates such as the blog strapline being arbitrarily limited to 131 characters &amp; the fact it seemed to be impossible to get the post timestamp in a format that would allow me to include a valid HTML5 <code>time</code> tag. Tumblr&#8217;s templating while similar seemed a lot more mature.</p>
+</div>
+<div class="paragraph">
+<p>Scriptogram has no facility for defining redirects so I&#8217;d have to use a CDN to maintain old post URLs. Worse, posts are served up under <code>/post/my-post-title</code> <em>and</em> under <code>/my-post-title</code>. The latter appears to be a bug &amp; no <code>canonical</code> link is rendered in the header to point to the correct URL.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="tumblr">Tumblr</h4>
+<div class="paragraph">
+<p>I already contribute to a Tumblr - <a href="http://hipsterdevstack.tumblr.com/">Hipster Dev Stack</a>, (you probably haven&#8217;t heard of it) - and find it pretty good for short form blogging. It&#8217;s also got a decent iOS client that accepts markdown input.</p>
+</div>
+<div class="paragraph">
+<p>I also like the fact that tumblr allows different post <em>types</em>; links, quotes, photos, etc. I&#8217;m not sure how much I&#8217;ll use them on this blog but it&#8217;s nice to have the option.</p>
+</div>
+<div class="paragraph">
+<p>Tumblr also ticked the other boxes; I can define redirects so that links to old post URLs won&#8217;t break, I can include Disqus comments &amp; include external scripts for prettifying code.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="migrating-to-tumblr">Migrating to Tumblr</h3>
+<div class="sect3">
+<h4 id="migrating-posts">Migrating posts</h4>
+<div class="paragraph">
+<p>One thing Tumblr <em>doesn&#8217;t</em> have is a tool for importing posts from another service so I had to copy &amp; paste my Octopress posts. Tedious but not difficult. Luckily they were all in markdown format anyway and included a timestamp in the header that could be pasted into Tumblr as is.</p>
+</div>
+<div class="paragraph">
+<p>I used Tumblr&#8217;s redirect facility to set up redirects from the old post URLs to the new ones. Again this is a tedious manual process but luckily I didn&#8217;t have <em>that</em> many posts to migrate.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="syntax-highlighting">Syntax highlighting</h4>
+<div class="paragraph">
+<p>I linked Google Code Prettify, added a small script block to add the <code>prettyprint</code> class to any <code>pre &gt; code</code> blocks &amp; copied some CSS rules into my theme.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="comments">Comments</h4>
+<div class="paragraph">
+<p>I just had to migrate my <a href="http://disqus.com/">Disqus</a> comments' URLs. Thankfully <em>Disqus</em> makes that pretty easy - you can just upload a CSV file that maps old URLs to new ones.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="theming">Theming</h4>
+<div class="paragraph">
+<p>I&#8217;d got quite far building a theme for Scriptogram but it was easy to adapt it to Tumblr.</p>
+</div>
+<div class="paragraph">
+<p>Unlike Scriptogram Tumblr expects you to inline CSS in the HTML template. You can upload and link to a separate file but can&#8217;t subsequently edit it so that seems like something to do once the bugs are ironed out. I also wanted to use a pre-processor to maintain my sanity. The workflow was initially pretty cumbersome:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>edit LESS file</p>
+</li>
+<li>
+<p>compile &amp; pipe output to clipboard</p>
+</li>
+<li>
+<p>select existing CSS block in the template and paste over the top</p>
+</li>
+<li>
+<p>copy entire template and paste into Tumblr&#8217;s editor</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>This got old pretty fast so I decided to automate it a little. I created a <a href="http://gruntjs.com/">Grunt</a> build file that compiled LESS and merged it into the template HTML. That meant I could run <code>grunt &amp;&amp; cat dist/template.html | pbcopy</code> and then paste into Tumblr&#8217;s editor. Still not perfect but the fiddly bit – selecting and pasting over the inline CSS – is gone.</p>
+</div>
+<div class="paragraph">
+<p>You can check out <a href="https://github.com/robfletcher/adhockery-tumblr">the blog theme and its Grunt build</a> on GitHub.</p>
+</div>
+<div class="paragraph">
+<p>I&#8217;d like to update the Grunt build to have a <em>production</em> mode that will generate an external CSS file, upload it to Tumblr&#8217;s CDN and merge a link into the template instead of the inline CSS.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="conclusion">Conclusion</h3>
+<div class="paragraph">
+<p>If it wasn&#8217;t for the fact I wanted an iOS friendly blog workflow I would have stayed with Octopress. It really is fantastic.</p>
+</div>
+<div class="paragraph">
+<p>There are some things I don&#8217;t like about Tumblr. First, the iOS app lets you compose posts in markdown but presents you with the generated HTML if you try to edit them later. I really hope that gets fixed but actually the web editor is perfectly usable on an iPad so it&#8217;s not a deal-breaker.</p>
+</div>
+<div class="paragraph">
+<p>If Scriptogram gets some updates to fix the things I wasn&#8217;t happy with I could imagine moving the blog again as editing plain files on Dropbox is always going to be more flexible than using a proprietary editor be it web or app.</p>
+</div>
+</div>
+    <footer>
+      <ul class="tag-list">
+          <li><a href="/tags/grunt/">grunt</a></li>
+      </ul>
+    </footer>
+  </article>
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>
+
+<div id="disqus_thread"></div>
+            <script type="text/javascript">
+            //<![CDATA[
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//adhockery.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            //]]>
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </script>

@@ -1,0 +1,104 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+      <header>
+  <h1>Articles tagged <em>‘caching’</em></h1>
+</header>
+
+  <article>
+    <header>
+      <time datetime="2010-03-05T06:42:00">Mar  5 2010</time>
+      <h2><a href="/2010/03/05/page-fragment-caching-with-grails-springcache-plugin/">Page fragment caching with Grails Springcache plugin</a></h2>
+    </header>
+    <div class="paragraph">
+<p>Yesterday I released the new version of the Springcache plugin for Grails. The new feature this brings to the table is page fragment caching driven by annotations on controller actions. The feature is based on <a href="http://ehcache.org/documentation/web_caching.html">EhCache Web</a> and is even simpler and more powerful than the full page caching <a href="http://blog.freeside.co/post/42902815893/full-page-caching-in-grails-with-ehcache-web">I blogged about recently</a>.</p>
+</div>
+
+    <a class="read-more" href="/2010/03/05/page-fragment-caching-with-grails-springcache-plugin/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2010-02-23T12:47:00">Feb 23 2010</time>
+      <h2><a href="/2010/02/23/full-page-caching-in-grails-with-ehcache-web/">Full page caching in Grails with Ehcache-Web</a></h2>
+    </header>
+    <div class="paragraph">
+<p>I&#8217;m on the verge of releasing a new version of the <a href="http://grails.org/plugin/springcache">Springcache plugin</a> that will feature a pretty cool new annotation-driven page fragment caching feature based on <a href="http://ehcache.org/documentation/web_caching.html">Ehcache-web</a>. However one of the things that came up during discussions on the mailing list was full page caching. I mentioned that it was pretty straightforward and promised to blog about how to do it, so…</p>
+</div>
+
+    <a class="read-more" href="/2010/02/23/full-page-caching-in-grails-with-ehcache-web/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2009-12-12T16:49:00">Dec 12 2009</time>
+      <h2><a href="/2009/12/12/new-springcache-plugin-version/">New Springcache Plugin Version</a></h2>
+    </header>
+    <div class="paragraph">
+<p>After <a href="http://blog.freeside.co/post/42902700224/springcache-plugin-status">saying it might take me a while</a> I got stuck in and rewrote the Springcache plugin from scratch. The new version is up now. The plugin now requires Grails 1.2.0-M3 or greater as it&#8217;s reliant on Spring 3.0.</p>
+</div>
+
+    <a class="read-more" href="/2009/12/12/new-springcache-plugin-version/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2009-11-26T22:56:00">Nov 26 2009</time>
+      <h2><a href="/2009/11/26/springcache-plugin-status/">Springcache Plugin Status</a></h2>
+    </header>
+    <div class="paragraph">
+<p>A couple of people have asked me about the <a href="http://grails.org/plugin/springcache">Springcache plugin</a> and Grails 1.2. Currently the plugin is not compatible with 1.2-M3 and onwards. The reason for this is that the spring-modules-cache library that the plugin depends on is not compatible with Spring 3.0 which is used by the newest versions of Grails. Not only that but the <a href="https://springmodules.dev.java.net/">spring-modules project</a> has been discontinued altogether. There is <a href="http://github.com/astubbs/spring-modules">a fork of it on Github</a> but that doesn&#8217;t look terribly active either. This means that at some point I&#8217;m going to have to sit down and write some code to bring the annotation driven caching inside the plugin itself and drop the spring-modules dependency. However, just to compound things the <a href="http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/ch08s09.html#aop-autoproxy-metadata">Spring documentation on the relevant area</a> hasn&#8217;t been updated yet and still references the classes that have been removed from the API which is what&#8217;s causing the incompatibility in the first place!</p>
+</div>
+
+    <a class="read-more" href="/2009/11/26/springcache-plugin-status/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2009-03-02T17:28:00">Mar  2 2009</time>
+      <h2><a href="/2009/03/02/why-would-i-ever-want-to-disable-the-l2-cache/">Why would I ever want to disable the L2 cache?</a></h2>
+    </header>
+    <div class="paragraph">
+<p>This question came up when pairing last week. We were going through our code-base adding the <a href="http://grails.org/doc/1.1.x/ref/Database%20Mapping/cache.html">cache directive</a> to a bunch of our domain classes. Grails is all about sensible defaults and it seems slightly odd that the level 2 cache is configured by default in <code>DataSource.groovy</code> but not actually <em>used</em> unless <code>cache(true)</code> is added to the mapping closure in each domain class. I wonder if anyone has any ideas why it might ever be a bad idea to use the L2 cache?</p>
+</div>
+
+    <a class="read-more" href="/2009/03/02/why-would-i-ever-want-to-disable-the-l2-cache/">Read more…</a>
+  </article>
+  <hr>
+
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>

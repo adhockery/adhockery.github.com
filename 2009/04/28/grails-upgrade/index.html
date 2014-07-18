@@ -1,0 +1,130 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery - Grails Upgrade</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header id="site-header">
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <main>
+        <article>
+    <header>
+      <time datetime="2009-04-28T14:55:00">Apr 28 2009</time>
+      <h1>Grails Upgrade</h1>
+    </header>
+    <div class="paragraph">
+<p>We&#8217;ve just finished upgrading our sites to <a href="http://www.grails.org/1.1+Release+Notes">Grails 1.1</a> and I thought it would be worth sharing some of the <a href="http://omfg.biz/">fun</a> we had with the process.</p>
+</div>
+
+<div class="paragraph">
+<p>First and foremost was a call site caching bug in Groovy 1.6.0 that caused chaos with our unit and integration tests. Basically any time we mocked a class then demanded behaviour on a static method or any time we used the metaClass to override a static method (among other things that&#8217;s pretty much any unit test that goes anywhere near a domain class) the behaviour wouldn&#8217;t get torn down again. This caused symptoms such as stubbed dynamic finders leaking from unit tests and breaking integration tests that would pass when re-run in isolation. We got as far as refactoring a whole bunch of test code that mocked static methods before <a href="http://burtbeckwith.com/blog/">Burt Beckwith</a> <a href="http://jira.codehaus.org/browse/GRAILS-4448">pointed out to me</a> that simply replacing $GRAILS_HOME/lib/groovy-all-1.6.0.jar with the newer version from the Groovy 1.6.1 or 1.6.2 release would fix the problem.</p>
+</div>
+<div class="paragraph">
+<p>Unfortunately the same bug has another effect that was quite catastrophic for us. Any Hibernate proxy of an instance of a domain class involved in an inheritance hierarchy will throw <em>ClassCastException</em> when you try to access a subclass property or do an <em>instanceof</em> check. I <a href="http://blog.freeside.co/post/42902409632/when-is-a-pirate-not-a-pirate-when-its-a">blogged already</a> about the <em>instanceof</em> issue but it&#8217;s actually wider ranging than I realised at the time. It can cause very unpredictable behaviour because complex relationships between objects and the way they are loaded by a controller before a page is rendered can cause this error to pop up under obscure conditions that are very hard to nail down with test coverage. To solve the problem we&#8217;ve had to use eager fetching in places where associations are typed as the base class of an inheritance hierarchy and to use explicit checks for proxies such as:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">if (o instanceof HibernateProxy) {
+    o = GrailsHibernateUtil.unwrapProxy(o)
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Hopefully this bug will be fixed in Grails 1.1.1 and we will be able to use the default lazy loading behaviour in all relationships.</p>
+</div>
+<div class="paragraph">
+<p>Other problems we encountered included:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The <code>onLoad</code> Hibernate event handler on domain classes now seems to run at a slightly different time in the object life cycle: <em>before</em> any eager fetched collections are loaded. We had one domain class that was doing some initialisation (calculating the percentage of votes each answer to a poll had received and storing it in a transient property) that no longer worked as the persistent collection it was trying to iterate over was always empty. This was simple to refactor out and in fairness was pretty horrible anyway.</p>
+</li>
+<li>
+<p><code>Config.groovy</code> and related external config files are no longer loaded when running unit tests so any unit test that excercises code doing <code>ConfigurationHolder.config.some.value.or.other</code> blew up. We solved this by simply adding the following to <code>_Events.groovy</code> to load up config prior to the unit tests running:</p>
+<div class="paragraph">
+<p>eventTestPhaseStart = \{ phase &#8594; if (phase == <em>unit</em>) \{ ConfigSlurper slurper = new ConfigSlurper(GrailsUtil.environment) def configClass = getClass().classLoader.loadClass("Config") def config = slurper.parse(configClass) ConfigurationHelper.initConfig config // this step loads the external environment config file(s) ConfigurationHolder.config = config } }</p>
+</div>
+</li>
+<li>
+<p>Logger configuration has completely changed (for the better) in Grails 1.1</p>
+</li>
+<li>
+<p>Some of our tests were explicitly setting the level of particular loggers to <em>OFF</em> because the test is deliberately causing an error condition and we didn&#8217;t want the console polluted with a huge stack trace. This no longer works as the <a href="http://www.bileblog.org/2003/08/the-evils-of-commons-loggingjar-and-its-ilk/">logging abstraction</a> has changed to <a href="http://www.slf4j.org/">SLF4J</a> which does not allow you to directly set the level on <a href="http://www.slf4j.org/apidocs/org/slf4j/Logger.html">its Logger class</a>. Having better things to do than unwrapping logging abstractions I just turned logging off altogether in the test Grails environment.</p>
+<div class="paragraph">
+<p>log4j = \{ root \{ off() } }</p>
+</div>
+</li>
+<li>
+<p>It looks like binding errors don&#8217;t get reported on nullable properties when using <code>DomainClass.properties = params</code> in a controller. I&#8217;ve <a href="http://jira.codehaus.org/browse/GRAILS-4485">raised a bug</a>.</p>
+</li>
+<li>
+<p>There&#8217;s been a minor change to the &lt;g:select&gt; tag. Previously the <em>disabled</em> attribute followed the HTML convention (<code>disabled="disabled"</code>) but now the attribute value needs to be a boolean. I guess this actually makes more sense than the goofy HTML convention but I really expect most of the attributes on those sorts of tags to be pure pass-through.</p>
+</li>
+<li>
+<p>The mockDomain method used by unit tests seems to be a little inconsistent when dealing with inheritance heirarchies. If you do <code>mockDomain(BaseClass)</code> then try to use <code>subClassInstance.subClassProperty</code> it fails with a MissingPropertyException. I&#8217;ve <a href="http://jira.codehaus.org/browse/GRAILS-4495">raised a bug</a>.</p>
+</li>
+<li>
+<p>We had customised <code>Package.groovy</code> to deploy our app at the root context. It seems this is now directly supported as an option in Grails 1.1 by setting <code>grails.app.context = '/'</code> in <code>Config.groovy</code>. I think this option was already available in Grails 1.0.3 but our patch pre-dated us upgrading to 1.0.3. One of the things I was trying to achieve while upgrading was to ensure we were patching Grails and any plugins as little as possible.</p>
+</li>
+<li>
+<p>I&#8217;d upgraded our selenium plugin (not the one in <a href="http://plugins.grails.org/">the Grails plugin repository</a>) a while back to cope with Grails 1.1 and upgraded the selenium server it contained at the same time. It turns out the new selenium server will time out attempting to click any anchor that uses the <code>javascript:</code> protocol in its href. Luckily this was only being done in 2 places in our app and was easily fixed by using href="#" instead.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>One other thing we decided to do was to replace our existing suite of <a href="http://grails.org/Functional+Testing">webtests</a> with <a href="http://www.grails.org/Grails%20Functional%20Testing">functional tests</a>. Webtest has never been popular with the developers on our team and we had made a number of modifications to version 0.4 of the plugin in order to support issues like config loading and running the app at the context root of the server. These modifications caused some headaches when trying to upgrade the plugin so we decided to drop it and port the tests over to the functional test plugin. Generally I&#8217;d still rather be writing Selenium tests than using either webtest or functional tests but the functional test syntax is a little nicer and less "pseudo-XML" than webtest&#8217;s.</p>
+</div>
+    <footer>
+      <ul class="tag-list">
+          <li><a href="/tags/testing/">testing</a></li>
+          <li><a href="/tags/grails-upgrade/">grails upgrade</a></li>
+          <li><a href="/tags/grails-plugins/">grails plugins</a></li>
+          <li><a href="/tags/hibernate/">hibernate</a></li>
+      </ul>
+    </footer>
+  </article>
+
+    </main>
+
+    <footer id="site-footer">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/archive">Archive</a>
+      </nav>
+    </footer>
+
+    <script src="/javascripts/adhockery.js"></script>
+  </body>
+</html>
+
+<div id="disqus_thread"></div>
+            <script type="text/javascript">
+            //<![CDATA[
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//adhockery.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            //]]>
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </script>

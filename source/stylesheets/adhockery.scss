@@ -32,9 +32,9 @@ $example-background: transparentize(#f2f2f2, 0.2);
 
 @include establish-baseline;
 
-body {
-  @include baseline-grid-background;
-}
+// body {
+//   @include baseline-grid-background;
+// }
 
 @import "mixins";
 @import "rem";

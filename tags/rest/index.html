@@ -14,7 +14,7 @@
   </head>
   <body>
 
-    <header id="site-header">
+    <header>
       <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
       <dl class="strapline">
         <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
@@ -22,8 +22,9 @@
       </dl>
     </header>
 
-    <main>
-      <header>
+    <div class="container">
+      <main>
+        <header>
   <h1>Articles tagged <em>‘rest’</em></h1>
 </header>
 
@@ -63,16 +64,22 @@
   </article>
   <hr>
 
+  <nav class="pagination">
+      <a disabled>Previous page</a>
+    <span>Page 1 of 1</span>
+      <a disabled>Next page</a>
+  </nav>
 
-    </main>
+      </main>
 
-    <footer id="site-footer">
-      <nav>
-        <a href="/">Home</a>
-        <a href="/about">About</a>
-        <a href="/archive">Archive</a>
-      </nav>
-    </footer>
+      <footer>
+        <nav>
+          <a href="/">Home</a>
+          <a href="/about">About</a>
+          <a href="/archive">Archive</a>
+        </nav>
+      </footer>
+    </div>
 
     <script src="/javascripts/adhockery.js"></script>
   </body>

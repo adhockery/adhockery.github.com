@@ -14,7 +14,7 @@
   </head>
   <body>
 
-    <header id="site-header">
+    <header>
       <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
       <dl class="strapline">
         <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
@@ -22,20 +22,9 @@
       </dl>
     </header>
 
-    <main>
-        <article>
-    <header>
-      <time datetime="2012-09-22T14:27:00">Sep 22 2012</time>
-      <h2><a href="/2012/09/22/testing-angular-forms-with-casper/">Testing Angular forms with Casper</a></h2>
-    </header>
-    <div class="paragraph">
-<p>When testing an <a href="http://angularjs.org">Angular</a> application using <a href="http://casperjs.org/">Casper</a> I found that the binding between inputs and model didn&#8217;t seem to be happening when I filled in form fields. I used Casper&#8217;s <a href="http://casperjs.org/api.html#casper.fill"><code>fill</code></a> method but found that the Angular form validation was rejecting any required fields as though they were still blank. With some debugging I was able to see that the <code>$scope</code> variables indeed weren&#8217;t getting updated.</p>
-</div>
-
-    <a class="read-more" href="/2012/09/22/testing-angular-forms-with-casper/">Read more…</a>
-  </article>
-  <hr>
-  <article>
+    <div class="container">
+      <main>
+          <article>
     <header>
       <time datetime="2012-08-29T17:29:00">Aug 29 2012</time>
       <h2><a href="/2012/08/29/derived-values-in-spock-where-tables/">Derived values in Spock where tables</a></h2>
@@ -179,22 +168,35 @@ applyTemplate('&lt;my:tag/&gt;') == 'the expected output'</code></pre>
     <a class="read-more" href="/2011/11/30/organizing-functional-tests/">Read more…</a>
   </article>
   <hr>
+  <article>
+    <header>
+      <time datetime="2011-11-29T00:07:00">Nov 29 2011</time>
+      <h2><a href="/2011/11/29/grails-2-upgrade-part-1/">Upgrading to Grails 2: Part 1</a></h2>
+    </header>
+    <div class="paragraph">
+<p>We&#8217;ve recently spent some time ensuring that our application is forwards-compatible with the upcoming Grails 2. Our app is broadly split into the application itself and a large plugin that forms the core of our <a href="http://en.wikipedia.org/wiki/Content_management_system">CMS</a>. We upgraded the plugin first as it contains the core domain classes but is also a slightly smaller task to tackle. I&#8217;ll write up our findings when we&#8217;ve completed upgrading the application itself in a follow-up to this post.</p>
+</div>
+
+    <a class="read-more" href="/2011/11/29/grails-2-upgrade-part-1/">Read more…</a>
+  </article>
+  <hr>
 
   <nav class="pagination">
       <a rel="prev" href="/page/3/">Previous page</a>
-    <span>Page 4 of 11</span>
+    <span>Page 4 of 10</span>
       <a rel="next" href="/page/5/">Next page</a>
   </nav>
 
-    </main>
+      </main>
 
-    <footer id="site-footer">
-      <nav>
-        <a href="/">Home</a>
-        <a href="/about">About</a>
-        <a href="/archive">Archive</a>
-      </nav>
-    </footer>
+      <footer>
+        <nav>
+          <a href="/">Home</a>
+          <a href="/about">About</a>
+          <a href="/archive">Archive</a>
+        </nav>
+      </footer>
+    </div>
 
     <script src="/javascripts/adhockery.js"></script>
   </body>

@@ -14,7 +14,7 @@
   </head>
   <body>
 
-    <header id="site-header">
+    <header>
       <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
       <dl class="strapline">
         <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
@@ -22,20 +22,9 @@
       </dl>
     </header>
 
-    <main>
-        <article>
-    <header>
-      <time datetime="2010-01-04T21:22:00">Jan  4 2010</time>
-      <h2><a href="/2010/01/04/upgrading-grails-1-1-1-2/">Upgrading Grails 1.1 -> 1.2</a></h2>
-    </header>
-    <div class="paragraph">
-<p>We&#8217;ve just successfully upgraded our app from Grails 1.1 to <a href="http://www.grails.org/1.2+Release+Notes">1.2</a> and pushed it to our QA environment. I thought I&#8217;d write up some of the issues we encountered in case anyone is bashing their heads against them.</p>
-</div>
-
-    <a class="read-more" href="/2010/01/04/upgrading-grails-1-1-1-2/">Read more…</a>
-  </article>
-  <hr>
-  <article>
+    <div class="container">
+      <main>
+          <article>
     <header>
       <time datetime="2010-01-02T12:23:00">Jan  2 2010</time>
       <h2><a href="/2010/01/02/selenium-rc-tests-with-a-running-grails-app/">Selenium RC tests with a running Grails app</a></h2>
@@ -158,22 +147,41 @@
     <a class="read-more" href="/2009/11/02/talk-on-selenium-rc-testing-in-grails/">Read more…</a>
   </article>
   <hr>
+  <article>
+    <header>
+      <time datetime="2009-11-02T10:48:00">Nov  2 2009</time>
+      <h2><a href="/2009/11/02/git-and-hudson/">Git and Hudson</a></h2>
+    </header>
+    <div class="paragraph">
+<p>I just encountered a rather annoying problem when running <a href="http://hudson-ci.org/">Hudson</a> as a service on <a href="http://ubuntu.com/">Ubuntu</a>. I was getting the following exception whenever the build checked code out of <a href="http://github.com/">GitHub</a>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>hudson.plugins.git.GitException: Could not apply tag hudson-Selenium_RC_Plugin-23
+ at hudson.plugins.git.GitAPI.tag(GitAPI.java:265)</pre>
+</div>
+</div>
+
+    <a class="read-more" href="/2009/11/02/git-and-hudson/">Read more…</a>
+  </article>
+  <hr>
 
   <nav class="pagination">
       <a rel="prev" href="/page/7/">Previous page</a>
-    <span>Page 8 of 11</span>
+    <span>Page 8 of 10</span>
       <a rel="next" href="/page/9/">Next page</a>
   </nav>
 
-    </main>
+      </main>
 
-    <footer id="site-footer">
-      <nav>
-        <a href="/">Home</a>
-        <a href="/about">About</a>
-        <a href="/archive">Archive</a>
-      </nav>
-    </footer>
+      <footer>
+        <nav>
+          <a href="/">Home</a>
+          <a href="/about">About</a>
+          <a href="/archive">Archive</a>
+        </nav>
+      </footer>
+    </div>
 
     <script src="/javascripts/adhockery.js"></script>
   </body>

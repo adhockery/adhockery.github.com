@@ -14,7 +14,7 @@
   </head>
   <body>
 
-    <header id="site-header">
+    <header>
       <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
       <dl class="strapline">
         <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
@@ -22,20 +22,9 @@
       </dl>
     </header>
 
-    <main>
-        <article>
-    <header>
-      <time datetime="2010-05-03T21:59:00">May  3 2010</time>
-      <h2><a href="/2010/05/03/asynchronous-application-events-in-grails/">Asynchronous application events in Grails</a></h2>
-    </header>
-    <div class="paragraph">
-<p>On the project for my current client we&#8217;ve been using JMS in a rather naïve way for some time now. We&#8217;ve also experienced a certain amount of pain getting JMS and ActiveMQ configured correctly. However, all we&#8217;re really using JMS for is asynchronous event broadcasting. Essentially we have a handful actions such as flushing hardware caches and notifying external systems that take place when a document changes. We don&#8217;t want these things blocking the request thread when users save data.</p>
-</div>
-
-    <a class="read-more" href="/2010/05/03/asynchronous-application-events-in-grails/">Read more…</a>
-  </article>
-  <hr>
-  <article>
+    <div class="container">
+      <main>
+          <article>
     <header>
       <time datetime="2010-05-03T07:59:00">May  3 2010</time>
       <h2><a href="/2010/05/03/selenium-rc-plugin-v1-0/">Selenium RC plugin v1.0</a></h2>
@@ -198,22 +187,35 @@ class @artifact.name@ {
     <a class="read-more" href="/2010/01/17/a-gradle-build-for-grails-plugins-with-test-apps/">Read more…</a>
   </article>
   <hr>
+  <article>
+    <header>
+      <time datetime="2010-01-04T21:22:00">Jan  4 2010</time>
+      <h2><a href="/2010/01/04/upgrading-grails-1-1-1-2/">Upgrading Grails 1.1 -> 1.2</a></h2>
+    </header>
+    <div class="paragraph">
+<p>We&#8217;ve just successfully upgraded our app from Grails 1.1 to <a href="http://www.grails.org/1.2+Release+Notes">1.2</a> and pushed it to our QA environment. I thought I&#8217;d write up some of the issues we encountered in case anyone is bashing their heads against them.</p>
+</div>
+
+    <a class="read-more" href="/2010/01/04/upgrading-grails-1-1-1-2/">Read more…</a>
+  </article>
+  <hr>
 
   <nav class="pagination">
       <a rel="prev" href="/page/6/">Previous page</a>
-    <span>Page 7 of 11</span>
+    <span>Page 7 of 10</span>
       <a rel="next" href="/page/8/">Next page</a>
   </nav>
 
-    </main>
+      </main>
 
-    <footer id="site-footer">
-      <nav>
-        <a href="/">Home</a>
-        <a href="/about">About</a>
-        <a href="/archive">Archive</a>
-      </nav>
-    </footer>
+      <footer>
+        <nav>
+          <a href="/">Home</a>
+          <a href="/about">About</a>
+          <a href="/archive">Archive</a>
+        </nav>
+      </footer>
+    </div>
 
     <script src="/javascripts/adhockery.js"></script>
   </body>

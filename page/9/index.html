@@ -14,7 +14,7 @@
   </head>
   <body>
 
-    <header id="site-header">
+    <header>
       <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
       <dl class="strapline">
         <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
@@ -22,26 +22,9 @@
       </dl>
     </header>
 
-    <main>
-        <article>
-    <header>
-      <time datetime="2009-11-02T10:48:00">Nov  2 2009</time>
-      <h2><a href="/2009/11/02/git-and-hudson/">Git and Hudson</a></h2>
-    </header>
-    <div class="paragraph">
-<p>I just encountered a rather annoying problem when running <a href="http://hudson-ci.org/">Hudson</a> as a service on <a href="http://ubuntu.com/">Ubuntu</a>. I was getting the following exception whenever the build checked code out of <a href="http://github.com/">GitHub</a>:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>hudson.plugins.git.GitException: Could not apply tag hudson-Selenium_RC_Plugin-23
- at hudson.plugins.git.GitAPI.tag(GitAPI.java:265)</pre>
-</div>
-</div>
-
-    <a class="read-more" href="/2009/11/02/git-and-hudson/">Read more…</a>
-  </article>
-  <hr>
-  <article>
+    <div class="container">
+      <main>
+          <article>
     <header>
       <time datetime="2009-09-14T16:00:00">Sep 14 2009</time>
       <h2><a href="/2009/09/14/testing-grails-apps-with-selenium-rc/">Testing Grails Apps With Selenium-RC</a></h2>
@@ -152,22 +135,35 @@
     <a class="read-more" href="/2009/06/13/querying-by-association-redux/">Read more…</a>
   </article>
   <hr>
+  <article>
+    <header>
+      <time datetime="2009-06-13T05:51:00">Jun 13 2009</time>
+      <h2><a href="/2009/06/13/hacking-on-grails-scaffolding-templates/">Hacking on Grails scaffolding templates</a></h2>
+    </header>
+    <div class="paragraph">
+<p>Grails scaffolding is a fantastic mechanism for getting you up and running quickly. I love the fact that you can provide your own implementation of <em>some</em> controller actions or views and scaffolding will just fill in the gaps. That way you can start hand-crafting things when complexity increases past a certain point but still have Grails do a bunch of work for you.</p>
+</div>
+
+    <a class="read-more" href="/2009/06/13/hacking-on-grails-scaffolding-templates/">Read more…</a>
+  </article>
+  <hr>
 
   <nav class="pagination">
       <a rel="prev" href="/page/8/">Previous page</a>
-    <span>Page 9 of 11</span>
+    <span>Page 9 of 10</span>
       <a rel="next" href="/page/10/">Next page</a>
   </nav>
 
-    </main>
+      </main>
 
-    <footer id="site-footer">
-      <nav>
-        <a href="/">Home</a>
-        <a href="/about">About</a>
-        <a href="/archive">Archive</a>
-      </nav>
-    </footer>
+      <footer>
+        <nav>
+          <a href="/">Home</a>
+          <a href="/about">About</a>
+          <a href="/archive">Archive</a>
+        </nav>
+      </footer>
+    </div>
 
     <script src="/javascripts/adhockery.js"></script>
   </body>

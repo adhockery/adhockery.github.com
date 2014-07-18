@@ -14,7 +14,7 @@
   </head>
   <body>
 
-    <header id="site-header">
+    <header>
       <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
       <dl class="strapline">
         <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
@@ -22,20 +22,9 @@
       </dl>
     </header>
 
-    <main>
-        <article>
-    <header>
-      <time datetime="2011-11-29T00:07:00">Nov 29 2011</time>
-      <h2><a href="/2011/11/29/grails-2-upgrade-part-1/">Upgrading to Grails 2: Part 1</a></h2>
-    </header>
-    <div class="paragraph">
-<p>We&#8217;ve recently spent some time ensuring that our application is forwards-compatible with the upcoming Grails 2. Our app is broadly split into the application itself and a large plugin that forms the core of our <a href="http://en.wikipedia.org/wiki/Content_management_system">CMS</a>. We upgraded the plugin first as it contains the core domain classes but is also a slightly smaller task to tackle. I&#8217;ll write up our findings when we&#8217;ve completed upgrading the application itself in a follow-up to this post.</p>
-</div>
-
-    <a class="read-more" href="/2011/11/29/grails-2-upgrade-part-1/">Read more…</a>
-  </article>
-  <hr>
-  <article>
+    <div class="container">
+      <main>
+          <article>
     <header>
       <time datetime="2011-11-24T00:59:00">Nov 24 2011</time>
       <h2><a href="/2011/11/24/fear-loathing-in-functional-testing-land/">Fear & loathing in functional testing land</a></h2>
@@ -171,22 +160,35 @@
     <a class="read-more" href="/2011/02/22/javascripts-history-object-pushstate-and-the-back/">Read more…</a>
   </article>
   <hr>
+  <article>
+    <header>
+      <time datetime="2011-02-06T15:02:00">Feb  6 2011</time>
+      <h2><a href="/2011/02/06/running-geb-tests-from-your-ide/">Running Geb tests from your IDE</a></h2>
+    </header>
+    <div class="paragraph">
+<p>A frequent complaint about functional testing in Grails is that the start up / shut down cycle time of the app makes prototyping a functional test prohibitive. There has been some recent progress in this are with Luke Daley&#8217;s <a href="http://www.grails.org/plugin/functional-test-development">Functional test development plugin</a> but it would be really nice to be able to just run functional tests from inside your IDE in the same way as a similar unit test.</p>
+</div>
+
+    <a class="read-more" href="/2011/02/06/running-geb-tests-from-your-ide/">Read more…</a>
+  </article>
+  <hr>
 
   <nav class="pagination">
       <a rel="prev" href="/page/4/">Previous page</a>
-    <span>Page 5 of 11</span>
+    <span>Page 5 of 10</span>
       <a rel="next" href="/page/6/">Next page</a>
   </nav>
 
-    </main>
+      </main>
 
-    <footer id="site-footer">
-      <nav>
-        <a href="/">Home</a>
-        <a href="/about">About</a>
-        <a href="/archive">Archive</a>
-      </nav>
-    </footer>
+      <footer>
+        <nav>
+          <a href="/">Home</a>
+          <a href="/about">About</a>
+          <a href="/archive">Archive</a>
+        </nav>
+      </footer>
+    </div>
 
     <script src="/javascripts/adhockery.js"></script>
   </body>

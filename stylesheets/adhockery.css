@@ -1094,6 +1094,33 @@ a.read-more {
     a.read-more:active:after, a.read-more:hover:after, a.read-more:focus:after {
       color: #8ecdc5; }
 
+/* line 136, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_main-content.scss */
+.about ul {
+  list-style-position: inside; }
+  /* line 138, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_main-content.scss */
+  .about ul a {
+    color: inherit;
+    text-decoration: inherit;
+    cursor: inherit; }
+    /* line 6, /Users/rfletcher/.rvm/gems/ruby-1.9.3-p547/gems/compass-0.12.6/frameworks/compass/stylesheets/compass/typography/links/_unstyled-link.scss */
+    .about ul a:active, .about ul a:focus {
+      outline: none; }
+    /* line 3, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
+    .about ul a:after {
+      content: "\00a0»";
+      color: transparent;
+      font-family: "league-gothic", "DIN Condensed", "Franklin Gothic Medium", "Franklin Gothic", "ITC Franklin Gothic", Arial, sans-serif;
+      font-size: 1.5em;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 0; }
+    /* line 14, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
+    .about ul a:active, .about ul a:hover, .about ul a:focus {
+      text-decoration: none; }
+      /* line 16, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
+      .about ul a:active:after, .about ul a:hover:after, .about ul a:focus:after {
+        color: #8ecdc5; }
+
 /* line 1, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_asciidoc.scss */
 .listingblock .title {
   font-size: 1.17em;

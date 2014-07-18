@@ -1,7 +1,11 @@
 #site-header {
   @include clearfix;
+  @include leader(1);
   max-width: $max-width;
-  margin: 0 auto;
+  margin: {
+    left: auto;
+    right: auto;
+  }
 
   h1 {
     @include column(10);

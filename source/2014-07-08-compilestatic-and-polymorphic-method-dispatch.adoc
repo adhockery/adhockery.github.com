@@ -26,7 +26,6 @@ class Categorizer {
       accept(it)
     }
   }
-
 }
 
 new Categorizer().accept(

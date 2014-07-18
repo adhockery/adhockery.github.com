@@ -61,6 +61,7 @@ article, .archive {
 
 article {
   @include leader(1);
+  @include trailer(0);
   // use h1 header sizes for article headers on the index page
   h2 {
     @include adjust-font-size-to($h1-font-size);

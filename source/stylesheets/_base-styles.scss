@@ -34,12 +34,13 @@ pre {
   overflow-y: visible;
 
   background: $example-background;
-  border: {
-    width: 1px 0;
-    style: dotted;
-    color: $border-color;
+  border-color: $border-color;
+  padding: {
+    left: rhythm(1);
+    right: rhythm(1);
   }
-  padding: rhythm(1);
+  @include leading-border($border-style: dotted);
+  @include trailing-border($border-style: dotted);
 }
 
 ul, ol {
@@ -63,8 +64,11 @@ ul.tag-list {
 }
 
 hr {
-  border: 0;
-  border-bottom: 1px dotted $border-color;
+  border: {
+    width: 0;
+    color: $border-color;
+  }
+  @include trailing-border($border-style: dotted);
 }
 
 blockquote {

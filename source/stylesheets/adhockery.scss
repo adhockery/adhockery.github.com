@@ -12,8 +12,6 @@ $logo-font-family: "acta-poster", $serif-font-family;
 $contrasted-dark-default: #222;
 
 // normalize overrides
-$base-font-size: 18px;
-$base-line-height: 24px;
 $base-font-family: $serif-font-family;
 
 // grid
@@ -33,6 +31,7 @@ $example-background: transparentize(#f2f2f2, 0.2);
 @import "mixins";
 @import "rem";
 @import "fout";
+@import "text";
 @import "base-styles";
 @import "site-header";
 @import "site-footer";

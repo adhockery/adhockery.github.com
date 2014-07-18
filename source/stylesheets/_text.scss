@@ -1,0 +1,19 @@
+$base-font-size: 18px;
+$base-line-height: 27px;
+@include establish-baseline;
+
+body {
+  @include baseline-grid-background;
+}
+
+// @media (min-width: 480px) {
+//   $base-font-size: 18px;
+//   $base-line-height: 27px;
+//   @include establish-baseline;
+// }
+//
+// @media (min-width: 1024px) {
+//   $base-font-size: 20px;
+//   $base-line-height: 30px;
+//   @include establish-baseline;
+// }

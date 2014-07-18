@@ -1,0 +1,27 @@
+body > footer {
+  @include column(10);
+  @include push(1);
+  @include pull(10);
+  @include leader(1);
+  @include trailer(1);
+
+  border-top: 1px dotted $border-color;
+
+  nav {
+    text-align: right;
+  }
+
+  a {
+    @include adjust-font-size-to($h2-font-size);
+    font: {
+      family: $heading-font-family;
+      weight: 400;
+    }
+    text-transform: uppercase;
+    @include next-link;
+
+    &:not(:first-child) {
+      margin-left: 1em;
+    }
+  }
+}

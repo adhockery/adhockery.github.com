@@ -1,0 +1,28 @@
+@mixin pagination-link($direction, $content) {
+  @include unstyled-link;
+  &:#{$direction} {
+    content: $content;
+    color: transparent;
+    font: {
+      family: $heading-font-family;
+      size: 1.5em;
+      style: normal;
+      weight: 400;
+    }
+    line-height: 0;
+  }
+  &:active, &:hover, &:focus {
+    text-decoration: none;
+    &:#{$direction} {
+      color: $decoration-color;
+    }
+  }
+}
+
+@mixin next-link {
+  @include pagination-link(after, "\00a0»");
+}
+
+@mixin prev-link {
+  @include pagination-link(before, "«\00a0");
+}

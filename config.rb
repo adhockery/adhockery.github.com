@@ -31,6 +31,10 @@ end
 
 activate :directory_indexes
 
+activate :disqus do |d|
+  d.shortname = "adhockery"
+end
+
 activate :autoprefixer
 
 activate :deploy do |deploy|

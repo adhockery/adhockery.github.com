@@ -19,3 +19,4 @@ gem "middleman-deploy"
 
 gem "middleman-autoprefixer"
 gem "normalize-scss"
+gem "middleman-disqus"

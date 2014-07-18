@@ -13,6 +13,8 @@ $contrasted-dark-default: #222;
 
 // normalize overrides
 $base-font-family: $serif-font-family;
+$base-font-size: 18px;
+$base-line-height: 27px;
 
 // grid
 $total-width: 100%;
@@ -28,10 +30,15 @@ $example-background: transparentize(#f2f2f2, 0.2);
 @import "normalize";
 @import "grid";
 
+@include establish-baseline;
+
+body {
+  @include baseline-grid-background;
+}
+
 @import "mixins";
 @import "rem";
 @import "fout";
-@import "text";
 @import "base-styles";
 @import "site-header";
 @import "site-footer";

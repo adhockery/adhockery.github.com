@@ -132,3 +132,10 @@ a.read-more {
   border-bottom: none;
   @include next-link;
 }
+
+.about ul {
+  list-style-position: inside;
+  a {
+    @include next-link;
+  }
+}

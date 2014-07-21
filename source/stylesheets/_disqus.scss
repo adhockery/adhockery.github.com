@@ -1,0 +1,12 @@
+.disqus {
+  @include clearfix;
+  max-width: $max-width;
+  margin: 0 auto;
+  @include leader(1);
+  @include trailer(1);
+  #disqus_thread {
+    @include column(10);
+    @include push(1);
+    @include pull(1);
+  }
+}

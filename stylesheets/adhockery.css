@@ -547,6 +547,10 @@ html {
   font-size: 18px;
   line-height: 1.5em; }
 
+/* line 35, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/adhockery.scss */
+body {
+  -webkit-text-size-adjust: none; }
+
 /*
  * Given a rems size renders rems with fallback pixels.
  *
@@ -724,8 +728,8 @@ body > header {
     margin-top: 0;
     margin-bottom: 0;
     position: relative;
-    font-size: 2.66667em;
-    line-height: 1.125em;
+    font-size: 2em;
+    line-height: 1.5em;
     display: inline-block;
     font-family: ultra, Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
     text-transform: lowercase; }
@@ -753,19 +757,24 @@ body > header {
     @media only screen and (min-width: 480px) {
       /* line 10, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
       body > header h1 {
+        font-size: 2.66667em;
+        line-height: 1.125em; } }
+    @media only screen and (min-width: 640px) {
+      /* line 10, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
+      body > header h1 {
         font-size: 3.55556em;
         line-height: 1.26563em; } }
-    @media only screen and (min-width: 640px) {
+    @media only screen and (min-width: 720px) {
       /* line 10, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
       body > header h1 {
         font-size: 4em;
         line-height: 1.125em; } }
-    @media only screen and (min-width: 940px) {
+    @media only screen and (min-width: 960px) {
       /* line 10, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
       body > header h1 {
         font-size: 5.33333em;
         line-height: 1.125em; } }
-  /* line 60, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
+  /* line 65, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
   body > header .strapline {
     display: inline;
     float: left;
@@ -778,23 +787,23 @@ body > header {
     display: none;
     margin-top: 0; }
     @media only screen and (min-width: 768px) {
-      /* line 60, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
+      /* line 65, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
       body > header .strapline {
         display: block; } }
-    /* line 71, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
+    /* line 76, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
     body > header .strapline dt {
       font-weight: 700; }
-    /* line 75, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
+    /* line 80, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
     body > header .strapline dd {
       margin: 0 36px; }
       /* line 37, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_rem.scss */
       .cssremunit body > header .strapline dd {
         margin: 0 2rem; }
-  /* line 80, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
+  /* line 85, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
   body > header cite {
     display: block;
     text-align: right; }
-    /* line 84, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
+    /* line 89, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
     body > header cite:before {
       content: '— '; }
 

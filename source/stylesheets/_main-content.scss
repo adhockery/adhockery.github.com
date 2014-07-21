@@ -100,3 +100,8 @@ a.read-more {
     @include next-link;
   }
 }
+
+.figure {
+  display: block;
+  text-align: center;
+}

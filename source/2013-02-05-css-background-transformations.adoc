@@ -30,11 +30,17 @@ My first thought was to apply a `background-color` to the element along with the
 }
 ----------------------------------------------------------
 
-Here's the result and the http://jsfiddle.net/piraterob/sKgmM/[jsFiddle] code. image:http://static.tumblr.com/x4ukvcb/3Mvmhr5k9/image.jpg[Transform and reverse,title="Element transformed & content reverse transformed"]
+Here's the result and the http://jsfiddle.net/piraterob/sKgmM/[jsFiddle] code.
+
+[.figure]
+image:http://static.tumblr.com/x4ukvcb/3Mvmhr5k9/image.jpg[Transform and reverse,title="Element transformed & content reverse transformed"]
 
 This works up to a point but the more complex the transforms the harder they are to reverse out correctly. I also found that certain transformations were effectively impossible to reverse out in this way. For example, if I apply a `rotate` transform to the element then each child element will be out of position when rotated back. It doesn't feel like a very maintainable solution.
 
-You can see what I mean if I add a border to the left of the various elements. They get progressively out of line as they are reverse transformed. The longer the content gets the more of a problem this becomes. image:http://static.tumblr.com/x4ukvcb/bKlmhr5r3/image.jpg[Reverse transformations force elements out of line,title="Elements drift out of line using transform & reverse"]
+You can see what I mean if I add a border to the left of the various elements. They get progressively out of line as they are reverse transformed. The longer the content gets the more of a problem this becomes.
+
+[.figure]
+image:http://static.tumblr.com/x4ukvcb/bKlmhr5r3/image.jpg[Reverse transformations force elements out of line,title="Elements drift out of line using transform & reverse"]
 
 === Say hello to the pseudo-background-element
 
@@ -64,9 +70,17 @@ Since I didn't want to add extra markup I decided to try this with a `:before` p
 
 The pseudo-element is positioned behind the actual element using `position: absolute` and `z-index: -1` and given the same dimensions as the "real" element. In order for the pseudo-element to render it requires the `content` declaration although I'm just using an empty string which seems to be enough to trigger the rendering.
 
-The result doesn't look particularly different from the first attempt but the code is much simpler now there's no reverse transformation going on. image:http://static.tumblr.com/x4ukvcb/PFDmhr5tv/image.jpg[Pseudo-element background,title="Pseudo background element"] Here's the code on http://jsfiddle.net/piraterob/sKgmM/1/[jsFiddle].
+The result doesn't look particularly different from the first attempt but the code is much simpler now there's no reverse transformation going on.
 
-If I add a border to the content elements again you can see that they are now properly in line – the background transformation has not affected them. Win! image:http://static.tumblr.com/x4ukvcb/X2Cmhr5vr/image.jpg[Using pseudo background elements are in line,title="Content is correctly aligned using pseudo background element"]
+[.figure]
+image:http://static.tumblr.com/x4ukvcb/PFDmhr5tv/image.jpg[Pseudo-element background,title="Pseudo background element"]
+
+Here's the code on http://jsfiddle.net/piraterob/sKgmM/1/[jsFiddle].
+
+If I add a border to the content elements again you can see that they are now properly in line – the background transformation has not affected them. Win!
+
+[.figure]
+image:http://static.tumblr.com/x4ukvcb/X2Cmhr5vr/image.jpg[Using pseudo background elements are in line,title="Content is correctly aligned using pseudo background element"]
 
 === Into the 3rd dimension
 
@@ -87,7 +101,12 @@ Because the transformations no longer affect the element or its content it's pos
 }
 --------------------------------------------------------------------------------------------------------------
 
-Here's an example of a 3D transformed background: image:http://static.tumblr.com/x4ukvcb/nWNmhr5xo/image.jpg[3d transformed background,title="3D transformed background"] … and the code on http://jsfiddle.net/piraterob/sKgmM/2/[jsFiddle].
+Here's an example of a 3D transformed background:
+
+[.figure]
+image:http://static.tumblr.com/x4ukvcb/nWNmhr5xo/image.jpg[3d transformed background,title="3D transformed background"]
+
+… and the code on http://jsfiddle.net/piraterob/sKgmM/2/[jsFiddle].
 
 === The inevitable compatibility issues
 
@@ -99,7 +118,10 @@ As ever, Internet Explorer is going to rain on our parade here as up to and incl
 
 Some browsers will allow parts of the 3d transformed background to project "_through_" the content and either block mouse clicks or actually obscure the content. The former is a big problem if you have anchors in the content as you won't be able to click them. Even `:hover` styles won't trigger. https://twitter.com/tim_yates/status/294487820435865600[Tim Yates provided me with a workaround] which is to add `pointer-events: none;` to the pseudo-element's CSS.
 
-Some browsers (at least iOS Safari & Chrome, possibly others) render the transformed background so that it actually obscures the content. image:http://static.tumblr.com/x4ukvcb/N4bmhr603/image.jpg[3d background projecting through content,title="3D transformed background projecting through content"]
+Some browsers (at least iOS Safari & Chrome, possibly others) render the transformed background so that it actually obscures the content.
+
+[.figure]
+image:http://static.tumblr.com/x4ukvcb/N4bmhr603/image.jpg[3d background projecting through content,title="3D transformed background projecting through content"]
 
 To prevent this you need to set the `transform-origin` property to the corner of the element _"closest"_ to the front on the _z_ axis. By default the origin is at the center so by moving it to the _"closest"_ corner you guarantee that z-axis transformations pivot the background behind the content.
 
@@ -108,13 +130,21 @@ To prevent this you need to set the `transform-origin` property to the corner of
 transform-origin: top left;
 ---------------------------
 
-The background is no longer projecting through the content. Some more fine-tuning is required on the element position but the fundamental problem is fixed. image:http://static.tumblr.com/x4ukvcb/B5Emhr61v/image.jpg[Background with transform origin set,title="3D transformed background with origin set"] The full example is on http://jsfiddle.net/piraterob/sKgmM/8/[jsFiddle].
+The background is no longer projecting through the content. Some more fine-tuning is required on the element position but the fundamental problem is fixed.
+
+[.figure]
+image:http://static.tumblr.com/x4ukvcb/B5Emhr61v/image.jpg[Background with transform origin set,title="3D transformed background with origin set"]
+
+The full example is on http://jsfiddle.net/piraterob/sKgmM/8/[jsFiddle].
 
 ==== Smoothing the edges
 
 On certain browsers skewed or rotated shapes will suffer from aliasing. The standard fix is to add `backface-visibility: hidden;` to the element's CSS. This clears things up in desktop webkit browsers for example.
 
-Unfortunately I found adding `backface-visibility: hidden` actually _caused_ aliasing on iOS. image:http://static.tumblr.com/x4ukvcb/okJmhr63c/image.jpg[iOS aliasing,title="Edges aliasing on iOS"]
+Unfortunately I found adding `backface-visibility: hidden` actually _caused_ aliasing on iOS.
+
+[.figure]
+image:http://static.tumblr.com/x4ukvcb/okJmhr63c/image.jpg[iOS aliasing,title="Edges aliasing on iOS"]
 
 http://www.fngtps.com/2011/how-to-prevent-jagged-edges-when-using-css-transformation-in-mobile-safari/[One site I found] suggested adding padding to a wrapper element. I didn't want to introduce any extra markup but I was able to adapt the technique to solve the problem without having to do so.
 
@@ -130,6 +160,9 @@ Instead of adding a wrapper element I added the padding to the pseudo-element it
 
 Again, the code is on http://jsfiddle.net/piraterob/sKgmM/9/[jsFiddle].
 
-This clears things up perfectly on iOS. The only down-side is that if you want to add a border or drop shadow there will be a gap between the background and the border / shadow. image:http://static.tumblr.com/x4ukvcb/rlpmhr64v/image.jpg[Gap between background & drop shadow,title="Gap between background & drop shadow"]
+This clears things up perfectly on iOS. The only down-side is that if you want to add a border or drop shadow there will be a gap between the background and the border / shadow.
+
+[.figure]
+image:http://static.tumblr.com/x4ukvcb/rlpmhr64v/image.jpg[Gap between background & drop shadow,title="Gap between background & drop shadow"]
 
 One solution to this is to use an `:after` pseudo-element placed behind the `:before` pseudo-element and positioned or resized to look like a border or drop-shadow. I've created a simple example on http://jsfiddle.net/piraterob/sKgmM/10/[jsFiddle].

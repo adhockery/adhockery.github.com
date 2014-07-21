@@ -1133,3 +1133,27 @@ a.read-more {
   /* line 9, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_asciidoc.scss */
   .listingblock .title + .content pre {
     margin-top: 0; }
+
+/* line 1, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_disqus.scss */
+.disqus {
+  *zoom: 1;
+  max-width: 56em;
+  margin: 0 auto;
+  margin-top: 1.5em;
+  margin-bottom: 1.5em; }
+  /* line 27, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_grid.scss */
+  .disqus:before, .disqus:after {
+    content: "";
+    display: table; }
+  /* line 31, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_grid.scss */
+  .disqus:after {
+    clear: both; }
+  /* line 7, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_disqus.scss */
+  .disqus #disqus_thread {
+    display: inline;
+    float: left;
+    width: 81.25%;
+    margin-left: 1.04167%;
+    margin-right: 1.04167%;
+    margin-left: 9.375%;
+    margin-right: 9.375%; }

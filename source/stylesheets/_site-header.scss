@@ -35,7 +35,8 @@ body > header {
       content: "::";
       color: $teal;
       position: absolute;
-      left: -0.75em;
+      left: -0.7em;
+      letter-spacing: -0.05em;
     }
     &:after {
       content: ".";

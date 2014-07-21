@@ -706,6 +706,7 @@ blockquote {
 body > header {
   *zoom: 1;
   margin-top: 1.5em;
+  margin-bottom: 1.5em;
   max-width: 56em;
   margin-left: auto;
   margin-right: auto; }
@@ -716,7 +717,7 @@ body > header {
   /* line 31, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_grid.scss */
   body > header:after {
     clear: both; }
-  /* line 10, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
+  /* line 11, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
   body > header h1 {
     display: inline;
     float: left;
@@ -733,10 +734,10 @@ body > header {
     display: inline-block;
     font-family: ultra, Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
     text-transform: lowercase; }
-    /* line 25, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
+    /* line 26, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
     .fontface body > header h1 {
       font-weight: 400; }
-    /* line 29, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
+    /* line 30, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
     body > header h1 a {
       color: inherit;
       text-decoration: inherit;
@@ -744,42 +745,42 @@ body > header {
       /* line 6, /Users/rfletcher/.rvm/gems/ruby-1.9.3-p547/gems/compass-0.12.6/frameworks/compass/stylesheets/compass/typography/links/_unstyled-link.scss */
       body > header h1 a:active, body > header h1 a:focus {
         outline: none; }
-    /* line 33, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
+    /* line 34, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
     body > header h1:before {
       content: "::";
       color: #8ecdc5;
       position: absolute;
       left: -0.75em; }
-    /* line 39, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
+    /* line 40, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
     body > header h1:after {
       content: ".";
       color: #e84327; }
     @media only screen and (min-width: 360px) {
-      /* line 10, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
+      /* line 11, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
       body > header h1 {
         font-size: 2em;
         line-height: 1.5em; } }
     @media only screen and (min-width: 480px) {
-      /* line 10, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
+      /* line 11, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
       body > header h1 {
         font-size: 2.66667em;
         line-height: 1.125em; } }
     @media only screen and (min-width: 640px) {
-      /* line 10, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
+      /* line 11, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
       body > header h1 {
         font-size: 3.55556em;
         line-height: 1.26563em; } }
     @media only screen and (min-width: 720px) {
-      /* line 10, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
+      /* line 11, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
       body > header h1 {
         font-size: 4em;
         line-height: 1.125em; } }
     @media only screen and (min-width: 960px) {
-      /* line 10, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
+      /* line 11, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
       body > header h1 {
         font-size: 5.33333em;
         line-height: 1.125em; } }
-  /* line 70, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
+  /* line 71, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
   body > header .strapline {
     display: inline;
     float: left;
@@ -790,25 +791,26 @@ body > header {
     font-size: 0.88889em;
     line-height: 1.6875em;
     display: none;
-    margin-top: 0; }
+    margin-top: 0;
+    margin-bottom: 1.6875em; }
     @media only screen and (min-width: 768px) {
-      /* line 70, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
+      /* line 71, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
       body > header .strapline {
         display: block; } }
-    /* line 81, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
+    /* line 84, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
     body > header .strapline dt {
       font-weight: 700; }
-    /* line 85, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
+    /* line 88, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
     body > header .strapline dd {
       margin: 0 36px; }
       /* line 37, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_rem.scss */
       .cssremunit body > header .strapline dd {
         margin: 0 2rem; }
-  /* line 90, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
+  /* line 93, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
   body > header cite {
     display: block;
     text-align: right; }
-    /* line 94, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
+    /* line 97, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
     body > header cite:before {
       content: '— '; }
 

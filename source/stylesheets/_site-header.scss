@@ -1,6 +1,7 @@
 body > header {
   @include clearfix;
   @include leader(1);
+  @include trailer(1);
   max-width: $max-width;
   margin: {
     left: auto;
@@ -68,11 +69,13 @@ body > header {
   }
 
   .strapline {
+    $strapline-font-size: 16px;
     @include column(8);
     @include push(1);
-    @include adjust-font-size-to(16px);
+    @include adjust-font-size-to($strapline-font-size);
     display: none;
     margin-top: 0;
+    @include trailer(1, $strapline-font-size);
 
     @media only screen and (min-width: 768px) {
       display: block;

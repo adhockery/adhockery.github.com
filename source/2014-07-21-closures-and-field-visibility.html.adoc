@@ -1,7 +1,7 @@
 ---
 title: Closures and field visibility
 date: 2014-07-21 11:34 BST
-tags:
+tags: groovy
 ---
 
 I find Groovy Closures can sometimes behave in ways that, once I think about it, make perfect sense but initially seem surprising. One example of this is the fact that closures _declared in a parent class_ cannot “see” private fields of that class when run in the context of a child class.

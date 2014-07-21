@@ -8,7 +8,7 @@ I find Groovy Closures can sometimes behave in ways that, once I think about it,
 
 READMORE
 
-Take a look at this code
+Take a look at this code:
 
 [source,groovy]
 ----

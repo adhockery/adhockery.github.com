@@ -5,10 +5,68 @@
   <id>http://blog.url.com/</id>
   <link href="http://blog.url.com/"/>
   <link href="http://blog.url.com/feed.xml" rel="self"/>
-  <updated>2014-07-08T07:11:00+01:00</updated>
+  <updated>2014-07-21T11:34:00+01:00</updated>
   <author>
     <name>Blog Author</name>
   </author>
+  <entry>
+    <title>Closures and field visibility</title>
+    <link rel="alternate" href="http://blog.url.com/2014/07/21/closures-and-field-visibility/"/>
+    <id>http://blog.url.com/2014/07/21/closures-and-field-visibility/</id>
+    <published>2014-07-21T11:34:00+01:00</published>
+    <updated>2014-07-21T11:35:30+01:00</updated>
+    <author>
+      <name>Article Author</name>
+    </author>
+    <content type="html">&lt;div class="paragraph"&gt;
+&lt;p&gt;I find Groovy Closures can sometimes behave in ways that, once I think about it, make perfect sense but initially seem surprising. One example of this is the fact that closures &lt;em&gt;declared in a parent class&lt;/em&gt; cannot “see” private fields of that class when run in the context of a child class.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Take a look at this code&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="highlight"&gt;&lt;code class="groovy language-groovy"&gt;class Multiplier {
+
+  private int multiplier
+
+  Multiplier(int multiplier) {
+    this.multiplier = multiplier
+  }
+
+  List multiply(List values) {
+    values.collect {
+      it * multiplier
+    }
+  }
+}
+
+assert new Multiplier(3).multiply([1, 2, 3]) == [3, 6, 9]&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;The class has a private field &lt;code&gt;multiplier&lt;/code&gt; that gets referenced in a closure in one of the class methods. This works fine. However, what happens if we extend that class?&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="highlight"&gt;&lt;code class="groovy language-groovy"&gt;class Doubler extends Multiplier {
+  Doubler() { super(2) }
+}
+
+assert new Doubler().multiply([1, 2, 3]) == [2, 4, 6]&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;This code results in &lt;code&gt;MissingPropertyException: No such property: multiplier for class: Doubler&lt;/code&gt;!&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;A closure gets compiled as an anonymous inner class and when run will attempt to resolve unknown property references against its &lt;em&gt;owner&lt;/em&gt; – in this case the object that contains it. Because the &lt;code&gt;multiplier&lt;/code&gt; field is not visible from the &lt;code&gt;Doubler&lt;/code&gt; class the reference doesn&amp;#8217;t work. If &lt;code&gt;multiplier&lt;/code&gt; is declared &lt;code&gt;protected&lt;/code&gt; the code works just fine.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;This is definitely worth bearing in mind if you are building library code designed to be extended by other people.&lt;/p&gt;
+&lt;/div&gt;</content>
+  </entry>
   <entry>
     <title>@CompileStatic and polymorphic method dispatch</title>
     <link rel="alternate" href="http://blog.url.com/2014/07/08/compilestatic-and-polymorphic-method-dispatch/"/>
@@ -531,88 +589,6 @@ $scope.save = function() {
 &lt;/div&gt;
 &lt;div class="paragraph"&gt;
 &lt;p&gt;Learning to think about separation of concerns in this way is key to getting the most out of Angular. Remember controllers are for managing view &lt;em&gt;state&lt;/em&gt; and directives are for managing the view &lt;em&gt;implementation&lt;/em&gt;. If you find yourself mixing those concerns step back and think about how you can separate them. The resulting code will be easier to follow, easier to change and easier to test.&lt;/p&gt;
-&lt;/div&gt;</content>
-  </entry>
-  <entry>
-    <title>Unit testing Angular directives that use controller and templateUrl</title>
-    <link rel="alternate" href="http://blog.url.com/2013/09/02/unit-testing-angular-directives-that-use-controller-and/"/>
-    <id>http://blog.url.com/2013/09/02/unit-testing-angular-directives-that-use-controller-and/</id>
-    <published>2013-09-02T14:48:00+01:00</published>
-    <updated>2014-07-13T08:34:18+01:00</updated>
-    <author>
-      <name>Article Author</name>
-    </author>
-    <content type="html">&lt;div class="paragraph"&gt;
-&lt;p&gt;I spent an hour or so this morning figuring out how to unit test an Angular directive that uses a controller and a template loaded from a file (as opposed to inline). There&amp;#8217;s a useful example in the &lt;a href="https://github.com/vojtajina/ng-directive-testing"&gt;ng-directive-testing&lt;/a&gt; repository but I thought a quick summary would be useful (as much to remind me the next time I have to do it as anything). Also the examples there test by interacting with DOM elements rather than directly with the directive&amp;#8217;s scope.&lt;/p&gt;
-&lt;/div&gt;
-
-&lt;div class="paragraph"&gt;
-&lt;p&gt;I&amp;#8217;m using the Yeoman Angular generator so my tests are using Jasmine &amp;amp; running with Karma.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;In order to get my directive&amp;#8217;s template to load I used the &lt;em&gt;karma-ng-html2js-preprocessor&lt;/em&gt; plugin for Karma:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="listingblock"&gt;
-&lt;div class="content"&gt;
-&lt;pre class="highlight"&gt;&lt;code class="bash language-bash"&gt;npm install karma-ng-html2js-preprocessor --save-dev&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;This plugin compiles HTML templates into JavaScript (I guess a little like the way the Handlebars compiler works) which are then exposed as an Angular module that your tests can depend on.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;I was previously using &lt;em&gt;grunt-karma&lt;/em&gt; 0.4.3 which I guess was what the Yeoman generator set me up with. In order to get the plugin to work I had to upgrade to 0.6.1 which also meant reconfiguring my &lt;em&gt;karma.conf.js&lt;/em&gt; to the new style where the config is exported as a module. Karma was pretty good about pointing out what was wrong in my existing config so it was easy enough to update.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;Then I added the specific config for the plugin.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="listingblock"&gt;
-&lt;div class="content"&gt;
-&lt;pre class="highlight"&gt;&lt;code class="javascript language-javascript"&gt;preprocessors: {
-  '**/*.coffee': 'coffee',
-  'app/views/*.html': 'ng-html2js'
-},
-
-ngHtml2JsPreprocessor: {
-  stripPrefix: 'app/',
-},&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;The CoffeeScript pre-processor is the default for Karma but I found I had to declare it explicitly when declaring another preprocessor. The &lt;em&gt;ng-html2js&lt;/em&gt; preprocessor operates on all HTML files under &lt;code&gt;app/views&lt;/code&gt; which is where the Yeoman generator places them. The other bit of config under &lt;em&gt;ngHtml2JsPreprocessor&lt;/em&gt; determines how the file path is converted to a module name the test can load. I&amp;#8217;m removing the &lt;code&gt;app/&lt;/code&gt; folder so that the module name will be the same as the path to the file declared in my directive&amp;#8217;s &lt;code&gt;templateUrl&lt;/code&gt; property.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;In order to load the template module I just added the template path to the Jasmine test:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="listingblock"&gt;
-&lt;div class="content"&gt;
-&lt;pre class="highlight"&gt;&lt;code class="coffeescript language-coffeescript"&gt;beforeEach module 'myApp', 'views/my-template.html'&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;My directive uses a controller that attaches a function to the scope. I wanted to write a test where I call the function directly on the scope as I would in a regular controller unit test. I found two problems with this. Firstly, the controller was not executing and secondly the scope that I compile the directive against is the &lt;em&gt;parent of&lt;/em&gt; the scope the controller interacts with not the same one.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;To fix the first problem I explicitly called &lt;code&gt;$digest()&lt;/code&gt; on the parent scope. That causes the controller function to execute. Then I could grab the directive&amp;#8217;s scope using the DOM element&amp;#8217;s &lt;code&gt;data&lt;/code&gt; method.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="listingblock"&gt;
-&lt;div class="content"&gt;
-&lt;pre class="highlight"&gt;&lt;code class="coffeescript language-coffeescript"&gt;scope = {}
-
-beforeEach inject ($compile, $rootScope) -&amp;gt;
-    # the compilation step generated by Yeoman
-    element = angular.element '&amp;lt;my-directive/&amp;gt;'
-    element = $compile(element) $rootScope
-
-    # execute the controller function
-    $rootScope.$digest()
-
-    # the directive's scope is a child of the one used to compile the element
-    scope = element.data '$scope'&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;When tests subsequently use that &lt;code&gt;scope&lt;/code&gt; variable they can directly call the scope functions declared by the controller.&lt;/p&gt;
 &lt;/div&gt;</content>
   </entry>
 </feed>

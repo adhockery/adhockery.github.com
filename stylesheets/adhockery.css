@@ -750,8 +750,9 @@ body > header {
       content: "::";
       color: #8ecdc5;
       position: absolute;
-      left: -0.75em; }
-    /* line 40, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
+      left: -0.7em;
+      letter-spacing: -0.05em; }
+    /* line 41, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
     body > header h1:after {
       content: ".";
       color: #e84327; }
@@ -780,7 +781,7 @@ body > header {
       body > header h1 {
         font-size: 5.33333em;
         line-height: 1.125em; } }
-  /* line 71, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
+  /* line 72, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
   body > header .strapline {
     display: inline;
     float: left;
@@ -794,23 +795,23 @@ body > header {
     margin-top: 0;
     margin-bottom: 1.6875em; }
     @media only screen and (min-width: 768px) {
-      /* line 71, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
+      /* line 72, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
       body > header .strapline {
         display: block; } }
-    /* line 84, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
+    /* line 85, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
     body > header .strapline dt {
       font-weight: 700; }
-    /* line 88, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
+    /* line 89, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
     body > header .strapline dd {
       margin: 0 36px; }
       /* line 37, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_rem.scss */
       .cssremunit body > header .strapline dd {
         margin: 0 2rem; }
-  /* line 93, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
+  /* line 94, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
   body > header cite {
     display: block;
     text-align: right; }
-    /* line 97, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
+    /* line 98, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
     body > header cite:before {
       content: '— '; }
 
@@ -884,15 +885,6 @@ body > .container {
     margin-right: 1.04167%;
     margin-left: 9.375%;
     margin-right: 9.375%; }
-  /* line 10, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_column-layout.scss */
-  body > .container > hr {
-    display: inline;
-    float: left;
-    width: 64.58333%;
-    margin-left: 1.04167%;
-    margin-right: 1.04167%;
-    margin-left: 17.70833%;
-    margin-right: 17.70833%; }
 
 /* line 1, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_main-content.scss */
 article, .archive {

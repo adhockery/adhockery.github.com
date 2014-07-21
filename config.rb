@@ -31,6 +31,10 @@ end
 
 activate :directory_indexes
 
+activate :google_analytics do |ga|
+  ga.tracking_id = 'UA-27275689-1'
+end
+
 activate :disqus do |d|
   d.shortname = "adhockery"
 end

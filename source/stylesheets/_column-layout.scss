@@ -7,9 +7,4 @@ body > .container {
     @include push(1);
     @include pull(1);
   }
-  > hr {
-    @include column(8);
-    @include push(2);
-    @include pull(2);
-  }
 }

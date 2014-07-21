@@ -1,0 +1,48 @@
+---
+title: Closures and field visibility
+date: 2014-07-21 11:34 BST
+tags:
+---
+
+I find Groovy Closures can sometimes behave in ways that, once I think about it, make perfect sense but initially seem surprising. One example of this is the fact that closures _declared in a parent class_ cannot “see” private fields of that class when run in the context of a child class.
+
+READMORE
+
+Take a look at this code
+
+[source,groovy]
+----
+class Multiplier {
+
+  private int multiplier
+
+  Multiplier(int multiplier) {
+    this.multiplier = multiplier
+  }
+
+  List multiply(List values) {
+    values.collect {
+      it * multiplier
+    }
+  }
+}
+
+assert new Multiplier(3).multiply([1, 2, 3]) == [3, 6, 9]
+----
+
+The class has a private field +multiplier+ that gets referenced in a closure in one of the class methods. This works fine. However, what happens if we extend that class?
+
+[source,groovy]
+----
+class Doubler extends Multiplier {
+  Doubler() { super(2) }
+}
+
+assert new Doubler().multiply([1, 2, 3]) == [2, 4, 6]
+----
+
+This code results in +MissingPropertyException: No such property: multiplier for class: Doubler+!
+
+A closure gets compiled as an anonymous inner class and when run will attempt to resolve unknown property references against its _owner_ – in this case the object that contains it. Because the +multiplier+ field is not visible from the +Doubler+ class the reference doesn't work. If +multiplier+ is declared +protected+ the code works just fine.
+
+This is definitely worth bearing in mind if you are building library code designed to be extended by other people.

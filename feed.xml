@@ -13,7 +13,7 @@
     <link rel="alternate" href="http://blog.url.com/2014/07/21/closures-and-field-visibility/"/>
     <id>http://blog.url.com/2014/07/21/closures-and-field-visibility/</id>
     <published>2014-07-21T11:34:00+01:00</published>
-    <updated>2014-07-21T14:12:20+01:00</updated>
+    <updated>2014-07-21T14:34:25+01:00</updated>
     <author>
       <name>Article Author</name>
     </author>
@@ -22,7 +22,7 @@
 &lt;/div&gt;
 
 &lt;div class="paragraph"&gt;
-&lt;p&gt;Take a look at this code&lt;/p&gt;
+&lt;p&gt;Take a look at this code:&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="listingblock"&gt;
 &lt;div class="content"&gt;

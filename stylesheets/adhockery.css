@@ -1071,6 +1071,11 @@ a.read-more {
       .about ul a:active:after, .about ul a:hover:after, .about ul a:focus:after {
         color: #8ecdc5; }
 
+/* line 104, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_main-content.scss */
+.figure {
+  display: block;
+  text-align: center; }
+
 /* line 1, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_pagination.scss */
 .pagination {
   font-size: 1.5em;

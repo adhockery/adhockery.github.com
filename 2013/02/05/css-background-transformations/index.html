@@ -62,13 +62,19 @@
 </div>
 </div>
 <div class="paragraph">
-<p>Here&#8217;s the result and the <a href="http://jsfiddle.net/piraterob/sKgmM/">jsFiddle</a> code. <span class="image"><img src="http://static.tumblr.com/x4ukvcb/3Mvmhr5k9/image.jpg" alt="Transform and reverse" title="Element transformed &amp; content reverse transformed"></span></p>
+<p>Here&#8217;s the result and the <a href="http://jsfiddle.net/piraterob/sKgmM/">jsFiddle</a> code.</p>
+</div>
+<div class="paragraph figure">
+<p><span class="image"><img src="http://static.tumblr.com/x4ukvcb/3Mvmhr5k9/image.jpg" alt="Transform and reverse" title="Element transformed &amp; content reverse transformed"></span></p>
 </div>
 <div class="paragraph">
 <p>This works up to a point but the more complex the transforms the harder they are to reverse out correctly. I also found that certain transformations were effectively impossible to reverse out in this way. For example, if I apply a <code>rotate</code> transform to the element then each child element will be out of position when rotated back. It doesn&#8217;t feel like a very maintainable solution.</p>
 </div>
 <div class="paragraph">
-<p>You can see what I mean if I add a border to the left of the various elements. They get progressively out of line as they are reverse transformed. The longer the content gets the more of a problem this becomes. <span class="image"><img src="http://static.tumblr.com/x4ukvcb/bKlmhr5r3/image.jpg" alt="Reverse transformations force elements out of line" title="Elements drift out of line using transform &amp; reverse"></span></p>
+<p>You can see what I mean if I add a border to the left of the various elements. They get progressively out of line as they are reverse transformed. The longer the content gets the more of a problem this becomes.</p>
+</div>
+<div class="paragraph figure">
+<p><span class="image"><img src="http://static.tumblr.com/x4ukvcb/bKlmhr5r3/image.jpg" alt="Reverse transformations force elements out of line" title="Elements drift out of line using transform &amp; reverse"></span></p>
 </div>
 </div>
 <div class="sect2">
@@ -103,10 +109,19 @@
 <p>The pseudo-element is positioned behind the actual element using <code>position: absolute</code> and <code>z-index: -1</code> and given the same dimensions as the "real" element. In order for the pseudo-element to render it requires the <code>content</code> declaration although I&#8217;m just using an empty string which seems to be enough to trigger the rendering.</p>
 </div>
 <div class="paragraph">
-<p>The result doesn&#8217;t look particularly different from the first attempt but the code is much simpler now there&#8217;s no reverse transformation going on. <span class="image"><img src="http://static.tumblr.com/x4ukvcb/PFDmhr5tv/image.jpg" alt="Pseudo-element background" title="Pseudo background element"></span> Here&#8217;s the code on <a href="http://jsfiddle.net/piraterob/sKgmM/1/">jsFiddle</a>.</p>
+<p>The result doesn&#8217;t look particularly different from the first attempt but the code is much simpler now there&#8217;s no reverse transformation going on.</p>
+</div>
+<div class="paragraph figure">
+<p><span class="image"><img src="http://static.tumblr.com/x4ukvcb/PFDmhr5tv/image.jpg" alt="Pseudo-element background" title="Pseudo background element"></span></p>
 </div>
 <div class="paragraph">
-<p>If I add a border to the content elements again you can see that they are now properly in line – the background transformation has not affected them. Win! <span class="image"><img src="http://static.tumblr.com/x4ukvcb/X2Cmhr5vr/image.jpg" alt="Using pseudo background elements are in line" title="Content is correctly aligned using pseudo background element"></span></p>
+<p>Here&#8217;s the code on <a href="http://jsfiddle.net/piraterob/sKgmM/1/">jsFiddle</a>.</p>
+</div>
+<div class="paragraph">
+<p>If I add a border to the content elements again you can see that they are now properly in line – the background transformation has not affected them. Win!</p>
+</div>
+<div class="paragraph figure">
+<p><span class="image"><img src="http://static.tumblr.com/x4ukvcb/X2Cmhr5vr/image.jpg" alt="Using pseudo background elements are in line" title="Content is correctly aligned using pseudo background element"></span></p>
 </div>
 </div>
 <div class="sect2">
@@ -130,7 +145,13 @@
 </div>
 </div>
 <div class="paragraph">
-<p>Here&#8217;s an example of a 3D transformed background: <span class="image"><img src="http://static.tumblr.com/x4ukvcb/nWNmhr5xo/image.jpg" alt="3d transformed background" title="3D transformed background"></span> … and the code on <a href="http://jsfiddle.net/piraterob/sKgmM/2/">jsFiddle</a>.</p>
+<p>Here&#8217;s an example of a 3D transformed background:</p>
+</div>
+<div class="paragraph figure">
+<p><span class="image"><img src="http://static.tumblr.com/x4ukvcb/nWNmhr5xo/image.jpg" alt="3d transformed background" title="3D transformed background"></span></p>
+</div>
+<div class="paragraph">
+<p>… and the code on <a href="http://jsfiddle.net/piraterob/sKgmM/2/">jsFiddle</a>.</p>
 </div>
 </div>
 <div class="sect2">
@@ -147,7 +168,10 @@
 <p>Some browsers will allow parts of the 3d transformed background to project "<em>through</em>" the content and either block mouse clicks or actually obscure the content. The former is a big problem if you have anchors in the content as you won&#8217;t be able to click them. Even <code>:hover</code> styles won&#8217;t trigger. <a href="https://twitter.com/tim_yates/status/294487820435865600">Tim Yates provided me with a workaround</a> which is to add <code>pointer-events: none;</code> to the pseudo-element&#8217;s CSS.</p>
 </div>
 <div class="paragraph">
-<p>Some browsers (at least iOS Safari &amp; Chrome, possibly others) render the transformed background so that it actually obscures the content. <span class="image"><img src="http://static.tumblr.com/x4ukvcb/N4bmhr603/image.jpg" alt="3d background projecting through content" title="3D transformed background projecting through content"></span></p>
+<p>Some browsers (at least iOS Safari &amp; Chrome, possibly others) render the transformed background so that it actually obscures the content.</p>
+</div>
+<div class="paragraph figure">
+<p><span class="image"><img src="http://static.tumblr.com/x4ukvcb/N4bmhr603/image.jpg" alt="3d background projecting through content" title="3D transformed background projecting through content"></span></p>
 </div>
 <div class="paragraph">
 <p>To prevent this you need to set the <code>transform-origin</code> property to the corner of the element <em>"closest"</em> to the front on the <em>z</em> axis. By default the origin is at the center so by moving it to the <em>"closest"</em> corner you guarantee that z-axis transformations pivot the background behind the content.</p>
@@ -158,7 +182,13 @@
 </div>
 </div>
 <div class="paragraph">
-<p>The background is no longer projecting through the content. Some more fine-tuning is required on the element position but the fundamental problem is fixed. <span class="image"><img src="http://static.tumblr.com/x4ukvcb/B5Emhr61v/image.jpg" alt="Background with transform origin set" title="3D transformed background with origin set"></span> The full example is on <a href="http://jsfiddle.net/piraterob/sKgmM/8/">jsFiddle</a>.</p>
+<p>The background is no longer projecting through the content. Some more fine-tuning is required on the element position but the fundamental problem is fixed.</p>
+</div>
+<div class="paragraph figure">
+<p><span class="image"><img src="http://static.tumblr.com/x4ukvcb/B5Emhr61v/image.jpg" alt="Background with transform origin set" title="3D transformed background with origin set"></span></p>
+</div>
+<div class="paragraph">
+<p>The full example is on <a href="http://jsfiddle.net/piraterob/sKgmM/8/">jsFiddle</a>.</p>
 </div>
 </div>
 <div class="sect3">
@@ -167,7 +197,10 @@
 <p>On certain browsers skewed or rotated shapes will suffer from aliasing. The standard fix is to add <code>backface-visibility: hidden;</code> to the element&#8217;s CSS. This clears things up in desktop webkit browsers for example.</p>
 </div>
 <div class="paragraph">
-<p>Unfortunately I found adding <code>backface-visibility: hidden</code> actually <em>caused</em> aliasing on iOS. <span class="image"><img src="http://static.tumblr.com/x4ukvcb/okJmhr63c/image.jpg" alt="iOS aliasing" title="Edges aliasing on iOS"></span></p>
+<p>Unfortunately I found adding <code>backface-visibility: hidden</code> actually <em>caused</em> aliasing on iOS.</p>
+</div>
+<div class="paragraph figure">
+<p><span class="image"><img src="http://static.tumblr.com/x4ukvcb/okJmhr63c/image.jpg" alt="iOS aliasing" title="Edges aliasing on iOS"></span></p>
 </div>
 <div class="paragraph">
 <p><a href="http://www.fngtps.com/2011/how-to-prevent-jagged-edges-when-using-css-transformation-in-mobile-safari/">One site I found</a> suggested adding padding to a wrapper element. I didn&#8217;t want to introduce any extra markup but I was able to adapt the technique to solve the problem without having to do so.</p>
@@ -187,7 +220,10 @@
 <p>Again, the code is on <a href="http://jsfiddle.net/piraterob/sKgmM/9/">jsFiddle</a>.</p>
 </div>
 <div class="paragraph">
-<p>This clears things up perfectly on iOS. The only down-side is that if you want to add a border or drop shadow there will be a gap between the background and the border / shadow. <span class="image"><img src="http://static.tumblr.com/x4ukvcb/rlpmhr64v/image.jpg" alt="Gap between background &amp; drop shadow" title="Gap between background &amp; drop shadow"></span></p>
+<p>This clears things up perfectly on iOS. The only down-side is that if you want to add a border or drop shadow there will be a gap between the background and the border / shadow.</p>
+</div>
+<div class="paragraph figure">
+<p><span class="image"><img src="http://static.tumblr.com/x4ukvcb/rlpmhr64v/image.jpg" alt="Gap between background &amp; drop shadow" title="Gap between background &amp; drop shadow"></span></p>
 </div>
 <div class="paragraph">
 <p>One solution to this is to use an <code>:after</code> pseudo-element placed behind the <code>:before</code> pseudo-element and positioned or resized to look like a border or drop-shadow. I&#8217;ve created a simple example on <a href="http://jsfiddle.net/piraterob/sKgmM/10/">jsFiddle</a>.</p>

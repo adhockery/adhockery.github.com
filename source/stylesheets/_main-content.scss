@@ -87,44 +87,6 @@ article {
   }
 }
 
-.pagination {
-  $pagination-font-size: $h2-font-size;
-  @include adjust-font-size-to($pagination-font-size);
-  @include leader(1, $pagination-font-size);
-  @include trailer(1, $pagination-font-size);
-  text-align: center;
-  font-family: $heading-font-family;
-  text-transform: uppercase;
-
-  a {
-    @include unstyled-link;
-    &:first-child {
-      &:after {
-        content: "\00a0\00b7";
-        margin: 0 0.5em;
-        color: $decoration-color;
-      }
-    }
-    &:last-child {
-      &:before {
-        content: "\00b7\00a0";
-        margin: 0 0.5em;
-        color: $decoration-color;
-      }
-    }
-    &[rel=next] {
-      @include next-link;
-    }
-    &[rel=prev] {
-      @include prev-link;
-    }
-    &[disabled] {
-      color: $muted-text-color;
-      pointer-events: none;
-    }
-  }
-}
-
 a.read-more {
   display: inline-block;
   font-style: italic;

@@ -10,6 +10,10 @@
       weight: 400;
     }
     line-height: 0;
+
+    .touch & {
+      color: $decoration-color;
+    }
   }
   &:active, &:hover, &:focus {
     text-decoration: none;

@@ -16,7 +16,7 @@ body > header {
       bottom: 0;
     }
     position: relative;
-    $logo-size: 48px;
+    $logo-size: 32px;
     @include adjust-font-size-to($logo-size);
     display:inline-block;
 
@@ -41,17 +41,27 @@ body > header {
       color: $red;
     }
 
+    @media only screen and (min-width: 360px) {
+      $logo-size: 36px;
+      @include adjust-font-size-to($logo-size);
+    }
+
     @media only screen and (min-width: 480px) {
-      $logo-size: 64px;
+      $logo-size: 48px;
       @include adjust-font-size-to($logo-size);
     }
 
     @media only screen and (min-width: 640px) {
+      $logo-size: 64px;
+      @include adjust-font-size-to($logo-size);
+    }
+
+    @media only screen and (min-width: 720px) {
       $logo-size: 72px;
       @include adjust-font-size-to($logo-size);
     }
 
-    @media only screen and (min-width: 940px) {
+    @media only screen and (min-width: 960px) {
       $logo-size: 96px;
       @include adjust-font-size-to($logo-size);
     }

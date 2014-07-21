@@ -32,9 +32,10 @@ $example-background: transparentize(#f2f2f2, 0.2);
 
 @include establish-baseline;
 
-// body {
+body {
+  -webkit-text-size-adjust: none;
 //   @include baseline-grid-background;
-// }
+}
 
 @import "mixins";
 @import "rem";
@@ -44,5 +45,6 @@ $example-background: transparentize(#f2f2f2, 0.2);
 @import "site-footer";
 @import "column-layout";
 @import "main-content";
+@import "pagination";
 @import "asciidoc";
 @import "disqus";

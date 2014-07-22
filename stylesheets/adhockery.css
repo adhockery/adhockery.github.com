@@ -551,6 +551,9 @@ html {
 body {
   -webkit-text-size-adjust: none; }
 
+/**
+ * Like Compass' unstyled-link but doesn't reset cursor.
+ */
 /*
  * Given a rems size renders rems with fallback pixels.
  *
@@ -627,24 +630,18 @@ pre {
   padding-bottom: 1.44444em; }
 
 /* line 46, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_base-styles.scss */
-ul, ol {
-  padding: 0; }
-
-/* line 50, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_base-styles.scss */
 time {
   font-style: italic; }
 
-/* line 54, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_base-styles.scss */
+/* line 50, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_base-styles.scss */
 a {
   color: inherit;
-  text-decoration: inherit;
-  cursor: inherit;
-  color: inherit; }
-  /* line 6, /Users/rfletcher/.rvm/gems/ruby-1.9.3-p547/gems/compass-0.12.6/frameworks/compass/stylesheets/compass/typography/links/_unstyled-link.scss */
+  text-decoration: inherit; }
+  /* line 8, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
   a:active, a:focus {
     outline: none; }
 
-/* line 59, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_base-styles.scss */
+/* line 54, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_base-styles.scss */
 ul.tag-list {
   margin: 0;
   padding: 0;
@@ -669,11 +666,11 @@ ul.tag-list {
     zoom: 1;
     *display: inline;
     white-space: nowrap; }
-  /* line 61, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_base-styles.scss */
+  /* line 56, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_base-styles.scss */
   ul.tag-list li:not(:last-child):after {
     content: ", "; }
 
-/* line 66, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_base-styles.scss */
+/* line 61, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_base-styles.scss */
 hr {
   border-width: 0;
   border-color: rgba(162, 162, 162, 0.8);
@@ -683,21 +680,21 @@ hr {
   margin-top: 1.5em;
   margin-bottom: 3em; }
 
-/* line 76, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_base-styles.scss */
+/* line 71, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_base-styles.scss */
 blockquote {
   position: relative; }
-  /* line 79, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_base-styles.scss */
+  /* line 74, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_base-styles.scss */
   blockquote:before, blockquote:after {
     font-family: ultra, Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
     font-size: 2.5em;
     color: #a2a2a2;
     position: absolute;
     top: 0; }
-  /* line 87, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_base-styles.scss */
+  /* line 82, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_base-styles.scss */
   blockquote:before {
     left: -0.75em;
     content: "“"; }
-  /* line 92, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_base-styles.scss */
+  /* line 87, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_base-styles.scss */
   blockquote:after {
     right: -0.75em;
     content: "”"; }
@@ -740,9 +737,8 @@ body > header {
     /* line 30, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
     body > header h1 a {
       color: inherit;
-      text-decoration: inherit;
-      cursor: inherit; }
-      /* line 6, /Users/rfletcher/.rvm/gems/ruby-1.9.3-p547/gems/compass-0.12.6/frameworks/compass/stylesheets/compass/typography/links/_unstyled-link.scss */
+      text-decoration: inherit; }
+      /* line 8, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
       body > header h1 a:active, body > header h1 a:focus {
         outline: none; }
     /* line 34, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
@@ -833,12 +829,11 @@ main + footer {
     text-transform: uppercase;
     color: inherit;
     text-decoration: inherit;
-    cursor: inherit;
     display: block; }
-    /* line 6, /Users/rfletcher/.rvm/gems/ruby-1.9.3-p547/gems/compass-0.12.6/frameworks/compass/stylesheets/compass/typography/links/_unstyled-link.scss */
+    /* line 8, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
     main + footer a:active, main + footer a:focus {
       outline: none; }
-    /* line 3, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
+    /* line 15, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
     main + footer a:after {
       content: "\00a0»";
       color: transparent;
@@ -847,13 +842,13 @@ main + footer {
       font-style: normal;
       font-weight: 400;
       line-height: 0; }
-      /* line 14, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
+      /* line 26, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
       .touch main + footer a:after {
         color: #8ecdc5; }
-    /* line 18, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
+    /* line 30, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
     main + footer a:active, main + footer a:hover, main + footer a:focus {
       text-decoration: none; }
-      /* line 20, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
+      /* line 32, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
       main + footer a:active:after, main + footer a:hover:after, main + footer a:focus:after {
         color: #8ecdc5; }
     /* line 20, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-footer.scss */
@@ -908,12 +903,11 @@ article, .archive {
     article h1 a, article h2 a, .archive h1 a, .archive h2 a {
       color: inherit;
       text-decoration: inherit;
-      cursor: inherit;
       border-bottom: none; }
-      /* line 6, /Users/rfletcher/.rvm/gems/ruby-1.9.3-p547/gems/compass-0.12.6/frameworks/compass/stylesheets/compass/typography/links/_unstyled-link.scss */
+      /* line 8, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
       article h1 a:active, article h1 a:focus, article h2 a:active, article h2 a:focus, .archive h1 a:active, .archive h1 a:focus, .archive h2 a:active, .archive h2 a:focus {
         outline: none; }
-      /* line 3, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
+      /* line 15, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
       article h1 a:after, article h2 a:after, .archive h1 a:after, .archive h2 a:after {
         content: "\00a0»";
         color: transparent;
@@ -922,13 +916,13 @@ article, .archive {
         font-style: normal;
         font-weight: 400;
         line-height: 0; }
-        /* line 14, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
+        /* line 26, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
         .touch article h1 a:after, .touch article h2 a:after, .touch .archive h1 a:after, .touch .archive h2 a:after {
           color: #8ecdc5; }
-      /* line 18, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
+      /* line 30, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
       article h1 a:active, article h1 a:hover, article h1 a:focus, article h2 a:active, article h2 a:hover, article h2 a:focus, .archive h1 a:active, .archive h1 a:hover, .archive h1 a:focus, .archive h2 a:active, .archive h2 a:hover, .archive h2 a:focus {
         text-decoration: none; }
-        /* line 20, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
+        /* line 32, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
         article h1 a:active:after, article h1 a:hover:after, article h1 a:focus:after, article h2 a:active:after, article h2 a:hover:after, article h2 a:focus:after, .archive h1 a:active:after, .archive h1 a:hover:after, .archive h1 a:focus:after, .archive h2 a:active:after, .archive h2 a:hover:after, .archive h2 a:focus:after {
           color: #8ecdc5; }
     /* line 29, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_main-content.scss */
@@ -939,54 +933,49 @@ article, .archive {
     article h1 time, article h2 time, .archive h1 time, .archive h2 time {
       font-style: normal; }
   /* line 39, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_main-content.scss */
-  article ul, article ol, .archive ul, .archive ol {
-    list-style-position: inside; }
-  /* line 43, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_main-content.scss */
   article .tag-list, .archive .tag-list {
     color: #a2a2a2; }
-    /* line 46, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_main-content.scss */
+    /* line 42, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_main-content.scss */
     article .tag-list a, .archive .tag-list a {
       color: inherit;
       text-decoration: inherit;
-      cursor: inherit;
       border-bottom: none; }
-      /* line 6, /Users/rfletcher/.rvm/gems/ruby-1.9.3-p547/gems/compass-0.12.6/frameworks/compass/stylesheets/compass/typography/links/_unstyled-link.scss */
+      /* line 8, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
       article .tag-list a:active, article .tag-list a:focus, .archive .tag-list a:active, .archive .tag-list a:focus {
         outline: none; }
-      /* line 48, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_main-content.scss */
+      /* line 44, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_main-content.scss */
       article .tag-list a:hover, article .tag-list a:active, article .tag-list a:focus, .archive .tag-list a:hover, .archive .tag-list a:active, .archive .tag-list a:focus {
         color: #8ecdc5; }
-    /* line 54, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_main-content.scss */
+    /* line 50, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_main-content.scss */
     article .tag-list li:first-child:before, .archive .tag-list li:first-child:before {
       content: "Tagged: ";
       font-style: italic; }
 
-/* line 61, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_main-content.scss */
+/* line 57, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_main-content.scss */
 article {
   margin-top: 1.5em;
   margin-bottom: 0em; }
-  /* line 65, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_main-content.scss */
+  /* line 61, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_main-content.scss */
   article h2 {
     font-size: 2em;
     line-height: 1.5em;
     margin-bottom: 0.75em; }
 
-/* line 72, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_main-content.scss */
+/* line 68, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_main-content.scss */
 .archive h2 {
   margin-bottom: 0; }
-/* line 75, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_main-content.scss */
+/* line 71, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_main-content.scss */
 .archive ul {
   margin-top: 0; }
-  /* line 77, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_main-content.scss */
+  /* line 73, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_main-content.scss */
   .archive ul a {
     border-bottom: 0;
     color: inherit;
-    text-decoration: inherit;
-    cursor: inherit; }
-    /* line 6, /Users/rfletcher/.rvm/gems/ruby-1.9.3-p547/gems/compass-0.12.6/frameworks/compass/stylesheets/compass/typography/links/_unstyled-link.scss */
+    text-decoration: inherit; }
+    /* line 8, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
     .archive ul a:active, .archive ul a:focus {
       outline: none; }
-    /* line 3, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
+    /* line 15, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
     .archive ul a:after {
       content: "\00a0»";
       color: transparent;
@@ -995,34 +984,33 @@ article {
       font-style: normal;
       font-weight: 400;
       line-height: 0; }
-      /* line 14, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
+      /* line 26, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
       .touch .archive ul a:after {
         color: #8ecdc5; }
-    /* line 18, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
+    /* line 30, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
     .archive ul a:active, .archive ul a:hover, .archive ul a:focus {
       text-decoration: none; }
-      /* line 20, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
+      /* line 32, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
       .archive ul a:active:after, .archive ul a:hover:after, .archive ul a:focus:after {
         color: #8ecdc5; }
-  /* line 81, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_main-content.scss */
+  /* line 77, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_main-content.scss */
   .archive ul time {
     display: inline-block;
-    min-width: 3em;
+    min-width: 4em;
     color: #a2a2a2; }
 
-/* line 89, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_main-content.scss */
+/* line 85, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_main-content.scss */
 a.read-more {
   display: inline-block;
   font-style: italic;
   font-weight: 700;
   border-bottom: none;
   color: inherit;
-  text-decoration: inherit;
-  cursor: inherit; }
-  /* line 6, /Users/rfletcher/.rvm/gems/ruby-1.9.3-p547/gems/compass-0.12.6/frameworks/compass/stylesheets/compass/typography/links/_unstyled-link.scss */
+  text-decoration: inherit; }
+  /* line 8, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
   a.read-more:active, a.read-more:focus {
     outline: none; }
-  /* line 3, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
+  /* line 15, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
   a.read-more:after {
     content: "\00a0»";
     color: transparent;
@@ -1031,47 +1019,43 @@ a.read-more {
     font-style: normal;
     font-weight: 400;
     line-height: 0; }
-    /* line 14, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
+    /* line 26, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
     .touch a.read-more:after {
       color: #8ecdc5; }
-  /* line 18, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
+  /* line 30, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
   a.read-more:active, a.read-more:hover, a.read-more:focus {
     text-decoration: none; }
-    /* line 20, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
+    /* line 32, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
     a.read-more:active:after, a.read-more:hover:after, a.read-more:focus:after {
       color: #8ecdc5; }
 
-/* line 97, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_main-content.scss */
-.about ul {
-  list-style-position: inside; }
-  /* line 99, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_main-content.scss */
-  .about ul a {
-    color: inherit;
-    text-decoration: inherit;
-    cursor: inherit; }
-    /* line 6, /Users/rfletcher/.rvm/gems/ruby-1.9.3-p547/gems/compass-0.12.6/frameworks/compass/stylesheets/compass/typography/links/_unstyled-link.scss */
-    .about ul a:active, .about ul a:focus {
-      outline: none; }
-    /* line 3, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
-    .about ul a:after {
-      content: "\00a0»";
-      color: transparent;
-      font-family: "league-gothic", "DIN Condensed", "Franklin Gothic Medium", "Franklin Gothic", "ITC Franklin Gothic", Arial, sans-serif;
-      font-size: 1.5em;
-      font-style: normal;
-      font-weight: 400;
-      line-height: 0; }
-      /* line 14, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
-      .touch .about ul a:after {
-        color: #8ecdc5; }
-    /* line 18, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
-    .about ul a:active, .about ul a:hover, .about ul a:focus {
-      text-decoration: none; }
-      /* line 20, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
-      .about ul a:active:after, .about ul a:hover:after, .about ul a:focus:after {
-        color: #8ecdc5; }
+/* line 94, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_main-content.scss */
+.about ul a {
+  color: inherit;
+  text-decoration: inherit; }
+  /* line 8, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
+  .about ul a:active, .about ul a:focus {
+    outline: none; }
+  /* line 15, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
+  .about ul a:after {
+    content: "\00a0»";
+    color: transparent;
+    font-family: "league-gothic", "DIN Condensed", "Franklin Gothic Medium", "Franklin Gothic", "ITC Franklin Gothic", Arial, sans-serif;
+    font-size: 1.5em;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 0; }
+    /* line 26, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
+    .touch .about ul a:after {
+      color: #8ecdc5; }
+  /* line 30, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
+  .about ul a:active, .about ul a:hover, .about ul a:focus {
+    text-decoration: none; }
+    /* line 32, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
+    .about ul a:active:after, .about ul a:hover:after, .about ul a:focus:after {
+      color: #8ecdc5; }
 
-/* line 104, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_main-content.scss */
+/* line 99, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_main-content.scss */
 .figure {
   display: block;
   text-align: center; }
@@ -1098,20 +1082,18 @@ a.read-more {
   /* line 14, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_pagination.scss */
   .pagination a {
     color: inherit;
-    text-decoration: inherit;
-    cursor: inherit; }
-    /* line 6, /Users/rfletcher/.rvm/gems/ruby-1.9.3-p547/gems/compass-0.12.6/frameworks/compass/stylesheets/compass/typography/links/_unstyled-link.scss */
+    text-decoration: inherit; }
+    /* line 8, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
     .pagination a:active, .pagination a:focus {
       outline: none; }
     /* line 16, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_pagination.scss */
     .pagination a[rel=next] {
       color: inherit;
-      text-decoration: inherit;
-      cursor: inherit; }
-      /* line 6, /Users/rfletcher/.rvm/gems/ruby-1.9.3-p547/gems/compass-0.12.6/frameworks/compass/stylesheets/compass/typography/links/_unstyled-link.scss */
+      text-decoration: inherit; }
+      /* line 8, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
       .pagination a[rel=next]:active, .pagination a[rel=next]:focus {
         outline: none; }
-      /* line 3, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
+      /* line 15, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
       .pagination a[rel=next]:after {
         content: "\00a0»";
         color: transparent;
@@ -1120,13 +1102,13 @@ a.read-more {
         font-style: normal;
         font-weight: 400;
         line-height: 0; }
-        /* line 14, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
+        /* line 26, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
         .touch .pagination a[rel=next]:after {
           color: #8ecdc5; }
-      /* line 18, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
+      /* line 30, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
       .pagination a[rel=next]:active, .pagination a[rel=next]:hover, .pagination a[rel=next]:focus {
         text-decoration: none; }
-        /* line 20, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
+        /* line 32, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
         .pagination a[rel=next]:active:after, .pagination a[rel=next]:hover:after, .pagination a[rel=next]:focus:after {
           color: #8ecdc5; }
       @media (min-width: 480px) {
@@ -1138,12 +1120,11 @@ a.read-more {
     /* line 27, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_pagination.scss */
     .pagination a[rel=prev] {
       color: inherit;
-      text-decoration: inherit;
-      cursor: inherit; }
-      /* line 6, /Users/rfletcher/.rvm/gems/ruby-1.9.3-p547/gems/compass-0.12.6/frameworks/compass/stylesheets/compass/typography/links/_unstyled-link.scss */
+      text-decoration: inherit; }
+      /* line 8, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
       .pagination a[rel=prev]:active, .pagination a[rel=prev]:focus {
         outline: none; }
-      /* line 3, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
+      /* line 15, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
       .pagination a[rel=prev]:before {
         content: "«\00a0";
         color: transparent;
@@ -1152,13 +1133,13 @@ a.read-more {
         font-style: normal;
         font-weight: 400;
         line-height: 0; }
-        /* line 14, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
+        /* line 26, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
         .touch .pagination a[rel=prev]:before {
           color: #8ecdc5; }
-      /* line 18, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
+      /* line 30, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
       .pagination a[rel=prev]:active, .pagination a[rel=prev]:hover, .pagination a[rel=prev]:focus {
         text-decoration: none; }
-        /* line 20, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
+        /* line 32, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
         .pagination a[rel=prev]:active:before, .pagination a[rel=prev]:hover:before, .pagination a[rel=prev]:focus:before {
           color: #8ecdc5; }
       @media (min-width: 480px) {
@@ -1170,9 +1151,10 @@ a.read-more {
     /* line 37, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_pagination.scss */
     .pagination a[disabled] {
       color: #a2a2a2;
+      cursor: inherit;
       pointer-events: none; }
   @media (min-width: 480px) {
-    /* line 44, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_pagination.scss */
+    /* line 45, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_pagination.scss */
     .pagination .current {
       margin: 0; } }
 

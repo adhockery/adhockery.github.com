@@ -36,15 +36,11 @@ article, .archive {
     }
   }
 
-  ul, ol {
-    list-style-position: inside;
-  }
-
   .tag-list {
     color: $muted-text-color;
 
     a {
-      @include unstyled-link;
+      @include plain-link;
       &:hover, &:active, &:focus {
         color: $teal;
       }
@@ -80,7 +76,7 @@ article {
     }
     time {
       display: inline-block;
-      min-width: 3em;
+      min-width: 4em;
       color: $muted-text-color;
     }
   }
@@ -95,7 +91,6 @@ a.read-more {
 }
 
 .about ul {
-  list-style-position: inside;
   a {
     @include next-link;
   }

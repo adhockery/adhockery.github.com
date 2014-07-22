@@ -17,7 +17,7 @@ article, section.primary {
     background-image: image-url($texture);
     color: #fff;
     a {
-      @include unstyled-link;
+      @include plain-link;
     }
 
     // use h1 header sizes for article headers on the index page

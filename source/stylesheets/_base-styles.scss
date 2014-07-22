@@ -43,17 +43,12 @@ pre {
   @include trailing-border($border-style: dotted);
 }
 
-ul, ol {
-  padding: 0;
-}
-
 time {
   font-style: italic;
 }
 
 a {
-  @include unstyled-link;
-  color: inherit;
+  @include plain-link;
 }
 
 ul.tag-list {

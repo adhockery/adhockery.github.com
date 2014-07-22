@@ -1,5 +1,16 @@
+/**
+ * Like Compass' unstyled-link but doesn't reset cursor.
+ */
+@mixin plain-link {
+  color: inherit;
+  text-decoration: inherit;
+  &:active, &:focus {
+    outline: none;
+  }
+}
+
 @mixin pagination-link($direction, $content) {
-  @include unstyled-link;
+  @include plain-link;
   &:#{$direction} {
     content: $content;
     color: transparent;

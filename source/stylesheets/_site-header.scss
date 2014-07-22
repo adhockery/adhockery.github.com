@@ -28,7 +28,7 @@ body > header {
     }
 
     a {
-      @include unstyled-link;
+      @include plain-link;
     }
 
     &:before {

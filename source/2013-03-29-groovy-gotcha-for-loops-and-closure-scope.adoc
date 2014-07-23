@@ -20,7 +20,15 @@ for (i in (1..5)) {
 fns.each { it() }
 -------------------
 
-What will get printed to _sysout_? Give up? You can http://groovyconsole.appspot.com/script/920002[run the script on Groovy Web Console].
+What will get printed to _sysout_? Give up? You can http://groovyconsole.appspot.com/script/920002[run the script on Groovy Web Console]. The output is this:
+
+....
+5
+5
+5
+5
+5
+....
 
 READMORE
 
@@ -40,7 +48,15 @@ for (i in (1..5)) {
 fns.each { it() }
 ------------------------------------
 
-You can http://groovyconsole.appspot.com/script/928001[run this on the Groovy Web Console] if you like.
+You can http://groovyconsole.appspot.com/script/928001[run this on the Groovy Web Console] if you like. Here's the output:
+
+....
+5 squared is 1
+5 squared is 4
+5 squared is 9
+5 squared is 16
+5 squared is 25
+....
 
 I've run afoul of this a couple of times when augmenting Grails artifacts with new behavior in a plugin. Given what we know of loop variables & closure scope consider what this code would do:
 

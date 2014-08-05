@@ -2,7 +2,9 @@ article, .archive {
   @include trailer(1);
 
   a {
-    border-bottom: 1px dotted $border-color;
+    border-bottom: 1px solid $teal;
+    box-shadow: inset 0 -4px 0 $teal;
+    // border-bottom: 1px dotted $border-color;
   }
 
   header, footer {
@@ -24,6 +26,7 @@ article, .archive {
     a {
       @include next-link;
       border-bottom: none;
+      box-shadow: none;
     }
 
     code {
@@ -45,6 +48,7 @@ article, .archive {
         color: $teal;
       }
       border-bottom: none;
+      box-shadow: none;
     }
 
     li:first-child:before {
@@ -87,6 +91,7 @@ a.read-more {
   font-style: italic;
   font-weight: 700;
   border-bottom: none;
+  box-shadow: none;
   @include next-link;
 }
 

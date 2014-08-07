@@ -526,15 +526,15 @@ table {
   border-collapse: collapse;
   border-spacing: 0; }
 
-/* line 41, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_grid.scss */
+/* line 41, /Users/rfletcher/Documents/adhockery/source/stylesheets/_grid.scss */
 body {
   width: 100%;
   *zoom: 1; }
-  /* line 27, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_grid.scss */
+  /* line 27, /Users/rfletcher/Documents/adhockery/source/stylesheets/_grid.scss */
   body:before, body:after {
     content: "";
     display: table; }
-  /* line 31, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_grid.scss */
+  /* line 31, /Users/rfletcher/Documents/adhockery/source/stylesheets/_grid.scss */
   body:after {
     clear: both; }
 
@@ -547,7 +547,7 @@ html {
   font-size: 18px;
   line-height: 1.5em; }
 
-/* line 35, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/adhockery.scss */
+/* line 35, /Users/rfletcher/Documents/adhockery/source/stylesheets/adhockery.scss */
 body {
   -webkit-text-size-adjust: none; }
 
@@ -575,44 +575,44 @@ body {
  *    padding: 16px 0 32px 8px;
  *    padding: 1rem 0 2rem 0.5rem;
  */
-/* line 1, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_fout.scss */
+/* line 1, /Users/rfletcher/Documents/adhockery/source/stylesheets/_fout.scss */
 body {
   opacity: 0;
   -webkit-transition: opacity 0.25s linear;
   transition: opacity 0.25s linear; }
-  /* line 4, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_fout.scss */
+  /* line 4, /Users/rfletcher/Documents/adhockery/source/stylesheets/_fout.scss */
   .wf-active body, .wf-inactive body {
     opacity: 1; }
 
-/* line 3, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_base-styles.scss */
+/* line 3, /Users/rfletcher/Documents/adhockery/source/stylesheets/_base-styles.scss */
 html {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box; }
 
-/* line 7, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_base-styles.scss */
+/* line 7, /Users/rfletcher/Documents/adhockery/source/stylesheets/_base-styles.scss */
 *, *:before, *:after {
   -webkit-box-sizing: inherit;
   -moz-box-sizing: inherit;
   box-sizing: inherit; }
 
-/* line 11, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_base-styles.scss */
+/* line 11, /Users/rfletcher/Documents/adhockery/source/stylesheets/_base-styles.scss */
 body {
   color: #222222; }
 
-/* line 16, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_base-styles.scss */
+/* line 16, /Users/rfletcher/Documents/adhockery/source/stylesheets/_base-styles.scss */
 h1, h2 {
   font-family: "league-gothic", "DIN Condensed", "Franklin Gothic Medium", "Franklin Gothic", "ITC Franklin Gothic", Arial, sans-serif;
   text-transform: uppercase; }
-  /* line 19, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_base-styles.scss */
+  /* line 19, /Users/rfletcher/Documents/adhockery/source/stylesheets/_base-styles.scss */
   .fontface h1, .fontface h2 {
     font-weight: 400; }
 
-/* line 25, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_base-styles.scss */
+/* line 25, /Users/rfletcher/Documents/adhockery/source/stylesheets/_base-styles.scss */
 code, kbd, pre, samp {
   font-family: "Courier New", Courier, monospace; }
 
-/* line 30, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_base-styles.scss */
+/* line 30, /Users/rfletcher/Documents/adhockery/source/stylesheets/_base-styles.scss */
 pre {
   white-space: pre;
   word-wrap: initial;
@@ -629,29 +629,29 @@ pre {
   border-bottom-width: 0.05556em;
   padding-bottom: 1.44444em; }
 
-/* line 46, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_base-styles.scss */
+/* line 46, /Users/rfletcher/Documents/adhockery/source/stylesheets/_base-styles.scss */
 time {
   font-style: italic; }
 
-/* line 50, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_base-styles.scss */
+/* line 50, /Users/rfletcher/Documents/adhockery/source/stylesheets/_base-styles.scss */
 a {
   color: inherit;
   text-decoration: inherit; }
-  /* line 8, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
+  /* line 8, /Users/rfletcher/Documents/adhockery/source/stylesheets/_mixins.scss */
   a:active, a:focus {
     outline: none; }
 
-/* line 54, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_base-styles.scss */
+/* line 54, /Users/rfletcher/Documents/adhockery/source/stylesheets/_base-styles.scss */
 ul.tag-list {
   margin: 0;
   padding: 0;
   border: 0;
   *zoom: 1; }
-  /* line 27, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_grid.scss */
+  /* line 27, /Users/rfletcher/Documents/adhockery/source/stylesheets/_grid.scss */
   ul.tag-list:before, ul.tag-list:after {
     content: "";
     display: table; }
-  /* line 31, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_grid.scss */
+  /* line 31, /Users/rfletcher/Documents/adhockery/source/stylesheets/_grid.scss */
   ul.tag-list:after {
     clear: both; }
   /* line 49, /Users/rfletcher/.rvm/gems/ruby-1.9.3-p547/gems/compass-0.12.6/frameworks/compass/stylesheets/compass/typography/lists/_inline-block-list.scss */
@@ -666,11 +666,11 @@ ul.tag-list {
     zoom: 1;
     *display: inline;
     white-space: nowrap; }
-  /* line 56, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_base-styles.scss */
+  /* line 56, /Users/rfletcher/Documents/adhockery/source/stylesheets/_base-styles.scss */
   ul.tag-list li:not(:last-child):after {
     content: ", "; }
 
-/* line 61, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_base-styles.scss */
+/* line 61, /Users/rfletcher/Documents/adhockery/source/stylesheets/_base-styles.scss */
 hr {
   border-width: 0;
   border-color: rgba(162, 162, 162, 0.8);
@@ -680,26 +680,26 @@ hr {
   margin-top: 1.5em;
   margin-bottom: 3em; }
 
-/* line 71, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_base-styles.scss */
+/* line 71, /Users/rfletcher/Documents/adhockery/source/stylesheets/_base-styles.scss */
 blockquote {
   position: relative; }
-  /* line 74, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_base-styles.scss */
+  /* line 74, /Users/rfletcher/Documents/adhockery/source/stylesheets/_base-styles.scss */
   blockquote:before, blockquote:after {
     font-family: ultra, Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
     font-size: 2.5em;
     color: #a2a2a2;
     position: absolute;
     top: 0; }
-  /* line 82, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_base-styles.scss */
+  /* line 82, /Users/rfletcher/Documents/adhockery/source/stylesheets/_base-styles.scss */
   blockquote:before {
     left: -0.75em;
     content: "“"; }
-  /* line 87, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_base-styles.scss */
+  /* line 87, /Users/rfletcher/Documents/adhockery/source/stylesheets/_base-styles.scss */
   blockquote:after {
     right: -0.75em;
     content: "”"; }
 
-/* line 1, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
+/* line 1, /Users/rfletcher/Documents/adhockery/source/stylesheets/_site-header.scss */
 body > header {
   *zoom: 1;
   margin-top: 1.5em;
@@ -707,14 +707,14 @@ body > header {
   max-width: 56em;
   margin-left: auto;
   margin-right: auto; }
-  /* line 27, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_grid.scss */
+  /* line 27, /Users/rfletcher/Documents/adhockery/source/stylesheets/_grid.scss */
   body > header:before, body > header:after {
     content: "";
     display: table; }
-  /* line 31, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_grid.scss */
+  /* line 31, /Users/rfletcher/Documents/adhockery/source/stylesheets/_grid.scss */
   body > header:after {
     clear: both; }
-  /* line 11, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
+  /* line 11, /Users/rfletcher/Documents/adhockery/source/stylesheets/_site-header.scss */
   body > header h1 {
     display: inline;
     float: left;
@@ -731,53 +731,53 @@ body > header {
     display: inline-block;
     font-family: ultra, Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
     text-transform: lowercase; }
-    /* line 26, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
+    /* line 26, /Users/rfletcher/Documents/adhockery/source/stylesheets/_site-header.scss */
     .fontface body > header h1 {
       font-weight: 400; }
-    /* line 30, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
+    /* line 30, /Users/rfletcher/Documents/adhockery/source/stylesheets/_site-header.scss */
     body > header h1 a {
       color: inherit;
       text-decoration: inherit; }
-      /* line 8, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
+      /* line 8, /Users/rfletcher/Documents/adhockery/source/stylesheets/_mixins.scss */
       body > header h1 a:active, body > header h1 a:focus {
         outline: none; }
-    /* line 34, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
+    /* line 34, /Users/rfletcher/Documents/adhockery/source/stylesheets/_site-header.scss */
     body > header h1:before {
       content: "::";
       color: #8ecdc5;
       position: absolute;
       left: -0.7em;
       letter-spacing: -0.05em; }
-    /* line 41, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
+    /* line 41, /Users/rfletcher/Documents/adhockery/source/stylesheets/_site-header.scss */
     body > header h1:after {
       content: ".";
       color: #e84327; }
     @media only screen and (min-width: 360px) {
-      /* line 11, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
+      /* line 11, /Users/rfletcher/Documents/adhockery/source/stylesheets/_site-header.scss */
       body > header h1 {
         font-size: 2em;
         line-height: 1.5em; } }
     @media only screen and (min-width: 480px) {
-      /* line 11, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
+      /* line 11, /Users/rfletcher/Documents/adhockery/source/stylesheets/_site-header.scss */
       body > header h1 {
         font-size: 2.66667em;
         line-height: 1.125em; } }
     @media only screen and (min-width: 640px) {
-      /* line 11, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
+      /* line 11, /Users/rfletcher/Documents/adhockery/source/stylesheets/_site-header.scss */
       body > header h1 {
         font-size: 3.55556em;
         line-height: 1.26563em; } }
     @media only screen and (min-width: 720px) {
-      /* line 11, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
+      /* line 11, /Users/rfletcher/Documents/adhockery/source/stylesheets/_site-header.scss */
       body > header h1 {
         font-size: 4em;
         line-height: 1.125em; } }
     @media only screen and (min-width: 960px) {
-      /* line 11, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
+      /* line 11, /Users/rfletcher/Documents/adhockery/source/stylesheets/_site-header.scss */
       body > header h1 {
         font-size: 5.33333em;
         line-height: 1.125em; } }
-  /* line 72, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
+  /* line 72, /Users/rfletcher/Documents/adhockery/source/stylesheets/_site-header.scss */
   body > header .strapline {
     display: inline;
     float: left;
@@ -791,36 +791,36 @@ body > header {
     margin-top: 0;
     margin-bottom: 1.6875em; }
     @media only screen and (min-width: 768px) {
-      /* line 72, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
+      /* line 72, /Users/rfletcher/Documents/adhockery/source/stylesheets/_site-header.scss */
       body > header .strapline {
         display: block; } }
-    /* line 85, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
+    /* line 85, /Users/rfletcher/Documents/adhockery/source/stylesheets/_site-header.scss */
     body > header .strapline dt {
       font-weight: 700; }
-    /* line 89, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
+    /* line 89, /Users/rfletcher/Documents/adhockery/source/stylesheets/_site-header.scss */
     body > header .strapline dd {
       margin: 0 36px; }
-      /* line 37, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_rem.scss */
+      /* line 37, /Users/rfletcher/Documents/adhockery/source/stylesheets/_rem.scss */
       .cssremunit body > header .strapline dd {
         margin: 0 2rem; }
-  /* line 94, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
+  /* line 94, /Users/rfletcher/Documents/adhockery/source/stylesheets/_site-header.scss */
   body > header cite {
     display: block;
     text-align: right; }
-    /* line 98, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-header.scss */
+    /* line 98, /Users/rfletcher/Documents/adhockery/source/stylesheets/_site-header.scss */
     body > header cite:before {
       content: '— '; }
 
-/* line 1, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-footer.scss */
+/* line 1, /Users/rfletcher/Documents/adhockery/source/stylesheets/_site-footer.scss */
 main + footer {
   margin-top: 3em;
   margin-bottom: 1.5em; }
-  /* line 5, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-footer.scss */
+  /* line 5, /Users/rfletcher/Documents/adhockery/source/stylesheets/_site-footer.scss */
   main + footer nav {
     border-top: 1px dotted rgba(162, 162, 162, 0.8);
     text-align: right;
     padding-top: 3em; }
-  /* line 11, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-footer.scss */
+  /* line 11, /Users/rfletcher/Documents/adhockery/source/stylesheets/_site-footer.scss */
   main + footer a {
     font-size: 1.5em;
     line-height: 2em;
@@ -830,10 +830,10 @@ main + footer {
     color: inherit;
     text-decoration: inherit;
     display: block; }
-    /* line 8, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
+    /* line 8, /Users/rfletcher/Documents/adhockery/source/stylesheets/_mixins.scss */
     main + footer a:active, main + footer a:focus {
       outline: none; }
-    /* line 15, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
+    /* line 15, /Users/rfletcher/Documents/adhockery/source/stylesheets/_mixins.scss */
     main + footer a:after {
       content: "\00a0»";
       color: transparent;
@@ -842,36 +842,36 @@ main + footer {
       font-style: normal;
       font-weight: 400;
       line-height: 0; }
-      /* line 26, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
+      /* line 26, /Users/rfletcher/Documents/adhockery/source/stylesheets/_mixins.scss */
       .touch main + footer a:after {
         color: #8ecdc5; }
-    /* line 30, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
+    /* line 30, /Users/rfletcher/Documents/adhockery/source/stylesheets/_mixins.scss */
     main + footer a:active, main + footer a:hover, main + footer a:focus {
       text-decoration: none; }
-      /* line 32, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
+      /* line 32, /Users/rfletcher/Documents/adhockery/source/stylesheets/_mixins.scss */
       main + footer a:active:after, main + footer a:hover:after, main + footer a:focus:after {
         color: #8ecdc5; }
-    /* line 20, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-footer.scss */
+    /* line 20, /Users/rfletcher/Documents/adhockery/source/stylesheets/_site-footer.scss */
     main + footer a:not(:first-child) {
       margin-left: 1em; }
     @media (min-width: 480px) {
-      /* line 11, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_site-footer.scss */
+      /* line 11, /Users/rfletcher/Documents/adhockery/source/stylesheets/_site-footer.scss */
       main + footer a {
         display: inline; } }
 
-/* line 1, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_column-layout.scss */
+/* line 1, /Users/rfletcher/Documents/adhockery/source/stylesheets/_column-layout.scss */
 body > .container {
   *zoom: 1;
   max-width: 56em;
   margin: 0 auto; }
-  /* line 27, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_grid.scss */
+  /* line 27, /Users/rfletcher/Documents/adhockery/source/stylesheets/_grid.scss */
   body > .container:before, body > .container:after {
     content: "";
     display: table; }
-  /* line 31, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_grid.scss */
+  /* line 31, /Users/rfletcher/Documents/adhockery/source/stylesheets/_grid.scss */
   body > .container:after {
     clear: both; }
-  /* line 5, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_column-layout.scss */
+  /* line 5, /Users/rfletcher/Documents/adhockery/source/stylesheets/_column-layout.scss */
   body > .container > * {
     display: inline;
     float: left;
@@ -881,33 +881,37 @@ body > .container {
     margin-left: 9.375%;
     margin-right: 9.375%; }
 
-/* line 1, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_main-content.scss */
+/* line 1, /Users/rfletcher/Documents/adhockery/source/stylesheets/_main-content.scss */
 article, .archive {
   margin-bottom: 1.5em; }
-  /* line 4, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_main-content.scss */
+  /* line 4, /Users/rfletcher/Documents/adhockery/source/stylesheets/_main-content.scss */
   article a, .archive a {
-    border-bottom: 1px dotted rgba(162, 162, 162, 0.8); }
-  /* line 9, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_main-content.scss */
+    border-bottom: 1px solid #8ecdc5;
+    -webkit-box-shadow: inset 0 -4px 0 #8ecdc5;
+            box-shadow: inset 0 -4px 0 #8ecdc5; }
+  /* line 11, /Users/rfletcher/Documents/adhockery/source/stylesheets/_main-content.scss */
   article header time, article footer time, .archive header time, .archive footer time {
     margin-top: 1.5em;
     color: #a2a2a2;
     display: block; }
-  /* line 16, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_main-content.scss */
+  /* line 18, /Users/rfletcher/Documents/adhockery/source/stylesheets/_main-content.scss */
   article footer, .archive footer {
     margin-top: 1.5em;
     padding-top: 1.5em; }
-  /* line 21, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_main-content.scss */
+  /* line 23, /Users/rfletcher/Documents/adhockery/source/stylesheets/_main-content.scss */
   article h1, article h2, .archive h1, .archive h2 {
     margin-top: 0; }
-    /* line 24, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_main-content.scss */
+    /* line 26, /Users/rfletcher/Documents/adhockery/source/stylesheets/_main-content.scss */
     article h1 a, article h2 a, .archive h1 a, .archive h2 a {
       color: inherit;
       text-decoration: inherit;
-      border-bottom: none; }
-      /* line 8, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
+      border-bottom: none;
+      -webkit-box-shadow: none;
+              box-shadow: none; }
+      /* line 8, /Users/rfletcher/Documents/adhockery/source/stylesheets/_mixins.scss */
       article h1 a:active, article h1 a:focus, article h2 a:active, article h2 a:focus, .archive h1 a:active, .archive h1 a:focus, .archive h2 a:active, .archive h2 a:focus {
         outline: none; }
-      /* line 15, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
+      /* line 15, /Users/rfletcher/Documents/adhockery/source/stylesheets/_mixins.scss */
       article h1 a:after, article h2 a:after, .archive h1 a:after, .archive h2 a:after {
         content: "\00a0»";
         color: transparent;
@@ -916,66 +920,68 @@ article, .archive {
         font-style: normal;
         font-weight: 400;
         line-height: 0; }
-        /* line 26, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
+        /* line 26, /Users/rfletcher/Documents/adhockery/source/stylesheets/_mixins.scss */
         .touch article h1 a:after, .touch article h2 a:after, .touch .archive h1 a:after, .touch .archive h2 a:after {
           color: #8ecdc5; }
-      /* line 30, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
+      /* line 30, /Users/rfletcher/Documents/adhockery/source/stylesheets/_mixins.scss */
       article h1 a:active, article h1 a:hover, article h1 a:focus, article h2 a:active, article h2 a:hover, article h2 a:focus, .archive h1 a:active, .archive h1 a:hover, .archive h1 a:focus, .archive h2 a:active, .archive h2 a:hover, .archive h2 a:focus {
         text-decoration: none; }
-        /* line 32, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
+        /* line 32, /Users/rfletcher/Documents/adhockery/source/stylesheets/_mixins.scss */
         article h1 a:active:after, article h1 a:hover:after, article h1 a:focus:after, article h2 a:active:after, article h2 a:hover:after, article h2 a:focus:after, .archive h1 a:active:after, .archive h1 a:hover:after, .archive h1 a:focus:after, .archive h2 a:active:after, .archive h2 a:hover:after, .archive h2 a:focus:after {
           color: #8ecdc5; }
-    /* line 29, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_main-content.scss */
+    /* line 32, /Users/rfletcher/Documents/adhockery/source/stylesheets/_main-content.scss */
     article h1 code, article h2 code, .archive h1 code, .archive h2 code {
       font-family: inherit;
       text-transform: none; }
-    /* line 34, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_main-content.scss */
+    /* line 37, /Users/rfletcher/Documents/adhockery/source/stylesheets/_main-content.scss */
     article h1 time, article h2 time, .archive h1 time, .archive h2 time {
       font-style: normal; }
-  /* line 39, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_main-content.scss */
+  /* line 42, /Users/rfletcher/Documents/adhockery/source/stylesheets/_main-content.scss */
   article .tag-list, .archive .tag-list {
     color: #a2a2a2; }
-    /* line 42, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_main-content.scss */
+    /* line 45, /Users/rfletcher/Documents/adhockery/source/stylesheets/_main-content.scss */
     article .tag-list a, .archive .tag-list a {
       color: inherit;
       text-decoration: inherit;
-      border-bottom: none; }
-      /* line 8, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
+      border-bottom: none;
+      -webkit-box-shadow: none;
+              box-shadow: none; }
+      /* line 8, /Users/rfletcher/Documents/adhockery/source/stylesheets/_mixins.scss */
       article .tag-list a:active, article .tag-list a:focus, .archive .tag-list a:active, .archive .tag-list a:focus {
         outline: none; }
-      /* line 44, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_main-content.scss */
+      /* line 47, /Users/rfletcher/Documents/adhockery/source/stylesheets/_main-content.scss */
       article .tag-list a:hover, article .tag-list a:active, article .tag-list a:focus, .archive .tag-list a:hover, .archive .tag-list a:active, .archive .tag-list a:focus {
         color: #8ecdc5; }
-    /* line 50, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_main-content.scss */
+    /* line 54, /Users/rfletcher/Documents/adhockery/source/stylesheets/_main-content.scss */
     article .tag-list li:first-child:before, .archive .tag-list li:first-child:before {
       content: "Tagged: ";
       font-style: italic; }
 
-/* line 57, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_main-content.scss */
+/* line 61, /Users/rfletcher/Documents/adhockery/source/stylesheets/_main-content.scss */
 article {
   margin-top: 1.5em;
   margin-bottom: 0em; }
-  /* line 61, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_main-content.scss */
+  /* line 65, /Users/rfletcher/Documents/adhockery/source/stylesheets/_main-content.scss */
   article h2 {
     font-size: 2em;
     line-height: 1.5em;
     margin-bottom: 0.75em; }
 
-/* line 68, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_main-content.scss */
+/* line 72, /Users/rfletcher/Documents/adhockery/source/stylesheets/_main-content.scss */
 .archive h2 {
   margin-bottom: 0; }
-/* line 71, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_main-content.scss */
+/* line 75, /Users/rfletcher/Documents/adhockery/source/stylesheets/_main-content.scss */
 .archive ul {
   margin-top: 0; }
-  /* line 73, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_main-content.scss */
+  /* line 77, /Users/rfletcher/Documents/adhockery/source/stylesheets/_main-content.scss */
   .archive ul a {
     border-bottom: 0;
     color: inherit;
     text-decoration: inherit; }
-    /* line 8, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
+    /* line 8, /Users/rfletcher/Documents/adhockery/source/stylesheets/_mixins.scss */
     .archive ul a:active, .archive ul a:focus {
       outline: none; }
-    /* line 15, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
+    /* line 15, /Users/rfletcher/Documents/adhockery/source/stylesheets/_mixins.scss */
     .archive ul a:after {
       content: "\00a0»";
       color: transparent;
@@ -984,33 +990,35 @@ article {
       font-style: normal;
       font-weight: 400;
       line-height: 0; }
-      /* line 26, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
+      /* line 26, /Users/rfletcher/Documents/adhockery/source/stylesheets/_mixins.scss */
       .touch .archive ul a:after {
         color: #8ecdc5; }
-    /* line 30, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
+    /* line 30, /Users/rfletcher/Documents/adhockery/source/stylesheets/_mixins.scss */
     .archive ul a:active, .archive ul a:hover, .archive ul a:focus {
       text-decoration: none; }
-      /* line 32, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
+      /* line 32, /Users/rfletcher/Documents/adhockery/source/stylesheets/_mixins.scss */
       .archive ul a:active:after, .archive ul a:hover:after, .archive ul a:focus:after {
         color: #8ecdc5; }
-  /* line 77, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_main-content.scss */
+  /* line 81, /Users/rfletcher/Documents/adhockery/source/stylesheets/_main-content.scss */
   .archive ul time {
     display: inline-block;
     min-width: 4em;
     color: #a2a2a2; }
 
-/* line 85, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_main-content.scss */
+/* line 89, /Users/rfletcher/Documents/adhockery/source/stylesheets/_main-content.scss */
 a.read-more {
   display: inline-block;
   font-style: italic;
   font-weight: 700;
   border-bottom: none;
+  -webkit-box-shadow: none;
+          box-shadow: none;
   color: inherit;
   text-decoration: inherit; }
-  /* line 8, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
+  /* line 8, /Users/rfletcher/Documents/adhockery/source/stylesheets/_mixins.scss */
   a.read-more:active, a.read-more:focus {
     outline: none; }
-  /* line 15, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
+  /* line 15, /Users/rfletcher/Documents/adhockery/source/stylesheets/_mixins.scss */
   a.read-more:after {
     content: "\00a0»";
     color: transparent;
@@ -1019,24 +1027,24 @@ a.read-more {
     font-style: normal;
     font-weight: 400;
     line-height: 0; }
-    /* line 26, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
+    /* line 26, /Users/rfletcher/Documents/adhockery/source/stylesheets/_mixins.scss */
     .touch a.read-more:after {
       color: #8ecdc5; }
-  /* line 30, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
+  /* line 30, /Users/rfletcher/Documents/adhockery/source/stylesheets/_mixins.scss */
   a.read-more:active, a.read-more:hover, a.read-more:focus {
     text-decoration: none; }
-    /* line 32, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
+    /* line 32, /Users/rfletcher/Documents/adhockery/source/stylesheets/_mixins.scss */
     a.read-more:active:after, a.read-more:hover:after, a.read-more:focus:after {
       color: #8ecdc5; }
 
-/* line 94, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_main-content.scss */
+/* line 99, /Users/rfletcher/Documents/adhockery/source/stylesheets/_main-content.scss */
 .about ul a {
   color: inherit;
   text-decoration: inherit; }
-  /* line 8, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
+  /* line 8, /Users/rfletcher/Documents/adhockery/source/stylesheets/_mixins.scss */
   .about ul a:active, .about ul a:focus {
     outline: none; }
-  /* line 15, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
+  /* line 15, /Users/rfletcher/Documents/adhockery/source/stylesheets/_mixins.scss */
   .about ul a:after {
     content: "\00a0»";
     color: transparent;
@@ -1045,22 +1053,22 @@ a.read-more {
     font-style: normal;
     font-weight: 400;
     line-height: 0; }
-    /* line 26, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
+    /* line 26, /Users/rfletcher/Documents/adhockery/source/stylesheets/_mixins.scss */
     .touch .about ul a:after {
       color: #8ecdc5; }
-  /* line 30, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
+  /* line 30, /Users/rfletcher/Documents/adhockery/source/stylesheets/_mixins.scss */
   .about ul a:active, .about ul a:hover, .about ul a:focus {
     text-decoration: none; }
-    /* line 32, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
+    /* line 32, /Users/rfletcher/Documents/adhockery/source/stylesheets/_mixins.scss */
     .about ul a:active:after, .about ul a:hover:after, .about ul a:focus:after {
       color: #8ecdc5; }
 
-/* line 99, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_main-content.scss */
+/* line 104, /Users/rfletcher/Documents/adhockery/source/stylesheets/_main-content.scss */
 .figure {
   display: block;
   text-align: center; }
 
-/* line 1, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_pagination.scss */
+/* line 1, /Users/rfletcher/Documents/adhockery/source/stylesheets/_pagination.scss */
 .pagination {
   font-size: 1.5em;
   line-height: 2em;
@@ -1068,32 +1076,32 @@ a.read-more {
   text-align: center;
   font-family: "league-gothic", "DIN Condensed", "Franklin Gothic Medium", "Franklin Gothic", "ITC Franklin Gothic", Arial, sans-serif;
   text-transform: uppercase; }
-  /* line 27, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_grid.scss */
+  /* line 27, /Users/rfletcher/Documents/adhockery/source/stylesheets/_grid.scss */
   .pagination:before, .pagination:after {
     content: "";
     display: table; }
-  /* line 31, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_grid.scss */
+  /* line 31, /Users/rfletcher/Documents/adhockery/source/stylesheets/_grid.scss */
   .pagination:after {
     clear: both; }
-  /* line 9, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_pagination.scss */
+  /* line 9, /Users/rfletcher/Documents/adhockery/source/stylesheets/_pagination.scss */
   .pagination .current {
     display: inline-block;
     margin: 0 0.5em; }
-  /* line 14, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_pagination.scss */
+  /* line 14, /Users/rfletcher/Documents/adhockery/source/stylesheets/_pagination.scss */
   .pagination a {
     color: inherit;
     text-decoration: inherit; }
-    /* line 8, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
+    /* line 8, /Users/rfletcher/Documents/adhockery/source/stylesheets/_mixins.scss */
     .pagination a:active, .pagination a:focus {
       outline: none; }
-    /* line 16, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_pagination.scss */
+    /* line 16, /Users/rfletcher/Documents/adhockery/source/stylesheets/_pagination.scss */
     .pagination a[rel=next] {
       color: inherit;
       text-decoration: inherit; }
-      /* line 8, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
+      /* line 8, /Users/rfletcher/Documents/adhockery/source/stylesheets/_mixins.scss */
       .pagination a[rel=next]:active, .pagination a[rel=next]:focus {
         outline: none; }
-      /* line 15, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
+      /* line 15, /Users/rfletcher/Documents/adhockery/source/stylesheets/_mixins.scss */
       .pagination a[rel=next]:after {
         content: "\00a0»";
         color: transparent;
@@ -1102,29 +1110,29 @@ a.read-more {
         font-style: normal;
         font-weight: 400;
         line-height: 0; }
-        /* line 26, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
+        /* line 26, /Users/rfletcher/Documents/adhockery/source/stylesheets/_mixins.scss */
         .touch .pagination a[rel=next]:after {
           color: #8ecdc5; }
-      /* line 30, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
+      /* line 30, /Users/rfletcher/Documents/adhockery/source/stylesheets/_mixins.scss */
       .pagination a[rel=next]:active, .pagination a[rel=next]:hover, .pagination a[rel=next]:focus {
         text-decoration: none; }
-        /* line 32, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
+        /* line 32, /Users/rfletcher/Documents/adhockery/source/stylesheets/_mixins.scss */
         .pagination a[rel=next]:active:after, .pagination a[rel=next]:hover:after, .pagination a[rel=next]:focus:after {
           color: #8ecdc5; }
       @media (min-width: 480px) {
-        /* line 20, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_pagination.scss */
+        /* line 20, /Users/rfletcher/Documents/adhockery/source/stylesheets/_pagination.scss */
         .pagination a[rel=next]:before {
           content: "\00b7\00a0";
           margin: 0 0.5em;
           color: #8ecdc5; } }
-    /* line 27, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_pagination.scss */
+    /* line 27, /Users/rfletcher/Documents/adhockery/source/stylesheets/_pagination.scss */
     .pagination a[rel=prev] {
       color: inherit;
       text-decoration: inherit; }
-      /* line 8, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
+      /* line 8, /Users/rfletcher/Documents/adhockery/source/stylesheets/_mixins.scss */
       .pagination a[rel=prev]:active, .pagination a[rel=prev]:focus {
         outline: none; }
-      /* line 15, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
+      /* line 15, /Users/rfletcher/Documents/adhockery/source/stylesheets/_mixins.scss */
       .pagination a[rel=prev]:before {
         content: "«\00a0";
         color: transparent;
@@ -1133,32 +1141,32 @@ a.read-more {
         font-style: normal;
         font-weight: 400;
         line-height: 0; }
-        /* line 26, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
+        /* line 26, /Users/rfletcher/Documents/adhockery/source/stylesheets/_mixins.scss */
         .touch .pagination a[rel=prev]:before {
           color: #8ecdc5; }
-      /* line 30, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
+      /* line 30, /Users/rfletcher/Documents/adhockery/source/stylesheets/_mixins.scss */
       .pagination a[rel=prev]:active, .pagination a[rel=prev]:hover, .pagination a[rel=prev]:focus {
         text-decoration: none; }
-        /* line 32, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_mixins.scss */
+        /* line 32, /Users/rfletcher/Documents/adhockery/source/stylesheets/_mixins.scss */
         .pagination a[rel=prev]:active:before, .pagination a[rel=prev]:hover:before, .pagination a[rel=prev]:focus:before {
           color: #8ecdc5; }
       @media (min-width: 480px) {
-        /* line 30, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_pagination.scss */
+        /* line 30, /Users/rfletcher/Documents/adhockery/source/stylesheets/_pagination.scss */
         .pagination a[rel=prev]:after {
           content: "\00a0\00b7";
           margin: 0 0.5em;
           color: #8ecdc5; } }
-    /* line 37, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_pagination.scss */
+    /* line 37, /Users/rfletcher/Documents/adhockery/source/stylesheets/_pagination.scss */
     .pagination a[disabled] {
       color: #a2a2a2;
       cursor: inherit;
       pointer-events: none; }
   @media (min-width: 480px) {
-    /* line 45, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_pagination.scss */
+    /* line 45, /Users/rfletcher/Documents/adhockery/source/stylesheets/_pagination.scss */
     .pagination .current {
       margin: 0; } }
 
-/* line 1, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_asciidoc.scss */
+/* line 1, /Users/rfletcher/Documents/adhockery/source/stylesheets/_asciidoc.scss */
 .listingblock .title {
   font-size: 1.17em;
   line-height: 1.28205em;
@@ -1167,25 +1175,25 @@ a.read-more {
   padding-left: 1.28205em;
   font-weight: 700;
   color: #a2a2a2; }
-  /* line 9, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_asciidoc.scss */
+  /* line 9, /Users/rfletcher/Documents/adhockery/source/stylesheets/_asciidoc.scss */
   .listingblock .title + .content pre {
     margin-top: 0; }
 
-/* line 1, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_disqus.scss */
+/* line 1, /Users/rfletcher/Documents/adhockery/source/stylesheets/_disqus.scss */
 .disqus {
   *zoom: 1;
   max-width: 56em;
   margin: 0 auto;
   margin-top: 1.5em;
   margin-bottom: 1.5em; }
-  /* line 27, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_grid.scss */
+  /* line 27, /Users/rfletcher/Documents/adhockery/source/stylesheets/_grid.scss */
   .disqus:before, .disqus:after {
     content: "";
     display: table; }
-  /* line 31, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_grid.scss */
+  /* line 31, /Users/rfletcher/Documents/adhockery/source/stylesheets/_grid.scss */
   .disqus:after {
     clear: both; }
-  /* line 7, /Users/rfletcher/Documents/adhockery.middleman/source/stylesheets/_disqus.scss */
+  /* line 7, /Users/rfletcher/Documents/adhockery/source/stylesheets/_disqus.scss */
   .disqus #disqus_thread {
     display: inline;
     float: left;

@@ -1,0 +1,185 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery - Spock and Hamcrest</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/Icon.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/Icon@2x.png">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header>
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <div class="container">
+      <main>
+          <article>
+    <header>
+      <time datetime="2014-08-07T11:23:00">Aug  7 2014</time>
+      <h1>Spock and Hamcrest</h1>
+    </header>
+    <div class="paragraph">
+<p>Groovy&#8217;s <em>power assert</em> and Hamcrest matchers both solve a similar problem – getting decent diagnostic information from an assertion failure. When writing JUnit or Spock tests in Groovy it&#8217;s typical to not use Hamcrest matchers as the <em>power assert</em> is so much simpler and just as effective. It&#8217;s worth bearing in mind, though that Hamcrest is also for helping clearly express the intent of an assertion. Spock provides support for Hamcrest matchers and I recently ran into a situation where I think it was the right thing to use.</p>
+</div>
+
+<div class="paragraph">
+<p>If we&#8217;re testing a method that returns a <code>Collection</code> that may contain duplicate entries but whose order is either non-deterministic or irrelevant to the test what is the best way to make an assertion about the content of the collection?</p>
+</div>
+<div class="paragraph">
+<p>Imagine we&#8217;re testing this interface:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">interface Api {
+  List&lt;String&gt; getThings()
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The return value here is <code>List</code> but it could be a <em>bag</em> or some other collection type. It <strong>cannot</strong> be <code>Set</code> as the method may return a collection containing elements with a cardinality greater than 1.</p>
+</div>
+<div class="paragraph">
+<p>Naïvely we might test it like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">expect:
+api.things == expected
+
+where:
+expected = ["a", "a", "b"]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If the order of the elements is non-deterministic this will sometimes pass and sometimes fail. No good.</p>
+</div>
+<div class="paragraph">
+<p>Next we might try converting the result and the expectation to a <code>Set</code> so that the comparison does not take order into account:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">expect:
+api.things as Set == expected as Set</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This will pass, but it can mask an error in the implementation because it&#8217;s not testing the cardinality of the elements. If <code>getThings()</code> returns <code>["a", "b"]</code> or <code>["a", "a", "a", "a", "b"]</code> the test will still pass which is almost certainly not what we intend.</p>
+</div>
+<div class="paragraph">
+<p>Another route is to enforce an artificial ordering for the purposes of testing:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">expect:
+api.things.sort() == expected</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This works so long as the element type is <code>Comparable</code> but I don&#8217;t find it very clear. As a reader of this code it might not be obvious why the sort is being done. The assertion is correct but at the cost of some clarity.</p>
+</div>
+<div class="paragraph">
+<p>I <a href="https://twitter.com/rfletcherEW/status/490051366807961600">tweeted about this</a> and got the following suggestion:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">expect:
+def actual = api.things
+actual.containsAll(expected) &amp;&amp; actual.size() == expected.size()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This appears thorough but also masks an error. The assertion will pass if the the actual result is <code>["a", "a", "b"]</code> or <code>["a", "b", "b"]</code>. It&#8217;s checking the size of the list but not the cardinality of individual elements.</p>
+</div>
+<div class="paragraph">
+<p><a href="https://twitter.com/RobElliot266/status/490058541500469248">Rob Elliot pointed out</a> that there&#8217;s a Hamcrest matcher for exactly this condition. Using that, I think yields the best result for clarity and correctness:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">expect:
+that api.things, containsInAnyOrder(*expected)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>One of the huge advantages of Spock and Groovy&#8217;s power assert are in the expressiveness of test code but I think using Hamcrest in this case provides a more readable solution.</p>
+</div>
+<div class="sect1">
+<h2 id="_implementation">Implementation</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To get this to work you need to import the <em>hamcrest-all</em> library that contains a lot more matchers than the <em>hamcrest-core</em> library that Spock pulls in by default.</p>
+</div>
+<div class="listingblock">
+<div class="title">build.gradle</div>
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">testCompile "org.hamcrest:hamcrest-all:1.3"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then you can static import Spock&#8217;s <code>that</code> method and the matcher itself:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">import static spock.util.matcher.HamcrestSupport.that
+import static org.hamcrest.Matchers.containsInAnyOrder</code></pre>
+</div>
+</div>
+</div>
+</div>
+    <footer>
+      <ul class="tag-list">
+      </ul>
+    </footer>
+  </article>
+
+      </main>
+
+      <footer>
+        <nav>
+          <a href="/">Home</a>
+          <a href="/about">About</a>
+          <a href="/archive">Archive</a>
+        </nav>
+      </footer>
+    </div>
+
+    <script src="/javascripts/adhockery.js"></script>
+    <script type="text/javascript">
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-27275689-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  </body>
+</html>
+
+<footer class="disqus">
+  <div id="disqus_thread"></div>
+            <script type="text/javascript">
+            //<![CDATA[
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//adhockery.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            //]]>
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </script>
+</footer>

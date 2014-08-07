@@ -4,10 +4,127 @@
   <id>http://blog.url.com/</id>
   <link href="http://blog.url.com/"/>
   <link href="http://blog.url.com/feed.xml" rel="self"/>
-  <updated>2014-07-21T11:34:00+01:00</updated>
+  <updated>2014-08-07T11:23:00+01:00</updated>
   <author>
     <name>Rob Fletcher</name>
   </author>
+  <entry>
+    <title>Spock and Hamcrest</title>
+    <link rel="alternate" href="http://blog.url.com/2014/08/07/spock-and-hamcrest/"/>
+    <id>http://blog.url.com/2014/08/07/spock-and-hamcrest/</id>
+    <published>2014-08-07T11:23:00+01:00</published>
+    <updated>2014-08-07T12:18:07+01:00</updated>
+    <author>
+      <name>Article Author</name>
+    </author>
+    <content type="html">&lt;div class="paragraph"&gt;
+&lt;p&gt;Groovy&amp;#8217;s &lt;em&gt;power assert&lt;/em&gt; and Hamcrest matchers both solve a similar problem – getting decent diagnostic information from an assertion failure. When writing JUnit or Spock tests in Groovy it&amp;#8217;s typical to not use Hamcrest matchers as the &lt;em&gt;power assert&lt;/em&gt; is so much simpler and just as effective. It&amp;#8217;s worth bearing in mind, though that Hamcrest is also for helping clearly express the intent of an assertion. Spock provides support for Hamcrest matchers and I recently ran into a situation where I think it was the right thing to use.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;div class="paragraph"&gt;
+&lt;p&gt;If we&amp;#8217;re testing a method that returns a &lt;code&gt;Collection&lt;/code&gt; that may contain duplicate entries but whose order is either non-deterministic or irrelevant to the test what is the best way to make an assertion about the content of the collection?&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Imagine we&amp;#8217;re testing this interface:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="highlight"&gt;&lt;code class="groovy language-groovy"&gt;interface Api {
+  List&amp;lt;String&amp;gt; getThings()
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;The return value here is &lt;code&gt;List&lt;/code&gt; but it could be a &lt;em&gt;bag&lt;/em&gt; or some other collection type. It &lt;strong&gt;cannot&lt;/strong&gt; be &lt;code&gt;Set&lt;/code&gt; as the method may return a collection containing elements with a cardinality greater than 1.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Naïvely we might test it like this:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="highlight"&gt;&lt;code class="groovy language-groovy"&gt;expect:
+api.things == expected
+
+where:
+expected = ["a", "a", "b"]&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;If the order of the elements is non-deterministic this will sometimes pass and sometimes fail. No good.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Next we might try converting the result and the expectation to a &lt;code&gt;Set&lt;/code&gt; so that the comparison does not take order into account:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="highlight"&gt;&lt;code class="groovy language-groovy"&gt;expect:
+api.things as Set == expected as Set&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;This will pass, but it can mask an error in the implementation because it&amp;#8217;s not testing the cardinality of the elements. If &lt;code&gt;getThings()&lt;/code&gt; returns &lt;code&gt;["a", "b"]&lt;/code&gt; or &lt;code&gt;["a", "a", "a", "a", "b"]&lt;/code&gt; the test will still pass which is almost certainly not what we intend.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Another route is to enforce an artificial ordering for the purposes of testing:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="highlight"&gt;&lt;code class="groovy language-groovy"&gt;expect:
+api.things.sort() == expected&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;This works so long as the element type is &lt;code&gt;Comparable&lt;/code&gt; but I don&amp;#8217;t find it very clear. As a reader of this code it might not be obvious why the sort is being done. The assertion is correct but at the cost of some clarity.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;I &lt;a href="https://twitter.com/rfletcherEW/status/490051366807961600"&gt;tweeted about this&lt;/a&gt; and got the following suggestion:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="highlight"&gt;&lt;code class="groovy language-groovy"&gt;expect:
+def actual = api.things
+actual.containsAll(expected) &amp;amp;&amp;amp; actual.size() == expected.size()&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;This appears thorough but also masks an error. The assertion will pass if the the actual result is &lt;code&gt;["a", "a", "b"]&lt;/code&gt; or &lt;code&gt;["a", "b", "b"]&lt;/code&gt;. It&amp;#8217;s checking the size of the list but not the cardinality of individual elements.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;&lt;a href="https://twitter.com/RobElliot266/status/490058541500469248"&gt;Rob Elliot pointed out&lt;/a&gt; that there&amp;#8217;s a Hamcrest matcher for exactly this condition. Using that, I think yields the best result for clarity and correctness:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="highlight"&gt;&lt;code class="groovy language-groovy"&gt;expect:
+that api.things, containsInAnyOrder(*expected)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;One of the huge advantages of Spock and Groovy&amp;#8217;s power assert are in the expressiveness of test code but I think using Hamcrest in this case provides a more readable solution.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="sect1"&gt;
+&lt;h2 id="_implementation"&gt;Implementation&lt;/h2&gt;
+&lt;div class="sectionbody"&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;To get this to work you need to import the &lt;em&gt;hamcrest-all&lt;/em&gt; library that contains a lot more matchers than the &lt;em&gt;hamcrest-core&lt;/em&gt; library that Spock pulls in by default.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="title"&gt;build.gradle&lt;/div&gt;
+&lt;div class="content"&gt;
+&lt;pre class="highlight"&gt;&lt;code class="groovy language-groovy"&gt;testCompile "org.hamcrest:hamcrest-all:1.3"&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Then you can static import Spock&amp;#8217;s &lt;code&gt;that&lt;/code&gt; method and the matcher itself:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="highlight"&gt;&lt;code class="groovy language-groovy"&gt;import static spock.util.matcher.HamcrestSupport.that
+import static org.hamcrest.Matchers.containsInAnyOrder&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;</content>
+  </entry>
   <entry>
     <title>Closures and field visibility</title>
     <link rel="alternate" href="http://blog.url.com/2014/07/21/closures-and-field-visibility/"/>
@@ -366,228 +483,6 @@ org.codehaus.groovy:groovy-all:2.0.5 -&amp;gt; 2.3.3
 &lt;/div&gt;
 &lt;div class="paragraph"&gt;
 &lt;p&gt;Static analysis is good when it&amp;#8217;s a tool for helping you write better code. It&amp;#8217;s bad when it&amp;#8217;s a “process”-step you&amp;#8217;re not allowed to disagree with or justify exceptions to or it becomes more of a hinderance than a help.&lt;/p&gt;
-&lt;/div&gt;</content>
-  </entry>
-  <entry>
-    <title>Decoupling from the DOM with Angular</title>
-    <link rel="alternate" href="http://blog.url.com/2013/09/12/decoupling-from-the-dom-with-angular/"/>
-    <id>http://blog.url.com/2013/09/12/decoupling-from-the-dom-with-angular/</id>
-    <published>2013-09-12T01:13:00+01:00</published>
-    <updated>2014-07-13T08:34:10+01:00</updated>
-    <author>
-      <name>Article Author</name>
-    </author>
-    <content type="html">&lt;div class="paragraph"&gt;
-&lt;p&gt;One piece of advice you&amp;#8217;ll run into pretty soon when working with Angular is that you should never touch the DOM outside of a directive. Especially when test-driving your components this is pretty wise. The great strength of Angular is the declarative way in which the view (HTML) works with the view model (Angular controllers). It&amp;#8217;s almost absurd how easy it is to unit test Angular controllers. Controller functions tend to act on &lt;code&gt;$scope&lt;/code&gt; properties, trigger or respond to events and all those things are straightforward to replicate in unit tests.&lt;/p&gt;
-&lt;/div&gt;
-
-&lt;div class="paragraph"&gt;
-&lt;p&gt;However, since Angular directives can &lt;em&gt;contain&lt;/em&gt; controllers the temptation can be to write some pretty non-idiomatic Angular code by writing &lt;em&gt;view logic&lt;/em&gt; that really belongs in a "pure" controller in a bloated directive that happily interacts with the DOM via the &lt;a href="http://docs.angularjs.org/api/angular.element"&gt;&lt;code&gt;$element&lt;/code&gt;&lt;/a&gt; injected into its controller in much the way a Backbone view might.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;I was recently building some fairly simple CRUD functionality for my current client. There&amp;#8217;s a list of &lt;em&gt;products&lt;/em&gt; and each has an &lt;em&gt;edit&lt;/em&gt; button that pops up a &lt;a href="http://getbootstrap.com/javascript/#modals"&gt;Bootstrap modal&lt;/a&gt; containing a form with the &lt;em&gt;product&lt;/em&gt; data.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;I initially built this using:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="ulist"&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;a controller that is triggered by the URL route and displays the &lt;em&gt;product&lt;/em&gt; list.&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;a directive for the form with its own controller exporting scope properties representing the selected &lt;em&gt;product&lt;/em&gt; and scope functions that handle things like clicking the &lt;em&gt;save&lt;/em&gt; or &lt;em&gt;cancel&lt;/em&gt; buttons.&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;The &lt;em&gt;product&lt;/em&gt; list is displayed in a table and the form is declared after it:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="listingblock"&gt;
-&lt;div class="content"&gt;
-&lt;pre class="highlight"&gt;&lt;code class="markup language-markup"&gt;&amp;lt;table&amp;gt;
-  &amp;lt;tr ng-repeat="product in products"&amp;gt;
-    &amp;lt;!-- you get the idea --&amp;gt;
-  &amp;lt;/tr&amp;gt;
-&amp;lt;/table&amp;gt;
-
-&amp;lt;div class="modal" edit-product-form&amp;gt;
-  &amp;lt;!-- a form that contains things like... --&amp;gt;
-  &amp;lt;input ng-model="product.title"&amp;gt;
-  &amp;lt;!-- and other inputs and buttons --&amp;gt;
-&amp;lt;/div&amp;gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;Each element in the &lt;em&gt;product&lt;/em&gt; list contains an &lt;em&gt;edit&lt;/em&gt; button:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="listingblock"&gt;
-&lt;div class="content"&gt;
-&lt;pre class="highlight"&gt;&lt;code class="markup language-markup"&gt;&amp;lt;button type="button" ng-click="edit(product)"&amp;gt;Edit&amp;lt;/button&amp;gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;Clicking the button triggers an event using &lt;a href="http://docs.angularjs.org/api/ng.$rootScope.Scope#$broadcast"&gt;&lt;code&gt;$scope.$broadcast&lt;/code&gt;&lt;/a&gt;:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="listingblock"&gt;
-&lt;div class="content"&gt;
-&lt;pre class="highlight"&gt;&lt;code class="javascript language-javascript"&gt;$scope.edit = function(product) {
-  $scope.$broadcast('product:edit', product);
-}&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;That event is picked up by the &lt;em&gt;edit-product-form&lt;/em&gt; directive. It places the &lt;em&gt;product&lt;/em&gt; in its isolate scope – which automatically populates the form with the &lt;em&gt;product&amp;#8217;s&lt;/em&gt; properties – and pops up the modal:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="listingblock"&gt;
-&lt;div class="content"&gt;
-&lt;pre class="highlight"&gt;&lt;code class="javascript language-javascript"&gt;angular.module('myApp').directive('edit-product-form', function() {
-  return {
-    restrict: 'A',
-    controller: ['$scope', '$element', function($scope, $element) {
-      $scope.$on('product:edit', function(event, product) {
-        $scope.product = product;
-        $element.modal('show');
-
-        //...&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;The &lt;em&gt;save&lt;/em&gt; button handler in the directive sends another event back up the scope heirarchy using &lt;a href="http://docs.angularjs.org/api/ng.$rootScope.Scope#$emit"&gt;&lt;code&gt;$scope.$emit&lt;/code&gt;&lt;/a&gt; and hides the modal again.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="listingblock"&gt;
-&lt;div class="content"&gt;
-&lt;pre class="highlight"&gt;&lt;code class="javascript language-javascript"&gt;$scope.save = function() {
-  $scope.product.$save(function() {
-    $scope.$emit('product:updated', $scope.product);
-    $element.modal('hide');
-  },
-  function() {
-    // display an error message
-  });
-};&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;Fine, this works &lt;strong&gt;but&lt;/strong&gt; it&amp;#8217;s interacting with the Bootstrap modal jQuery plugin in an imperative way. When I want the modal to appear I &lt;em&gt;tell&lt;/em&gt; it to appear explicitly. When I want it to disappear I &lt;em&gt;tell&lt;/em&gt; it to hide. This is mixing up the logical action of placing the form data in the scope, saving changes and updating the list view with the specifics of &lt;em&gt;how&lt;/em&gt; the form is displayed – with a Bootstrap modal dialog. The logic governing view state would be the same if showing and hiding the form were handled in a different way. I&amp;#8217;ve violated the &lt;a href="http://en.wikipedia.org/wiki/Separation_of_concerns"&gt;&lt;em&gt;separation of concerns&lt;/em&gt;&lt;/a&gt;.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;To summarize the problems:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="ulist"&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;Unit testing the code requires at least a minimal DOM even for assertions purely concerned with the scope properties.&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;If I want to use a similar modal elsewhere in the app I can&amp;#8217;t re-use anything here unless you consider copy 'n paste to be reuse.&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;If I want to use a different widget like &lt;a href="http://foundation.zurb.com/docs/components/reveal.html"&gt;Foundation&amp;#8217;s &lt;em&gt;Reveal&lt;/em&gt;&lt;/a&gt; to show and hide the form I need to pick through – and be careful not to break – the code that governs the view state even though that&amp;#8217;s a separate concern.&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;We can do better.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;Let&amp;#8217;s pare things back to the simplest state – what am I trying to do here? I want to hide the "edit product" form until I have selected a product to edit, show the form while I&amp;#8217;m working on that product then hide it again once I&amp;#8217;m finished. The view state of &lt;em&gt;"user has selected a product"&lt;/em&gt; is represented by the existence of a property called &lt;code&gt;$scope.product&lt;/code&gt;. With no fancy presentation or slide in/out effects I could do this by just adding and removing that scope property at the appropriate time:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="listingblock"&gt;
-&lt;div class="content"&gt;
-&lt;pre class="highlight"&gt;&lt;code class="javascript language-javascript"&gt;$scope.edit = function(product) {
-  $scope.product = product;
-};
-
-$scope.save = function() {
-  $scope.product.$save(function() {
-    delete($scope.product);
-  }, function() {
-    // display an error message
-  });
-};&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;Then in the view I can &lt;em&gt;declaratively&lt;/em&gt; react to the presence or absence of the &lt;code&gt;product&lt;/code&gt; property:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="listingblock"&gt;
-&lt;div class="content"&gt;
-&lt;pre class="highlight"&gt;&lt;code class="markup language-markup"&gt;&amp;lt;div ng-show="product"&amp;gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;The &lt;a href="http://docs.angularjs.org/api/ng.directive:ngShow"&gt;&lt;code&gt;ng-show&lt;/code&gt;&lt;/a&gt; directive hides the element unless there is a non-&lt;code&gt;null&lt;/code&gt;, non-&lt;code&gt;undefined&lt;/code&gt; property in the scope that matches its value.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;Simple. Now the view does the right thing based on state of the view model. You may or may not have noticed but I&amp;#8217;ve done away with the directive for the edit form now – the &lt;code&gt;edit&lt;/code&gt; and &lt;code&gt;save&lt;/code&gt; functions can just appear as part of the controller that manages the &lt;em&gt;product&lt;/em&gt; list. Arguably the directive is still useful for modulatity – especially if the form is complex – but crucially I don&amp;#8217;t &lt;em&gt;need&lt;/em&gt; it because I don&amp;#8217;t &lt;em&gt;need&lt;/em&gt; to imperatively interact with the DOM.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;I should be able to use a Bootstrap modal to hide and show the form instead of the basic &lt;code&gt;ng-show&lt;/code&gt; directive &lt;strong&gt;without changing any of the controller code&lt;/strong&gt;. The mechanism for showing and hiding the form is an implementation detail of the view that&amp;#8217;s nothing to do with the view model. Managing that kind of separation of concerns is the promise of Angular in a nutshell.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;To do this I&amp;#8217;ll add the Boostrap modal class to my view:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="listingblock"&gt;
-&lt;div class="content"&gt;
-&lt;pre class="highlight"&gt;&lt;code class="markup language-markup"&gt;&amp;lt;div class="modal fade" trigger="product"&amp;gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;Don&amp;#8217;t worry about the &lt;code&gt;trigger&lt;/code&gt; attribute – I&amp;#8217;ll get to that.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;Then I&amp;#8217;ll create a new directive that is activated simply by the presence of the &lt;code&gt;modal&lt;/code&gt; class on the element.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="listingblock"&gt;
-&lt;div class="content"&gt;
-&lt;pre class="highlight"&gt;&lt;code class="javascript language-javascript"&gt;angular.module('myApp').directive('modal', function() {
-  return {
-    restrict: 'C',
-    controller: ['$scope', '$element', '$attrs', function($scope, $element, $attrs) {
-      $scope.$watch($attrs.trigger, function(newValue, oldValue) {
-        if (!!newValue &amp;amp;&amp;amp; !oldValue) {
-          $element.modal('show');
-        }
-        if (!!oldValue &amp;amp;&amp;amp; !newValue) {
-          $element.modal('hide');
-        }
-      });
-    }]
-  };
-});&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;The &lt;code&gt;restrict: 'C'&lt;/code&gt; means the directive is activated by a class name that is the same as the directive name. In other words any element that has &lt;code&gt;class="modal"&lt;/code&gt; will have this directive applied.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;The directive uses the &lt;code&gt;$scope.$watch&lt;/code&gt; function to respond to changes in a scope property defined by the &lt;code&gt;trigger&lt;/code&gt; attribute on the directive&amp;#8217;s element. Note that &lt;code&gt;$scope.trigger&lt;/code&gt; still works as is if, like me, you&amp;#8217;re fussy about validity and declare the attribute as &lt;code&gt;data-trigger="product"&lt;/code&gt;.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;The &lt;code&gt;$watch&lt;/code&gt; callback is invoked every time the named scope property changes and is passed the previous and new values of that property. In this example I only care whether the property has changed from &lt;code&gt;null&lt;/code&gt;/&lt;code&gt;undefined&lt;/code&gt; to an object or vice-versa. I don&amp;#8217;t want to call &lt;code&gt;$element.modal 'show'&lt;/code&gt; again if the modal is already visible but &lt;code&gt;$scope.property&lt;/code&gt; has just changed to point to a &lt;em&gt;different&lt;/em&gt; object. (If you haven&amp;#8217;t seen the &lt;code&gt;!!&lt;/code&gt; operator in JavaScript before it&amp;#8217;s simply a way of coercing any type to boolean).&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;I&amp;#8217;ve now got two components – a controller that purely interacts with scope properties and a directive that responds to scope changes and calls a jQuery plugin method.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="ulist"&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;Both those are very simple to unit test.&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Neither is coupled to the other except via the &lt;code&gt;trigger&lt;/code&gt; attribute in the view.&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;I can re-use the &lt;em&gt;modal&lt;/em&gt; directive in similar scenarios elsewhere in the system by just adding &lt;code&gt;class="modal"&lt;/code&gt; and an appropriate &lt;code&gt;trigger&lt;/code&gt; attribute.&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;If I want to use a different UI widget I only have to change the directive.&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;Learning to think about separation of concerns in this way is key to getting the most out of Angular. Remember controllers are for managing view &lt;em&gt;state&lt;/em&gt; and directives are for managing the view &lt;em&gt;implementation&lt;/em&gt;. If you find yourself mixing those concerns step back and think about how you can separate them. The resulting code will be easier to follow, easier to change and easier to test.&lt;/p&gt;
 &lt;/div&gt;</content>
   </entry>
 </feed>

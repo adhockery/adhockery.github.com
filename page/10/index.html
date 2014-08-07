@@ -29,6 +29,21 @@
       <main>
           <article>
     <header>
+      <time datetime="2009-06-13T06:25:00">Jun 13 2009</time>
+      <h2><a href="/2009/06/13/querying-by-association-redux/">Querying by Association Redux</a></h2>
+    </header>
+    <div class="paragraph">
+<p>A couple of months back I <a href="http://blog.freeside.co/post/42902379524/querying-by-association-with-grails-criteria">posted</a> about the problems with criteria queries where you want results with a collection property that <em>contains</em> some value.</p>
+</div>
+<div class="paragraph">
+<p>Last night I was reading through my new copy of <a href="http://blogs.bytecode.com.au/glen/">Glen Smith</a> and Peter Ledbrook&#8217;s <a href="http://www.amazon.co.uk/Grails-Action-Glen-Smith/dp/1933988932">Grails In Action</a> and my eye was caught by a particular example where they use aliases in a criteria query. Sure enough a quick test this morning confirms that this is the solution to the problem.</p>
+</div>
+
+    <a class="read-more" href="/2009/06/13/querying-by-association-redux/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
       <time datetime="2009-06-13T05:51:00">Jun 13 2009</time>
       <h2><a href="/2009/06/13/hacking-on-grails-scaffolding-templates/">Hacking on Grails scaffolding templates</a></h2>
     </header>
@@ -151,18 +166,6 @@ class Pirate {
 </div>
 
     <a class="read-more" href="/2009/03/03/persisting-datetime-with-zone-information/">Read more…</a>
-  </article>
-  <hr>
-  <article>
-    <header>
-      <time datetime="2009-03-02T17:28:00">Mar  2 2009</time>
-      <h2><a href="/2009/03/02/why-would-i-ever-want-to-disable-the-l2-cache/">Why would I ever want to disable the L2 cache?</a></h2>
-    </header>
-    <div class="paragraph">
-<p>This question came up when pairing last week. We were going through our code-base adding the <a href="http://grails.org/doc/1.1.x/ref/Database%20Mapping/cache.html">cache directive</a> to a bunch of our domain classes. Grails is all about sensible defaults and it seems slightly odd that the level 2 cache is configured by default in <code>DataSource.groovy</code> but not actually <em>used</em> unless <code>cache(true)</code> is added to the mapping closure in each domain class. I wonder if anyone has any ideas why it might ever be a bad idea to use the L2 cache?</p>
-</div>
-
-    <a class="read-more" href="/2009/03/02/why-would-i-ever-want-to-disable-the-l2-cache/">Read more…</a>
   </article>
   <hr>
 

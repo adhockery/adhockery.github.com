@@ -29,6 +29,49 @@
       <main>
           <article>
     <header>
+      <time datetime="2013-07-09T14:28:00">Jul  9 2013</time>
+      <h2><a href="/2013/07/09/semantic-color-names-in-less-and-sass-stylesheets/">Semantic color names in LESS and Sass stylesheets</a></h2>
+    </header>
+    <div class="paragraph">
+<p>Most people using Sass or LESS will define variables for the palette of colors in their page. Something like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="scss language-scss">$blackish: #231f20;
+$purple: #561e31;
+$pink: #da2770;
+$off-white: #efefef;
+
+.header {
+    background-color: $blackish;
+    color: $off-white;
+}
+
+a {
+    color: $purple;
+    &amp;:hover, &amp;:active {
+        color: $pink;
+    }
+}
+
+blockquote {
+    background-color: $blackish;
+    color: $purple;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This is good as far as it goes. Tweaking colors in the page is pretty easy as they only have to be changed in the variable definition.</p>
+</div>
+<div class="paragraph">
+<p>That said, I think there are a couple of problems here.</p>
+</div>
+
+    <a class="read-more" href="/2013/07/09/semantic-color-names-in-less-and-sass-stylesheets/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
       <time datetime="2013-05-21T13:49:01">May 21 2013</time>
       <h2><a href="/2013/05/21/parameterized-specs-with-jasmine/">Parameterized specs with Jasmine</a></h2>
     </header>
@@ -191,18 +234,6 @@ fns.each { it() }</code></pre>
 </div>
 
     <a class="read-more" href="/2013/02/17/groovy-the-public-keyword/">Read more…</a>
-  </article>
-  <hr>
-  <article>
-    <header>
-      <time datetime="2013-02-13T16:21:30">Feb 13 2013</time>
-      <h2><a href="/2013/02/13/deprecating-grails-plugins/">Deprecating Grails plugins</a></h2>
-    </header>
-    <div class="paragraph">
-<p>I&#8217;ve written a number of Grails plugins and the fact is that some of them are effectively unsupported. I&#8217;ve only got so much time &amp; I&#8217;m juggling work, family, conference speaking, my own projects and open source. Any plugin development I do is going to be driven by the requirements of work or other projects, so even those plugins I still consider as supported might not get updated as often as some people would like.</p>
-</div>
-
-    <a class="read-more" href="/2013/02/13/deprecating-grails-plugins/">Read more…</a>
   </article>
   <hr>
 

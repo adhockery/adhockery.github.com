@@ -29,6 +29,18 @@
       <main>
           <article>
     <header>
+      <time datetime="2014-08-07T11:23:00">Aug  7 2014</time>
+      <h2><a href="/2014/08/07/spock-and-hamcrest/">Spock and Hamcrest</a></h2>
+    </header>
+    <div class="paragraph">
+<p>Groovy&#8217;s <em>power assert</em> and Hamcrest matchers both solve a similar problem – getting decent diagnostic information from an assertion failure. When writing JUnit or Spock tests in Groovy it&#8217;s typical to not use Hamcrest matchers as the <em>power assert</em> is so much simpler and just as effective. It&#8217;s worth bearing in mind, though that Hamcrest is also for helping clearly express the intent of an assertion. Spock provides support for Hamcrest matchers and I recently ran into a situation where I think it was the right thing to use.</p>
+</div>
+
+    <a class="read-more" href="/2014/08/07/spock-and-hamcrest/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
       <time datetime="2014-07-21T11:34:00">Jul 21 2014</time>
       <h2><a href="/2014/07/21/closures-and-field-visibility/">Closures and field visibility</a></h2>
     </header>
@@ -139,49 +151,6 @@
 </div>
 
     <a class="read-more" href="/2013/07/26/gr8conf-us-debrief/">Read more…</a>
-  </article>
-  <hr>
-  <article>
-    <header>
-      <time datetime="2013-07-09T14:28:00">Jul  9 2013</time>
-      <h2><a href="/2013/07/09/semantic-color-names-in-less-and-sass-stylesheets/">Semantic color names in LESS and Sass stylesheets</a></h2>
-    </header>
-    <div class="paragraph">
-<p>Most people using Sass or LESS will define variables for the palette of colors in their page. Something like:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="scss language-scss">$blackish: #231f20;
-$purple: #561e31;
-$pink: #da2770;
-$off-white: #efefef;
-
-.header {
-    background-color: $blackish;
-    color: $off-white;
-}
-
-a {
-    color: $purple;
-    &amp;:hover, &amp;:active {
-        color: $pink;
-    }
-}
-
-blockquote {
-    background-color: $blackish;
-    color: $purple;
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>This is good as far as it goes. Tweaking colors in the page is pretty easy as they only have to be changed in the variable definition.</p>
-</div>
-<div class="paragraph">
-<p>That said, I think there are a couple of problems here.</p>
-</div>
-
-    <a class="read-more" href="/2013/07/09/semantic-color-names-in-less-and-sass-stylesheets/">Read more…</a>
   </article>
   <hr>
 

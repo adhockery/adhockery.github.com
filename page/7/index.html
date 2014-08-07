@@ -29,6 +29,18 @@
       <main>
           <article>
     <header>
+      <time datetime="2010-05-28T13:27:00">May 28 2010</time>
+      <h2><a href="/2010/05/28/grails-spring-events-plugin/">Grails Spring Events Plugin</a></h2>
+    </header>
+    <div class="paragraph">
+<p>Following on from <a href="http://blog.freeside.co/post/42902948889/asynchronous-application-events-in-grails">my previous post</a> I&#8217;ve developed a Grails plugin that packages the asynchronous events behaviour up and adds some extra useful functionality.</p>
+</div>
+
+    <a class="read-more" href="/2010/05/28/grails-spring-events-plugin/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
       <time datetime="2010-05-03T21:59:00">May  3 2010</time>
       <h2><a href="/2010/05/03/asynchronous-application-events-in-grails/">Asynchronous application events in Grails</a></h2>
     </header>
@@ -172,34 +184,6 @@ class @artifact.name@ {
 </div>
 
     <a class="read-more" href="/2010/02/23/full-page-caching-in-grails-with-ehcache-web/">Read more…</a>
-  </article>
-  <hr>
-  <article>
-    <header>
-      <time datetime="2010-01-17T20:35:00">Jan 17 2010</time>
-      <h2><a href="/2010/01/17/a-gradle-build-for-grails-plugins-with-test-apps/">A Gradle build for Grails plugins with test apps</a></h2>
-    </header>
-    <div class="paragraph">
-<p>There&#8217;s a fairly popular technique in Grails plugin development where the plugin has <em>test apps</em> stored in <code>test/projects/*</code>, each of which references the plugin by including <code>grails.plugin.location."my-plugin" = "../../.."</code> in its <em>BuildConfig.groovy</em>. Doing this allows you as a plugin developer to:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Automate tests for sample projects using the plugin with significantly different configurations.</p>
-</li>
-<li>
-<p>Test using domain classes, controllers, etc. that shouldn&#8217;t be packaged with the plugin.</p>
-</li>
-<li>
-<p>Test drive, changing code in both the test app and the plugin without the need to use <code>grails package-plugin</code> or <code>grails install-plugin</code> to pick up changes.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>The downside is that to run all the plugin project&#8217;s tests it&#8217;s necessary to run the plugin&#8217;s own tests, then change directory into each of the test apps and run their tests. Continuous integration config is also fiddlier for the same reason.</p>
-</div>
-
-    <a class="read-more" href="/2010/01/17/a-gradle-build-for-grails-plugins-with-test-apps/">Read more…</a>
   </article>
   <hr>
 

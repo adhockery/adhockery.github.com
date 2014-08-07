@@ -29,6 +29,34 @@
       <main>
           <article>
     <header>
+      <time datetime="2010-01-17T20:35:00">Jan 17 2010</time>
+      <h2><a href="/2010/01/17/a-gradle-build-for-grails-plugins-with-test-apps/">A Gradle build for Grails plugins with test apps</a></h2>
+    </header>
+    <div class="paragraph">
+<p>There&#8217;s a fairly popular technique in Grails plugin development where the plugin has <em>test apps</em> stored in <code>test/projects/*</code>, each of which references the plugin by including <code>grails.plugin.location."my-plugin" = "../../.."</code> in its <em>BuildConfig.groovy</em>. Doing this allows you as a plugin developer to:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Automate tests for sample projects using the plugin with significantly different configurations.</p>
+</li>
+<li>
+<p>Test using domain classes, controllers, etc. that shouldn&#8217;t be packaged with the plugin.</p>
+</li>
+<li>
+<p>Test drive, changing code in both the test app and the plugin without the need to use <code>grails package-plugin</code> or <code>grails install-plugin</code> to pick up changes.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The downside is that to run all the plugin project&#8217;s tests it&#8217;s necessary to run the plugin&#8217;s own tests, then change directory into each of the test apps and run their tests. Continuous integration config is also fiddlier for the same reason.</p>
+</div>
+
+    <a class="read-more" href="/2010/01/17/a-gradle-build-for-grails-plugins-with-test-apps/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
       <time datetime="2010-01-04T21:22:00">Jan  4 2010</time>
       <h2><a href="/2010/01/04/upgrading-grails-1-1-1-2/">Upgrading Grails 1.1 -> 1.2</a></h2>
     </header>
@@ -148,18 +176,6 @@
 </div>
 
     <a class="read-more" href="/2009/11/05/grails-selenium-rc-plugin-released/">Read more…</a>
-  </article>
-  <hr>
-  <article>
-    <header>
-      <time datetime="2009-11-02T17:24:00">Nov  2 2009</time>
-      <h2><a href="/2009/11/02/talk-on-selenium-rc-testing-in-grails/">Talk on Selenium RC Testing In Grails</a></h2>
-    </header>
-    <div class="paragraph">
-<p>I&#8217;ll be delivering a short talk about testing Grails apps with the <a href="http://github.com/robfletcher/grails-selenium-rc">Selenium RC plugin</a> I&#8217;m <a href="http://blog.freeside.co/post/42902592328/testing-grails-apps-with-selenium-rc">working on</a> at the <a href="http://skillsmatter.com/user-group/java-jee/ggug">London Groovy and Grails User Group</a> on 20th November. Details are <a href="http://skillsmatter.com/event/java-jee/testing-grails-applications-with-selenium-rc">here</a>.</p>
-</div>
-
-    <a class="read-more" href="/2009/11/02/talk-on-selenium-rc-testing-in-grails/">Read more…</a>
   </article>
   <hr>
 

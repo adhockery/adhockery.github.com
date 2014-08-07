@@ -25,6 +25,9 @@ body > header {
     text-transform: lowercase;
     .fontface & {
       font-weight: 400;
+      // this fixes some blurry semi-boldness
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
 
     a {

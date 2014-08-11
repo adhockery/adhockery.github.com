@@ -19,7 +19,7 @@ class A {
 
   void handle(Writable thing) {
     try {
-      thing.write(writer)
+      thing.writeTo(writer)
     } finally {
       if (thing instanceof Closeable) {
         thing.close()
@@ -29,7 +29,7 @@ class A {
 }
 ----
 
-we'd want to test that not only is the +write+ method from +Writable+ called but that if the parameter we pass is +Closeable+ it gets closed properly as well.
+we'd want to test that not only is the +writeTo+ method from +Writable+ called but that if the parameter we pass is +Closeable+ it gets closed properly as well.
 
 The simplest case, where the parameter _isn't_ +Closeable+ is easy to test:
 
@@ -45,7 +45,7 @@ def "writes a writable"() {
   a.handle(x)
 
   then:
-  1 * x.write(_)
+  1 * x.writeTo(_)
 }
 ----
 
@@ -55,26 +55,31 @@ But when we need the mock parameter to implement the +Closeable+ interface as we
 ----
 def "writes and closes a closeable writable"() {
   given:
-  def x = Writable(Writable)
+  def x = Mock(Writable)
 
   when:
   a.handle(x)
 
   then:
-  1 * x.write(_)
+  1 * x.writeTo(_)
+
+  then:
   1 * x.close()
 }
 
 def "closes a closeable even if writing fails"() {
   given:
   def x = Mock(Writable) {
-    write(_) >> { throw new IOException() }
+    writeTo(_) >> { throw new IOException() }
   }
 
   when:
   a.handle(x)
 
   then:
+  thrown IOException
+
+  and:
   1 * x.close()
 }
 ----

@@ -1,0 +1,105 @@
+---
+title: Multiple interface mocks with Spock
+date: 2014-08-11 11:46 BST
+tags: spock, testing
+---
+
+Spock's +Mock+ factory method (as well as factories for the other types of test double; +Stub+ & +Spy+) accepts a single interface representing the type you need a test double for. But what should you do if you need a test double that implements multiple interfaces?
+
+READMORE
+
+In some situations where code accepts flexible parameter types and is using runtime dispatching (or +instanceof+ checks) internally to perform different behavior we'd want to test that different types were handled correctly.
+
+A trivial example might be a method like this:
+
+[source,groovy]
+----
+class A {
+  private Writer writer
+
+  void handle(Writable thing) {
+    try {
+      thing.write(writer)
+    } finally {
+      if (thing instanceof Closeable) {
+        thing.close()
+      }
+    }
+  }
+}
+----
+
+we'd want to test that not only is the +write+ method from +Writable+ called but that if the parameter we pass is +Closeable+ it gets closed properly as well.
+
+The simplest case, where the parameter _isn't_ +Closeable+ is easy to test:
+
+[source,groovy]
+----
+@Subject a = new A()
+
+def "writes a writable"() {
+  given:
+  def x = Mock(Writable)
+
+  when:
+  a.handle(x)
+
+  then:
+  1 * x.write(_)
+}
+----
+
+But when we need the mock parameter to implement the +Closeable+ interface as well as +Writable+ in order to drive the variant behavior it's not so obvious what to do. The following tests will fail because the +isntanceof+ check in the +handle+ method will return +false+.
+
+[source,groovy]
+----
+def "writes and closes a closeable writable"() {
+  given:
+  def x = Writable(Writable)
+
+  when:
+  a.handle(x)
+
+  then:
+  1 * x.write(_)
+  1 * x.close()
+}
+
+def "closes a closeable even if writing fails"() {
+  given:
+  def x = Mock(Writable) {
+    write(_) >> { throw new IOException() }
+  }
+
+  when:
+  a.handle(x)
+
+  then:
+  1 * x.close()
+}
+----
+
+Although it might be nice you cannot do something like:
+
+[source,groovy]
+----
+def mock = Mock(Comparable, Closeable)
+----
+
+We could cast around for some class that happens to implement both interfaces and then use a +Spy+ but the simplest and cleanest solution is to just create our own interface inside the specification class:
+
+[source,groovy]
+----
+private static interface CloseableWritable extends Writable, Closeable {}
+----
+
+Then in the feature methods we can just use:
+
+[source,groovy]
+----
+given:
+def x = Mock(CloseableWritable)
+----
+
+
+In retrospect this solution is the most obvious thing in the world but it took me a little while to remember that an interface can extend more than one other interface. Since we never actually need to implement +CloseableWritable+ with anything other than a mock it makes sense to encapsulate it inside the specification class.

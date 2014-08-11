@@ -1,7 +1,7 @@
 ---
 title: Spock and Hamcrest
 date: 2014-08-07 11:23 BST
-tags:
+tags: spock, hamcrest, testing
 ---
 
 Groovy's _power assert_ and Hamcrest matchers both solve a similar problem – getting decent diagnostic information from an assertion failure. When writing JUnit or Spock tests in Groovy it's typical to not use Hamcrest matchers as the _power assert_ is so much simpler and just as effective. It's worth bearing in mind, though that Hamcrest is also for helping clearly express the intent of an assertion. Spock provides support for Hamcrest matchers and I recently ran into a situation where I think it was the right thing to use.

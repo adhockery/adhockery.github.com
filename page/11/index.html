@@ -29,6 +29,18 @@
       <main>
           <article>
     <header>
+      <time datetime="2009-03-03T13:31:00">Mar  3 2009</time>
+      <h2><a href="/2009/03/03/persisting-datetime-with-zone-information/">Persisting DateTime with zone information</a></h2>
+    </header>
+    <div class="paragraph">
+<p>I was stuck a while ago trying to figure out how to map <a href="http://joda-time.sourceforge.net/contrib/hibernate/apidocs/org/joda/time/contrib/hibernate/PersistentDateTimeTZ.html"><code>PersistentDateTimeTZ</code></a> in a GORM class. It&#8217;s an implementation of Hibernate&#8217;s <a href="http://www.hibernate.org/hib_docs/v3/api/org/hibernate/usertype/UserType.html"><code>UserType</code></a> interface that persists a Joda <a href="http://joda-time.sourceforge.net/api-release/org/joda/time/DateTime.html"><code>DateTime</code></a> value using 2 columns - one for the actual timestamp and one for the time zone. The <code>DateTime</code> class contains time zone information but a SQL timestamp column is time zone agnostic so you can lose data when the value is saved (the same exact problem exists when persisting <code>java.util.Date</code> values).</p>
+</div>
+
+    <a class="read-more" href="/2009/03/03/persisting-datetime-with-zone-information/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
       <time datetime="2009-03-02T17:28:00">Mar  2 2009</time>
       <h2><a href="/2009/03/02/why-would-i-ever-want-to-disable-the-l2-cache/">Why would I ever want to disable the L2 cache?</a></h2>
     </header>

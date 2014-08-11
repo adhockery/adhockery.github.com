@@ -29,6 +29,18 @@
       <main>
           <article>
     <header>
+      <time datetime="2012-10-15T12:56:00">Oct 15 2012</time>
+      <h2><a href="/2012/10/15/less-with-modernizr-and-media-queries/">LESS with Modernizr and media queries</a></h2>
+    </header>
+    <div class="paragraph">
+<p>One of the main advantages of <a href="http://lesscss.org/">LESS</a> is <a href="http://lesscss.org/#-nested-rules">nesting</a> rules for components in a structure that mirrors the DOM. However, when using <a href="http://modernizr.com/">Modernizr</a> you create override rules based on classes present on the root <code>html</code> tag. It would be nice to declare those override rules alongside the other rules for the same components. The same concern applies when using media queries. Luckily, there <em>is</em> a way to do this.</p>
+</div>
+
+    <a class="read-more" href="/2012/10/15/less-with-modernizr-and-media-queries/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
       <time datetime="2012-10-11T21:18:00">Oct 11 2012</time>
       <h2><a href="/2012/10/11/is-this-a-dagger-i-see-before-me/">Is this a Dagger I see before me?</a></h2>
     </header>
@@ -160,27 +172,6 @@ nameLength = crew.length()</code></pre>
 </div>
 
     <a class="read-more" href="/2012/01/10/optional-tag-bodies/">Read more…</a>
-  </article>
-  <hr>
-  <article>
-    <header>
-      <time datetime="2011-12-23T10:24:00">Dec 23 2011</time>
-      <h2><a href="/2011/12/23/wiring-taglib-dependencies-in-unit-tests/">Wiring taglib dependencies in Grails 2 unit tests</a></h2>
-    </header>
-    <div class="paragraph">
-<p>Grails 2 has made a lot of improvements in unit testing support. One of the things I always used to find particularly painful was unit testing taglibs. Now when your test class is annotated with <code>@TestFor(MyTagLib)</code> you can use the <code>applyTemplate</code> method like this:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="groovy language-groovy">expect:
-applyTemplate('&lt;my:tag/&gt;') == 'the expected output'</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>However, one thing I found is that it&#8217;s quite tricky to wire a dependency in to the taglib instance that&#8217;s used by the <code>applyTemplate</code> method.</p>
-</div>
-
-    <a class="read-more" href="/2011/12/23/wiring-taglib-dependencies-in-unit-tests/">Read more…</a>
   </article>
   <hr>
 

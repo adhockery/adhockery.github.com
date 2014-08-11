@@ -4,16 +4,134 @@
   <id>http://blog.url.com/</id>
   <link href="http://blog.url.com/"/>
   <link href="http://blog.url.com/feed.xml" rel="self"/>
-  <updated>2014-08-07T11:23:00+01:00</updated>
+  <updated>2014-08-11T11:46:00+01:00</updated>
   <author>
     <name>Rob Fletcher</name>
   </author>
+  <entry>
+    <title>Multiple interface mocks with Spock</title>
+    <link rel="alternate" href="http://blog.url.com/2014/08/11/multiple-interface-mocks-with-spock/"/>
+    <id>http://blog.url.com/2014/08/11/multiple-interface-mocks-with-spock/</id>
+    <published>2014-08-11T11:46:00+01:00</published>
+    <updated>2014-08-11T14:41:06+01:00</updated>
+    <author>
+      <name>Article Author</name>
+    </author>
+    <content type="html">&lt;div class="paragraph"&gt;
+&lt;p&gt;Spock&amp;#8217;s &lt;code&gt;Mock&lt;/code&gt; factory method (as well as factories for the other types of test double; &lt;code&gt;Stub&lt;/code&gt; &amp;amp; &lt;code&gt;Spy&lt;/code&gt;) accepts a single interface representing the type you need a test double for. But what should you do if you need a test double that implements multiple interfaces?&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;div class="paragraph"&gt;
+&lt;p&gt;In some situations where code accepts flexible parameter types and is using runtime dispatching (or &lt;code&gt;instanceof&lt;/code&gt; checks) internally to perform different behavior we&amp;#8217;d want to test that different types were handled correctly.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;A trivial example might be a method like this:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="highlight"&gt;&lt;code class="groovy language-groovy"&gt;class A {
+  private Writer writer
+
+  void handle(Writable thing) {
+    try {
+      thing.write(writer)
+    } finally {
+      if (thing instanceof Closeable) {
+        thing.close()
+      }
+    }
+  }
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;we&amp;#8217;d want to test that not only is the &lt;code&gt;write&lt;/code&gt; method from &lt;code&gt;Writable&lt;/code&gt; called but that if the parameter we pass is &lt;code&gt;Closeable&lt;/code&gt; it gets closed properly as well.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;The simplest case, where the parameter &lt;em&gt;isn&amp;#8217;t&lt;/em&gt; &lt;code&gt;Closeable&lt;/code&gt; is easy to test:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="highlight"&gt;&lt;code class="groovy language-groovy"&gt;@Subject a = new A()
+
+def "writes a writable"() {
+  given:
+  def x = Mock(Writable)
+
+  when:
+  a.handle(x)
+
+  then:
+  1 * x.write(_)
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;But when we need the mock parameter to implement the &lt;code&gt;Closeable&lt;/code&gt; interface as well as &lt;code&gt;Writable&lt;/code&gt; in order to drive the variant behavior it&amp;#8217;s not so obvious what to do. The following tests will fail because the &lt;code&gt;isntanceof&lt;/code&gt; check in the &lt;code&gt;handle&lt;/code&gt; method will return &lt;code&gt;false&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="highlight"&gt;&lt;code class="groovy language-groovy"&gt;def "writes and closes a closeable writable"() {
+  given:
+  def x = Writable(Writable)
+
+  when:
+  a.handle(x)
+
+  then:
+  1 * x.write(_)
+  1 * x.close()
+}
+
+def "closes a closeable even if writing fails"() {
+  given:
+  def x = Mock(Writable) {
+    write(_) &amp;gt;&amp;gt; { throw new IOException() }
+  }
+
+  when:
+  a.handle(x)
+
+  then:
+  1 * x.close()
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Although it might be nice you cannot do something like:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="highlight"&gt;&lt;code class="groovy language-groovy"&gt;def mock = Mock(Comparable, Closeable)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;We could cast around for some class that happens to implement both interfaces and then use a &lt;code&gt;Spy&lt;/code&gt; but the simplest and cleanest solution is to just create our own interface inside the specification class:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="highlight"&gt;&lt;code class="groovy language-groovy"&gt;private static interface CloseableWritable extends Writable, Closeable {}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Then in the feature methods we can just use:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="highlight"&gt;&lt;code class="groovy language-groovy"&gt;given:
+def x = Mock(CloseableWritable)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;In retrospect this solution is the most obvious thing in the world but it took me a little while to remember that an interface can extend more than one other interface. Since we never actually need to implement &lt;code&gt;CloseableWritable&lt;/code&gt; with anything other than a mock it makes sense to encapsulate it inside the specification class.&lt;/p&gt;
+&lt;/div&gt;</content>
+  </entry>
   <entry>
     <title>Spock and Hamcrest</title>
     <link rel="alternate" href="http://blog.url.com/2014/08/07/spock-and-hamcrest/"/>
     <id>http://blog.url.com/2014/08/07/spock-and-hamcrest/</id>
     <published>2014-08-07T11:23:00+01:00</published>
-    <updated>2014-08-07T12:18:07+01:00</updated>
+    <updated>2014-08-11T14:40:56+01:00</updated>
     <author>
       <name>Article Author</name>
     </author>
@@ -431,58 +549,6 @@ org.codehaus.groovy:groovy-all:2.0.5 -&amp;gt; 2.3.3
 &lt;/div&gt;
 &lt;div class="paragraph"&gt;
 &lt;p&gt;Finally the extra jar is gone from IDEA.&lt;/p&gt;
-&lt;/div&gt;</content>
-  </entry>
-  <entry>
-    <title>Static analysis and strictness</title>
-    <link rel="alternate" href="http://blog.url.com/2014/06/22/static-analysis-and-strictness/"/>
-    <id>http://blog.url.com/2014/06/22/static-analysis-and-strictness/</id>
-    <published>2014-06-22T08:27:00+01:00</published>
-    <updated>2014-07-13T08:34:00+01:00</updated>
-    <author>
-      <name>Article Author</name>
-    </author>
-    <content type="html">&lt;div class="paragraph"&gt;
-&lt;p&gt;Let me be clear – static analysis tools like Checkstyle and Codenarc are useful tools. But…&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;I don&amp;#8217;t think you should have overly strict enforcement. There is a small class of static analysis rules that are unambiguous – you&amp;#8217;re not using that &lt;code&gt;import&lt;/code&gt;, that &lt;code&gt;if&lt;/code&gt; block doesn&amp;#8217;t have braces – but there is a large class of rules that exist in a grey area. Is that method really unused or is it invoked reflectively somewhere? Yes, generally we should declare constants for magic numbers but is it really necessary for the prime seed of a hash code method?&lt;/p&gt;
-&lt;/div&gt;
-
-&lt;div class="paragraph"&gt;
-&lt;p&gt;I think the only sane thing to do with those kinds of rule is to enforce them as warnings. What are the alternatives?&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="olist arabic"&gt;
-&lt;ol class="arabic"&gt;
-&lt;li&gt;
-&lt;p&gt;Clutter up the code with &lt;code&gt;@SuppressWarning&lt;/code&gt; annotations. If you&amp;#8217;re doing this I think you&amp;#8217;ve lost sight of why you&amp;#8217;re using static analysis in the first place. You&amp;#8217;re making the code harder to read in the interests of detecting errors that can be hard to spot in cluttered code? Er… ok.&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Put file name and line number references in a rule exceptions file. That&amp;#8217;s going to be a nuisance to maintain over time and can easily accumulate a cruft of references to rule violations that no longer exist in the code.&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;The counter-argument is that warnings can build up in the report until it&amp;#8217;s hard to see the wood for the trees. Okay, but if you really have &lt;em&gt;that many&lt;/em&gt; violations I think you need to reconsider how much you care about or believe in some of those rules. Turn off or change the configuration of rules you disagree with or break as often as not.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;It&amp;#8217;s not a terrible idea to set a threshold on the number of warnings allowed before the build will fail as a cue to revisit your rule settings.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;Static analysis is useful but don&amp;#8217;t let it be a straight jacket. Use it as a guide by all means but remember sometimes it&amp;#8217;s wrong and you know better.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;&lt;strong&gt;Edit:&lt;/strong&gt; Gus Power &lt;a href="https://twitter.com/guspower/status/480656135696183296"&gt;tweeted me a response&lt;/a&gt; to this post that I think hits the nail on the head:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="quoteblock"&gt;
-&lt;blockquote&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;one of those approaches that easily becomes conformity / police enforcement + noisy vs. personally helpful / useful indication&lt;/p&gt;
-&lt;/div&gt;
-&lt;/blockquote&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;Static analysis is good when it&amp;#8217;s a tool for helping you write better code. It&amp;#8217;s bad when it&amp;#8217;s a “process”-step you&amp;#8217;re not allowed to disagree with or justify exceptions to or it becomes more of a hinderance than a help.&lt;/p&gt;
 &lt;/div&gt;</content>
   </entry>
 </feed>

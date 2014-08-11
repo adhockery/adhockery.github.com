@@ -33,6 +33,30 @@
 
   <article>
     <header>
+      <time datetime="2014-08-11T11:46:00">Aug 11 2014</time>
+      <h2><a href="/2014/08/11/multiple-interface-mocks-with-spock/">Multiple interface mocks with Spock</a></h2>
+    </header>
+    <div class="paragraph">
+<p>Spock&#8217;s <code>Mock</code> factory method (as well as factories for the other types of test double; <code>Stub</code> &amp; <code>Spy</code>) accepts a single interface representing the type you need a test double for. But what should you do if you need a test double that implements multiple interfaces?</p>
+</div>
+
+    <a class="read-more" href="/2014/08/11/multiple-interface-mocks-with-spock/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2014-08-07T11:23:00">Aug  7 2014</time>
+      <h2><a href="/2014/08/07/spock-and-hamcrest/">Spock and Hamcrest</a></h2>
+    </header>
+    <div class="paragraph">
+<p>Groovy&#8217;s <em>power assert</em> and Hamcrest matchers both solve a similar problem – getting decent diagnostic information from an assertion failure. When writing JUnit or Spock tests in Groovy it&#8217;s typical to not use Hamcrest matchers as the <em>power assert</em> is so much simpler and just as effective. It&#8217;s worth bearing in mind, though that Hamcrest is also for helping clearly express the intent of an assertion. Spock provides support for Hamcrest matchers and I recently ran into a situation where I think it was the right thing to use.</p>
+</div>
+
+    <a class="read-more" href="/2014/08/07/spock-and-hamcrest/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
       <time datetime="2013-09-02T14:48:00">Sep  2 2013</time>
       <h2><a href="/2013/09/02/unit-testing-angular-directives-that-use-controller-and/">Unit testing Angular directives that use controller and templateUrl</a></h2>
     </header>
@@ -140,34 +164,10 @@ nameLength = crew.length()</code></pre>
     <a class="read-more" href="/2012/08/29/derived-values-in-spock-where-tables/">Read more…</a>
   </article>
   <hr>
-  <article>
-    <header>
-      <time datetime="2012-05-09T00:47:00">May  9 2012</time>
-      <h2><a href="/2012/05/09/testing-with-embedded-vertx/">Testing with embedded Vert.x</a></h2>
-    </header>
-    <div class="paragraph">
-<p>I blogged recently about <a href="http://blog.freeside.co/post/41774661851/testing-callbacks-with-spock-mocks">using Spock to test APIs that use callbacks</a>. The post came out of some work I&#8217;ve been doing with <a href="http://vertx.io/">Vert.x</a>. Although the tests I wrote worked, I found them rather mock-heavy and felt I wasn&#8217;t using the Vert.x API as idiomatically as I could have been.</p>
-</div>
-
-    <a class="read-more" href="/2012/05/09/testing-with-embedded-vertx/">Read more…</a>
-  </article>
-  <hr>
-  <article>
-    <header>
-      <time datetime="2012-05-01T12:50:00">May  1 2012</time>
-      <h2><a href="/2012/05/01/testing-callbacks-with-spock-mocks/">Testing callbacks with Spock mocks</a></h2>
-    </header>
-    <div class="paragraph">
-<p>I&#8217;ve been doing some work with <a href="http://vertx.io/">vert.x</a> over the last few days and trying to develop components that are test-driven. Like any asynchronous framework rather than having methods that return a value you pass a callback Closure that gets invoked at some point in the future with the result. This makes it tricky to write unit tests that mock out collaborators as you might in a traditional app.</p>
-</div>
-
-    <a class="read-more" href="/2012/05/01/testing-callbacks-with-spock-mocks/">Read more…</a>
-  </article>
-  <hr>
 
   <nav class="pagination">
       <a rel="prev" disabled>Previous</a>
-    <span class="current">1 of 3</span>
+    <span class="current">1 of 4</span>
       <a rel="next" href="/tags/testing/page/2/">Next</a>
   </nav>
 

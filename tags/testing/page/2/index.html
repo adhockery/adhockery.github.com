@@ -33,6 +33,30 @@
 
   <article>
     <header>
+      <time datetime="2012-05-09T00:47:00">May  9 2012</time>
+      <h2><a href="/2012/05/09/testing-with-embedded-vertx/">Testing with embedded Vert.x</a></h2>
+    </header>
+    <div class="paragraph">
+<p>I blogged recently about <a href="http://blog.freeside.co/post/41774661851/testing-callbacks-with-spock-mocks">using Spock to test APIs that use callbacks</a>. The post came out of some work I&#8217;ve been doing with <a href="http://vertx.io/">Vert.x</a>. Although the tests I wrote worked, I found them rather mock-heavy and felt I wasn&#8217;t using the Vert.x API as idiomatically as I could have been.</p>
+</div>
+
+    <a class="read-more" href="/2012/05/09/testing-with-embedded-vertx/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
+      <time datetime="2012-05-01T12:50:00">May  1 2012</time>
+      <h2><a href="/2012/05/01/testing-callbacks-with-spock-mocks/">Testing callbacks with Spock mocks</a></h2>
+    </header>
+    <div class="paragraph">
+<p>I&#8217;ve been doing some work with <a href="http://vertx.io/">vert.x</a> over the last few days and trying to develop components that are test-driven. Like any asynchronous framework rather than having methods that return a value you pass a callback Closure that gets invoked at some point in the future with the result. This makes it tricky to write unit tests that mock out collaborators as you might in a traditional app.</p>
+</div>
+
+    <a class="read-more" href="/2012/05/01/testing-callbacks-with-spock-mocks/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
       <time datetime="2012-02-15T06:46:00">Feb 15 2012</time>
       <h2><a href="/2012/02/15/spock-killer-features-the-old-method/">Spock Killer Features: The “old” method</a></h2>
     </header>
@@ -157,49 +181,10 @@ applyTemplate('&lt;my:tag/&gt;') == 'the expected output'</code></pre>
     <a class="read-more" href="/2010/09/24/stubbing-access-to-the-g-message-tag-in-unit-tests/">Read more…</a>
   </article>
   <hr>
-  <article>
-    <header>
-      <time datetime="2010-06-15T14:18:00">Jun 15 2010</time>
-      <h2><a href="/2010/06/15/export-selenium-ide-scripts-for-grails/">Export Selenium IDE scripts for Grails</a></h2>
-    </header>
-    <div class="paragraph">
-<p>Thanks to the <a href="http://adam.goucher.ca/?p=1352">documentation</a> provided on <a href="http://adam.goucher.ca/">Adam Goucher&#8217;s blog</a> I&#8217;ve created a simple Firefox plugin that extends the <a href="http://seleniumhq.org/projects/ide/">Selenium IDE</a> and adds formatters that allow you to export a script as a <a href="http://robfletcher.github.com/grails-selenium-rc/docs/manual/index.html">Grails Selenium RC</a> test case. You have the option of JUnit 3 (extends <em>GroovyTestCase</em>, uses <em>assertEquals</em>) or JUnit 4 (doesn&#8217;t extend anything, uses annotations and <em>assertThat</em>) formats.</p>
-</div>
-
-    <a class="read-more" href="/2010/06/15/export-selenium-ide-scripts-for-grails/">Read more…</a>
-  </article>
-  <hr>
-  <article>
-    <header>
-      <time datetime="2010-05-03T07:59:00">May  3 2010</time>
-      <h2><a href="/2010/05/03/selenium-rc-plugin-v1-0/">Selenium RC plugin v1.0</a></h2>
-    </header>
-    <div class="paragraph">
-<p>The Selenium RC plugin for Grails has hit version 1.0 with:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Firefox 3.6 support</p>
-</li>
-<li>
-<p>grabbing of screenshots on test failures</p>
-</li>
-<li>
-<p>the ability to call JavaScript user extensions on the <em>selenium</em> object as though they were regular Groovy methods</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>among other features. Check out the documentation at <a href="http://robfletcher.github.com/grails-selenium-rc">http://robfletcher.github.com/grails-selenium-rc</a> and install with <code>grails install-plugin selenium-rc</code>.</p>
-</div>
-    <a class="read-more" href="/2010/05/03/selenium-rc-plugin-v1-0/">Read more…</a>
-  </article>
-  <hr>
 
   <nav class="pagination">
       <a rel="prev" href="/tags/testing/">Previous</a>
-    <span class="current">2 of 3</span>
+    <span class="current">2 of 4</span>
       <a rel="next" href="/tags/testing/page/3/">Next</a>
   </nav>
 

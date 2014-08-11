@@ -1,0 +1,188 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery - Multiple interface mocks with Spock</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/Icon.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/Icon@2x.png">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header>
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <div class="container">
+      <main>
+          <article>
+    <header>
+      <time datetime="2014-08-11T11:46:00">Aug 11 2014</time>
+      <h1>Multiple interface mocks with Spock</h1>
+    </header>
+    <div class="paragraph">
+<p>Spock&#8217;s <code>Mock</code> factory method (as well as factories for the other types of test double; <code>Stub</code> &amp; <code>Spy</code>) accepts a single interface representing the type you need a test double for. But what should you do if you need a test double that implements multiple interfaces?</p>
+</div>
+
+<div class="paragraph">
+<p>In some situations where code accepts flexible parameter types and is using runtime dispatching (or <code>instanceof</code> checks) internally to perform different behavior we&#8217;d want to test that different types were handled correctly.</p>
+</div>
+<div class="paragraph">
+<p>A trivial example might be a method like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">class A {
+  private Writer writer
+
+  void handle(Writable thing) {
+    try {
+      thing.write(writer)
+    } finally {
+      if (thing instanceof Closeable) {
+        thing.close()
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>we&#8217;d want to test that not only is the <code>write</code> method from <code>Writable</code> called but that if the parameter we pass is <code>Closeable</code> it gets closed properly as well.</p>
+</div>
+<div class="paragraph">
+<p>The simplest case, where the parameter <em>isn&#8217;t</em> <code>Closeable</code> is easy to test:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">@Subject a = new A()
+
+def "writes a writable"() {
+  given:
+  def x = Mock(Writable)
+
+  when:
+  a.handle(x)
+
+  then:
+  1 * x.write(_)
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>But when we need the mock parameter to implement the <code>Closeable</code> interface as well as <code>Writable</code> in order to drive the variant behavior it&#8217;s not so obvious what to do. The following tests will fail because the <code>isntanceof</code> check in the <code>handle</code> method will return <code>false</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">def "writes and closes a closeable writable"() {
+  given:
+  def x = Writable(Writable)
+
+  when:
+  a.handle(x)
+
+  then:
+  1 * x.write(_)
+  1 * x.close()
+}
+
+def "closes a closeable even if writing fails"() {
+  given:
+  def x = Mock(Writable) {
+    write(_) &gt;&gt; { throw new IOException() }
+  }
+
+  when:
+  a.handle(x)
+
+  then:
+  1 * x.close()
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Although it might be nice you cannot do something like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">def mock = Mock(Comparable, Closeable)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We could cast around for some class that happens to implement both interfaces and then use a <code>Spy</code> but the simplest and cleanest solution is to just create our own interface inside the specification class:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">private static interface CloseableWritable extends Writable, Closeable {}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then in the feature methods we can just use:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">given:
+def x = Mock(CloseableWritable)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In retrospect this solution is the most obvious thing in the world but it took me a little while to remember that an interface can extend more than one other interface. Since we never actually need to implement <code>CloseableWritable</code> with anything other than a mock it makes sense to encapsulate it inside the specification class.</p>
+</div>
+    <footer>
+      <ul class="tag-list">
+          <li><a href="/tags/spock/">spock</a></li>
+          <li><a href="/tags/testing/">testing</a></li>
+      </ul>
+    </footer>
+  </article>
+
+      </main>
+
+      <footer>
+        <nav>
+          <a href="/">Home</a>
+          <a href="/about">About</a>
+          <a href="/archive">Archive</a>
+        </nav>
+      </footer>
+    </div>
+
+    <script src="/javascripts/adhockery.js"></script>
+    <script type="text/javascript">
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-27275689-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  </body>
+</html>
+
+<footer class="disqus">
+  <div id="disqus_thread"></div>
+            <script type="text/javascript">
+            //<![CDATA[
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//adhockery.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            //]]>
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </script>
+</footer>

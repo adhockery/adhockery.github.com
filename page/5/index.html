@@ -29,6 +29,27 @@
       <main>
           <article>
     <header>
+      <time datetime="2011-12-23T10:24:00">Dec 23 2011</time>
+      <h2><a href="/2011/12/23/wiring-taglib-dependencies-in-unit-tests/">Wiring taglib dependencies in Grails 2 unit tests</a></h2>
+    </header>
+    <div class="paragraph">
+<p>Grails 2 has made a lot of improvements in unit testing support. One of the things I always used to find particularly painful was unit testing taglibs. Now when your test class is annotated with <code>@TestFor(MyTagLib)</code> you can use the <code>applyTemplate</code> method like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">expect:
+applyTemplate('&lt;my:tag/&gt;') == 'the expected output'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>However, one thing I found is that it&#8217;s quite tricky to wire a dependency in to the taglib instance that&#8217;s used by the <code>applyTemplate</code> method.</p>
+</div>
+
+    <a class="read-more" href="/2011/12/23/wiring-taglib-dependencies-in-unit-tests/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
       <time datetime="2011-11-30T23:27:00">Nov 30 2011</time>
       <h2><a href="/2011/11/30/organizing-functional-tests/">Organizing functional tests</a></h2>
     </header>
@@ -161,18 +182,6 @@
 </div>
 
     <a class="read-more" href="/2011/03/25/styling-with-html5-form-validation/">Read more…</a>
-  </article>
-  <hr>
-  <article>
-    <header>
-      <time datetime="2011-03-06T20:08:00">Mar  6 2011</time>
-      <h2><a href="/2011/03/06/date-and-time-inputs-vs-usability/">Date and time inputs vs. usability</a></h2>
-    </header>
-    <div class="paragraph">
-<p>Form input controls for date/time values have always been problematic. The more I experiment with different options, the more I think there is no one-size-fits-all solution.</p>
-</div>
-
-    <a class="read-more" href="/2011/03/06/date-and-time-inputs-vs-usability/">Read more…</a>
   </article>
   <hr>
 

@@ -49,7 +49,7 @@
 
   void handle(Writable thing) {
     try {
-      thing.write(writer)
+      thing.writeTo(writer)
     } finally {
       if (thing instanceof Closeable) {
         thing.close()
@@ -60,7 +60,7 @@
 </div>
 </div>
 <div class="paragraph">
-<p>we&#8217;d want to test that not only is the <code>write</code> method from <code>Writable</code> called but that if the parameter we pass is <code>Closeable</code> it gets closed properly as well.</p>
+<p>we&#8217;d want to test that not only is the <code>writeTo</code> method from <code>Writable</code> called but that if the parameter we pass is <code>Closeable</code> it gets closed properly as well.</p>
 </div>
 <div class="paragraph">
 <p>The simplest case, where the parameter <em>isn&#8217;t</em> <code>Closeable</code> is easy to test:</p>
@@ -77,7 +77,7 @@ def "writes a writable"() {
   a.handle(x)
 
   then:
-  1 * x.write(_)
+  1 * x.writeTo(_)
 }</code></pre>
 </div>
 </div>
@@ -88,26 +88,31 @@ def "writes a writable"() {
 <div class="content">
 <pre class="highlight"><code class="groovy language-groovy">def "writes and closes a closeable writable"() {
   given:
-  def x = Writable(Writable)
+  def x = Mock(Writable)
 
   when:
   a.handle(x)
 
   then:
-  1 * x.write(_)
+  1 * x.writeTo(_)
+
+  then:
   1 * x.close()
 }
 
 def "closes a closeable even if writing fails"() {
   given:
   def x = Mock(Writable) {
-    write(_) &gt;&gt; { throw new IOException() }
+    writeTo(_) &gt;&gt; { throw new IOException() }
   }
 
   when:
   a.handle(x)
 
   then:
+  thrown IOException
+
+  and:
   1 * x.close()
 }</code></pre>
 </div>

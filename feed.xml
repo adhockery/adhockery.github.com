@@ -13,7 +13,7 @@
     <link rel="alternate" href="http://blog.url.com/2014/08/11/multiple-interface-mocks-with-spock/"/>
     <id>http://blog.url.com/2014/08/11/multiple-interface-mocks-with-spock/</id>
     <published>2014-08-11T11:46:00+01:00</published>
-    <updated>2014-08-11T14:41:06+01:00</updated>
+    <updated>2014-08-11T17:03:10+01:00</updated>
     <author>
       <name>Article Author</name>
     </author>
@@ -34,7 +34,7 @@
 
   void handle(Writable thing) {
     try {
-      thing.write(writer)
+      thing.writeTo(writer)
     } finally {
       if (thing instanceof Closeable) {
         thing.close()
@@ -45,7 +45,7 @@
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class="paragraph"&gt;
-&lt;p&gt;we&amp;#8217;d want to test that not only is the &lt;code&gt;write&lt;/code&gt; method from &lt;code&gt;Writable&lt;/code&gt; called but that if the parameter we pass is &lt;code&gt;Closeable&lt;/code&gt; it gets closed properly as well.&lt;/p&gt;
+&lt;p&gt;we&amp;#8217;d want to test that not only is the &lt;code&gt;writeTo&lt;/code&gt; method from &lt;code&gt;Writable&lt;/code&gt; called but that if the parameter we pass is &lt;code&gt;Closeable&lt;/code&gt; it gets closed properly as well.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="paragraph"&gt;
 &lt;p&gt;The simplest case, where the parameter &lt;em&gt;isn&amp;#8217;t&lt;/em&gt; &lt;code&gt;Closeable&lt;/code&gt; is easy to test:&lt;/p&gt;
@@ -62,7 +62,7 @@ def "writes a writable"() {
   a.handle(x)
 
   then:
-  1 * x.write(_)
+  1 * x.writeTo(_)
 }&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -73,26 +73,31 @@ def "writes a writable"() {
 &lt;div class="content"&gt;
 &lt;pre class="highlight"&gt;&lt;code class="groovy language-groovy"&gt;def "writes and closes a closeable writable"() {
   given:
-  def x = Writable(Writable)
+  def x = Mock(Writable)
 
   when:
   a.handle(x)
 
   then:
-  1 * x.write(_)
+  1 * x.writeTo(_)
+
+  then:
   1 * x.close()
 }
 
 def "closes a closeable even if writing fails"() {
   given:
   def x = Mock(Writable) {
-    write(_) &amp;gt;&amp;gt; { throw new IOException() }
+    writeTo(_) &amp;gt;&amp;gt; { throw new IOException() }
   }
 
   when:
   a.handle(x)
 
   then:
+  thrown IOException
+
+  and:
   1 * x.close()
 }&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;

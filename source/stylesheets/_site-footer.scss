@@ -15,7 +15,7 @@ main + footer {
       weight: 400;
     }
     text-transform: uppercase;
-    @include next-link;
+    @include arrow-link;
 
     &:not(:first-child) {
       margin-left: 1em;

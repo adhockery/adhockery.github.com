@@ -41,3 +41,12 @@
 @mixin prev-link {
   @include pagination-link(before, "«\00a0");
 }
+
+@mixin arrow-link {
+  @include next-link;
+}
+
+@mixin underline-link($color: $teal) {
+  border-bottom: 1px solid $color;
+  box-shadow: inset 0 -4px 0 $color;
+}

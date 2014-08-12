@@ -886,24 +886,19 @@ body > .container {
 /* line 1, /Users/rfletcher/Documents/adhockery/source/stylesheets/_main-content.scss */
 article, .archive {
   margin-bottom: 1.5em; }
-  /* line 4, /Users/rfletcher/Documents/adhockery/source/stylesheets/_main-content.scss */
-  article a, .archive a {
-    border-bottom: 1px solid #8ecdc5;
-    -webkit-box-shadow: inset 0 -4px 0 #8ecdc5;
-            box-shadow: inset 0 -4px 0 #8ecdc5; }
-  /* line 11, /Users/rfletcher/Documents/adhockery/source/stylesheets/_main-content.scss */
+  /* line 5, /Users/rfletcher/Documents/adhockery/source/stylesheets/_main-content.scss */
   article header time, article footer time, .archive header time, .archive footer time {
     margin-top: 1.5em;
     color: #a2a2a2;
     display: block; }
-  /* line 18, /Users/rfletcher/Documents/adhockery/source/stylesheets/_main-content.scss */
+  /* line 12, /Users/rfletcher/Documents/adhockery/source/stylesheets/_main-content.scss */
   article footer, .archive footer {
     margin-top: 1.5em;
     padding-top: 1.5em; }
-  /* line 23, /Users/rfletcher/Documents/adhockery/source/stylesheets/_main-content.scss */
+  /* line 17, /Users/rfletcher/Documents/adhockery/source/stylesheets/_main-content.scss */
   article h1, article h2, .archive h1, .archive h2 {
     margin-top: 0; }
-    /* line 26, /Users/rfletcher/Documents/adhockery/source/stylesheets/_main-content.scss */
+    /* line 20, /Users/rfletcher/Documents/adhockery/source/stylesheets/_main-content.scss */
     article h1 a, article h2 a, .archive h1 a, .archive h2 a {
       color: inherit;
       text-decoration: inherit;
@@ -931,17 +926,17 @@ article, .archive {
         /* line 32, /Users/rfletcher/Documents/adhockery/source/stylesheets/_mixins.scss */
         article h1 a:active:after, article h1 a:hover:after, article h1 a:focus:after, article h2 a:active:after, article h2 a:hover:after, article h2 a:focus:after, .archive h1 a:active:after, .archive h1 a:hover:after, .archive h1 a:focus:after, .archive h2 a:active:after, .archive h2 a:hover:after, .archive h2 a:focus:after {
           color: #8ecdc5; }
-    /* line 32, /Users/rfletcher/Documents/adhockery/source/stylesheets/_main-content.scss */
+    /* line 26, /Users/rfletcher/Documents/adhockery/source/stylesheets/_main-content.scss */
     article h1 code, article h2 code, .archive h1 code, .archive h2 code {
       font-family: inherit;
       text-transform: none; }
-    /* line 37, /Users/rfletcher/Documents/adhockery/source/stylesheets/_main-content.scss */
+    /* line 31, /Users/rfletcher/Documents/adhockery/source/stylesheets/_main-content.scss */
     article h1 time, article h2 time, .archive h1 time, .archive h2 time {
       font-style: normal; }
-  /* line 42, /Users/rfletcher/Documents/adhockery/source/stylesheets/_main-content.scss */
+  /* line 36, /Users/rfletcher/Documents/adhockery/source/stylesheets/_main-content.scss */
   article .tag-list, .archive .tag-list {
     color: #a2a2a2; }
-    /* line 45, /Users/rfletcher/Documents/adhockery/source/stylesheets/_main-content.scss */
+    /* line 39, /Users/rfletcher/Documents/adhockery/source/stylesheets/_main-content.scss */
     article .tag-list a, .archive .tag-list a {
       color: inherit;
       text-decoration: inherit;
@@ -951,31 +946,36 @@ article, .archive {
       /* line 8, /Users/rfletcher/Documents/adhockery/source/stylesheets/_mixins.scss */
       article .tag-list a:active, article .tag-list a:focus, .archive .tag-list a:active, .archive .tag-list a:focus {
         outline: none; }
-      /* line 47, /Users/rfletcher/Documents/adhockery/source/stylesheets/_main-content.scss */
+      /* line 41, /Users/rfletcher/Documents/adhockery/source/stylesheets/_main-content.scss */
       article .tag-list a:hover, article .tag-list a:active, article .tag-list a:focus, .archive .tag-list a:hover, .archive .tag-list a:active, .archive .tag-list a:focus {
         color: #8ecdc5; }
-    /* line 54, /Users/rfletcher/Documents/adhockery/source/stylesheets/_main-content.scss */
+    /* line 48, /Users/rfletcher/Documents/adhockery/source/stylesheets/_main-content.scss */
     article .tag-list li:first-child:before, .archive .tag-list li:first-child:before {
       content: "Tagged: ";
       font-style: italic; }
 
-/* line 61, /Users/rfletcher/Documents/adhockery/source/stylesheets/_main-content.scss */
+/* line 55, /Users/rfletcher/Documents/adhockery/source/stylesheets/_main-content.scss */
 article {
   margin-top: 1.5em;
   margin-bottom: 0em; }
-  /* line 65, /Users/rfletcher/Documents/adhockery/source/stylesheets/_main-content.scss */
+  /* line 59, /Users/rfletcher/Documents/adhockery/source/stylesheets/_main-content.scss */
   article h2 {
     font-size: 2em;
     line-height: 1.5em;
     margin-bottom: 0.75em; }
+  /* line 64, /Users/rfletcher/Documents/adhockery/source/stylesheets/_main-content.scss */
+  article a {
+    border-bottom: 1px solid #8ecdc5;
+    -webkit-box-shadow: inset 0 -4px 0 #8ecdc5;
+            box-shadow: inset 0 -4px 0 #8ecdc5; }
 
-/* line 72, /Users/rfletcher/Documents/adhockery/source/stylesheets/_main-content.scss */
+/* line 70, /Users/rfletcher/Documents/adhockery/source/stylesheets/_main-content.scss */
 .archive h2 {
   margin-bottom: 0; }
-/* line 75, /Users/rfletcher/Documents/adhockery/source/stylesheets/_main-content.scss */
+/* line 73, /Users/rfletcher/Documents/adhockery/source/stylesheets/_main-content.scss */
 .archive ul {
   margin-top: 0; }
-  /* line 77, /Users/rfletcher/Documents/adhockery/source/stylesheets/_main-content.scss */
+  /* line 75, /Users/rfletcher/Documents/adhockery/source/stylesheets/_main-content.scss */
   .archive ul a {
     border-bottom: 0;
     color: inherit;
@@ -1001,13 +1001,13 @@ article {
       /* line 32, /Users/rfletcher/Documents/adhockery/source/stylesheets/_mixins.scss */
       .archive ul a:active:after, .archive ul a:hover:after, .archive ul a:focus:after {
         color: #8ecdc5; }
-  /* line 81, /Users/rfletcher/Documents/adhockery/source/stylesheets/_main-content.scss */
+  /* line 79, /Users/rfletcher/Documents/adhockery/source/stylesheets/_main-content.scss */
   .archive ul time {
     display: inline-block;
     min-width: 4em;
     color: #a2a2a2; }
 
-/* line 89, /Users/rfletcher/Documents/adhockery/source/stylesheets/_main-content.scss */
+/* line 87, /Users/rfletcher/Documents/adhockery/source/stylesheets/_main-content.scss */
 a.read-more {
   display: inline-block;
   font-style: italic;
@@ -1039,7 +1039,7 @@ a.read-more {
     a.read-more:active:after, a.read-more:hover:after, a.read-more:focus:after {
       color: #8ecdc5; }
 
-/* line 99, /Users/rfletcher/Documents/adhockery/source/stylesheets/_main-content.scss */
+/* line 97, /Users/rfletcher/Documents/adhockery/source/stylesheets/_main-content.scss */
 .about ul a {
   color: inherit;
   text-decoration: inherit; }
@@ -1065,7 +1065,7 @@ a.read-more {
     .about ul a:active:after, .about ul a:hover:after, .about ul a:focus:after {
       color: #8ecdc5; }
 
-/* line 104, /Users/rfletcher/Documents/adhockery/source/stylesheets/_main-content.scss */
+/* line 102, /Users/rfletcher/Documents/adhockery/source/stylesheets/_main-content.scss */
 .figure {
   display: block;
   text-align: center; }

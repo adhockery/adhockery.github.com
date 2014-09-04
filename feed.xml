@@ -4,10 +4,39 @@
   <id>http://blog.url.com/</id>
   <link href="http://blog.url.com/"/>
   <link href="http://blog.url.com/feed.xml" rel="self"/>
-  <updated>2014-08-11T11:46:00+01:00</updated>
+  <updated>2014-08-14T14:35:00+01:00</updated>
   <author>
     <name>Rob Fletcher</name>
   </author>
+  <entry>
+    <title>Spring Batch is hostile to unit tests</title>
+    <link rel="alternate" href="http://blog.url.com/2014/08/14/spring-batch-is-hostile-to-unit-tests/"/>
+    <id>http://blog.url.com/2014/08/14/spring-batch-is-hostile-to-unit-tests/</id>
+    <published>2014-08-14T14:35:00+01:00</published>
+    <updated>2014-08-14T15:16:06+01:00</updated>
+    <author>
+      <name>Article Author</name>
+    </author>
+    <content type="html">&lt;div class="ulist"&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Can&amp;#8217;t create a &lt;code&gt;JobBuilderFactory&lt;/code&gt; or &lt;code&gt;StepBuilderFactory&lt;/code&gt; without a &lt;code&gt;JobRepository&lt;/code&gt; or &lt;code&gt;PlatformTransactionManager&lt;/code&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;To create a &lt;code&gt;JobRepository&lt;/code&gt; (using &lt;code&gt;SimpleJobRepository&lt;/code&gt;) I need 4 different DAOs. At least it&amp;#8217;s an interface so it can be replaced with a stub.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Try to pass parameters to a &lt;code&gt;Tasklet&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;ChunkContext&lt;/code&gt; requires a &lt;code&gt;StepContext&lt;/code&gt; which requires a &lt;code&gt;StepExecution&lt;/code&gt; which requires a &lt;code&gt;JobExecution&lt;/code&gt; which requires a &lt;code&gt;JobInstance&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;StepContribution&lt;/code&gt; requires a &lt;code&gt;StepExecution&lt;/code&gt;, etc.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;</content>
+  </entry>
   <entry>
     <title>Multiple interface mocks with Spock</title>
     <link rel="alternate" href="http://blog.url.com/2014/08/11/multiple-interface-mocks-with-spock/"/>
@@ -442,118 +471,6 @@ Object: [c, d, 2]&lt;/pre&gt;
 &lt;/div&gt;
 &lt;div class="paragraph"&gt;
 &lt;p&gt;&lt;strong&gt;Edit:&lt;/strong&gt; &lt;a href="https://twitter.com/CedricChampeau/status/481451226790645760"&gt;Cédric Champeau pointed out&lt;/a&gt; that you should use JDK 7u60 or above to avoid any potential &lt;em&gt;invokedynamic&lt;/em&gt; related bugs.&lt;/p&gt;
-&lt;/div&gt;</content>
-  </entry>
-  <entry>
-    <title>Gradle and Groovy’s Invoke Dynamic support</title>
-    <link rel="alternate" href="http://blog.url.com/2014/06/24/gradle-and-groovys-invoke-dynamic-support/"/>
-    <id>http://blog.url.com/2014/06/24/gradle-and-groovys-invoke-dynamic-support/</id>
-    <published>2014-06-24T15:32:00+01:00</published>
-    <updated>2014-07-13T08:33:47+01:00</updated>
-    <author>
-      <name>Article Author</name>
-    </author>
-    <content type="html">&lt;div class="paragraph"&gt;
-&lt;p&gt;Since version 2.0 the Groovy distribution has included an alternate artifact that enables &lt;a href="http://docs.oracle.com/javase/7/docs/technotes/guides/vm/multiple-language-support.html#invokedynamic"&gt;invoke dynamic&lt;/a&gt; support.&lt;/p&gt;
-&lt;/div&gt;
-
-&lt;div class="paragraph"&gt;
-&lt;p&gt;You can include that in a Gradle project by specifying a dependency like this:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="listingblock"&gt;
-&lt;div class="title"&gt;build.gradle&lt;/div&gt;
-&lt;div class="content"&gt;
-&lt;pre class="highlight"&gt;&lt;code class="groovy language-groovy"&gt;compile "org.codehaus.groovy:groovy-all:2.3.3:indy"&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;However if you have other libraries that depend on groovy they may pull in the regular version transitively giving you two versions of Groovy in your dependency graph. This happens to me a lot with Spock which depends on &lt;em&gt;groovy-all:2.0.5&lt;/em&gt;. For example I probably have a dependency like this as well:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="listingblock"&gt;
-&lt;div class="title"&gt;build.gradle&lt;/div&gt;
-&lt;div class="content"&gt;
-&lt;pre class="highlight"&gt;&lt;code class="groovy language-groovy"&gt;testCompile "org.spockframework:spock-core:0.7-groovy-2.0"&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;I noticed that the &lt;em&gt;External Libraries&lt;/em&gt; section of the project tree in &lt;em&gt;IntelliJ IDEA&lt;/em&gt; contained two &lt;em&gt;groovy-all&lt;/em&gt; jars. One is &lt;em&gt;groovy-all-2.3.3&lt;/em&gt; and the other is &lt;em&gt;groovy-all-2.3.3-indy&lt;/em&gt;. That&amp;#8217;s not good. I only want the &lt;em&gt;indy&lt;/em&gt; version.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;To debug where the dependency is coming from you can use Gradle&amp;#8217;s &lt;code&gt;dependencyInsight&lt;/code&gt; target like this:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="listingblock"&gt;
-&lt;div class="content"&gt;
-&lt;pre class="highlight"&gt;&lt;code class="bash language-bash"&gt;gradle dependencyInsight --dependency groovy-all&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;By default the &lt;code&gt;dependencyInsight&lt;/code&gt; only searches the &lt;em&gt;compile&lt;/em&gt; configuration and you may well see nothing there. You can search other configurations by adding an argument on the command line. For example:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="listingblock"&gt;
-&lt;div class="content"&gt;
-&lt;pre class="highlight"&gt;&lt;code class="bash language-bash"&gt;gradle dependencyInsight --dependency groovy-all --configuration testCompile&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;The output from the command looks like this:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="listingblock"&gt;
-&lt;div class="content"&gt;
-&lt;pre&gt;:dependencyInsight
-org.codehaus.groovy:groovy-all:2.3.3 (conflict resolution)
-\--- compile
-
-org.codehaus.groovy:groovy-all:2.0.5 -&amp;gt; 2.3.3
-\--- org.spockframework:spock-core:0.7-groovy-2.0
-     \--- testCompile&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;Here we can see &lt;em&gt;groovy-all&lt;/em&gt; version &lt;em&gt;2.3.3&lt;/em&gt; explicitly included as a &lt;em&gt;compile&lt;/em&gt; dependency &lt;strong&gt;and&lt;/strong&gt; pulled in transitively by Spock. Gradle&amp;#8217;s conflict resolution has selected version &lt;em&gt;2.3.3&lt;/em&gt; but what the output doesn&amp;#8217;t show us is the variant. It doesn&amp;#8217;t appear to be possible to tell whether the &lt;em&gt;indy&lt;/em&gt; or regular flavor of &lt;em&gt;groovy-all&lt;/em&gt; is pulled in.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;To fix this I first tried forcing the version with:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="listingblock"&gt;
-&lt;div class="title"&gt;build.gradle&lt;/div&gt;
-&lt;div class="content"&gt;
-&lt;pre class="highlight"&gt;&lt;code class="groovy language-groovy"&gt;configurations.all {
-  resolutionStrategy {
-    force "org.codehaus.groovy:groovy-all:2.3.3:indy"
-  }
-}&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;The &lt;code&gt;dependencyInsight&lt;/code&gt; output changed a little:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="listingblock"&gt;
-&lt;div class="content"&gt;
-&lt;pre&gt;:dependencyInsight
-org.codehaus.groovy:groovy-all:2.3.3 (forced)
-\--- compile
-
-org.codehaus.groovy:groovy-all:2.0.5 -&amp;gt; 2.3.3
-\--- org.spockframework:spock-core:0.7-groovy-2.0
-     \--- testCompile&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;However, I could still see both versions of &lt;em&gt;groovy-all&lt;/em&gt; in IDEA&amp;#8217;s project tree. It looks like the &lt;em&gt;force&lt;/em&gt; resolution strategy doesn&amp;#8217;t take into account the variant you request.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;Unfortunately the only way to get evict the regular &lt;em&gt;groovy-all&lt;/em&gt; jar from the dependency tree seems to be to explicitly exclude it from every dependency that pulls it in transitively. For example:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="listingblock"&gt;
-&lt;div class="title"&gt;build.gradle&lt;/div&gt;
-&lt;div class="content"&gt;
-&lt;pre class="highlight"&gt;&lt;code class="groovy language-groovy"&gt;testCompile("org.spockframework:spock-core:0.7-groovy-2.0") {
-  exclude module: "groovy-all"
-}&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;Finally the extra jar is gone from IDEA.&lt;/p&gt;
 &lt;/div&gt;</content>
   </entry>
 </feed>

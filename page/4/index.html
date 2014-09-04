@@ -29,6 +29,21 @@
       <main>
           <article>
     <header>
+      <time datetime="2012-10-16T13:14:00">Oct 16 2012</time>
+      <h2><a href="/2012/10/16/less-vs-sass-variable-scopes/">LESS vs SASS variable scopes</a></h2>
+    </header>
+    <div class="paragraph">
+<p>Google for something like <em>"LESS vs SASS"</em> and you will find the general consensus seems to be that SASS comes out ahead. Take a look at <a href="http://wrangl.com/sass-v-less">this summary</a>, for example.</p>
+</div>
+<div class="paragraph">
+<p>I&#8217;m not going to argue that in some respects SASS isn&#8217;t more powerful but there&#8217;s one particular thing - variable scoping - that I think LESS handles better.</p>
+</div>
+
+    <a class="read-more" href="/2012/10/16/less-vs-sass-variable-scopes/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
       <time datetime="2012-10-15T12:56:00">Oct 15 2012</time>
       <h2><a href="/2012/10/15/less-with-modernizr-and-media-queries/">LESS with Modernizr and media queries</a></h2>
     </header>
@@ -151,29 +166,6 @@ nameLength = crew.length()</code></pre>
     <a class="read-more" href="/2012/02/02/twitter-bootstrap-and-semantics/">Read more…</a>
   </article>
   <hr>
-  <article>
-    <header>
-      <time datetime="2012-01-10T19:56:00">Jan 10 2012</time>
-      <h2><a href="/2012/01/10/optional-tag-bodies/">Optional tag bodies</a></h2>
-    </header>
-    <div class="paragraph">
-<p>Sometimes you may want to implement a Grails GSP tag that has an optional body. Grails tag closures take one or two arguments, the first a map of the attributes passed to the tag the second a <em>Closure</em> representing the tag body. Even if the tag was not invoked with a body the second argument is not <em>null</em> so doing this does not work:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="groovy language-groovy">def myTag = { attrs, body -&gt;
-    if (!body) {
-        // render a default body
-    } else {
-        // render the supplied tag body
-    }
-}</code></pre>
-</div>
-</div>
-
-    <a class="read-more" href="/2012/01/10/optional-tag-bodies/">Read more…</a>
-  </article>
-  <hr>
 
   <nav class="pagination">
       <a rel="prev" href="/page/3/">Previous</a>
@@ -201,5 +193,22 @@ nameLength = crew.length()</code></pre>
   ga('create', 'UA-27275689-1', 'auto');
   ga('send', 'pageview');
 </script>
+
+    <!-- clicky analytics -->
+    <a title="Web Statistics" href="http://clicky.com/100768647"><img alt="Web Statistics" src="//static.getclicky.com/media/links/badge.gif" border="0" /></a>
+    <script type="text/javascript">
+    var clicky_site_ids = clicky_site_ids || [];
+    clicky_site_ids.push(100768647);
+    (function() {
+      var s = document.createElement('script');
+      s.type = 'text/javascript';
+      s.async = true;
+      s.src = '//static.getclicky.com/js';
+      ( document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0] ).appendChild( s );
+    })();
+    </script>
+    <noscript><p><img alt="Clicky" width="1" height="1" src="//in.getclicky.com/100768647ns.gif" /></p></noscript>
+    <!-- / analytics -->
+    
   </body>
 </html>

@@ -29,6 +29,33 @@
       <main>
           <article>
     <header>
+      <time datetime="2014-08-14T14:35:00">Aug 14 2014</time>
+      <h2><a href="/2014/08/14/spring-batch-is-hostile-to-unit-tests/">Spring Batch is hostile to unit tests</a></h2>
+    </header>
+    <div class="ulist">
+<ul>
+<li>
+<p>Can&#8217;t create a <code>JobBuilderFactory</code> or <code>StepBuilderFactory</code> without a <code>JobRepository</code> or <code>PlatformTransactionManager</code>.</p>
+</li>
+<li>
+<p>To create a <code>JobRepository</code> (using <code>SimpleJobRepository</code>) I need 4 different DAOs. At least it&#8217;s an interface so it can be replaced with a stub.</p>
+</li>
+<li>
+<p>Try to pass parameters to a <code>Tasklet</code></p>
+</li>
+<li>
+<p><code>ChunkContext</code> requires a <code>StepContext</code> which requires a <code>StepExecution</code> which requires a <code>JobExecution</code> which requires a <code>JobInstance</code></p>
+</li>
+<li>
+<p><code>StepContribution</code> requires a <code>StepExecution</code>, etc.</p>
+</li>
+</ul>
+</div>
+    <a class="read-more" href="/2014/08/14/spring-batch-is-hostile-to-unit-tests/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
       <time datetime="2014-08-11T11:46:00">Aug 11 2014</time>
       <h2><a href="/2014/08/11/multiple-interface-mocks-with-spock/">Multiple interface mocks with Spock</a></h2>
     </header>
@@ -141,18 +168,6 @@
     <a class="read-more" href="/2013/09/02/unit-testing-angular-directives-that-use-controller-and/">Read more…</a>
   </article>
   <hr>
-  <article>
-    <header>
-      <time datetime="2013-09-02T10:07:00">Sep  2 2013</time>
-      <h2><a href="/2013/09/02/on-organizing-files-and-directories-in-angular-apps/">On organizing files and directories in Angular apps</a></h2>
-    </header>
-    <div class="paragraph">
-<p>I&#8217;ve been working on an <a href="http://angularjs.org/">Angular JS</a> project for the past few weeks. It&#8217;s not the first time I&#8217;ve used Angular but it is the first time I&#8217;ve used the <a href="https://github.com/yeoman/generator-angular"><em>generator-angular</em></a> package for <a href="http://yeoman.io/">Yeoman</a>. Having the ability to quickly generate skeletons for new components is really nice but there&#8217;s one thing that rubs me up the wrong way – the way the genenerated code is organized on the file system.</p>
-</div>
-
-    <a class="read-more" href="/2013/09/02/on-organizing-files-and-directories-in-angular-apps/">Read more…</a>
-  </article>
-  <hr>
 
   <nav class="pagination">
       <a rel="prev" disabled>Previous</a>
@@ -180,5 +195,22 @@
   ga('create', 'UA-27275689-1', 'auto');
   ga('send', 'pageview');
 </script>
+
+    <!-- clicky analytics -->
+    <a title="Web Statistics" href="http://clicky.com/100768647"><img alt="Web Statistics" src="//static.getclicky.com/media/links/badge.gif" border="0" /></a>
+    <script type="text/javascript">
+    var clicky_site_ids = clicky_site_ids || [];
+    clicky_site_ids.push(100768647);
+    (function() {
+      var s = document.createElement('script');
+      s.type = 'text/javascript';
+      s.async = true;
+      s.src = '//static.getclicky.com/js';
+      ( document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0] ).appendChild( s );
+    })();
+    </script>
+    <noscript><p><img alt="Clicky" width="1" height="1" src="//in.getclicky.com/100768647ns.gif" /></p></noscript>
+    <!-- / analytics -->
+    
   </body>
 </html>

@@ -1006,8 +1006,11 @@ article {
     display: inline-block;
     min-width: 4em;
     color: #a2a2a2; }
+  /* line 84, /Users/rfletcher/Documents/adhockery/source/stylesheets/_main-content.scss */
+  .archive ul a, .archive ul time {
+    vertical-align: middle; }
 
-/* line 87, /Users/rfletcher/Documents/adhockery/source/stylesheets/_main-content.scss */
+/* line 90, /Users/rfletcher/Documents/adhockery/source/stylesheets/_main-content.scss */
 a.read-more {
   display: inline-block;
   font-style: italic;
@@ -1039,7 +1042,7 @@ a.read-more {
     a.read-more:active:after, a.read-more:hover:after, a.read-more:focus:after {
       color: #8ecdc5; }
 
-/* line 97, /Users/rfletcher/Documents/adhockery/source/stylesheets/_main-content.scss */
+/* line 100, /Users/rfletcher/Documents/adhockery/source/stylesheets/_main-content.scss */
 .about ul a {
   color: inherit;
   text-decoration: inherit; }
@@ -1065,7 +1068,7 @@ a.read-more {
     .about ul a:active:after, .about ul a:hover:after, .about ul a:focus:after {
       color: #8ecdc5; }
 
-/* line 102, /Users/rfletcher/Documents/adhockery/source/stylesheets/_main-content.scss */
+/* line 105, /Users/rfletcher/Documents/adhockery/source/stylesheets/_main-content.scss */
 .figure {
   display: block;
   text-align: center; }

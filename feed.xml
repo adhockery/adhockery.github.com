@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
   <title>Ad-Hockery</title>
-  <id>http://blog.url.com/</id>
-  <link href="http://blog.url.com/"/>
-  <link href="http://blog.url.com/feed.xml" rel="self"/>
+  <id>http://blog.freeside.co/</id>
+  <link href="http://blog.freeside.co/"/>
+  <link href="http://blog.freeside.co/feed.xml" rel="self"/>
   <updated>2014-09-24T10:26:00+01:00</updated>
   <author>
     <name>Rob Fletcher</name>
   </author>
   <entry>
     <title>How can test it if I don't know what I'm building yet?</title>
-    <link rel="alternate" href="http://blog.url.com/2014/09/24/how-can-i-test-it-if-i-dont-know-what-im-building-yet/"/>
-    <id>http://blog.url.com/2014/09/24/how-can-i-test-it-if-i-dont-know-what-im-building-yet/</id>
+    <link rel="alternate" href="http://blog.freeside.co/2014/09/24/how-can-i-test-it-if-i-dont-know-what-im-building-yet/"/>
+    <id>http://blog.freeside.co/2014/09/24/how-can-i-test-it-if-i-dont-know-what-im-building-yet/</id>
     <published>2014-09-24T10:26:00+01:00</published>
     <updated>2014-09-24T10:26:50+01:00</updated>
     <author>
-      <name>Article Author</name>
+      <name>Rob Fletcher</name>
     </author>
     <content type="html">&lt;div class="paragraph"&gt;
 &lt;p&gt;One objection to the practice of TDD I&amp;#8217;ve heard from several different people is along the lines of &lt;em&gt;“
@@ -55,12 +55,12 @@ I don&amp;#8217;t know exactly what I&amp;#8217;m building at the outset, the co
   </entry>
   <entry>
     <title>Multiple interface mocks with Spock</title>
-    <link rel="alternate" href="http://blog.url.com/2014/08/11/multiple-interface-mocks-with-spock/"/>
-    <id>http://blog.url.com/2014/08/11/multiple-interface-mocks-with-spock/</id>
+    <link rel="alternate" href="http://blog.freeside.co/2014/08/11/multiple-interface-mocks-with-spock/"/>
+    <id>http://blog.freeside.co/2014/08/11/multiple-interface-mocks-with-spock/</id>
     <published>2014-08-11T11:46:00+01:00</published>
     <updated>2014-08-11T17:03:10+01:00</updated>
     <author>
-      <name>Article Author</name>
+      <name>Rob Fletcher</name>
     </author>
     <content type="html">&lt;div class="paragraph"&gt;
 &lt;p&gt;Spock&amp;#8217;s &lt;code&gt;Mock&lt;/code&gt; factory method (as well as factories for the other types of test double; &lt;code&gt;Stub&lt;/code&gt; &amp;amp; &lt;code&gt;Spy&lt;/code&gt;) accepts a single interface representing the type you need a test double for. But what should you do if you need a test double that implements multiple interfaces?&lt;/p&gt;
@@ -178,12 +178,12 @@ def x = Mock(CloseableWritable)&lt;/code&gt;&lt;/pre&gt;
   </entry>
   <entry>
     <title>Spock and Hamcrest</title>
-    <link rel="alternate" href="http://blog.url.com/2014/08/07/spock-and-hamcrest/"/>
-    <id>http://blog.url.com/2014/08/07/spock-and-hamcrest/</id>
+    <link rel="alternate" href="http://blog.freeside.co/2014/08/07/spock-and-hamcrest/"/>
+    <id>http://blog.freeside.co/2014/08/07/spock-and-hamcrest/</id>
     <published>2014-08-07T11:23:00+01:00</published>
     <updated>2014-08-11T14:40:56+01:00</updated>
     <author>
-      <name>Article Author</name>
+      <name>Rob Fletcher</name>
     </author>
     <content type="html">&lt;div class="paragraph"&gt;
 &lt;p&gt;Groovy&amp;#8217;s &lt;em&gt;power assert&lt;/em&gt; and Hamcrest matchers both solve a similar problem – getting decent diagnostic information from an assertion failure. When writing JUnit or Spock tests in Groovy it&amp;#8217;s typical to not use Hamcrest matchers as the &lt;em&gt;power assert&lt;/em&gt; is so much simpler and just as effective. It&amp;#8217;s worth bearing in mind, though that Hamcrest is also for helping clearly express the intent of an assertion. Spock provides support for Hamcrest matchers and I recently ran into a situation where I think it was the right thing to use.&lt;/p&gt;
@@ -295,12 +295,12 @@ import static org.hamcrest.Matchers.containsInAnyOrder&lt;/code&gt;&lt;/pre&gt;
   </entry>
   <entry>
     <title>Closures and field visibility</title>
-    <link rel="alternate" href="http://blog.url.com/2014/07/21/closures-and-field-visibility/"/>
-    <id>http://blog.url.com/2014/07/21/closures-and-field-visibility/</id>
+    <link rel="alternate" href="http://blog.freeside.co/2014/07/21/closures-and-field-visibility/"/>
+    <id>http://blog.freeside.co/2014/07/21/closures-and-field-visibility/</id>
     <published>2014-07-21T11:34:00+01:00</published>
     <updated>2014-07-21T14:34:25+01:00</updated>
     <author>
-      <name>Article Author</name>
+      <name>Rob Fletcher</name>
     </author>
     <content type="html">&lt;div class="paragraph"&gt;
 &lt;p&gt;I find Groovy Closures can sometimes behave in ways that, once I think about it, make perfect sense but initially seem surprising. One example of this is the fact that closures &lt;em&gt;declared in a parent class&lt;/em&gt; cannot “see” private fields of that class when run in the context of a child class.&lt;/p&gt;
@@ -353,12 +353,12 @@ assert new Doubler().multiply([1, 2, 3]) == [2, 4, 6]&lt;/code&gt;&lt;/pre&gt;
   </entry>
   <entry>
     <title>@CompileStatic and polymorphic method dispatch</title>
-    <link rel="alternate" href="http://blog.url.com/2014/07/08/compilestatic-and-polymorphic-method-dispatch/"/>
-    <id>http://blog.url.com/2014/07/08/compilestatic-and-polymorphic-method-dispatch/</id>
+    <link rel="alternate" href="http://blog.freeside.co/2014/07/08/compilestatic-and-polymorphic-method-dispatch/"/>
+    <id>http://blog.freeside.co/2014/07/08/compilestatic-and-polymorphic-method-dispatch/</id>
     <published>2014-07-08T07:11:00+01:00</published>
     <updated>2014-07-18T06:14:28+01:00</updated>
     <author>
-      <name>Article Author</name>
+      <name>Rob Fletcher</name>
     </author>
     <content type="html">&lt;div class="paragraph"&gt;
 &lt;p&gt;I&amp;#8217;m a big fan of Groovy&amp;#8217;s &lt;code&gt;@CompileStatic&lt;/code&gt; feature – so much so that I&amp;#8217;ve updated the &lt;em&gt;Groovy class&lt;/em&gt; template in IntelliJ IDEA to use it by default. I should stress I don&amp;#8217;t do this because I believe non-statically compiled Groovy to be slow – it isn&amp;#8217;t.&lt;/p&gt;
@@ -435,12 +435,12 @@ Object: [c, d, 2]&lt;/pre&gt;
   </entry>
   <entry>
     <title>Enabling Groovy’s “invokedynamic” support in Gradle</title>
-    <link rel="alternate" href="http://blog.url.com/2014/06/24/enabling-groovys-invokedynamic-support-in-gradle/"/>
-    <id>http://blog.url.com/2014/06/24/enabling-groovys-invokedynamic-support-in-gradle/</id>
+    <link rel="alternate" href="http://blog.freeside.co/2014/06/24/enabling-groovys-invokedynamic-support-in-gradle/"/>
+    <id>http://blog.freeside.co/2014/06/24/enabling-groovys-invokedynamic-support-in-gradle/</id>
     <published>2014-06-24T15:46:00+01:00</published>
     <updated>2014-07-13T08:33:13+01:00</updated>
     <author>
-      <name>Article Author</name>
+      <name>Rob Fletcher</name>
     </author>
     <content type="html">&lt;div class="paragraph"&gt;
 &lt;p&gt;I posted &lt;a href="/post/89759686171/gradle-and-groovys-invoke-dynamic-support"&gt;previously&lt;/a&gt; about configuring a Gradle project to ensure that only the &lt;em&gt;indy&lt;/em&gt; version of Groovy (that is the variant that supports Java 7&amp;#8217;s &lt;em&gt;invokedynamic&lt;/em&gt; bytecode instruction) is included in the dependency graph. However, just including that version of the Groovy jar is &lt;strong&gt;not&lt;/strong&gt; enough to make your Groovy code compile in such a way that it uses &lt;em&gt;invokedynamic&lt;/em&gt;.&lt;/p&gt;

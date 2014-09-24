@@ -13,13 +13,12 @@
     <link rel="alternate" href="http://blog.freeside.co/2014/09/24/how-can-i-test-it-if-i-dont-know-what-im-building-yet/"/>
     <id>http://blog.freeside.co/2014/09/24/how-can-i-test-it-if-i-dont-know-what-im-building-yet/</id>
     <published>2014-09-24T10:26:00+01:00</published>
-    <updated>2014-09-24T10:26:50+01:00</updated>
+    <updated>2014-09-24T14:46:44+01:00</updated>
     <author>
       <name>Rob Fletcher</name>
     </author>
     <content type="html">&lt;div class="paragraph"&gt;
-&lt;p&gt;One objection to the practice of TDD I&amp;#8217;ve heard from several different people is along the lines of &lt;em&gt;“
-I don&amp;#8217;t know exactly what I&amp;#8217;m building at the outset, the code is experimental, so how can I write tests for it?”&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;One objection to the practice of TDD I&amp;#8217;ve heard from several different people is along the lines of &lt;em&gt;“I don&amp;#8217;t know exactly what I&amp;#8217;m building at the outset, the code is experimental, so how can I write tests for it?”&lt;/em&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="paragraph"&gt;
 &lt;p&gt;Frequently it is the case that you have an idea but don&amp;#8217;t know the mechanics of how you&amp;#8217;re going to implement it. I find this particularly when I&amp;#8217;m writing code that extends a third-party library. You don&amp;#8217;t know exactly where the API hooks you&amp;#8217;ll need to use are, your understanding of the API is fuzzy and you expect to learn it as you go. So how do you test-drive in that situation?&lt;/p&gt;

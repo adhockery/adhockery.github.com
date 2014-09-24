@@ -5,6 +5,11 @@ tags: groovy
 alias: ["post/46597838031/groovy-gotchas-overloading-the-assignment-operator/"]
 ---
 
+[NOTE]
+====
+I reported this issue as https://jira.codehaus.org/browse/GROOVY-6084[GROOVY-6084] and it has been fixed as of Groovy 2.4.0-beta-4. I'm keeping the blog post here for historical interest.
+====
+
 When assigning to a property of an object in Groovy using the assignment operator `=` Groovy will look for a bean property style setter method. For example `x.foo = y` is equivalent to `x.setFoo(y)`. Or is it?
 
 Since meta-methods can be overloaded with different parameter types what will be printed to _sysout_ if we run this script? (Remember that Groovy - unlike Java - dispatches to the _most specific_ applicable method signature).

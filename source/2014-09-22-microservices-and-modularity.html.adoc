@@ -1,0 +1,37 @@
+---
+title: Microservices and modularity
+date: 2014-09-22 10:07 BST
+tags: micro-services, architecture
+published: false
+---
+
+Uncle Bob Martin recently published a post about http://blog.cleancoder.com/uncle-bob/2014/09/19/MicroServicesAndJars.html[Micro-services and jars]. The gist of it is:
+
+* Micro-services have a cost at the communication layer.
+* Many of the advantages of modular architecture can be achieved by simply using jars.
+* Don't use micro-services just because they're _cool_.
+
+This is not a “rebuttal” of Uncle Bob's post. I agree with much of what he has to say:
+
+* The best software is simple software.
+* Add architectural patterns when they make sense not because they're popular.
+* Modular architecture has benefits for simplicity and maintainability even in monolithic systems.
+* You don't need to be doing micro-services to do modularity.
+
+However, I think he's being slightly dismissive of micro-services as hype-driven while ignoring the _reason_ they're currently popular and is over-stating the practicality of using plain jars to build “independently deployable” components. (Note: I'm only going to talk about jars. I don't have enough experience from a developer perspective with DLLs or Gems to discuss those.)
+
+Are jars really “independently deployable”? Jars have implicit dependencies which can cause sufficient problems that the term _jar hell_ has https://en.wikipedia.org/wiki/Java_Classloader#JAR_hell[its own Wikipedia entry]! There's considerable excitement about http://openjdk.java.net/projects/jigsaw/[Project Jigsaw] which proposes a new module system and considerable dismay every time it gets pushed back to a later Java version.
+
+My colleague https://twitter.com/cfieber[Cameron Fieber] made this argument better than I can:
+
+++++
+<div class="storify"><iframe src="//storify.com/rfletcherEW/cfieber-and-unclebobmartin-on-the-independent-depl/embed?header=false&border=false" width="100%" height=750 frameborder=no allowtransparency=true></iframe><script src="//storify.com/rfletcherEW/cfieber-and-unclebobmartin-on-the-independent-depl.js?header=false&border=false"></script><noscript>[<a href="//storify.com/rfletcherEW/cfieber-and-unclebobmartin-on-the-independent-depl" target="_blank">View the story "@cfieber and @unclebobmartin on the independent deployability of jars" on Storify</a>]</noscript></div>
+++++
+
+If you really want to _hot deploy_ jars don't you need some kind of messaging protocol? That or custom classloaders it seems to me. https://en.wikipedia.org/wiki/OSGi[OSGi] is an existing attempt to address modularity which has been brought up several times and I believe it also has some hot-reload capabilities. I'm not going to discuss OSGi's merits or lack thereof. I don't actually know enough about it. OSGi could be the software equivalent of magic pixie dust but if you need to use it then jars alone are not enough for independent deployability.
+
+The point I think Uncle Bob is missing (or perhaps just chose not to discuss) is _why_ micro-services are the flavor of the month. It's because the pattern suits the ubiquitous cloud platforms that are now pretty much the default way to deploy software. Micro-services are lightweight, run self-contained and communicate with one another using simple protocols to allow not just modularity within the JVM but modularity to the extent that you don't know or care whether different services or instances are running in the same JVM, on the same virtual machine or half a world away from one another. Stephane Maldini referred to this as https://twitter.com/smaldini/status/513305741718224896[“location transparency”]. Micro-services are popular because _“horizontal scaling”_ (adding more networked servers rather than making individual servers more powerful.) is a cost-effective way to respond to spikes in demand.
+
+Of course you shouldn't use a micro-service architecture _“because it sounds cool”_. That's not a good reason to do anything in software. I also think it's a straw man. Micro-services aren't _“a big fad tearning through the industry”_ because of hype and glassy-eyed developers hypnotized by shininess. If developers are excited it's because they see the possibilities for things like cheap scaling, commodity hardware (no more allocating 2GB heap space to a web-app, which seriously limits where you can run it and what it will cost), fast development cycles and – _yes_ – control over dependency bloat and the inevitable conflicts.
+
+Should everything be a micro-service? No. There are some non-trivial problems to solve: How do you co-ordinate end-to-end testing? How do you implement security between the service components (not like https://twitter.com/uSelfService/status/513749941337198592[this])? How do you share system concepts between services in a DRY way? As Uncle Bob points out, how do you debug across service boundaries? It's not a lazy way to achieve modularity, there are definitely costs involved and not just due to the performance characteristics of the interfaces between services.

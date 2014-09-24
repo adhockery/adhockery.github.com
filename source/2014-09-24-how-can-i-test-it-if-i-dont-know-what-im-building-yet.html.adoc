@@ -1,0 +1,25 @@
+---
+title: How can test it if I don't know what I'm building yet?
+date: 2014-09-24 10:26 BST
+tags: testing, tdd, outside-in
+---
+
+One objection to the practice of TDD I've heard from several different people is along the lines of _“I don't know exactly what I'm building at the outset, the code is experimental, so how can I write tests for it?”_
+
+Frequently it is the case that you have an idea but don't know the mechanics of how you're going to implement it. I find this particularly when I'm writing code that extends a third-party library. You don't know exactly where the API hooks you'll need to use are, your understanding of the API is fuzzy and you expect to learn it as you go. So how do you test-drive in that situation?
+
+READMORE
+
+XP has a recommendation here: write a http://www.extremeprogramming.org/rules/spike.html[_spike_] then throw the code away once you have enough understanding of the technical solution to approach the problem in a more rigorous manner. In my experience that practice, while valid, doesn't sell TDD to a doubter.
+
+What I think really causes the original objection is that the person in question is thinking at the wrong level. They're mentally diving straight in to code, to the solution, to the elegant and shining temple of technical brilliance they're about to erect. They're thinking about _how_ not _what_.
+
+Step back. Sure, you don't know what your code is going to look like or how it's going to interface with anything. If you try to start with low-level unit tests now you _will_ spend a lot of time re-writing tests for fine-grained interactions when you need to take a different approach.
+
+Two things you _do_ know are what is going in to this thing you're going to build and what you want to come out of the other side.footnote:[If you don't know _that_ I'm pretty sure you need to figure it out before you start writing any code.] So test that. Test that at a high level.
+
+Writing a static asset pipeline that concatenates and minifies JavaScript and CSS files? Write a test that uses example files and makes assertions about what the result should look like. Writing an authentication system for a web-app? Write some browser-based tests that register accounts, log in, log out and verify authentication state via the user interface that doesn't exist yet. If you're using Cucumber you don't need to implement all the detail of the steps yet. If you're using Spock or JUnit (or RSpec, Scalaz, Jasmine or whatever) then compose an abstraction for the tests and leave out undefined details you don't know. Use sensible assumptions you can easily change (we're probably going to ask for a username and password), no-op helper methods (we don't know exactly how we'll verify the user is logged in just yet so we'll write a helper +isLoggedInAs(username)+), elide over the irrelevant detail (we might require some other information when a user registers but we can add that later).
+
+None of those things require you to know how the code you're going to write is going to work. They require you to think about and formally specify what you expect in the way of input and output. It forces you to define the coarse-grained behavior of the software you're designing – _what_ you want it to do. The _how_ now has a framework for success into which it can grow.
+
+In http://www.growing-object-oriented-software.com[_Growing Object-Oriented Software Guided By Tests_] Steve Freeman and Nat Pryce describe this style of testing as _outside-in_. You start with high level tests using a _“walking skeleton”_ and progressively work inward adding more detail and drilling down to low-level unit tests and the accompanying fine-grained behavior. The _walking skeleton_ is fleshed out as you go and by the end of the process has evolved into a passing end-to-end acceptance test suite.

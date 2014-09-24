@@ -1,0 +1,12 @@
+---
+title: Spring Batch is hostile to unit tests
+date: 2014-08-14 14:35 BST
+tags:
+published: false
+---
+
+- Can't create a `JobBuilderFactory` or `StepBuilderFactory` without a `JobRepository` or `PlatformTransactionManager`.
+- To create a `JobRepository` (using `SimpleJobRepository`) I need 4 different DAOs. At least it's an interface so it can be replaced with a stub.
+- Try to pass parameters to a `Tasklet`
+  - `ChunkContext` requires a `StepContext` which requires a `StepExecution` which requires a `JobExecution` which requires a `JobInstance`
+  - `StepContribution` requires a `StepExecution`, etc.

@@ -29,6 +29,18 @@
       <main>
           <article>
     <header>
+      <time datetime="2011-03-25T00:10:00">Mar 25 2011</time>
+      <h2><a href="/2011/03/25/styling-with-html5-form-validation/">Styling with HTML5 form validation</a></h2>
+    </header>
+    <div class="paragraph">
+<p>HTML5 specifies a number of enhancements to form inputs that are gradually being implemented by newer browsers. Among the enhancements is support for some level of automatic form validation. When inputs have invalid values the browser may refuse to submit the form. Currently Opera, Safari, Chrome and Firefox 4 have some support for this. IE8 does not. I haven&#8217;t experimented with IE9 yet.</p>
+</div>
+
+    <a class="read-more" href="/2011/03/25/styling-with-html5-form-validation/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
       <time datetime="2011-03-06T20:08:00">Mar  6 2011</time>
       <h2><a href="/2011/03/06/date-and-time-inputs-vs-usability/">Date and time inputs vs. usability</a></h2>
     </header>
@@ -148,34 +160,6 @@
 </div>
 
     <a class="read-more" href="/2010/06/29/acyclic-relationship-validation-in-grails/">Read more…</a>
-  </article>
-  <hr>
-  <article>
-    <header>
-      <time datetime="2010-06-24T06:57:00">Jun 24 2010</time>
-      <h2><a href="/2010/06/24/defaulting-joda-time-hibernate-types-with-grails/">Defaulting Joda Time Hibernate Types with Grails</a></h2>
-    </header>
-    <div class="paragraph">
-<p>Grails 1.2 added the ability to define default Hibernate mappings that apply to all GORM classes. It turns out this is incredibly useful if you&#8217;re using Joda-Time types instead of <em>java.util.Date</em> in your domain objects. Previously you had to specify the Hibernate user type for every single field, like this:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="groovy language-groovy">import org.joda.time.*
-import org.joda.time.contrib.hibernate.*
-
-DateTime dateCreated
-DateTime lastUpdated
-LocalDate birthday
-
-static mapping = {
-    dateCreated type: PersistentDateTime
-    lastUpdated type: PersistentDateTime
-    birthday type: PersistentLocalDate
-}</code></pre>
-</div>
-</div>
-
-    <a class="read-more" href="/2010/06/24/defaulting-joda-time-hibernate-types-with-grails/">Read more…</a>
   </article>
   <hr>
 

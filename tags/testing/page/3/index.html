@@ -33,6 +33,24 @@
 
   <article>
     <header>
+      <time datetime="2010-09-24T13:48:00">Sep 24 2010</time>
+      <h2><a href="/2010/09/24/stubbing-access-to-the-g-message-tag-in-unit-tests/">Stubbing access to the g:message tag in unit tests</a></h2>
+    </header>
+    <div class="paragraph">
+<p>Grails controllers and tag libs can access any tag as though it were a method. The most common use for this is probably accessing i18n messages via the <code>[g:message][1]</code> tag. However, because tag access is magic wired up by Grails it&#8217;s not available in unit tests without some effort.</p>
+</div>
+<div class="paragraph">
+<p>This is a perennial nuisance. Not exactly difficult to solve and yet something I find myself solving over and over in different tests and different projects.</p>
+</div>
+<div class="paragraph">
+<p>I&#8217;ve come up with what I think is a pretty good and re-usable solution. It allows you to specify messages if you want to, or just use the message code if it&#8217;s not something you care about in a particular test. As an aside, at a unit test level, I think testing that the correct message <em>code</em> is being used is probably the right thing to do; I&#8217;d leave testing actual message text to end-to-end tests.</p>
+</div>
+
+    <a class="read-more" href="/2010/09/24/stubbing-access-to-the-g-message-tag-in-unit-tests/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
       <time datetime="2010-06-15T14:18:00">Jun 15 2010</time>
       <h2><a href="/2010/06/15/export-selenium-ide-scripts-for-grails/">Export Selenium IDE scripts for Grails</a></h2>
     </header>
@@ -192,18 +210,6 @@ class @artifact.name@ {
 </div>
 
     <a class="read-more" href="/2009/09/14/testing-grails-apps-with-selenium-rc/">Read more…</a>
-  </article>
-  <hr>
-  <article>
-    <header>
-      <time datetime="2009-09-11T02:56:00">Sep 11 2009</time>
-      <h2><a href="/2009/09/11/thoughts-on-testing/">Thoughts on Testing</a></h2>
-    </header>
-    <div class="paragraph">
-<p>These are some of the practices I try to live by when writing test coverage. Some of the detail may be <a href="http://grails.org/">Grails</a>-centric since that&#8217;s been my development platform of choice for the last couple of years, but the gist of the points is generally applicable.</p>
-</div>
-
-    <a class="read-more" href="/2009/09/11/thoughts-on-testing/">Read more…</a>
   </article>
   <hr>
 

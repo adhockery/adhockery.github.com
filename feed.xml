@@ -4,10 +4,55 @@
   <id>http://blog.url.com/</id>
   <link href="http://blog.url.com/"/>
   <link href="http://blog.url.com/feed.xml" rel="self"/>
-  <updated>2014-08-11T11:46:00+01:00</updated>
+  <updated>2014-09-17T10:10:00+01:00</updated>
   <author>
     <name>Rob Fletcher</name>
   </author>
+  <entry>
+    <title>How can test it if I don't know what I'm building yet?</title>
+    <link rel="alternate" href="http://blog.url.com/2014/09/17/i-can-test-it-if-i-don-t-know-how-i-m-building-it/"/>
+    <id>http://blog.url.com/2014/09/17/i-can-test-it-if-i-don-t-know-how-i-m-building-it/</id>
+    <published>2014-09-17T10:10:00+01:00</published>
+    <updated>2014-09-24T10:03:37+01:00</updated>
+    <author>
+      <name>Article Author</name>
+    </author>
+    <content type="html">&lt;div class="paragraph"&gt;
+&lt;p&gt;One objection to the practice of TDD I&amp;#8217;ve heard from several different people is along the lines of &lt;em&gt;“
+I don&amp;#8217;t know exactly what I&amp;#8217;m building at the outset, the code is experimental, so how can I write tests for it?”&lt;/em&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Frequently it is the case that you have an idea but don&amp;#8217;t know the mechanics of how you&amp;#8217;re going to implement it. I find this particularly when I&amp;#8217;m writing code that extends a third-party library. You don&amp;#8217;t know exactly where the API hooks you&amp;#8217;ll need to use are, your understanding of the API is fuzzy and you expect to learn it as you go. So how do you test-drive in that situation?&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;div class="paragraph"&gt;
+&lt;p&gt;XP has a recommendation here: write a &lt;a href="http://www.extremeprogramming.org/rules/spike.html"&gt;&lt;em&gt;spike&lt;/em&gt;&lt;/a&gt; then throw the code away once you have enough understanding of the technical solution to approach the problem in a more rigorous manner. In my experience that practice, while valid, doesn&amp;#8217;t sell TDD to a doubter.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;What I think really causes the original objection is that the person in question is thinking at the wrong level. They&amp;#8217;re mentally diving straight in to code, to the solution, to the elegant and shining temple of technical brilliance they&amp;#8217;re about to erect. They&amp;#8217;re thinking about &lt;em&gt;how&lt;/em&gt; not &lt;em&gt;what&lt;/em&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Step back. Sure, you don&amp;#8217;t know what your code is going to look like or how it&amp;#8217;s going to interface with anything. If you try to start with low-level unit tests now you &lt;em&gt;will&lt;/em&gt; spend a lot of time re-writing tests for fine-grained interactions when you need to take a different approach.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Two things you &lt;em&gt;do&lt;/em&gt; know are what is going in to this thing you&amp;#8217;re going to build and what you want to come out of the other side.&lt;span class="footnote"&gt;[&lt;a id="_footnoteref_1" class="footnote" href="#_footnote_1" title="View footnote."&gt;1&lt;/a&gt;]&lt;/span&gt; So test that. Test that at a high level.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Writing a static asset pipeline that concatenates and minifies JavaScript and CSS files? Write a test that uses example files and makes assertions about what the result should look like. Writing an authentication system for a web-app? Write some browser-based tests that register accounts, log in, log out and verify authentication state via the user interface that doesn&amp;#8217;t exist yet. If you&amp;#8217;re using Cucumber you don&amp;#8217;t need to implement all the detail of the steps yet. If you&amp;#8217;re using Spock or JUnit (or RSpec, Scalaz, Jasmine or whatever) then compose an abstraction for the tests and leave out undefined details you don&amp;#8217;t know. Use sensible assumptions you can easily change (we&amp;#8217;re probably going to ask for a username and password), no-op helper methods (we don&amp;#8217;t know exactly how we&amp;#8217;ll verify the user is logged in just yet so we&amp;#8217;ll write a helper &lt;code&gt;isLoggedInAs(username)&lt;/code&gt;), elide over the irrelevant detail (we might require some other information when a user registers but we can add that later).&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;None of those things require you to know how the code you&amp;#8217;re going to write is going to work. They require you to think about and formally specify what you expect in the way of input and output. It forces you to define the coarse-grained behavior of the software you&amp;#8217;re designing – &lt;em&gt;what&lt;/em&gt; you want it to do. The &lt;em&gt;how&lt;/em&gt; now has a framework for success into which it can grow.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;In &lt;a href="http://www.growing-object-oriented-software.com"&gt;&lt;em&gt;Growing Object-Oriented Software Guided By Tests&lt;/em&gt;&lt;/a&gt; Steve Freeman and Nat Pryce describe this style of testing as &lt;em&gt;outside-in&lt;/em&gt;. You start with high level tests using a &lt;em&gt;“walking skeleton”&lt;/em&gt; and progressively work inward adding more detail and drilling down to low-level unit tests and the accompanying fine-grained behavior. The &lt;em&gt;walking skeleton&lt;/em&gt; is fleshed out as you go and by the end of the process has evolved into a passing end-to-end acceptance test suite.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id="footnotes"&gt;
+&lt;hr&gt;
+&lt;div class="footnote" id="_footnote_1"&gt;
+&lt;a href="#_footnoteref_1"&gt;1&lt;/a&gt; If you don&amp;#8217;t know &lt;em&gt;that&lt;/em&gt; I&amp;#8217;m pretty sure you need to figure it out before you start writing any code.
+&lt;/div&gt;
+&lt;/div&gt;</content>
+  </entry>
   <entry>
     <title>Multiple interface mocks with Spock</title>
     <link rel="alternate" href="http://blog.url.com/2014/08/11/multiple-interface-mocks-with-spock/"/>
@@ -442,118 +487,6 @@ Object: [c, d, 2]&lt;/pre&gt;
 &lt;/div&gt;
 &lt;div class="paragraph"&gt;
 &lt;p&gt;&lt;strong&gt;Edit:&lt;/strong&gt; &lt;a href="https://twitter.com/CedricChampeau/status/481451226790645760"&gt;Cédric Champeau pointed out&lt;/a&gt; that you should use JDK 7u60 or above to avoid any potential &lt;em&gt;invokedynamic&lt;/em&gt; related bugs.&lt;/p&gt;
-&lt;/div&gt;</content>
-  </entry>
-  <entry>
-    <title>Gradle and Groovy’s Invoke Dynamic support</title>
-    <link rel="alternate" href="http://blog.url.com/2014/06/24/gradle-and-groovys-invoke-dynamic-support/"/>
-    <id>http://blog.url.com/2014/06/24/gradle-and-groovys-invoke-dynamic-support/</id>
-    <published>2014-06-24T15:32:00+01:00</published>
-    <updated>2014-07-13T08:33:47+01:00</updated>
-    <author>
-      <name>Article Author</name>
-    </author>
-    <content type="html">&lt;div class="paragraph"&gt;
-&lt;p&gt;Since version 2.0 the Groovy distribution has included an alternate artifact that enables &lt;a href="http://docs.oracle.com/javase/7/docs/technotes/guides/vm/multiple-language-support.html#invokedynamic"&gt;invoke dynamic&lt;/a&gt; support.&lt;/p&gt;
-&lt;/div&gt;
-
-&lt;div class="paragraph"&gt;
-&lt;p&gt;You can include that in a Gradle project by specifying a dependency like this:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="listingblock"&gt;
-&lt;div class="title"&gt;build.gradle&lt;/div&gt;
-&lt;div class="content"&gt;
-&lt;pre class="highlight"&gt;&lt;code class="groovy language-groovy"&gt;compile "org.codehaus.groovy:groovy-all:2.3.3:indy"&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;However if you have other libraries that depend on groovy they may pull in the regular version transitively giving you two versions of Groovy in your dependency graph. This happens to me a lot with Spock which depends on &lt;em&gt;groovy-all:2.0.5&lt;/em&gt;. For example I probably have a dependency like this as well:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="listingblock"&gt;
-&lt;div class="title"&gt;build.gradle&lt;/div&gt;
-&lt;div class="content"&gt;
-&lt;pre class="highlight"&gt;&lt;code class="groovy language-groovy"&gt;testCompile "org.spockframework:spock-core:0.7-groovy-2.0"&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;I noticed that the &lt;em&gt;External Libraries&lt;/em&gt; section of the project tree in &lt;em&gt;IntelliJ IDEA&lt;/em&gt; contained two &lt;em&gt;groovy-all&lt;/em&gt; jars. One is &lt;em&gt;groovy-all-2.3.3&lt;/em&gt; and the other is &lt;em&gt;groovy-all-2.3.3-indy&lt;/em&gt;. That&amp;#8217;s not good. I only want the &lt;em&gt;indy&lt;/em&gt; version.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;To debug where the dependency is coming from you can use Gradle&amp;#8217;s &lt;code&gt;dependencyInsight&lt;/code&gt; target like this:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="listingblock"&gt;
-&lt;div class="content"&gt;
-&lt;pre class="highlight"&gt;&lt;code class="bash language-bash"&gt;gradle dependencyInsight --dependency groovy-all&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;By default the &lt;code&gt;dependencyInsight&lt;/code&gt; only searches the &lt;em&gt;compile&lt;/em&gt; configuration and you may well see nothing there. You can search other configurations by adding an argument on the command line. For example:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="listingblock"&gt;
-&lt;div class="content"&gt;
-&lt;pre class="highlight"&gt;&lt;code class="bash language-bash"&gt;gradle dependencyInsight --dependency groovy-all --configuration testCompile&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;The output from the command looks like this:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="listingblock"&gt;
-&lt;div class="content"&gt;
-&lt;pre&gt;:dependencyInsight
-org.codehaus.groovy:groovy-all:2.3.3 (conflict resolution)
-\--- compile
-
-org.codehaus.groovy:groovy-all:2.0.5 -&amp;gt; 2.3.3
-\--- org.spockframework:spock-core:0.7-groovy-2.0
-     \--- testCompile&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;Here we can see &lt;em&gt;groovy-all&lt;/em&gt; version &lt;em&gt;2.3.3&lt;/em&gt; explicitly included as a &lt;em&gt;compile&lt;/em&gt; dependency &lt;strong&gt;and&lt;/strong&gt; pulled in transitively by Spock. Gradle&amp;#8217;s conflict resolution has selected version &lt;em&gt;2.3.3&lt;/em&gt; but what the output doesn&amp;#8217;t show us is the variant. It doesn&amp;#8217;t appear to be possible to tell whether the &lt;em&gt;indy&lt;/em&gt; or regular flavor of &lt;em&gt;groovy-all&lt;/em&gt; is pulled in.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;To fix this I first tried forcing the version with:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="listingblock"&gt;
-&lt;div class="title"&gt;build.gradle&lt;/div&gt;
-&lt;div class="content"&gt;
-&lt;pre class="highlight"&gt;&lt;code class="groovy language-groovy"&gt;configurations.all {
-  resolutionStrategy {
-    force "org.codehaus.groovy:groovy-all:2.3.3:indy"
-  }
-}&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;The &lt;code&gt;dependencyInsight&lt;/code&gt; output changed a little:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="listingblock"&gt;
-&lt;div class="content"&gt;
-&lt;pre&gt;:dependencyInsight
-org.codehaus.groovy:groovy-all:2.3.3 (forced)
-\--- compile
-
-org.codehaus.groovy:groovy-all:2.0.5 -&amp;gt; 2.3.3
-\--- org.spockframework:spock-core:0.7-groovy-2.0
-     \--- testCompile&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;However, I could still see both versions of &lt;em&gt;groovy-all&lt;/em&gt; in IDEA&amp;#8217;s project tree. It looks like the &lt;em&gt;force&lt;/em&gt; resolution strategy doesn&amp;#8217;t take into account the variant you request.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;Unfortunately the only way to get evict the regular &lt;em&gt;groovy-all&lt;/em&gt; jar from the dependency tree seems to be to explicitly exclude it from every dependency that pulls it in transitively. For example:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="listingblock"&gt;
-&lt;div class="title"&gt;build.gradle&lt;/div&gt;
-&lt;div class="content"&gt;
-&lt;pre class="highlight"&gt;&lt;code class="groovy language-groovy"&gt;testCompile("org.spockframework:spock-core:0.7-groovy-2.0") {
-  exclude module: "groovy-all"
-}&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;Finally the extra jar is gone from IDEA.&lt;/p&gt;
 &lt;/div&gt;</content>
   </entry>
 </feed>

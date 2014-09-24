@@ -87,7 +87,21 @@
       <time datetime="2013-03-29T15:42:07">Mar 29 2013</time>
       <h2><a href="/2013/03/29/groovy-gotchas-overloading-the-assignment-operator/">Groovy gotchas: overloading the assignment operator</a></h2>
     </header>
-    <div class="paragraph">
+    <div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>I reported this issue as <a href="https://jira.codehaus.org/browse/GROOVY-6084">GROOVY-6084</a> and it has been fixed as of Groovy 2.4.0-beta-4. I&#8217;m keeping the blog post here for historical interest.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
 <p>When assigning to a property of an object in Groovy using the assignment operator <code>=</code> Groovy will look for a bean property style setter method. For example <code>x.foo = y</code> is equivalent to <code>x.setFoo(y)</code>. Or is it?</p>
 </div>
 <div class="paragraph">

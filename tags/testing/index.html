@@ -33,6 +33,22 @@
 
   <article>
     <header>
+      <time datetime="2014-09-17T10:10:00">Sep 17 2014</time>
+      <h2><a href="/2014/09/17/i-can-test-it-if-i-don-t-know-how-i-m-building-it/">How can test it if I don't know what I'm building yet?</a></h2>
+    </header>
+    <div class="paragraph">
+<p>One objection to the practice of TDD I&#8217;ve heard from several different people is along the lines of <em>“
+I don&#8217;t know exactly what I&#8217;m building at the outset, the code is experimental, so how can I write tests for it?”</em></p>
+</div>
+<div class="paragraph">
+<p>Frequently it is the case that you have an idea but don&#8217;t know the mechanics of how you&#8217;re going to implement it. I find this particularly when I&#8217;m writing code that extends a third-party library. You don&#8217;t know exactly where the API hooks you&#8217;ll need to use are, your understanding of the API is fuzzy and you expect to learn it as you go. So how do you test-drive in that situation?</p>
+</div>
+
+    <a class="read-more" href="/2014/09/17/i-can-test-it-if-i-don-t-know-how-i-m-building-it/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
       <time datetime="2014-08-11T11:46:00">Aug 11 2014</time>
       <h2><a href="/2014/08/11/multiple-interface-mocks-with-spock/">Multiple interface mocks with Spock</a></h2>
     </header>
@@ -140,28 +156,6 @@
 </div>
 
     <a class="read-more" href="/2012/09/22/testing-angular-forms-with-casper/">Read more…</a>
-  </article>
-  <hr>
-  <article>
-    <header>
-      <time datetime="2012-08-29T17:29:00">Aug 29 2012</time>
-      <h2><a href="/2012/08/29/derived-values-in-spock-where-tables/">Derived values in Spock where tables</a></h2>
-    </header>
-    <div class="paragraph">
-<p>When using <code>where</code> blocks in Spock there are two forms; assigning iterable values to a variable, e.g. <code>crew &lt;&lt; ['Mal', 'Kaylee', 'Jayne']</code> or using a datatable. In the first form I always knew you could use assigned values, for example:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="groovy language-groovy">where:
-crew &lt;&lt; ['Mal', 'Kaylee', 'Jayne']
-nameLength = crew.length()</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Note the assignment operator used rather than the left shift on the second line there.</p>
-</div>
-
-    <a class="read-more" href="/2012/08/29/derived-values-in-spock-where-tables/">Read more…</a>
   </article>
   <hr>
 

@@ -4,16 +4,16 @@
   <id>http://blog.url.com/</id>
   <link href="http://blog.url.com/"/>
   <link href="http://blog.url.com/feed.xml" rel="self"/>
-  <updated>2014-09-17T10:10:00+01:00</updated>
+  <updated>2014-09-24T10:26:00+01:00</updated>
   <author>
     <name>Rob Fletcher</name>
   </author>
   <entry>
     <title>How can test it if I don't know what I'm building yet?</title>
-    <link rel="alternate" href="http://blog.url.com/2014/09/17/how-can-i-test-it-if-i-dont-know-what-im-building-yet/"/>
-    <id>http://blog.url.com/2014/09/17/how-can-i-test-it-if-i-dont-know-what-im-building-yet/</id>
-    <published>2014-09-17T10:10:00+01:00</published>
-    <updated>2014-09-24T10:03:37+01:00</updated>
+    <link rel="alternate" href="http://blog.url.com/2014/09/24/how-can-i-test-it-if-i-dont-know-what-im-building-yet/"/>
+    <id>http://blog.url.com/2014/09/24/how-can-i-test-it-if-i-dont-know-what-im-building-yet/</id>
+    <published>2014-09-24T10:26:00+01:00</published>
+    <updated>2014-09-24T10:26:50+01:00</updated>
     <author>
       <name>Article Author</name>
     </author>

@@ -1,0 +1,37 @@
+---
+title: Fixing current time for tests with Java 8's date/time API
+date: 2015-01-15 14:19 GMT
+tags: datetime, jdk8, jodatime, testing
+---
+
+For years I've used the Joda Time library to provide a nicer alternative to the horrible mutable `java.util.Date` class and the terrifying abyss of `java.util.Calendar`. One thing, as a fanatical tester, that really appealed to me was the existence of the `DateTimeUtils` class. All the Joda Time types use `DateTimeUtils` as a source of the current instant and it exposes methods that allow tests to fix or offset the value that's returned. That can rule out some irritating flakiness in tests and enable testing of time zone / daylight savings bugs, timeout logic and so on while retaining the encapsulation of timestamp generation in production code.
+
+Of course, when you look at `DateTimeUtils` with purist eyes it's a horrible hack. A static singleton encapsulating global mutable state! I guess that was the attitude of those responsible for JSR-352 that created the new `java.time` package which is largely based on Joda Time. One of the things that _wasn't_ carried over from Joda Time is the `DateTimeUtils` class. Instead factory methods such as `Instant.now()` use a `Clock` object – by default `Clock.systemUTC()`.
+
+READMORE
+
+The docs for `java.time.Clock` state:
+
+~~~~
+The primary purpose of this abstraction is to allow alternate clocks to be plugged in as and when required. Applications use an object to obtain the current time rather than a static method. This can simplify testing.
+
+Best practice for applications is to pass a `Clock` into any method that requires the current instant.
+~~~~
+
+Honestly _the only time_ I can think I'd want to use an alternate `Clock` implementation is when testing and now instead of a simple hack like:
+
+[source,groovy]
+----
+given: DateTimeUtils.setCurrentMillisFixed(Random.nextLong())
+when: // I do something
+then: // something happens
+cleanup: DateTimeUtils.setCurrentMillisSystem()
+----
+
+I have to pass a fixed `Clock` into the class/system under test. This is all very well in a dependency injection context but it's no fun when the timestamps are in value objects that have no reason to expose variant clock behavior to other elements of the production system.
+
+I hate having to drill holes into my production code to enable tests to do things like this. If the graph of objects under test is a couple of layers deep you may need to add `Clock` parameters in several places to generate timestamps in a controlled way where you need to. If you need to use multiple different fixed clocks to test a certain condition (ordering model objects based on their last update time, for example) then you need to expose a _setter_ for the `Clock`.
+
+So in order to avoid the evil singleton anti-pattern instead we need to break object encapsulation and expose mutable state on objects just for the benefit of tests. I'm sure I'm not the only one to whom this doesn't feel like an improvement.
+
+So what happens? I reinvent `DateTimeUtils` by creating a static singleton with a global `Clock` property that I can set at will directly from the test. Each place in the code that needs to generate a timestamp needs to remember to use the singleton in order that timestamps are consistently generated.

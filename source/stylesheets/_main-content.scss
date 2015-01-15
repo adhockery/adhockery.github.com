@@ -60,7 +60,7 @@ article {
     @include adjust-font-size-to($h1-font-size);
     @include trailer(1, $h1-font-size);
   }
-  
+
   a {
     @include underline-link;
   }
@@ -80,6 +80,9 @@ article {
       display: inline-block;
       min-width: 4em;
       color: $muted-text-color;
+    }
+    a, time {
+      vertical-align: middle;
     }
   }
 }

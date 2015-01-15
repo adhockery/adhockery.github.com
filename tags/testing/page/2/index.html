@@ -33,6 +33,18 @@
 
   <article>
     <header>
+      <time datetime="2012-09-22T14:27:00">Sep 22 2012</time>
+      <h2><a href="/2012/09/22/testing-angular-forms-with-casper/">Testing Angular forms with Casper</a></h2>
+    </header>
+    <div class="paragraph">
+<p>When testing an <a href="http://angularjs.org">Angular</a> application using <a href="http://casperjs.org/">Casper</a> I found that the binding between inputs and model didn&#8217;t seem to be happening when I filled in form fields. I used Casper&#8217;s <a href="http://casperjs.org/api.html#casper.fill"><code>fill</code></a> method but found that the Angular form validation was rejecting any required fields as though they were still blank. With some debugging I was able to see that the <code>$scope</code> variables indeed weren&#8217;t getting updated.</p>
+</div>
+
+    <a class="read-more" href="/2012/09/22/testing-angular-forms-with-casper/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
       <time datetime="2012-08-29T17:29:00">Aug 29 2012</time>
       <h2><a href="/2012/08/29/derived-values-in-spock-where-tables/">Derived values in Spock where tables</a></h2>
     </header>
@@ -165,24 +177,6 @@ applyTemplate('&lt;my:tag/&gt;') == 'the expected output'</code></pre>
 </div>
 
     <a class="read-more" href="/2010/11/30/encapsulating-page-state-and-actions-in-geb/">Read more…</a>
-  </article>
-  <hr>
-  <article>
-    <header>
-      <time datetime="2010-11-26T00:17:00">Nov 26 2010</time>
-      <h2><a href="/2010/11/26/modelling-repeating-structures-with-geb-page-objects/">Modelling repeating structures with Geb page objects</a></h2>
-    </header>
-    <div class="paragraph">
-<p><a href="http://geb.codehaus.org/">Geb</a> is the hot new thing in Grails functional testing. One of its most powerful features is the concise DSL for defining page objects. The reasons for using page objects are <a href="http://code.google.com/p/selenium/wiki/PageObjects">well</a> <a href="http://robfletcher.github.com/grails-selenium-rc/docs/manual/guide/4.%20Using%20Page%20Objects.html">enumerated</a> <a href="http://geb.codehaus.org/manual/latest/pages.html#the_page_object_pattern_why">elsewhere</a> but the basic point is to allow your tests to interact with pages in a manner agnostic of the detail of their structure. This is both practical (you can change markup structure without having to fix numerous tests that only fail because they were tightly coupled to that structure) and aesthetic (your tests read more like a user&#8217;s interaction with the page - the <em>what</em> rather than the <em>how</em>).</p>
-</div>
-<div class="paragraph">
-<p>I want to put together a few short blog posts dealing with patterns that I find useful for defining page objects and modules in Geb. As I go I&#8217;ll keep adding to a very simple Grails project showing working examples which is <a href="https://github.com/robfletcher/geb-examples/">available on GitHub</a>.</p>
-</div>
-<div class="paragraph">
-<p>In this post I want to talk about repeating data structures such as lists and tables and how to model them effectively.</p>
-</div>
-
-    <a class="read-more" href="/2010/11/26/modelling-repeating-structures-with-geb-page-objects/">Read more…</a>
   </article>
   <hr>
 

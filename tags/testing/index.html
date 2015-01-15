@@ -33,6 +33,21 @@
 
   <article>
     <header>
+      <time datetime="2015-01-15T14:19:00">Jan 15 2015</time>
+      <h2><a href="/2015/01/15/fixing-current-time-for-tests-with-java-8-s-date-time-api/">Fixing current time for tests with Java 8's date/time API</a></h2>
+    </header>
+    <div class="paragraph">
+<p>For years I&#8217;ve used the Joda Time library to provide a nicer alternative to the horrible mutable <code>java.util.Date</code> class and the terrifying abyss of <code>java.util.Calendar</code>. One thing, as a fanatical tester, that really appealed to me was the existence of the <code>DateTimeUtils</code> class. All the Joda Time types use <code>DateTimeUtils</code> as a source of the current instant and it exposes methods that allow tests to fix or offset the value that&#8217;s returned. That can rule out some irritating flakiness in tests and enable testing of time zone / daylight savings bugs, timeout logic and so on while retaining the encapsulation of timestamp generation in production code.</p>
+</div>
+<div class="paragraph">
+<p>Of course, when you look at <code>DateTimeUtils</code> with purist eyes it&#8217;s a horrible hack. A static singleton encapsulating global mutable state! I guess that was the attitude of those responsible for JSR-352 that created the new <code>java.time</code> package which is largely based on Joda Time. One of the things that <em>wasn&#8217;t</em> carried over from Joda Time is the <code>DateTimeUtils</code> class. Instead factory methods such as <code>Instant.now()</code> use a <code>Clock</code> object – by default <code>Clock.systemUTC()</code>.</p>
+</div>
+
+    <a class="read-more" href="/2015/01/15/fixing-current-time-for-tests-with-java-8-s-date-time-api/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
       <time datetime="2014-09-24T10:26:00">Sep 24 2014</time>
       <h2><a href="/2014/09/24/how-can-i-test-it-if-i-dont-know-what-im-building-yet/">How can test it if I don't know what I'm building yet?</a></h2>
     </header>
@@ -143,18 +158,6 @@
 </div>
 
     <a class="read-more" href="/2012/10/28/jerry-a-jquery-like-api-for-dom-parsing/">Read more…</a>
-  </article>
-  <hr>
-  <article>
-    <header>
-      <time datetime="2012-09-22T14:27:00">Sep 22 2012</time>
-      <h2><a href="/2012/09/22/testing-angular-forms-with-casper/">Testing Angular forms with Casper</a></h2>
-    </header>
-    <div class="paragraph">
-<p>When testing an <a href="http://angularjs.org">Angular</a> application using <a href="http://casperjs.org/">Casper</a> I found that the binding between inputs and model didn&#8217;t seem to be happening when I filled in form fields. I used Casper&#8217;s <a href="http://casperjs.org/api.html#casper.fill"><code>fill</code></a> method but found that the Angular form validation was rejecting any required fields as though they were still blank. With some debugging I was able to see that the <code>$scope</code> variables indeed weren&#8217;t getting updated.</p>
-</div>
-
-    <a class="read-more" href="/2012/09/22/testing-angular-forms-with-casper/">Read more…</a>
   </article>
   <hr>
 

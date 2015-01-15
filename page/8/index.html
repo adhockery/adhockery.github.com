@@ -29,6 +29,18 @@
       <main>
           <article>
     <header>
+      <time datetime="2010-03-05T06:42:00">Mar  5 2010</time>
+      <h2><a href="/2010/03/05/page-fragment-caching-with-grails-springcache-plugin/">Page fragment caching with Grails Springcache plugin</a></h2>
+    </header>
+    <div class="paragraph">
+<p>Yesterday I released the new version of the Springcache plugin for Grails. The new feature this brings to the table is page fragment caching driven by annotations on controller actions. The feature is based on <a href="http://ehcache.org/documentation/web_caching.html">EhCache Web</a> and is even simpler and more powerful than the full page caching <a href="http://blog.freeside.co/post/42902815893/full-page-caching-in-grails-with-ehcache-web">I blogged about recently</a>.</p>
+</div>
+
+    <a class="read-more" href="/2010/03/05/page-fragment-caching-with-grails-springcache-plugin/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
       <time datetime="2010-02-25T13:04:00">Feb 25 2010</time>
       <h2><a href="/2010/02/25/using-a-custom-data-binder-with-grails-domain-objects/">Using a custom data binder with Grails domain objects</a></h2>
     </header>
@@ -149,30 +161,6 @@
 </div>
 
     <a class="read-more" href="/2009/11/26/springcache-plugin-status/">Read more…</a>
-  </article>
-  <hr>
-  <article>
-    <header>
-      <time datetime="2009-11-21T14:17:00">Nov 21 2009</time>
-      <h2><a href="/2009/11/21/why-do-strings-behave-like-a-collection/">Why do Strings behave like a Collection?</a></h2>
-    </header>
-    <div class="paragraph">
-<p>Mostly I love Groovy but every now and then some behaviour gets on my nerves. For example, why do the iterator methods on String behave as though it was a collections of characters rather than an Object? If I define a method with a dynamic-typed parameter like:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="groovy language-groovy">void printNames(names) {
-    names.each {
-        println it
-    }
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Passing a collection of Strings results in each String being printed. Passing a single String results in each character of the String being printed separately. I would have thought that the Object behaviour was a more appropriate default here (iterators on Object are called once passing the object itself). After all the <code>.chars</code> property is available if you really want to represent a String as a collection of characters.</p>
-</div>
-
-    <a class="read-more" href="/2009/11/21/why-do-strings-behave-like-a-collection/">Read more…</a>
   </article>
   <hr>
 

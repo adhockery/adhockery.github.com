@@ -1,0 +1,140 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery - Fixing current time for tests with Java 8's date/time API</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/Icon.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/Icon@2x.png">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header>
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <div class="container">
+      <main>
+          <article>
+    <header>
+      <time datetime="2015-01-15T14:19:00">Jan 15 2015</time>
+      <h1>Fixing current time for tests with Java 8's date/time API</h1>
+    </header>
+    <div class="paragraph">
+<p>For years I&#8217;ve used the Joda Time library to provide a nicer alternative to the horrible mutable <code>java.util.Date</code> class and the terrifying abyss of <code>java.util.Calendar</code>. One thing, as a fanatical tester, that really appealed to me was the existence of the <code>DateTimeUtils</code> class. All the Joda Time types use <code>DateTimeUtils</code> as a source of the current instant and it exposes methods that allow tests to fix or offset the value that&#8217;s returned. That can rule out some irritating flakiness in tests and enable testing of time zone / daylight savings bugs, timeout logic and so on while retaining the encapsulation of timestamp generation in production code.</p>
+</div>
+<div class="paragraph">
+<p>Of course, when you look at <code>DateTimeUtils</code> with purist eyes it&#8217;s a horrible hack. A static singleton encapsulating global mutable state! I guess that was the attitude of those responsible for JSR-352 that created the new <code>java.time</code> package which is largely based on Joda Time. One of the things that <em>wasn&#8217;t</em> carried over from Joda Time is the <code>DateTimeUtils</code> class. Instead factory methods such as <code>Instant.now()</code> use a <code>Clock</code> object – by default <code>Clock.systemUTC()</code>.</p>
+</div>
+
+<div class="paragraph">
+<p>The docs for <code>java.time.Clock</code> state:</p>
+</div>
+<div class="paragraph">
+<p><sub>~</sub>~
+The primary purpose of this abstraction is to allow alternate clocks to be plugged in as and when required. Applications use an object to obtain the current time rather than a static method. This can simplify testing.</p>
+</div>
+<div class="paragraph">
+<p>Best practice for applications is to pass a <code>Clock</code> into any method that requires the current instant.
+<sub>~</sub>~</p>
+</div>
+<div class="paragraph">
+<p>Honestly <em>the only time</em> I can think I&#8217;d want to use an alternate <code>Clock</code> implementation is when testing and now instead of a simple hack like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">given: DateTimeUtils.setCurrentMillisFixed(Random.nextLong())
+when: // I do something
+then: // something happens
+cleanup: DateTimeUtils.setCurrentMillisSystem()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>I have to pass a fixed <code>Clock</code> into the class/system under test. This is all very well in a dependency injection context but it&#8217;s no fun when the timestamps are in value objects that have no reason to expose variant clock behavior to other elements of the production system.</p>
+</div>
+<div class="paragraph">
+<p>I hate having to drill holes into my production code to enable tests to do things like this. If the graph of objects under test is a couple of layers deep you may need to add <code>Clock</code> parameters in several places to generate timestamps in a controlled way where you need to. If you need to use multiple different fixed clocks to test a certain condition (ordering model objects based on their last update time, for example) then you need to expose a <em>setter</em> for the <code>Clock</code>.</p>
+</div>
+<div class="paragraph">
+<p>So in order to avoid the evil singleton anti-pattern instead we need to break object encapsulation and expose mutable state on objects just for the benefit of tests. I&#8217;m sure I&#8217;m not the only one to whom this doesn&#8217;t feel like an improvement.</p>
+</div>
+<div class="paragraph">
+<p>So what happens? I reinvent <code>DateTimeUtils</code> by creating a static singleton with a global <code>Clock</code> property that I can set at will directly from the test. Each place in the code that needs to generate a timestamp needs to remember to use the singleton in order that timestamps are consistently generated.</p>
+</div>
+    <footer>
+      <ul class="tag-list">
+          <li><a href="/tags/datetime/">datetime</a></li>
+          <li><a href="/tags/jdk8/">jdk8</a></li>
+          <li><a href="/tags/jodatime/">jodatime</a></li>
+          <li><a href="/tags/testing/">testing</a></li>
+      </ul>
+    </footer>
+  </article>
+
+      </main>
+
+      <footer>
+        <nav>
+          <a href="/">Home</a>
+          <a href="/about">About</a>
+          <a href="/archive">Archive</a>
+        </nav>
+      </footer>
+    </div>
+
+    <script src="/javascripts/adhockery.js"></script>
+    <script type="text/javascript">
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-27275689-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+    <!-- clicky analytics -->
+    <a title="Web Statistics" href="http://clicky.com/100768647"><img alt="Web Statistics" src="//static.getclicky.com/media/links/badge.gif" border="0" /></a>
+    <script type="text/javascript">
+    var clicky_site_ids = clicky_site_ids || [];
+    clicky_site_ids.push(100768647);
+    (function() {
+      var s = document.createElement('script');
+      s.type = 'text/javascript';
+      s.async = true;
+      s.src = '//static.getclicky.com/js';
+      ( document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0] ).appendChild( s );
+    })();
+    </script>
+    <noscript><p><img alt="Clicky" width="1" height="1" src="//in.getclicky.com/100768647ns.gif" /></p></noscript>
+    <!-- / analytics -->
+    
+  </body>
+</html>
+
+<footer class="disqus">
+  <div id="disqus_thread"></div>
+            <script type="text/javascript">
+            //<![CDATA[
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//adhockery.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            //]]>
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </script>
+</footer>

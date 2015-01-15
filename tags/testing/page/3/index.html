@@ -33,6 +33,24 @@
 
   <article>
     <header>
+      <time datetime="2010-11-26T00:17:00">Nov 26 2010</time>
+      <h2><a href="/2010/11/26/modelling-repeating-structures-with-geb-page-objects/">Modelling repeating structures with Geb page objects</a></h2>
+    </header>
+    <div class="paragraph">
+<p><a href="http://geb.codehaus.org/">Geb</a> is the hot new thing in Grails functional testing. One of its most powerful features is the concise DSL for defining page objects. The reasons for using page objects are <a href="http://code.google.com/p/selenium/wiki/PageObjects">well</a> <a href="http://robfletcher.github.com/grails-selenium-rc/docs/manual/guide/4.%20Using%20Page%20Objects.html">enumerated</a> <a href="http://geb.codehaus.org/manual/latest/pages.html#the_page_object_pattern_why">elsewhere</a> but the basic point is to allow your tests to interact with pages in a manner agnostic of the detail of their structure. This is both practical (you can change markup structure without having to fix numerous tests that only fail because they were tightly coupled to that structure) and aesthetic (your tests read more like a user&#8217;s interaction with the page - the <em>what</em> rather than the <em>how</em>).</p>
+</div>
+<div class="paragraph">
+<p>I want to put together a few short blog posts dealing with patterns that I find useful for defining page objects and modules in Geb. As I go I&#8217;ll keep adding to a very simple Grails project showing working examples which is <a href="https://github.com/robfletcher/geb-examples/">available on GitHub</a>.</p>
+</div>
+<div class="paragraph">
+<p>In this post I want to talk about repeating data structures such as lists and tables and how to model them effectively.</p>
+</div>
+
+    <a class="read-more" href="/2010/11/26/modelling-repeating-structures-with-geb-page-objects/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
       <time datetime="2010-09-24T13:48:00">Sep 24 2010</time>
       <h2><a href="/2010/09/24/stubbing-access-to-the-g-message-tag-in-unit-tests/">Stubbing access to the g:message tag in unit tests</a></h2>
     </header>
@@ -198,18 +216,6 @@ class @artifact.name@ {
 </div>
 
     <a class="read-more" href="/2009/11/02/talk-on-selenium-rc-testing-in-grails/">Read more…</a>
-  </article>
-  <hr>
-  <article>
-    <header>
-      <time datetime="2009-09-14T16:00:00">Sep 14 2009</time>
-      <h2><a href="/2009/09/14/testing-grails-apps-with-selenium-rc/">Testing Grails Apps With Selenium-RC</a></h2>
-    </header>
-    <div class="paragraph">
-<p>I <a href="http://blog.freeside.co/post/42902576958/thoughts-on-testing">mentioned in my last post</a> that I&#8217;d started to think we were going about <a href="http://seleniumhq.org/">Selenium</a> testing all wrong. For years I&#8217;ve been writing Selenium tests using the <a href="http://seleniumhq.org/projects/ide/">Selenium IDE</a>, so the tests are in HTML files. When doing pre-commit testing and on CI the tests are run with the <code>HtmlTestRunner</code>. This technique is fine and well - developing tests with the IDE is fast and they can be easily worked on an re-tested in the IDE until they are correct. However, some things have always bothered me and Adam Goucher&#8217;s thoughts on <a href="http://adam.goucher.ca/?p=1198">the Selenium Value Chain</a> crystallised some of those suspicions.</p>
-</div>
-
-    <a class="read-more" href="/2009/09/14/testing-grails-apps-with-selenium-rc/">Read more…</a>
   </article>
   <hr>
 

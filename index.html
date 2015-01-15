@@ -29,6 +29,21 @@
       <main>
           <article>
     <header>
+      <time datetime="2015-01-15T14:19:00">Jan 15 2015</time>
+      <h2><a href="/2015/01/15/fixing-current-time-for-tests-with-java-8-s-date-time-api/">Fixing current time for tests with Java 8's date/time API</a></h2>
+    </header>
+    <div class="paragraph">
+<p>For years I&#8217;ve used the Joda Time library to provide a nicer alternative to the horrible mutable <code>java.util.Date</code> class and the terrifying abyss of <code>java.util.Calendar</code>. One thing, as a fanatical tester, that really appealed to me was the existence of the <code>DateTimeUtils</code> class. All the Joda Time types use <code>DateTimeUtils</code> as a source of the current instant and it exposes methods that allow tests to fix or offset the value that&#8217;s returned. That can rule out some irritating flakiness in tests and enable testing of time zone / daylight savings bugs, timeout logic and so on while retaining the encapsulation of timestamp generation in production code.</p>
+</div>
+<div class="paragraph">
+<p>Of course, when you look at <code>DateTimeUtils</code> with purist eyes it&#8217;s a horrible hack. A static singleton encapsulating global mutable state! I guess that was the attitude of those responsible for JSR-352 that created the new <code>java.time</code> package which is largely based on Joda Time. One of the things that <em>wasn&#8217;t</em> carried over from Joda Time is the <code>DateTimeUtils</code> class. Instead factory methods such as <code>Instant.now()</code> use a <code>Clock</code> object – by default <code>Clock.systemUTC()</code>.</p>
+</div>
+
+    <a class="read-more" href="/2015/01/15/fixing-current-time-for-tests-with-java-8-s-date-time-api/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
       <time datetime="2014-09-24T10:26:00">Sep 24 2014</time>
       <h2><a href="/2014/09/24/how-can-i-test-it-if-i-dont-know-what-im-building-yet/">How can test it if I don't know what I'm building yet?</a></h2>
     </header>
@@ -142,18 +157,6 @@
 </div>
 
     <a class="read-more" href="/2013/09/12/decoupling-from-the-dom-with-angular/">Read more…</a>
-  </article>
-  <hr>
-  <article>
-    <header>
-      <time datetime="2013-09-02T14:48:00">Sep  2 2013</time>
-      <h2><a href="/2013/09/02/unit-testing-angular-directives-that-use-controller-and/">Unit testing Angular directives that use controller and templateUrl</a></h2>
-    </header>
-    <div class="paragraph">
-<p>I spent an hour or so this morning figuring out how to unit test an Angular directive that uses a controller and a template loaded from a file (as opposed to inline). There&#8217;s a useful example in the <a href="https://github.com/vojtajina/ng-directive-testing">ng-directive-testing</a> repository but I thought a quick summary would be useful (as much to remind me the next time I have to do it as anything). Also the examples there test by interacting with DOM elements rather than directly with the directive&#8217;s scope.</p>
-</div>
-
-    <a class="read-more" href="/2013/09/02/unit-testing-angular-directives-that-use-controller-and/">Read more…</a>
   </article>
   <hr>
 

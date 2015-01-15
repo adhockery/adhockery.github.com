@@ -4,10 +4,61 @@
   <id>http://blog.freeside.co/</id>
   <link href="http://blog.freeside.co/"/>
   <link href="http://blog.freeside.co/feed.xml" rel="self"/>
-  <updated>2014-09-24T10:26:00+01:00</updated>
+  <updated>2015-01-15T14:19:00+00:00</updated>
   <author>
     <name>Rob Fletcher</name>
   </author>
+  <entry>
+    <title>Fixing current time for tests with Java 8's date/time API</title>
+    <link rel="alternate" href="http://blog.freeside.co/2015/01/15/fixing-current-time-for-tests-with-java-8-s-date-time-api/"/>
+    <id>http://blog.freeside.co/2015/01/15/fixing-current-time-for-tests-with-java-8-s-date-time-api/</id>
+    <published>2015-01-15T14:19:00+00:00</published>
+    <updated>2015-01-15T14:28:59+00:00</updated>
+    <author>
+      <name>Rob Fletcher</name>
+    </author>
+    <content type="html">&lt;div class="paragraph"&gt;
+&lt;p&gt;For years I&amp;#8217;ve used the Joda Time library to provide a nicer alternative to the horrible mutable &lt;code&gt;java.util.Date&lt;/code&gt; class and the terrifying abyss of &lt;code&gt;java.util.Calendar&lt;/code&gt;. One thing, as a fanatical tester, that really appealed to me was the existence of the &lt;code&gt;DateTimeUtils&lt;/code&gt; class. All the Joda Time types use &lt;code&gt;DateTimeUtils&lt;/code&gt; as a source of the current instant and it exposes methods that allow tests to fix or offset the value that&amp;#8217;s returned. That can rule out some irritating flakiness in tests and enable testing of time zone / daylight savings bugs, timeout logic and so on while retaining the encapsulation of timestamp generation in production code.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Of course, when you look at &lt;code&gt;DateTimeUtils&lt;/code&gt; with purist eyes it&amp;#8217;s a horrible hack. A static singleton encapsulating global mutable state! I guess that was the attitude of those responsible for JSR-352 that created the new &lt;code&gt;java.time&lt;/code&gt; package which is largely based on Joda Time. One of the things that &lt;em&gt;wasn&amp;#8217;t&lt;/em&gt; carried over from Joda Time is the &lt;code&gt;DateTimeUtils&lt;/code&gt; class. Instead factory methods such as &lt;code&gt;Instant.now()&lt;/code&gt; use a &lt;code&gt;Clock&lt;/code&gt; object – by default &lt;code&gt;Clock.systemUTC()&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;div class="paragraph"&gt;
+&lt;p&gt;The docs for &lt;code&gt;java.time.Clock&lt;/code&gt; state:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;&lt;sub&gt;~&lt;/sub&gt;~
+The primary purpose of this abstraction is to allow alternate clocks to be plugged in as and when required. Applications use an object to obtain the current time rather than a static method. This can simplify testing.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Best practice for applications is to pass a &lt;code&gt;Clock&lt;/code&gt; into any method that requires the current instant.
+&lt;sub&gt;~&lt;/sub&gt;~&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Honestly &lt;em&gt;the only time&lt;/em&gt; I can think I&amp;#8217;d want to use an alternate &lt;code&gt;Clock&lt;/code&gt; implementation is when testing and now instead of a simple hack like:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="highlight"&gt;&lt;code class="groovy language-groovy"&gt;given: DateTimeUtils.setCurrentMillisFixed(Random.nextLong())
+when: // I do something
+then: // something happens
+cleanup: DateTimeUtils.setCurrentMillisSystem()&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;I have to pass a fixed &lt;code&gt;Clock&lt;/code&gt; into the class/system under test. This is all very well in a dependency injection context but it&amp;#8217;s no fun when the timestamps are in value objects that have no reason to expose variant clock behavior to other elements of the production system.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;I hate having to drill holes into my production code to enable tests to do things like this. If the graph of objects under test is a couple of layers deep you may need to add &lt;code&gt;Clock&lt;/code&gt; parameters in several places to generate timestamps in a controlled way where you need to. If you need to use multiple different fixed clocks to test a certain condition (ordering model objects based on their last update time, for example) then you need to expose a &lt;em&gt;setter&lt;/em&gt; for the &lt;code&gt;Clock&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;So in order to avoid the evil singleton anti-pattern instead we need to break object encapsulation and expose mutable state on objects just for the benefit of tests. I&amp;#8217;m sure I&amp;#8217;m not the only one to whom this doesn&amp;#8217;t feel like an improvement.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;So what happens? I reinvent &lt;code&gt;DateTimeUtils&lt;/code&gt; by creating a static singleton with a global &lt;code&gt;Clock&lt;/code&gt; property that I can set at will directly from the test. Each place in the code that needs to generate a timestamp needs to remember to use the singleton in order that timestamps are consistently generated.&lt;/p&gt;
+&lt;/div&gt;</content>
+  </entry>
   <entry>
     <title>How can test it if I don't know what I'm building yet?</title>
     <link rel="alternate" href="http://blog.freeside.co/2014/09/24/how-can-i-test-it-if-i-dont-know-what-im-building-yet/"/>
@@ -430,62 +481,6 @@ Object: [c, d, 2]&lt;/pre&gt;
 &lt;/div&gt;
 &lt;div class="paragraph"&gt;
 &lt;p&gt;There is a compromise, though. Instead of full static compilation you can enable static type checking in the Groovy compiler using &lt;code&gt;@TypeChecked&lt;/code&gt;. With &lt;code&gt;@TypeChecked&lt;/code&gt; the call to &lt;code&gt;accept(it)&lt;/code&gt; is dispatched at runtime and the output is the same as the original.&lt;/p&gt;
-&lt;/div&gt;</content>
-  </entry>
-  <entry>
-    <title>Enabling Groovy’s “invokedynamic” support in Gradle</title>
-    <link rel="alternate" href="http://blog.freeside.co/2014/06/24/enabling-groovys-invokedynamic-support-in-gradle/"/>
-    <id>http://blog.freeside.co/2014/06/24/enabling-groovys-invokedynamic-support-in-gradle/</id>
-    <published>2014-06-24T15:46:00+01:00</published>
-    <updated>2014-07-13T08:33:13+01:00</updated>
-    <author>
-      <name>Rob Fletcher</name>
-    </author>
-    <content type="html">&lt;div class="paragraph"&gt;
-&lt;p&gt;I posted &lt;a href="/post/89759686171/gradle-and-groovys-invoke-dynamic-support"&gt;previously&lt;/a&gt; about configuring a Gradle project to ensure that only the &lt;em&gt;indy&lt;/em&gt; version of Groovy (that is the variant that supports Java 7&amp;#8217;s &lt;em&gt;invokedynamic&lt;/em&gt; bytecode instruction) is included in the dependency graph. However, just including that version of the Groovy jar is &lt;strong&gt;not&lt;/strong&gt; enough to make your Groovy code compile in such a way that it uses &lt;em&gt;invokedynamic&lt;/em&gt;.&lt;/p&gt;
-&lt;/div&gt;
-
-&lt;div class="paragraph"&gt;
-&lt;p&gt;In addition to including the right version of the jar you need to configure Gradle&amp;#8217;s &lt;code&gt;GroovyCompile&lt;/code&gt; task like this:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="listingblock"&gt;
-&lt;div class="title"&gt;build.gradle&lt;/div&gt;
-&lt;div class="content"&gt;
-&lt;pre class="highlight"&gt;&lt;code class="groovy language-groovy"&gt;tasks.withType(GroovyCompile) {
-  groovyOptions.optimizationOptions.indy = true
-}&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;If you want to check the code is being compiled correctly the easiest way I&amp;#8217;ve found to do so is to use &lt;code&gt;javap&lt;/code&gt; to read the bytecode form a class file and see if there are any &lt;em&gt;invokedynamic&lt;/em&gt; instructions. Here&amp;#8217;s an example:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="listingblock"&gt;
-&lt;div class="content"&gt;
-&lt;pre class="highlight"&gt;&lt;code class="bash language-bash"&gt;javap -v -cp build/classes/test co.freeside.jdbi.time.LocalDateSpec | grep invokedynamic&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;If the class is compiled with the &lt;em&gt;indy&lt;/em&gt; option set you&amp;#8217;ll see some output. Here&amp;#8217;s what I get from that class:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="listingblock"&gt;
-&lt;div class="content"&gt;
-&lt;pre&gt; 3: invokedynamic #46,  0             // InvokeDynamic #0:init:(Ljava/lang/Class;Ljava/lang/String;)Ljava/lang/Object;
- 8: invokedynamic #52,  0             // InvokeDynamic #1:cast:(Ljava/lang/Object;)Lorg/skife/jdbi/v2/tweak/ResultSetMapper;
- 2: invokedynamic #62,  0             // InvokeDynamic #2:getProperty:(Ljava/lang/Class;)Ljava/lang/Object;
- 7: invokedynamic #52,  0             // InvokeDynamic #1:cast:(Ljava/lang/Object;)Lorg/skife/jdbi/v2/tweak/ResultSetMapper;
- 3: invokedynamic #70,  0             // InvokeDynamic #3:getProperty:(Lco/freeside/jdbi/time/LocalDateSpec;)Ljava/lang/Object;
- 8: invokedynamic #76,  0             // InvokeDynamic #4:invoke:(Ljava/lang/Class;Ljava/lang/Object;)Ljava/lang/Object;
-13: invokedynamic #79,  0             // InvokeDynamic #1:cast:(Ljava/lang/Object;)Ljava/time/LocalDate;
-32: invokedynamic #95,  0             // InvokeDynamic #1:cast:(Lgroovy/lang/GString;)Ljava/lang/String;
-35: invokedynamic #95,  0             // InvokeDynamic #1:cast:(Lgroovy/lang/GString;)Ljava/lang/String;
-32: invokedynamic #95,  0             // InvokeDynamic #1:cast:(Lgroovy/lang/GString;)Ljava/lang/String;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;Of course, bear in mind that not all classes will contain any &lt;em&gt;invokedynamic&lt;/em&gt; instructions. If you&amp;#8217;ve used &lt;code&gt;@CompileStatic&lt;/code&gt; for example method calls are not dispatched dynamically.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;&lt;strong&gt;Edit:&lt;/strong&gt; &lt;a href="https://twitter.com/CedricChampeau/status/481451226790645760"&gt;Cédric Champeau pointed out&lt;/a&gt; that you should use JDK 7u60 or above to avoid any potential &lt;em&gt;invokedynamic&lt;/em&gt; related bugs.&lt;/p&gt;
 &lt;/div&gt;</content>
   </entry>
 </feed>

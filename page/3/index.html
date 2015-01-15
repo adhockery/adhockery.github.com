@@ -29,6 +29,21 @@
       <main>
           <article>
     <header>
+      <time datetime="2013-03-22T00:16:00">Mar 22 2013</time>
+      <h2><a href="/2013/03/22/stateful-interactions-in-spock/">Stateful interactions in Spock</a></h2>
+    </header>
+    <div class="paragraph">
+<p>The Java mocking library <a href="http://jmock.org/">jMock</a> has <a href="http://jmock.org/states.html">a nice feature for dealing with verifying mock interactions in stateful circumstances</a>. I first came across it when reading <a href="http://www.growing-object-oriented-software.com/">Growing Object-Oriented Software Guided By Tests</a> (<em>GOOS</em>) by Steve Freeman &amp; Nat Pryce.</p>
+</div>
+<div class="paragraph">
+<p>I was curious as to whether I could implement something similar with <em>Spock</em>. There&#8217;s no syntactic support right now (although there is <a href="http://code.google.com/p/spock/issues/detail?id=130">an open issue</a>) but it&#8217;s not that complex to achieve something adequate.</p>
+</div>
+
+    <a class="read-more" href="/2013/03/22/stateful-interactions-in-spock/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
       <time datetime="2013-02-26T14:08:20">Feb 26 2013</time>
       <h2><a href="/2013/02/26/grails-builds-on-travis-ci/">Grails builds on Travis CI</a></h2>
     </header>
@@ -139,18 +154,6 @@
 </div>
 
     <a class="read-more" href="/2012/12/20/grails-and-front-end-tools/">Read more…</a>
-  </article>
-  <hr>
-  <article>
-    <header>
-      <time datetime="2012-10-28T14:36:00">Oct 28 2012</time>
-      <h2><a href="/2012/10/28/jerry-a-jquery-like-api-for-dom-parsing/">Jerry: a jQuery like API for DOM parsing</a></h2>
-    </header>
-    <div class="paragraph">
-<p>When unit testing things that produce HTML output (such as some Grails taglibs) there are some common pitfalls. Comparing large chunks of markup with an expected string is very brittle; whitespace and attribute ordering becomes significant. Often people end up using regular expressions or assertions like <code>assert output.contains('&lt;div id="foo"&gt;')</code>. Whilst it may be a bit more maintainable this doesn&#8217;t really test correct DOM structure which is often important and again, attribute order can be a problem.</p>
-</div>
-
-    <a class="read-more" href="/2012/10/28/jerry-a-jquery-like-api-for-dom-parsing/">Read more…</a>
   </article>
   <hr>
 

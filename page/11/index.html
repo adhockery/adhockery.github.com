@@ -29,6 +29,18 @@
       <main>
           <article>
     <header>
+      <time datetime="2009-03-31T14:55:00">Mar 31 2009</time>
+      <h2><a href="/2009/03/31/joda-time-and-grails-auto-timestamping/">Joda-Time and Grails Auto-Timestamping</a></h2>
+    </header>
+    <div class="paragraph">
+<p>The <a href="http://grails.org/JodaTime+Plugin">Joda-Time Plugin docs</a> state that <a href="http://grails.org/doc/1.1.x/guide/5.%20Object%20Relational%20Mapping%20(GORM).html#5.5.1%20Events%20and%20Auto%20Timestamping">Grails' auto-timestamping</a> works with Joda-Time properties which is the case. However, when testing it can be useful to take advantage of Joda Time&#8217;s <a href="http://joda-time.sourceforge.net/api-release/org/joda/time/DateTimeUtils.html"><code>DateTimeUtils</code></a> class to mock the current time. This enables you to have new <code>DateTime</code> objects, for example, use a predictable timestamp. Unfortunately it doesn&#8217;t play nicely with Grails' auto-timestamping which under the covers uses <code>System.currentTimeMillis()</code>.</p>
+</div>
+
+    <a class="read-more" href="/2009/03/31/joda-time-and-grails-auto-timestamping/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
       <time datetime="2009-03-10T09:30:00">Mar 10 2009</time>
       <h2><a href="/2009/03/10/internationalizing-domain-classes-and-enums/">Internationalizing Domain Classes and Enums</a></h2>
     </header>

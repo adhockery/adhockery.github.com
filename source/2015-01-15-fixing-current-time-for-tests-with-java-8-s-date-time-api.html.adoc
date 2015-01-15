@@ -12,11 +12,11 @@ READMORE
 
 The docs for `java.time.Clock` state:
 
-~~~~
+____
 The primary purpose of this abstraction is to allow alternate clocks to be plugged in as and when required. Applications use an object to obtain the current time rather than a static method. This can simplify testing.
 
 Best practice for applications is to pass a `Clock` into any method that requires the current instant.
-~~~~
+____
 
 Honestly _the only time_ I can think I'd want to use an alternate `Clock` implementation is when testing and now instead of a simple hack like:
 

@@ -42,13 +42,15 @@
 <div class="paragraph">
 <p>The docs for <code>java.time.Clock</code> state:</p>
 </div>
+<div class="quoteblock">
+<blockquote>
 <div class="paragraph">
-<p><sub>~</sub>~
-The primary purpose of this abstraction is to allow alternate clocks to be plugged in as and when required. Applications use an object to obtain the current time rather than a static method. This can simplify testing.</p>
+<p>The primary purpose of this abstraction is to allow alternate clocks to be plugged in as and when required. Applications use an object to obtain the current time rather than a static method. This can simplify testing.</p>
 </div>
 <div class="paragraph">
-<p>Best practice for applications is to pass a <code>Clock</code> into any method that requires the current instant.
-<sub>~</sub>~</p>
+<p>Best practice for applications is to pass a <code>Clock</code> into any method that requires the current instant.</p>
+</div>
+</blockquote>
 </div>
 <div class="paragraph">
 <p>Honestly <em>the only time</em> I can think I&#8217;d want to use an alternate <code>Clock</code> implementation is when testing and now instead of a simple hack like:</p>

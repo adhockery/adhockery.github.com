@@ -13,7 +13,7 @@
     <link rel="alternate" href="http://blog.freeside.co/2015/01/15/fixing-current-time-for-tests-with-java-8-s-date-time-api/"/>
     <id>http://blog.freeside.co/2015/01/15/fixing-current-time-for-tests-with-java-8-s-date-time-api/</id>
     <published>2015-01-15T14:19:00+00:00</published>
-    <updated>2015-01-15T14:28:59+00:00</updated>
+    <updated>2015-01-15T14:33:35+00:00</updated>
     <author>
       <name>Rob Fletcher</name>
     </author>
@@ -27,13 +27,15 @@
 &lt;div class="paragraph"&gt;
 &lt;p&gt;The docs for &lt;code&gt;java.time.Clock&lt;/code&gt; state:&lt;/p&gt;
 &lt;/div&gt;
+&lt;div class="quoteblock"&gt;
+&lt;blockquote&gt;
 &lt;div class="paragraph"&gt;
-&lt;p&gt;&lt;sub&gt;~&lt;/sub&gt;~
-The primary purpose of this abstraction is to allow alternate clocks to be plugged in as and when required. Applications use an object to obtain the current time rather than a static method. This can simplify testing.&lt;/p&gt;
+&lt;p&gt;The primary purpose of this abstraction is to allow alternate clocks to be plugged in as and when required. Applications use an object to obtain the current time rather than a static method. This can simplify testing.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="paragraph"&gt;
-&lt;p&gt;Best practice for applications is to pass a &lt;code&gt;Clock&lt;/code&gt; into any method that requires the current instant.
-&lt;sub&gt;~&lt;/sub&gt;~&lt;/p&gt;
+&lt;p&gt;Best practice for applications is to pass a &lt;code&gt;Clock&lt;/code&gt; into any method that requires the current instant.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/blockquote&gt;
 &lt;/div&gt;
 &lt;div class="paragraph"&gt;
 &lt;p&gt;Honestly &lt;em&gt;the only time&lt;/em&gt; I can think I&amp;#8217;d want to use an alternate &lt;code&gt;Clock&lt;/code&gt; implementation is when testing and now instead of a simple hack like:&lt;/p&gt;

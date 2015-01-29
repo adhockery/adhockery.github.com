@@ -29,6 +29,18 @@
       <main>
           <article>
     <header>
+      <time datetime="2009-07-10T09:02:00">Jul 10 2009</time>
+      <h2><a href="/2009/07/10/auditing-data-with-the-acegi-plugin-and-grails-upgrade/">Auditing data with the Acegi plugin and Grails upgrade pain</a></h2>
+    </header>
+    <div class="paragraph">
+<p>I&#8217;m in the middle of trying to upgrade our app (again). We&#8217;re running on Grails 1.1 now and I&#8217;m attempting to get us to 1.1.1 and from there to 1.2-M1. As Marc Palmer <a href="http://www.anyware.co.uk/2005/2009/07/03/grails-12m1-and-why-you-need-to-download-it-now/">points out</a> the more people using it the more likely it is that 1.2 final will be rock solid.</p>
+</div>
+
+    <a class="read-more" href="/2009/07/10/auditing-data-with-the-acegi-plugin-and-grails-upgrade/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
       <time datetime="2009-06-23T18:17:00">Jun 23 2009</time>
       <h2><a href="/2009/06/23/scripting-plugin-and-dependency-installation/">Scripting Plugin and Dependency Installation</a></h2>
     </header>
@@ -134,38 +146,6 @@
 <p>Good news. The recent release of the <a href="http://www.jetbrains.net/confluence/display/IDEADEV/Diana+EAP">IntelliJ Idea EAP</a> has added proper handling of the new plugin installation system in Grails 1.1 - <em>i.e.</em> it automatically picks up your plugins installed under <code>~/.grails/1.1/projects/&lt;name&gt;/plugins</code>.</p>
 </div>
     <a class="read-more" href="/2009/04/02/grails-1-1-plugins-and-intellij-idea/">Read more…</a>
-  </article>
-  <hr>
-  <article>
-    <header>
-      <time datetime="2009-04-01T12:46:00">Apr  1 2009</time>
-      <h2><a href="/2009/04/01/querying-by-association-with-grails-criteria/">Querying By Association With Grails Criteria</a></h2>
-    </header>
-    <div class="paragraph">
-<p>A common requirement is to select all instances of a domain class where one of its many-to-many associations contains a particular instance of another domain class. Consider these domain classes where a <code>Ship</code> has a crew composed of <code>Pirate`s and any particular `Pirate</code> can be a part of the crew of several <code>Ship</code>s:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="groovy language-groovy">class Ship {
-   static hasMany = [crew: CrewMember]
-   String name
-}
-
-class CrewMember {
-   static belongsTo = [ship: Ship]
-   Pirate pirate
-}
-
-class Pirate {
-   String name
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>How can we use a criteria query to find all the <code>Ship</code> instances where a particular <code>Pirate</code> is a member of the crew?</p>
-</div>
-
-    <a class="read-more" href="/2009/04/01/querying-by-association-with-grails-criteria/">Read more…</a>
   </article>
   <hr>
 

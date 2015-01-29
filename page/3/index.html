@@ -29,6 +29,44 @@
       <main>
           <article>
     <header>
+      <time datetime="2013-03-29T12:30:00">Mar 29 2013</time>
+      <h2><a href="/2013/03/29/groovy-gotcha-for-loops-and-closure-scope/">Groovy gotcha: for loops and closure scope</a></h2>
+    </header>
+    <div class="paragraph">
+<p>You probably know that Groovy closures retain information about the scope in which they were created. The closure body can refer to values that were in scope where the closure was declared. There is a gotcha here that has bitten me a few times, though. That&#8217;s when closures are created in a <code>for</code> loop.</p>
+</div>
+<div class="paragraph">
+<p>Consider this example.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">def fns = []
+for (i in (1..5)) {
+    fns &lt;&lt; {-&gt;
+        println i
+    }
+}
+fns.each { it() }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>What will get printed to <em>sysout</em>? Give up? You can <a href="http://groovyconsole.appspot.com/script/920002">run the script on Groovy Web Console</a>. The output is this:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>5
+5
+5
+5
+5</pre>
+</div>
+</div>
+
+    <a class="read-more" href="/2013/03/29/groovy-gotcha-for-loops-and-closure-scope/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
       <time datetime="2013-03-22T00:16:00">Mar 22 2013</time>
       <h2><a href="/2013/03/22/stateful-interactions-in-spock/">Stateful interactions in Spock</a></h2>
     </header>
@@ -142,18 +180,6 @@
 </div>
 
     <a class="read-more" href="/2013/01/19/coffeescript-gotchas-for-loops/">Read more…</a>
-  </article>
-  <hr>
-  <article>
-    <header>
-      <time datetime="2012-12-20T21:23:00">Dec 20 2012</time>
-      <h2><a href="/2012/12/20/grails-and-front-end-tools/">Grails & front end tools</a></h2>
-    </header>
-    <div class="paragraph">
-<p>Last week was the London Groovy &amp; Grails Exchange 2012 where I gave a talk called <a href="http://skillsmatter.com/podcast/groovy-grails/grails-for-hipsters">Grails for hipsters</a> about integrating Grails apps with some of the buzziest current tools &amp; techniques. Part of what I talked about was my approach to handling pre-processed front-end resources in Grails apps. In <a href="http://git.io/hipsteroid">the demo app</a> for my talk I used <a href="http://lesscss.org/">LESS</a> &amp; <a href="http://coffeescript.org/">CoffeeScript</a> but everything I discusses applies equally to <a href="http://sass-lang.com/">SASS</a>, <a href="http://learnboost.github.com/stylus/">Stylus</a>, <a href="http://www.typescriptlang.org/">TypeScript</a>, etc.</p>
-</div>
-
-    <a class="read-more" href="/2012/12/20/grails-and-front-end-tools/">Read more…</a>
   </article>
   <hr>
 

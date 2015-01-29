@@ -4,10 +4,190 @@
   <id>http://blog.freeside.co/</id>
   <link href="http://blog.freeside.co/"/>
   <link href="http://blog.freeside.co/feed.xml" rel="self"/>
-  <updated>2015-01-15T14:19:00+00:00</updated>
+  <updated>2015-01-29T11:34:00+00:00</updated>
   <author>
     <name>Rob Fletcher</name>
   </author>
+  <entry>
+    <title>Simple background polling with RxJava</title>
+    <link rel="alternate" href="http://blog.freeside.co/2015/01/29/simple-background-polling-with-rxjava/"/>
+    <id>http://blog.freeside.co/2015/01/29/simple-background-polling-with-rxjava/</id>
+    <published>2015-01-29T11:34:00+00:00</published>
+    <updated>2015-01-29T11:34:17+00:00</updated>
+    <author>
+      <name>Rob Fletcher</name>
+    </author>
+    <content type="html">&lt;div class="paragraph"&gt;
+&lt;p&gt;I&amp;#8217;ve done odd bits of playing around with RxJava before but never dived into it very deeply. Today I wanted to re-implement an unreliable background polling operation and &lt;a href="https://twitter.com/tomaslin"&gt;Tomás Lin&lt;/a&gt; suggested I look at using &lt;a href="https://github.com/ReactiveX/RxJava"&gt;RxJava&lt;/a&gt;. This may be an obvious implementation to some but I had to do a bit of experimentation (and searching Stack Overflow) to come up with it.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Imagine we&amp;#8217;re polling a web-service regularly. The service returns a JSON array of independent items (think events since last poll, Tweets with a particular hashtag or something similar). We want to do some processing (filtering, parsing to a type) on each item and then pass them off to a handler.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;div class="paragraph"&gt;
+&lt;p&gt;The first thing we need is a heartbeat so:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="highlight"&gt;&lt;code class="java language-java"&gt;Observable.interval(30, TimeUnit.SECONDS)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;That will return an &lt;code&gt;Observable&amp;lt;Long&amp;gt;&lt;/code&gt; that emits a value every 30 seconds. The values are clock ticks starting at zero.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;At each tick we want to poll a remote service. For the sake of simplicity let&amp;#8217;s assume we&amp;#8217;re using a REST client like &lt;a href="http://square.github.io/retrofit/"&gt;Retrofit&lt;/a&gt; that does the HTTP transport and JSON parsing for us so we have an interface like this:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="highlight"&gt;&lt;code class="java language-java"&gt;public interface MessageService {
+  // annotations are ommitted but this method makes a REST call
+  List&amp;lt;Message&amp;gt; getRecentMessages();
+}
+
+public interface Message {
+  boolean isFor(Recipient recipient);
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;How do we translate our tick sequence into calls to &lt;code&gt;getRecentMessages&lt;/code&gt;? We can think of it as a &lt;strong&gt;map&lt;/strong&gt; operation – just one in which we don&amp;#8217;t care about the original value.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="highlight"&gt;&lt;code class="java language-java"&gt;Observable.interval(30, TimeUnit.SECONDS)
+          .map((tick) -&amp;gt; messageService.getRecentMessages())&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Now we have an &lt;code&gt;Observable&amp;lt;List&amp;lt;Message&amp;gt;&amp;gt;&lt;/code&gt;. So far so good. However, that &lt;code&gt;map&lt;/code&gt; operation is doing blocking I/O so we should shift it onto an appropriate scheduler (yes, Retrofit can return &lt;code&gt;rx.Observable&lt;/code&gt; so we could handle this in a non-blocking way but I&amp;#8217;ll skip that for the purposes of this discussion).&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="highlight"&gt;&lt;code class="java language-java"&gt;Observable.interval(30, TimeUnit.SECONDS, Schedulers.io())
+          .map((tick) -&amp;gt; messageService.getRecentMessages())&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;For this example we&amp;#8217;ll consume the messages by just subscribing and logging what we get.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="highlight"&gt;&lt;code class="java language-java"&gt;Observable.interval(30, TimeUnit.SECONDS, Schedulers.io())
+          .map((tick) -&amp;gt; messageService.getRecentMessages())
+          .subscribe((messages) -&amp;gt; {
+            // the subscriber is called with List&amp;lt;Message&amp;gt; every time
+            // the remote service is polled
+            for (Message message : messages) {
+              log.info(message.toString())
+            }
+          })&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Of course the call to the remote service may fail – the service may be down or rate limiting us for example. We need to ensure our subscription doesn&amp;#8217;t end because the call threw an exception. We could add a &lt;code&gt;try/catch&lt;/code&gt; around the remote call but RxJava has a mechanism for retrying that is a little neater.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="highlight"&gt;&lt;code class="java language-java"&gt;Observable.interval(30, TimeUnit.SECONDS, Schedulers.io())
+          .map((tick) -&amp;gt; messageService.getRecentMessages())
+          .retry()
+          .subscribe((messages) -&amp;gt; {
+            for (Message message : messages) {
+              log.info(message.toString())
+            }
+          })&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Now any exceptions are swallowed and the poll will get repeated at the next interval. We could get more sophisticated here and use a back-off policy but the key point is the subscriber only has to deal with messages that were successfully retrieved.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;That said, we probably want to know the remote service is giving us trouble so let&amp;#8217;s add some logging.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="highlight"&gt;&lt;code class="java language-java"&gt;Observable.interval(30, TimeUnit.SECONDS, Schedulers.io())
+          .map((tick) -&amp;gt; messageService.getRecentMessages())
+          // The error handler is called with any exception raised upstream
+          .doOnError((err) -&amp;gt; log.error("Error retrieving messages", err))
+          // Errors do not propagate past retry so they must be handled before
+          .retry()
+          .subscribe((messages) -&amp;gt; {
+            for (Message message : messages) {
+              log.info(message.toString())
+            }
+          })&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Now the next thing we need to do is filter out any messages not intended for us. That&amp;#8217;s pretty easy with another &lt;code&gt;map&lt;/code&gt; operation on the &lt;code&gt;List&amp;lt;Message&lt;/code&gt; emitted every time we poll.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="highlight"&gt;&lt;code class="java language-java"&gt;Observable.interval(30, TimeUnit.SECONDS, Schedulers.io())
+          .map((tick) -&amp;gt; messageService.getRecentMessages())
+          .doOnError((err) -&amp;gt; log.error("Error retrieving messages", err))
+          .retry()
+          .map((messages) -&amp;gt;
+            // a 2nd map operation is called with the List&amp;lt;Message&amp;gt; emitted upstream
+            messages.stream()
+                    // filter to a sub-list containing only "our" messages
+                    .filter((message) -&amp;gt; message.isFor(recipient))
+                    // turn sub-list stream back into a List&amp;lt;Message&amp;gt;
+                    .collect(Collectors.toList()))
+          .subscribe((messages) -&amp;gt; {
+            for (Message message : messages) {
+              log.info(message.toString())
+            }
+          })&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;At this point everything is working but notice that we&amp;#8217;re always dealing with &lt;code&gt;List&amp;lt;Message&amp;gt;&lt;/code&gt;. The grouping is just an artifact of the way the messages are retrieved from the remote service. We really should be dealing with a stream of individual messages. I scratched my head on this one for a little while until &lt;a href="https://twitter.com/jon_k_schneider/status/560582822767759360"&gt;Jon Schneider&lt;/a&gt; and &lt;a href="https://twitter.com/tim_yates/status/560582608015597568"&gt;Tim Yates&lt;/a&gt; provided me with an obvious and simple solution.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="highlight"&gt;&lt;code class="java language-java"&gt;Observable.interval(30, TimeUnit.SECONDS, Schedulers.io())
+          .map((tick) -&amp;gt; messageService.getRecentMessages())
+          .doOnError((err) -&amp;gt; log.error("Error retrieving messages", err))
+          .retry()
+          // turns each List&amp;lt;Message&amp;gt; into an Observable&amp;lt;Message&amp;gt; that flatMap
+          // will join into a single stream
+          .flatMap(Observable::from) &lt;b&gt;(1)&lt;/b&gt;
+          .filter((message) -&amp;gt; message.isFor(recipient))
+          .subscribe((message) -&amp;gt; log.info(message.toString()))&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;The &lt;code&gt;flatMap&lt;/code&gt; method allows you to produce a new &lt;code&gt;Observable&lt;/code&gt; for each value emitted from upstream and coalesceses them into a single downstream &lt;code&gt;Observable&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;This is much neater. Now the downstream operations are free to deal with individual messages – we can handle the target filtering with a simple &lt;code&gt;filter&lt;/code&gt; operation instead of mapping the original list to a sub-list and we no longer need to loop over multiple messages in the subscriber.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;One last thing is that perhaps our remote service will give us some duplicate messages on subsequent calls. An ideal way to handle that would be to send a last message id or an HTTP &lt;code&gt;If-Modified-Since&lt;/code&gt; header with the request but if that&amp;#8217;s not an option Rx can help us.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="highlight"&gt;&lt;code class="java language-java"&gt;Observable.interval(30, TimeUnit.SECONDS, Schedulers.io())
+          .map((tick) -&amp;gt; messageService.getRecentMessages())
+          .doOnError((err) -&amp;gt; log.error("Error retrieving messages", err))
+          .retry()
+          .flatMap(Observable::from)
+          // filter out any previously seen messages
+          .distinct()
+          .filter((message) -&amp;gt; message.isFor(recipient))
+          .subscribe((message) -&amp;gt; log.info(message.toString()))&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Obviously using &lt;code&gt;distinct&lt;/code&gt; assumes that our &lt;code&gt;Message&lt;/code&gt; objects are unique and implement &lt;code&gt;hashCode&lt;/code&gt; properly.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;We now have a filtered stream of unique messages generated by polling a remote service in an error-tolerant way.&lt;/p&gt;
+&lt;/div&gt;</content>
+  </entry>
   <entry>
     <title>Fixing current time for tests with Java 8's date/time API</title>
     <link rel="alternate" href="http://blog.freeside.co/2015/01/15/fixing-current-time-for-tests-with-java-8-s-date-time-api/"/>
@@ -401,88 +581,6 @@ assert new Doubler().multiply([1, 2, 3]) == [2, 4, 6]&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 &lt;div class="paragraph"&gt;
 &lt;p&gt;This is definitely worth bearing in mind if you are building library code designed to be extended by other people.&lt;/p&gt;
-&lt;/div&gt;</content>
-  </entry>
-  <entry>
-    <title>@CompileStatic and polymorphic method dispatch</title>
-    <link rel="alternate" href="http://blog.freeside.co/2014/07/08/compilestatic-and-polymorphic-method-dispatch/"/>
-    <id>http://blog.freeside.co/2014/07/08/compilestatic-and-polymorphic-method-dispatch/</id>
-    <published>2014-07-08T07:11:00+01:00</published>
-    <updated>2014-07-18T06:14:28+01:00</updated>
-    <author>
-      <name>Rob Fletcher</name>
-    </author>
-    <content type="html">&lt;div class="paragraph"&gt;
-&lt;p&gt;I&amp;#8217;m a big fan of Groovy&amp;#8217;s &lt;code&gt;@CompileStatic&lt;/code&gt; feature – so much so that I&amp;#8217;ve updated the &lt;em&gt;Groovy class&lt;/em&gt; template in IntelliJ IDEA to use it by default. I should stress I don&amp;#8217;t do this because I believe non-statically compiled Groovy to be slow – it isn&amp;#8217;t.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;Recently &lt;a href="https://twitter.com/pledbrook/status/475986668840050688"&gt;Peter Ledbrook reminded me of one drawback&lt;/a&gt; which is that method dispatch is statically bound when using &lt;code&gt;@CompileStatic&lt;/code&gt; like it is in Java. This means that the behavior of calling polymorphic methods can change when argument types are not known at compile time.&lt;/p&gt;
-&lt;/div&gt;
-
-&lt;div class="paragraph"&gt;
-&lt;p&gt;Here&amp;#8217;s a simple example. What will this code print?&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="listingblock"&gt;
-&lt;div class="content"&gt;
-&lt;pre class="highlight"&gt;&lt;code class="groovy language-groovy"&gt;class Categorizer {
-
-  void accept(String s) { println "String: '$s'" }
-  void accept(Number n) { println "Number: $n" }
-  void accept(Object o) { println "Object: $o" }
-
-  void accept(Object... objects) {
-    objects.each {
-      accept(it)
-    }
-  }
-}
-
-new Categorizer().accept(
-  "a",
-  "${'b'}",
-  1,
-  true,
-  ["c", "d", 2] as Object[]
-)&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;This is straight up dynamic Groovy so we get this:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="listingblock"&gt;
-&lt;div class="content"&gt;
-&lt;pre&gt;String: 'a'
-String: 'b'
-Number: 1
-Object: true
-String: 'c'
-String: 'd'
-Number: 2&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;Dynamically compiled Groovy uses runtime method dispatch meaning that the version of &lt;code&gt;Categorizer.accept&lt;/code&gt; to use for the statement &lt;code&gt;accept(it)&lt;/code&gt; is determined at runtime based on the type of &lt;code&gt;it&lt;/code&gt;.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;What happens to that output if we add &lt;code&gt;@CompileStatic&lt;/code&gt; to the &lt;code&gt;Categorizer&lt;/code&gt; class? The output changes to this:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="listingblock"&gt;
-&lt;div class="content"&gt;
-&lt;pre&gt;Object: a
-Object: b
-Object: 1
-Object: true
-Object: [c, d, 2]&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;Now the statement &lt;code&gt;accept(it)&lt;/code&gt; is bound at &lt;em&gt;compile time&lt;/em&gt; and there is no type information about &lt;code&gt;it&lt;/code&gt;. The compiler&amp;#8217;s only choice is to bind to &lt;code&gt;accept(Object)&lt;/code&gt;.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;This is completely logical when you understand what the compiler is doing but it&amp;#8217;s behavior that annoyed me back when I was using Java full time and I much prefer Groovy&amp;#8217;s runtime dispatch.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;There is a compromise, though. Instead of full static compilation you can enable static type checking in the Groovy compiler using &lt;code&gt;@TypeChecked&lt;/code&gt;. With &lt;code&gt;@TypeChecked&lt;/code&gt; the call to &lt;code&gt;accept(it)&lt;/code&gt; is dispatched at runtime and the output is the same as the original.&lt;/p&gt;
 &lt;/div&gt;</content>
   </entry>
 </feed>

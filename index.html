@@ -29,6 +29,21 @@
       <main>
           <article>
     <header>
+      <time datetime="2015-01-29T11:34:00">Jan 29 2015</time>
+      <h2><a href="/2015/01/29/simple-background-polling-with-rxjava/">Simple background polling with RxJava</a></h2>
+    </header>
+    <div class="paragraph">
+<p>I&#8217;ve done odd bits of playing around with RxJava before but never dived into it very deeply. Today I wanted to re-implement an unreliable background polling operation and <a href="https://twitter.com/tomaslin">Tomás Lin</a> suggested I look at using <a href="https://github.com/ReactiveX/RxJava">RxJava</a>. This may be an obvious implementation to some but I had to do a bit of experimentation (and searching Stack Overflow) to come up with it.</p>
+</div>
+<div class="paragraph">
+<p>Imagine we&#8217;re polling a web-service regularly. The service returns a JSON array of independent items (think events since last poll, Tweets with a particular hashtag or something similar). We want to do some processing (filtering, parsing to a type) on each item and then pass them off to a handler.</p>
+</div>
+
+    <a class="read-more" href="/2015/01/29/simple-background-polling-with-rxjava/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
       <time datetime="2015-01-15T14:19:00">Jan 15 2015</time>
       <h2><a href="/2015/01/15/fixing-current-time-for-tests-with-java-8-s-date-time-api/">Fixing current time for tests with Java 8's date/time API</a></h2>
     </header>
@@ -145,18 +160,6 @@
 </div>
 
     <a class="read-more" href="/2014/06/22/static-analysis-and-strictness/">Read more…</a>
-  </article>
-  <hr>
-  <article>
-    <header>
-      <time datetime="2013-09-12T01:13:00">Sep 12 2013</time>
-      <h2><a href="/2013/09/12/decoupling-from-the-dom-with-angular/">Decoupling from the DOM with Angular</a></h2>
-    </header>
-    <div class="paragraph">
-<p>One piece of advice you&#8217;ll run into pretty soon when working with Angular is that you should never touch the DOM outside of a directive. Especially when test-driving your components this is pretty wise. The great strength of Angular is the declarative way in which the view (HTML) works with the view model (Angular controllers). It&#8217;s almost absurd how easy it is to unit test Angular controllers. Controller functions tend to act on <code>$scope</code> properties, trigger or respond to events and all those things are straightforward to replicate in unit tests.</p>
-</div>
-
-    <a class="read-more" href="/2013/09/12/decoupling-from-the-dom-with-angular/">Read more…</a>
   </article>
   <hr>
 

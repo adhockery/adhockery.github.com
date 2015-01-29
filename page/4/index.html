@@ -29,6 +29,18 @@
       <main>
           <article>
     <header>
+      <time datetime="2012-12-20T21:23:00">Dec 20 2012</time>
+      <h2><a href="/2012/12/20/grails-and-front-end-tools/">Grails & front end tools</a></h2>
+    </header>
+    <div class="paragraph">
+<p>Last week was the London Groovy &amp; Grails Exchange 2012 where I gave a talk called <a href="http://skillsmatter.com/podcast/groovy-grails/grails-for-hipsters">Grails for hipsters</a> about integrating Grails apps with some of the buzziest current tools &amp; techniques. Part of what I talked about was my approach to handling pre-processed front-end resources in Grails apps. In <a href="http://git.io/hipsteroid">the demo app</a> for my talk I used <a href="http://lesscss.org/">LESS</a> &amp; <a href="http://coffeescript.org/">CoffeeScript</a> but everything I discusses applies equally to <a href="http://sass-lang.com/">SASS</a>, <a href="http://learnboost.github.com/stylus/">Stylus</a>, <a href="http://www.typescriptlang.org/">TypeScript</a>, etc.</p>
+</div>
+
+    <a class="read-more" href="/2012/12/20/grails-and-front-end-tools/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
       <time datetime="2012-10-28T14:36:00">Oct 28 2012</time>
       <h2><a href="/2012/10/28/jerry-a-jquery-like-api-for-dom-parsing/">Jerry: a jQuery like API for DOM parsing</a></h2>
     </header>
@@ -149,21 +161,6 @@ nameLength = crew.length()</code></pre>
 </div>
 
     <a class="read-more" href="/2012/02/15/spock-killer-features-the-old-method/">Read more…</a>
-  </article>
-  <hr>
-  <article>
-    <header>
-      <time datetime="2012-02-07T10:56:00">Feb  7 2012</time>
-      <h2><a href="/2012/02/07/semi-restful-scaffolded-controllers/">Semi-RESTful Scaffolded Controllers</a></h2>
-    </header>
-    <div class="paragraph">
-<p>The default Grails scaffolded controllers use a <em>create</em> action to render a form and a <em>save</em> action as the target the form will <em>POST</em> to. If the <em>save</em> action succeeds it redirects to <em>show</em> and if it fails due to constraint violations it re-renders the form. The same applies to editing with the <em>edit</em> and <em>update</em> actions.</p>
-</div>
-<div class="paragraph">
-<p>There&#8217;s a slight quirk here in that a failed <em>save</em> will cause the URL to change from <em>/controllerName/create</em> to <em>/controllerName/save</em>. Not a particularly huge issue, after all it&#8217;s not something a search spider will see and users will be very unlikely to care. One thing I have found problematic though is when rendering a navigation element that highlights an item based on the current action.</p>
-</div>
-
-    <a class="read-more" href="/2012/02/07/semi-restful-scaffolded-controllers/">Read more…</a>
   </article>
   <hr>
 

@@ -29,6 +29,18 @@
       <main>
           <article>
     <header>
+      <time datetime="2010-03-11T17:50:00">Mar 11 2010</time>
+      <h2><a href="/2010/03/11/grails-plugins-on-hudson/">Grails plugins on Hudson</a></h2>
+    </header>
+    <div class="paragraph">
+<p><span class="image"><img src="http://4.bp.blogspot.com/_fh9xwLFYBUw/S5ks3ENs8yI/AAAAAAAACbU/vHE684-UsTI/s400/hudson.png" alt="image"></span>Yesterday I spent some time setting up <a href="http://hudson-ci.org/">Hudson</a> continuous integration build for my various Grails plugins. It was pretty straightforward but I&#8217;ve <a href="https://twitter.com/wangjammer5/statuses/10269319705">been asked</a> to document the steps involved.</p>
+</div>
+
+    <a class="read-more" href="/2010/03/11/grails-plugins-on-hudson/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
       <time datetime="2010-03-05T06:42:00">Mar  5 2010</time>
       <h2><a href="/2010/03/05/page-fragment-caching-with-grails-springcache-plugin/">Page fragment caching with Grails Springcache plugin</a></h2>
     </header>
@@ -149,18 +161,6 @@
 </div>
 
     <a class="read-more" href="/2009/12/12/new-springcache-plugin-version/">Read more…</a>
-  </article>
-  <hr>
-  <article>
-    <header>
-      <time datetime="2009-11-26T22:56:00">Nov 26 2009</time>
-      <h2><a href="/2009/11/26/springcache-plugin-status/">Springcache Plugin Status</a></h2>
-    </header>
-    <div class="paragraph">
-<p>A couple of people have asked me about the <a href="http://grails.org/plugin/springcache">Springcache plugin</a> and Grails 1.2. Currently the plugin is not compatible with 1.2-M3 and onwards. The reason for this is that the spring-modules-cache library that the plugin depends on is not compatible with Spring 3.0 which is used by the newest versions of Grails. Not only that but the <a href="https://springmodules.dev.java.net/">spring-modules project</a> has been discontinued altogether. There is <a href="http://github.com/astubbs/spring-modules">a fork of it on Github</a> but that doesn&#8217;t look terribly active either. This means that at some point I&#8217;m going to have to sit down and write some code to bring the annotation driven caching inside the plugin itself and drop the spring-modules dependency. However, just to compound things the <a href="http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/ch08s09.html#aop-autoproxy-metadata">Spring documentation on the relevant area</a> hasn&#8217;t been updated yet and still references the classes that have been removed from the API which is what&#8217;s causing the incompatibility in the first place!</p>
-</div>
-
-    <a class="read-more" href="/2009/11/26/springcache-plugin-status/">Read more…</a>
   </article>
   <hr>
 

@@ -29,6 +29,18 @@
       <main>
           <article>
     <header>
+      <time datetime="2013-09-12T01:13:00">Sep 12 2013</time>
+      <h2><a href="/2013/09/12/decoupling-from-the-dom-with-angular/">Decoupling from the DOM with Angular</a></h2>
+    </header>
+    <div class="paragraph">
+<p>One piece of advice you&#8217;ll run into pretty soon when working with Angular is that you should never touch the DOM outside of a directive. Especially when test-driving your components this is pretty wise. The great strength of Angular is the declarative way in which the view (HTML) works with the view model (Angular controllers). It&#8217;s almost absurd how easy it is to unit test Angular controllers. Controller functions tend to act on <code>$scope</code> properties, trigger or respond to events and all those things are straightforward to replicate in unit tests.</p>
+</div>
+
+    <a class="read-more" href="/2013/09/12/decoupling-from-the-dom-with-angular/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
       <time datetime="2013-09-02T14:48:00">Sep  2 2013</time>
       <h2><a href="/2013/09/02/unit-testing-angular-directives-that-use-controller-and/">Unit testing Angular directives that use controller and templateUrl</a></h2>
     </header>
@@ -207,44 +219,6 @@ o.foo = o</code></pre>
 </div>
 
     <a class="read-more" href="/2013/03/29/groovy-gotchas-overloading-the-assignment-operator/">Read more…</a>
-  </article>
-  <hr>
-  <article>
-    <header>
-      <time datetime="2013-03-29T12:30:00">Mar 29 2013</time>
-      <h2><a href="/2013/03/29/groovy-gotcha-for-loops-and-closure-scope/">Groovy gotcha: for loops and closure scope</a></h2>
-    </header>
-    <div class="paragraph">
-<p>You probably know that Groovy closures retain information about the scope in which they were created. The closure body can refer to values that were in scope where the closure was declared. There is a gotcha here that has bitten me a few times, though. That&#8217;s when closures are created in a <code>for</code> loop.</p>
-</div>
-<div class="paragraph">
-<p>Consider this example.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="groovy language-groovy">def fns = []
-for (i in (1..5)) {
-    fns &lt;&lt; {-&gt;
-        println i
-    }
-}
-fns.each { it() }</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>What will get printed to <em>sysout</em>? Give up? You can <a href="http://groovyconsole.appspot.com/script/920002">run the script on Groovy Web Console</a>. The output is this:</p>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>5
-5
-5
-5
-5</pre>
-</div>
-</div>
-
-    <a class="read-more" href="/2013/03/29/groovy-gotcha-for-loops-and-closure-scope/">Read more…</a>
   </article>
   <hr>
 

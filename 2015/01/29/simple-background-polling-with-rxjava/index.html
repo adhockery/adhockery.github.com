@@ -136,7 +136,7 @@ public interface Message {
 </div>
 </div>
 <div class="paragraph">
-<p>Now the next thing we need to do is filter out any messages not intended for us. That&#8217;s pretty easy with another <code>map</code> operation on the <code>List&lt;Message</code> emitted every time we poll.</p>
+<p>Now the next thing we need to do is filter out any messages not intended for us. That&#8217;s pretty easy with another <code>map</code> operation on the <code>List&lt;Message&gt;</code> emitted every time we poll.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -178,7 +178,7 @@ public interface Message {
 <p>The <code>flatMap</code> method allows you to produce a new <code>Observable</code> for each value emitted from upstream and coalesceses them into a single downstream <code>Observable</code>.</p>
 </div>
 <div class="paragraph">
-<p>This is much neater. Now the downstream operations are free to deal with individual messages – we can handle the target filtering with a simple <code>filter</code> operation instead of mapping the original list to a sub-list and we no longer need to loop over multiple messages in the subscriber.</p>
+<p>This is much neater. Now the downstream operations are free to deal with individual messages – we can handle the recipient filtering with a simple <code>filter</code> operation instead of mapping the original list to a sub-list and we no longer need to loop over multiple messages in the subscriber.</p>
 </div>
 <div class="paragraph">
 <p>One last thing is that perhaps our remote service will give us some duplicate messages on subsequent calls. An ideal way to handle that would be to send a last message id or an HTTP <code>If-Modified-Since</code> header with the request but if that&#8217;s not an option Rx can help us.</p>

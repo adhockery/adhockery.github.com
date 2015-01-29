@@ -13,7 +13,7 @@
     <link rel="alternate" href="http://blog.freeside.co/2015/01/29/simple-background-polling-with-rxjava/"/>
     <id>http://blog.freeside.co/2015/01/29/simple-background-polling-with-rxjava/</id>
     <published>2015-01-29T11:34:00+00:00</published>
-    <updated>2015-01-29T11:46:13+00:00</updated>
+    <updated>2015-01-29T12:21:49+00:00</updated>
     <author>
       <name>Rob Fletcher</name>
     </author>
@@ -121,7 +121,7 @@ public interface Message {
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class="paragraph"&gt;
-&lt;p&gt;Now the next thing we need to do is filter out any messages not intended for us. That&amp;#8217;s pretty easy with another &lt;code&gt;map&lt;/code&gt; operation on the &lt;code&gt;List&amp;lt;Message&lt;/code&gt; emitted every time we poll.&lt;/p&gt;
+&lt;p&gt;Now the next thing we need to do is filter out any messages not intended for us. That&amp;#8217;s pretty easy with another &lt;code&gt;map&lt;/code&gt; operation on the &lt;code&gt;List&amp;lt;Message&amp;gt;&lt;/code&gt; emitted every time we poll.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="listingblock"&gt;
 &lt;div class="content"&gt;
@@ -163,7 +163,7 @@ public interface Message {
 &lt;p&gt;The &lt;code&gt;flatMap&lt;/code&gt; method allows you to produce a new &lt;code&gt;Observable&lt;/code&gt; for each value emitted from upstream and coalesceses them into a single downstream &lt;code&gt;Observable&lt;/code&gt;.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="paragraph"&gt;
-&lt;p&gt;This is much neater. Now the downstream operations are free to deal with individual messages – we can handle the target filtering with a simple &lt;code&gt;filter&lt;/code&gt; operation instead of mapping the original list to a sub-list and we no longer need to loop over multiple messages in the subscriber.&lt;/p&gt;
+&lt;p&gt;This is much neater. Now the downstream operations are free to deal with individual messages – we can handle the recipient filtering with a simple &lt;code&gt;filter&lt;/code&gt; operation instead of mapping the original list to a sub-list and we no longer need to loop over multiple messages in the subscriber.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="paragraph"&gt;
 &lt;p&gt;One last thing is that perhaps our remote service will give us some duplicate messages on subsequent calls. An ideal way to handle that would be to send a last message id or an HTTP &lt;code&gt;If-Modified-Since&lt;/code&gt; header with the request but if that&amp;#8217;s not an option Rx can help us.&lt;/p&gt;

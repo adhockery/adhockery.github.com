@@ -80,7 +80,7 @@ public interface Message {
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="java language-java">Observable.interval(30, TimeUnit.SECONDS, Schedulers.io())
-          .map((tick) -&gt; messageService.getRecentMessages())</code></pre>
+          .map(tick -&gt; messageService.getRecentMessages())</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -89,8 +89,8 @@ public interface Message {
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="java language-java">Observable.interval(30, TimeUnit.SECONDS, Schedulers.io())
-          .map((tick) -&gt; messageService.getRecentMessages())
-          .subscribe((messages) -&gt; {
+          .map(tick -&gt; messageService.getRecentMessages())
+          .subscribe(messages -&gt; {
             // the subscriber is called with List&lt;Message&gt; every time
             // the remote service is polled
             for (Message message : messages) {
@@ -105,9 +105,9 @@ public interface Message {
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="java language-java">Observable.interval(30, TimeUnit.SECONDS, Schedulers.io())
-          .map((tick) -&gt; messageService.getRecentMessages())
+          .map(tick -&gt; messageService.getRecentMessages())
           .retry()
-          .subscribe((messages) -&gt; {
+          .subscribe(messages -&gt; {
             for (Message message : messages) {
               log.info(message.toString())
             }
@@ -123,12 +123,12 @@ public interface Message {
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="java language-java">Observable.interval(30, TimeUnit.SECONDS, Schedulers.io())
-          .map((tick) -&gt; messageService.getRecentMessages())
+          .map(tick -&gt; messageService.getRecentMessages())
           // The error handler is called with any exception raised upstream
-          .doOnError((err) -&gt; log.error("Error retrieving messages", err))
+          .doOnError(err -&gt; log.error("Error retrieving messages", err))
           // Errors do not propagate past retry so they must be handled before
           .retry()
-          .subscribe((messages) -&gt; {
+          .subscribe(messages -&gt; {
             for (Message message : messages) {
               log.info(message.toString())
             }
@@ -141,17 +141,17 @@ public interface Message {
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="java language-java">Observable.interval(30, TimeUnit.SECONDS, Schedulers.io())
-          .map((tick) -&gt; messageService.getRecentMessages())
-          .doOnError((err) -&gt; log.error("Error retrieving messages", err))
+          .map(tick -&gt; messageService.getRecentMessages())
+          .doOnError(err -&gt; log.error("Error retrieving messages", err))
           .retry()
-          .map((messages) -&gt;
+          .map(messages -&gt;
             // a 2nd map operation is called with the List&lt;Message&gt; emitted upstream
             messages.stream()
                     // filter to a sub-list containing only "our" messages
-                    .filter((message) -&gt; message.isFor(recipient))
+                    .filter(message -&gt; message.isFor(recipient))
                     // turn sub-list stream back into a List&lt;Message&gt;
                     .collect(Collectors.toList()))
-          .subscribe((messages) -&gt; {
+          .subscribe(messages -&gt; {
             for (Message message : messages) {
               log.info(message.toString())
             }
@@ -164,14 +164,14 @@ public interface Message {
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="java language-java">Observable.interval(30, TimeUnit.SECONDS, Schedulers.io())
-          .map((tick) -&gt; messageService.getRecentMessages())
-          .doOnError((err) -&gt; log.error("Error retrieving messages", err))
+          .map(tick -&gt; messageService.getRecentMessages())
+          .doOnError(err -&gt; log.error("Error retrieving messages", err))
           .retry()
           // turns each List&lt;Message&gt; into an Observable&lt;Message&gt; that flatMap
           // will join into a single stream
           .flatMap(Observable::from)
-          .filter((message) -&gt; message.isFor(recipient))
-          .subscribe((message) -&gt; log.info(message.toString()))</code></pre>
+          .filter(message -&gt; message.isFor(recipient))
+          .subscribe(message -&gt; log.info(message.toString()))</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -186,14 +186,14 @@ public interface Message {
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="java language-java">Observable.interval(30, TimeUnit.SECONDS, Schedulers.io())
-          .map((tick) -&gt; messageService.getRecentMessages())
-          .doOnError((err) -&gt; log.error("Error retrieving messages", err))
+          .map(tick -&gt; messageService.getRecentMessages())
+          .doOnError(err -&gt; log.error("Error retrieving messages", err))
           .retry()
           .flatMap(Observable::from)
           // filter out any previously seen messages
           .distinct()
-          .filter((message) -&gt; message.isFor(recipient))
-          .subscribe((message) -&gt; log.info(message.toString()))</code></pre>
+          .filter(message -&gt; message.isFor(recipient))
+          .subscribe(message -&gt; log.info(message.toString()))</code></pre>
 </div>
 </div>
 <div class="paragraph">

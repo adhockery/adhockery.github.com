@@ -13,7 +13,7 @@
     <link rel="alternate" href="http://blog.freeside.co/2015/01/29/simple-background-polling-with-rxjava/"/>
     <id>http://blog.freeside.co/2015/01/29/simple-background-polling-with-rxjava/</id>
     <published>2015-01-29T11:34:00+00:00</published>
-    <updated>2015-01-29T12:21:49+00:00</updated>
+    <updated>2015-01-29T15:48:41+00:00</updated>
     <author>
       <name>Rob Fletcher</name>
     </author>
@@ -65,7 +65,7 @@ public interface Message {
 &lt;div class="listingblock"&gt;
 &lt;div class="content"&gt;
 &lt;pre class="highlight"&gt;&lt;code class="java language-java"&gt;Observable.interval(30, TimeUnit.SECONDS, Schedulers.io())
-          .map((tick) -&amp;gt; messageService.getRecentMessages())&lt;/code&gt;&lt;/pre&gt;
+          .map(tick -&amp;gt; messageService.getRecentMessages())&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class="paragraph"&gt;
@@ -74,8 +74,8 @@ public interface Message {
 &lt;div class="listingblock"&gt;
 &lt;div class="content"&gt;
 &lt;pre class="highlight"&gt;&lt;code class="java language-java"&gt;Observable.interval(30, TimeUnit.SECONDS, Schedulers.io())
-          .map((tick) -&amp;gt; messageService.getRecentMessages())
-          .subscribe((messages) -&amp;gt; {
+          .map(tick -&amp;gt; messageService.getRecentMessages())
+          .subscribe(messages -&amp;gt; {
             // the subscriber is called with List&amp;lt;Message&amp;gt; every time
             // the remote service is polled
             for (Message message : messages) {
@@ -90,9 +90,9 @@ public interface Message {
 &lt;div class="listingblock"&gt;
 &lt;div class="content"&gt;
 &lt;pre class="highlight"&gt;&lt;code class="java language-java"&gt;Observable.interval(30, TimeUnit.SECONDS, Schedulers.io())
-          .map((tick) -&amp;gt; messageService.getRecentMessages())
+          .map(tick -&amp;gt; messageService.getRecentMessages())
           .retry()
-          .subscribe((messages) -&amp;gt; {
+          .subscribe(messages -&amp;gt; {
             for (Message message : messages) {
               log.info(message.toString())
             }
@@ -108,12 +108,12 @@ public interface Message {
 &lt;div class="listingblock"&gt;
 &lt;div class="content"&gt;
 &lt;pre class="highlight"&gt;&lt;code class="java language-java"&gt;Observable.interval(30, TimeUnit.SECONDS, Schedulers.io())
-          .map((tick) -&amp;gt; messageService.getRecentMessages())
+          .map(tick -&amp;gt; messageService.getRecentMessages())
           // The error handler is called with any exception raised upstream
-          .doOnError((err) -&amp;gt; log.error("Error retrieving messages", err))
+          .doOnError(err -&amp;gt; log.error("Error retrieving messages", err))
           // Errors do not propagate past retry so they must be handled before
           .retry()
-          .subscribe((messages) -&amp;gt; {
+          .subscribe(messages -&amp;gt; {
             for (Message message : messages) {
               log.info(message.toString())
             }
@@ -126,17 +126,17 @@ public interface Message {
 &lt;div class="listingblock"&gt;
 &lt;div class="content"&gt;
 &lt;pre class="highlight"&gt;&lt;code class="java language-java"&gt;Observable.interval(30, TimeUnit.SECONDS, Schedulers.io())
-          .map((tick) -&amp;gt; messageService.getRecentMessages())
-          .doOnError((err) -&amp;gt; log.error("Error retrieving messages", err))
+          .map(tick -&amp;gt; messageService.getRecentMessages())
+          .doOnError(err -&amp;gt; log.error("Error retrieving messages", err))
           .retry()
-          .map((messages) -&amp;gt;
+          .map(messages -&amp;gt;
             // a 2nd map operation is called with the List&amp;lt;Message&amp;gt; emitted upstream
             messages.stream()
                     // filter to a sub-list containing only "our" messages
-                    .filter((message) -&amp;gt; message.isFor(recipient))
+                    .filter(message -&amp;gt; message.isFor(recipient))
                     // turn sub-list stream back into a List&amp;lt;Message&amp;gt;
                     .collect(Collectors.toList()))
-          .subscribe((messages) -&amp;gt; {
+          .subscribe(messages -&amp;gt; {
             for (Message message : messages) {
               log.info(message.toString())
             }
@@ -149,14 +149,14 @@ public interface Message {
 &lt;div class="listingblock"&gt;
 &lt;div class="content"&gt;
 &lt;pre class="highlight"&gt;&lt;code class="java language-java"&gt;Observable.interval(30, TimeUnit.SECONDS, Schedulers.io())
-          .map((tick) -&amp;gt; messageService.getRecentMessages())
-          .doOnError((err) -&amp;gt; log.error("Error retrieving messages", err))
+          .map(tick -&amp;gt; messageService.getRecentMessages())
+          .doOnError(err -&amp;gt; log.error("Error retrieving messages", err))
           .retry()
           // turns each List&amp;lt;Message&amp;gt; into an Observable&amp;lt;Message&amp;gt; that flatMap
           // will join into a single stream
           .flatMap(Observable::from)
-          .filter((message) -&amp;gt; message.isFor(recipient))
-          .subscribe((message) -&amp;gt; log.info(message.toString()))&lt;/code&gt;&lt;/pre&gt;
+          .filter(message -&amp;gt; message.isFor(recipient))
+          .subscribe(message -&amp;gt; log.info(message.toString()))&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class="paragraph"&gt;
@@ -171,14 +171,14 @@ public interface Message {
 &lt;div class="listingblock"&gt;
 &lt;div class="content"&gt;
 &lt;pre class="highlight"&gt;&lt;code class="java language-java"&gt;Observable.interval(30, TimeUnit.SECONDS, Schedulers.io())
-          .map((tick) -&amp;gt; messageService.getRecentMessages())
-          .doOnError((err) -&amp;gt; log.error("Error retrieving messages", err))
+          .map(tick -&amp;gt; messageService.getRecentMessages())
+          .doOnError(err -&amp;gt; log.error("Error retrieving messages", err))
           .retry()
           .flatMap(Observable::from)
           // filter out any previously seen messages
           .distinct()
-          .filter((message) -&amp;gt; message.isFor(recipient))
-          .subscribe((message) -&amp;gt; log.info(message.toString()))&lt;/code&gt;&lt;/pre&gt;
+          .filter(message -&amp;gt; message.isFor(recipient))
+          .subscribe(message -&amp;gt; log.info(message.toString()))&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class="paragraph"&gt;

@@ -13,7 +13,7 @@
     <link rel="alternate" href="http://blog.freeside.co/2015/01/29/simple-background-polling-with-rxjava/"/>
     <id>http://blog.freeside.co/2015/01/29/simple-background-polling-with-rxjava/</id>
     <published>2015-01-29T11:34:00+00:00</published>
-    <updated>2015-01-29T11:35:48+00:00</updated>
+    <updated>2015-01-29T11:46:13+00:00</updated>
     <author>
       <name>Rob Fletcher</name>
     </author>
@@ -154,7 +154,7 @@ public interface Message {
           .retry()
           // turns each List&amp;lt;Message&amp;gt; into an Observable&amp;lt;Message&amp;gt; that flatMap
           // will join into a single stream
-          .flatMap(Observable::from) &lt;b&gt;(1)&lt;/b&gt;
+          .flatMap(Observable::from)
           .filter((message) -&amp;gt; message.isFor(recipient))
           .subscribe((message) -&amp;gt; log.info(message.toString()))&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;

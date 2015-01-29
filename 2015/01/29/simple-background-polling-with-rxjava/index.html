@@ -169,7 +169,7 @@ public interface Message {
           .retry()
           // turns each List&lt;Message&gt; into an Observable&lt;Message&gt; that flatMap
           // will join into a single stream
-          .flatMap(Observable::from) <b>(1)</b>
+          .flatMap(Observable::from)
           .filter((message) -&gt; message.isFor(recipient))
           .subscribe((message) -&gt; log.info(message.toString()))</code></pre>
 </div>

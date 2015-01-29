@@ -13,7 +13,7 @@
     <link rel="alternate" href="http://blog.freeside.co/2015/01/29/simple-background-polling-with-rxjava/"/>
     <id>http://blog.freeside.co/2015/01/29/simple-background-polling-with-rxjava/</id>
     <published>2015-01-29T11:34:00+00:00</published>
-    <updated>2015-01-29T11:34:17+00:00</updated>
+    <updated>2015-01-29T11:35:48+00:00</updated>
     <author>
       <name>Rob Fletcher</name>
     </author>
@@ -51,7 +51,7 @@ public interface Message {
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class="paragraph"&gt;
-&lt;p&gt;How do we translate our tick sequence into calls to &lt;code&gt;getRecentMessages&lt;/code&gt;? We can think of it as a &lt;strong&gt;map&lt;/strong&gt; operation – just one in which we don&amp;#8217;t care about the original value.&lt;/p&gt;
+&lt;p&gt;How do we translate our tick sequence into calls to &lt;code&gt;getRecentMessages&lt;/code&gt;? We can think of it as a &lt;em&gt;map&lt;/em&gt; operation – just one in which we don&amp;#8217;t care about the original value.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="listingblock"&gt;
 &lt;div class="content"&gt;

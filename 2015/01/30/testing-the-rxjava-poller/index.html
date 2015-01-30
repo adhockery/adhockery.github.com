@@ -1,0 +1,240 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ad-Hockery - Testing the RxJava poller</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/Icon.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/Icon@2x.png">
+    <link rel="stylesheet" href="/stylesheets/adhockery.css">
+    <link rel="stylesheet" href="/stylesheets/prism.css">
+    <script src="/javascripts/modernizr.custom.js"></script>
+    <script src="//use.edgefonts.net/ultra;league-gothic.js"></script>
+  </head>
+  <body>
+
+    <header>
+      <h1 class="logo"><a href="/">Ad-Hockery</a></h1>
+      <dl class="strapline">
+        <dt>ad-hockery: <em>/ad·hok'@r·ee/</em>, n.</dt>
+        <dd>Gratuitous assumptions... which lead to the appearance of semi-intelligent behavior but are in fact entirely arbitrary. <cite><a href="http://www.retrologic.com/jargon/A/ad-hockery.html">Jargon File</a></cite>
+      </dl>
+    </header>
+
+    <div class="container">
+      <main>
+          <article>
+    <header>
+      <time datetime="2015-01-30T10:15:00">Jan 30 2015</time>
+      <h1>Testing the RxJava poller</h1>
+    </header>
+    <div class="paragraph">
+<p>Yesterday I posted about <a href="http://blog.freeside.co/2015/01/29/simple-background-polling-with-rxjava/">an implementation of a simple remote service polling mechanism</a> using <a href="https://github.com/ReactiveX/RxJava">RxJava</a>. One of the things I particularly liked when applying this pattern at work was how straightforward it was to unit test.</p>
+</div>
+<div class="paragraph">
+<p>Often when dealing with asynchronous processing unit testing can be pretty painful. Typically you need to use a mechanism such as Java&#8217;s <code>CountDownLatch</code> or Spock&#8217;s <code>BlockingVariables</code> or <code>PollingConditions</code> to synchronize threads before making assertions. Allowing processing to run asynchronously, especially when testing scheduled activity can make tests very slow as well.</p>
+</div>
+<div class="paragraph">
+<p>Ideally tests the asynchronous nature of the code is abstracted and the timer can be faked out. This is exactly the approach that RxJava takes.</p>
+</div>
+
+<div class="paragraph">
+<p>Recall that we used <code>Schedulers.io()</code> to ensure that blocking I/O was handled appropriately. If we make that scheduler a property of the <em>poller</em> object we can replace it in tests with <code>Schedulers.test()</code>.</p>
+</div>
+<div class="paragraph">
+<p>If we wrap the polling logic discussed in the previous post up in a <code>start</code> method of a <code>MessagePoller</code> class we can have a constructor that looks like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="java language-java">public MessagePoller(MessageService messageService,
+                     Action1&lt;Message&gt; subscriber,
+                     Scheduler scheduler) {</code></pre>
+</div>
+</div>
+<div class="sidebarblock">
+<div class="content">
+<div class="paragraph">
+<p>For the sake of brevity I&#8217;m actually omitting a couple of parameters here – we&#8217;d also want the polling interval and the message recipient to be parameters. For the examples in this post I&#8217;ll hardcode those.</p>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>The test scheduler provides a method <code>advanceTimeBy(long, TimeUnit)</code> that fakes a delay without any time actually having to elapse. For our purposes this is ideal as we can use <code>advanceTimeBy(30, SECONDS)</code> to trigger a poll on the remote service.</p>
+</div>
+<div class="paragraph">
+<p>It&#8217;s very easy to write a test that ensures the subscriber is sent a message returned by the remote service.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">def messageService = Stub(MessageService)
+def subscriber = Mock(Action1)
+@Shared scheduler = Schedulers.test()
+
+@Subject messagePoller = new MessagePoller(messageService,
+                                           subscriber,
+                                           scheduler)
+
+def "subscriber can receive a single message"() {
+  given: "the remote service will return a single message"
+  messageService.recentMessages(_) &gt;&gt; [message]
+
+  and: "polling has started"
+  messagePoller.start()
+
+  when: "the next poll is triggered"
+  scheduler.advanceTimeBy(30, SECONDS)
+
+  then: "the subscriber receives the message"
+  1 * subscriber.call(message)
+
+  where:
+  message = new Message("1", "Hi", "Cam", "Rob")
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We stub the response from the remote service, start polling, fake the interval ocurring and then assert that our subscriber mock receives the message. There&#8217;s no thread synchronization and the test runs almost instantaneously.</p>
+</div>
+<div class="paragraph">
+<p>We can just as easily test that messages are streamed consistently from multiple calls to the remote service.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">def "subscriber can receive multiple messages from multiple polls"() {
+  given:
+  messageService.recentMessages(_) &gt;&gt;
+      [message1, message2] &gt;&gt;
+      [message3]
+
+  and:
+  messagePoller.start()
+
+  when:
+  scheduler.advanceTimeBy(60, SECONDS)
+
+  then:
+  1 * subscriber.call(message1)
+  1 * subscriber.call(message2)
+  1 * subscriber.call(message3)
+
+  where:
+  message1 = new Message("1", "Hi", "Cam", "Rob")
+  message2 = new Message("2", "Bye", "Cam", "Rob")
+  message3 = new Message("3", "Hi", "Clay", "Rob")
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here we trigger two polls by advancing the time further and ensuring that the subscriber recieves all the messages.</p>
+</div>
+<div class="paragraph">
+<p>The test sets up two sequential return values for the <code>messageService</code> stub using Spock&#8217;s chaining syntax. The first time <code>messageServices.recentMessages</code> gets called it will respond with <code>[message2, message2]</code> and the second time it will respond with <code>[message3]</code>.</p>
+</div>
+<div class="paragraph">
+<p>Using the same technique we can also test that exceptions do not stop the polling mechanism.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">def "polling continues after an error from the message service"() {
+  given:
+  messageService.recentMessages(_) &gt;&gt;
+      [message1] &gt;&gt;
+      { throw MockHttpException.newInternalError(null) } &gt;&gt;
+      [message2]
+
+  and:
+  messagePoller.start()
+
+  when:
+  scheduler.advanceTimeBy(90, SECONDS)
+
+  then:
+  2 * subscriber.call(_)
+
+  where:
+  message1 = new Message("1", "Hi", "Tomas", "Rob")
+  message2 = new Message("2", "Bye", "Tomas", "Rob")
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here we poll the remote service three times. Using Spock&#8217;s stub chaining we&#8217;ve set up 3 responses, the second of which will throw an exception. We then assert that both messages arrive because the exception was not allowed to kill the stream.</p>
+</div>
+<div class="paragraph">
+<p>It&#8217;s similarly straightforward to test other aspects of the polling mechanism; message filtering by recipient, de-duplication and so on.</p>
+</div>
+<div class="sidebarblock">
+<div class="content">
+<div class="paragraph">
+<p>I have published a small <a href="https://github.com/robfletcher/rx-message-poll">GitHub project</a> containing this example and its tests..</p>
+</div>
+</div>
+</div>
+    <footer>
+      <ul class="tag-list">
+          <li><a href="/tags/rxjava/">rxjava</a></li>
+          <li><a href="/tags/testing/">testing</a></li>
+          <li><a href="/tags/spock/">spock</a></li>
+      </ul>
+    </footer>
+  </article>
+
+      </main>
+
+      <footer>
+        <nav>
+          <a href="/">Home</a>
+          <a href="/about">About</a>
+          <a href="/archive">Archive</a>
+        </nav>
+      </footer>
+    </div>
+
+    <script src="/javascripts/adhockery.js"></script>
+    <script type="text/javascript">
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-27275689-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+    <!-- clicky analytics -->
+    <a title="Web Statistics" href="http://clicky.com/100768647"><img alt="Web Statistics" src="//static.getclicky.com/media/links/badge.gif" border="0" /></a>
+    <script type="text/javascript">
+    var clicky_site_ids = clicky_site_ids || [];
+    clicky_site_ids.push(100768647);
+    (function() {
+      var s = document.createElement('script');
+      s.type = 'text/javascript';
+      s.async = true;
+      s.src = '//static.getclicky.com/js';
+      ( document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0] ).appendChild( s );
+    })();
+    </script>
+    <noscript><p><img alt="Clicky" width="1" height="1" src="//in.getclicky.com/100768647ns.gif" /></p></noscript>
+    <!-- / analytics -->
+    
+  </body>
+</html>
+
+<footer class="disqus">
+  <div id="disqus_thread"></div>
+            <script type="text/javascript">
+            //<![CDATA[
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//adhockery.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            //]]>
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </script>
+</footer>

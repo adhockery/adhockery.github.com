@@ -33,6 +33,24 @@
 
   <article>
     <header>
+      <time datetime="2015-01-30T10:15:00">Jan 30 2015</time>
+      <h2><a href="/2015/01/30/testing-the-rxjava-poller/">Testing the RxJava poller</a></h2>
+    </header>
+    <div class="paragraph">
+<p>Yesterday I posted about <a href="http://blog.freeside.co/2015/01/29/simple-background-polling-with-rxjava/">an implementation of a simple remote service polling mechanism</a> using <a href="https://github.com/ReactiveX/RxJava">RxJava</a>. One of the things I particularly liked when applying this pattern at work was how straightforward it was to unit test.</p>
+</div>
+<div class="paragraph">
+<p>Often when dealing with asynchronous processing unit testing can be pretty painful. Typically you need to use a mechanism such as Java&#8217;s <code>CountDownLatch</code> or Spock&#8217;s <code>BlockingVariables</code> or <code>PollingConditions</code> to synchronize threads before making assertions. Allowing processing to run asynchronously, especially when testing scheduled activity can make tests very slow as well.</p>
+</div>
+<div class="paragraph">
+<p>Ideally tests the asynchronous nature of the code is abstracted and the timer can be faked out. This is exactly the approach that RxJava takes.</p>
+</div>
+
+    <a class="read-more" href="/2015/01/30/testing-the-rxjava-poller/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
       <time datetime="2015-01-15T14:19:00">Jan 15 2015</time>
       <h2><a href="/2015/01/15/fixing-current-time-for-tests-with-java-8-s-date-time-api/">Fixing current time for tests with Java 8's date/time API</a></h2>
     </header>
@@ -146,18 +164,6 @@
 </div>
 
     <a class="read-more" href="/2013/01/20/getting-started-with-angular-unit-tests/">Read more…</a>
-  </article>
-  <hr>
-  <article>
-    <header>
-      <time datetime="2012-10-28T14:36:00">Oct 28 2012</time>
-      <h2><a href="/2012/10/28/jerry-a-jquery-like-api-for-dom-parsing/">Jerry: a jQuery like API for DOM parsing</a></h2>
-    </header>
-    <div class="paragraph">
-<p>When unit testing things that produce HTML output (such as some Grails taglibs) there are some common pitfalls. Comparing large chunks of markup with an expected string is very brittle; whitespace and attribute ordering becomes significant. Often people end up using regular expressions or assertions like <code>assert output.contains('&lt;div id="foo"&gt;')</code>. Whilst it may be a bit more maintainable this doesn&#8217;t really test correct DOM structure which is often important and again, attribute order can be a problem.</p>
-</div>
-
-    <a class="read-more" href="/2012/10/28/jerry-a-jquery-like-api-for-dom-parsing/">Read more…</a>
   </article>
   <hr>
 

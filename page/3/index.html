@@ -29,6 +29,53 @@
       <main>
           <article>
     <header>
+      <time datetime="2013-03-29T15:42:07">Mar 29 2013</time>
+      <h2><a href="/2013/03/29/groovy-gotchas-overloading-the-assignment-operator/">Groovy gotchas: overloading the assignment operator</a></h2>
+    </header>
+    <div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>I reported this issue as <a href="https://jira.codehaus.org/browse/GROOVY-6084">GROOVY-6084</a> and it has been fixed as of Groovy 2.4.0-beta-4. I&#8217;m keeping the blog post here for historical interest.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>When assigning to a property of an object in Groovy using the assignment operator <code>=</code> Groovy will look for a bean property style setter method. For example <code>x.foo = y</code> is equivalent to <code>x.setFoo(y)</code>. Or is it?</p>
+</div>
+<div class="paragraph">
+<p>Since meta-methods can be overloaded with different parameter types what will be printed to <em>sysout</em> if we run this script? (Remember that Groovy - unlike Java - dispatches to the <em>most specific</em> applicable method signature).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">Object.metaClass.with {
+    setFoo = {
+        println "setFoo(Object)"
+    }
+    setFoo = { String s -&gt;
+        println "setFoo(String)"
+    }
+}
+
+def o = new Object()
+o.setFoo("foo")
+o.setFoo(o)
+o.foo = "foo"
+o.foo = o</code></pre>
+</div>
+</div>
+
+    <a class="read-more" href="/2013/03/29/groovy-gotchas-overloading-the-assignment-operator/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
       <time datetime="2013-03-29T12:30:00">Mar 29 2013</time>
       <h2><a href="/2013/03/29/groovy-gotcha-for-loops-and-closure-scope/">Groovy gotcha: for loops and closure scope</a></h2>
     </header>
@@ -168,18 +215,6 @@ fns.each { it() }</code></pre>
 </div>
 
     <a class="read-more" href="/2013/01/20/getting-started-with-angular-unit-tests/">Read more…</a>
-  </article>
-  <hr>
-  <article>
-    <header>
-      <time datetime="2013-01-19T17:20:00">Jan 19 2013</time>
-      <h2><a href="/2013/01/19/coffeescript-gotchas-for-loops/">CoffeeScript Gotchas: for loops</a></h2>
-    </header>
-    <div class="paragraph">
-<p>I was caught out by a subtle difference between JavaScript and CoffeeScript yesterday.</p>
-</div>
-
-    <a class="read-more" href="/2013/01/19/coffeescript-gotchas-for-loops/">Read more…</a>
   </article>
   <hr>
 

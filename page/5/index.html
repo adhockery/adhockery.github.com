@@ -29,6 +29,21 @@
       <main>
           <article>
     <header>
+      <time datetime="2012-02-15T06:46:00">Feb 15 2012</time>
+      <h2><a href="/2012/02/15/spock-killer-features-the-old-method/">Spock Killer Features: The “old” method</a></h2>
+    </header>
+    <div class="paragraph">
+<p>I use Spock almost exclusively to test Groovy or Java code these days. It&#8217;s got some fantastic features that other test frameworks don&#8217;t have. Some of them aren&#8217;t that well known or documented, though.</p>
+</div>
+<div class="paragraph">
+<p>The <code>old</code> method is possibly my favourite Spock feature. It&#8217;s a simple thing but really enhances test legibility. It&#8217;s also great for wowing developers new to Spock because it looks like black magic at first glance.</p>
+</div>
+
+    <a class="read-more" href="/2012/02/15/spock-killer-features-the-old-method/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
       <time datetime="2012-02-07T10:56:00">Feb  7 2012</time>
       <h2><a href="/2012/02/07/semi-restful-scaffolded-controllers/">Semi-RESTful Scaffolded Controllers</a></h2>
     </header>
@@ -177,25 +192,6 @@ applyTemplate('&lt;my:tag/&gt;') == 'the expected output'</code></pre>
 </div>
 
     <a class="read-more" href="/2011/08/18/data-driven-variation-with-spock/">Read more…</a>
-  </article>
-  <hr>
-  <article>
-    <header>
-      <time datetime="2011-08-02T13:01:00">Aug  2 2011</time>
-      <h2><a href="/2011/08/02/avoiding-accidental-i18n-in-grails/">Avoiding accidental i18n in Grails</a></h2>
-    </header>
-    <div class="paragraph">
-<p>We’re developing an app that’s exclusively for a UK audience so i18n really isn’t an issue for us. However recently we got bitten by some i18n creeping in where we didn’t want it. Specifically, when using Grails’ <code>g:dateFormat</code> tag the default behaviour is to format the date according to the <code>Locale</code> specified in the user’s <code>Accept-Language</code> header. Even though we are explicitly specifying a format pattern for the date Java is aware of localized day names for some languages so the output can vary. The result is that on a page full of English text there suddenly appears a Spanish or Swedish day name. What makes things worse is that as we use server-side content caching and a CDN if a user with a non-English <code>Accept-Language</code> header is the first to see a particular page or bit of dynamically retrieved content then the cache is primed and until it expires <em>everyone</em> will see the non-English day name text. The solution in a Grails app is as simple as replacing Spring’s standard <code>localeResolver</code> bean with an instance of <code>FixedLocaleResolver</code>. Just add the following to <em>grails-app/conf/spring/resources.groovy</em>:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="groovy language-groovy">localeResolver(org.springframework.web.servlet.i18n.FixedLocaleResolver, Locale.UK)</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>This changes the way Spring works out the request locale and any locale-aware tags should just fall into place.</p>
-</div>
-    <a class="read-more" href="/2011/08/02/avoiding-accidental-i18n-in-grails/">Read more…</a>
   </article>
   <hr>
 

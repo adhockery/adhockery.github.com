@@ -29,6 +29,25 @@
       <main>
           <article>
     <header>
+      <time datetime="2011-08-02T13:01:00">Aug  2 2011</time>
+      <h2><a href="/2011/08/02/avoiding-accidental-i18n-in-grails/">Avoiding accidental i18n in Grails</a></h2>
+    </header>
+    <div class="paragraph">
+<p>We’re developing an app that’s exclusively for a UK audience so i18n really isn’t an issue for us. However recently we got bitten by some i18n creeping in where we didn’t want it. Specifically, when using Grails’ <code>g:dateFormat</code> tag the default behaviour is to format the date according to the <code>Locale</code> specified in the user’s <code>Accept-Language</code> header. Even though we are explicitly specifying a format pattern for the date Java is aware of localized day names for some languages so the output can vary. The result is that on a page full of English text there suddenly appears a Spanish or Swedish day name. What makes things worse is that as we use server-side content caching and a CDN if a user with a non-English <code>Accept-Language</code> header is the first to see a particular page or bit of dynamically retrieved content then the cache is primed and until it expires <em>everyone</em> will see the non-English day name text. The solution in a Grails app is as simple as replacing Spring’s standard <code>localeResolver</code> bean with an instance of <code>FixedLocaleResolver</code>. Just add the following to <em>grails-app/conf/spring/resources.groovy</em>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="groovy language-groovy">localeResolver(org.springframework.web.servlet.i18n.FixedLocaleResolver, Locale.UK)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This changes the way Spring works out the request locale and any locale-aware tags should just fall into place.</p>
+</div>
+    <a class="read-more" href="/2011/08/02/avoiding-accidental-i18n-in-grails/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
       <time datetime="2011-05-21T21:59:00">May 21 2011</time>
       <h2><a href="/2011/05/21/resources-plugin-and-modular-web-components-for-grails/">Resources plugin and modular web components for Grails apps</a></h2>
     </header>
@@ -148,18 +167,6 @@
 </div>
 
     <a class="read-more" href="/2010/09/24/stubbing-access-to-the-g-message-tag-in-unit-tests/">Read more…</a>
-  </article>
-  <hr>
-  <article>
-    <header>
-      <time datetime="2010-08-12T22:46:00">Aug 12 2010</time>
-      <h2><a href="/2010/08/12/auto-generate-spock-specs-for-grails-artifacts/">Auto-generate Spock specs for Grails artifacts</a></h2>
-    </header>
-    <div class="paragraph">
-<p>When creating artifacts such as domain classes, controllers and tag libs Grails generates a <em>JUnit</em> test case. If, like me, you&#8217;re digging writing specifications with <a href="http://spockframework.org/">Spock</a> you&#8217;d probably rather have Grails generate one of those. The last thing I want is to manually transform every generated test case into a specification for every artifact I create.</p>
-</div>
-
-    <a class="read-more" href="/2010/08/12/auto-generate-spock-specs-for-grails-artifacts/">Read more…</a>
   </article>
   <hr>
 

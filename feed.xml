@@ -4,10 +4,162 @@
   <id>http://blog.freeside.co/</id>
   <link href="http://blog.freeside.co/"/>
   <link href="http://blog.freeside.co/feed.xml" rel="self"/>
-  <updated>2015-01-29T11:34:00+00:00</updated>
+  <updated>2015-01-30T10:15:00+00:00</updated>
   <author>
     <name>Rob Fletcher</name>
   </author>
+  <entry>
+    <title>Testing the RxJava poller</title>
+    <link rel="alternate" href="http://blog.freeside.co/2015/01/30/testing-the-rxjava-poller/"/>
+    <id>http://blog.freeside.co/2015/01/30/testing-the-rxjava-poller/</id>
+    <published>2015-01-30T10:15:00+00:00</published>
+    <updated>2015-01-30T10:15:45+00:00</updated>
+    <author>
+      <name>Rob Fletcher</name>
+    </author>
+    <content type="html">&lt;div class="paragraph"&gt;
+&lt;p&gt;Yesterday I posted about &lt;a href="http://blog.freeside.co/2015/01/29/simple-background-polling-with-rxjava/"&gt;an implementation of a simple remote service polling mechanism&lt;/a&gt; using &lt;a href="https://github.com/ReactiveX/RxJava"&gt;RxJava&lt;/a&gt;. One of the things I particularly liked when applying this pattern at work was how straightforward it was to unit test.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Often when dealing with asynchronous processing unit testing can be pretty painful. Typically you need to use a mechanism such as Java&amp;#8217;s &lt;code&gt;CountDownLatch&lt;/code&gt; or Spock&amp;#8217;s &lt;code&gt;BlockingVariables&lt;/code&gt; or &lt;code&gt;PollingConditions&lt;/code&gt; to synchronize threads before making assertions. Allowing processing to run asynchronously, especially when testing scheduled activity can make tests very slow as well.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Ideally tests the asynchronous nature of the code is abstracted and the timer can be faked out. This is exactly the approach that RxJava takes.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Recall that we used &lt;code&gt;Schedulers.io()&lt;/code&gt; to ensure that blocking I/O was handled appropriately. If we make that scheduler a property of the &lt;em&gt;poller&lt;/em&gt; object we can replace it in tests with &lt;code&gt;Schedulers.test()&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;If we wrap the polling logic discussed in the previous post up in a &lt;code&gt;start&lt;/code&gt; method of a &lt;code&gt;MessagePoller&lt;/code&gt; class we can have a constructor that looks like this:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="highlight"&gt;&lt;code class="java language-java"&gt;public MessagePoller(MessageService messageService,
+                     Action1&amp;lt;Message&amp;gt; subscriber,
+                     Scheduler scheduler) {&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="sidebarblock"&gt;
+&lt;div class="content"&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;For the sake of brevity I&amp;#8217;m actually omitting a couple of parameters here – we&amp;#8217;d also want the polling interval and the message recipient to be parameters. For the examples in this post I&amp;#8217;ll hardcode those.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;The test scheduler provides a method &lt;code&gt;advanceTimeBy(long, TimeUnit)&lt;/code&gt; that fakes a delay without any time actually having to elapse. For our purposes this is ideal as we can use &lt;code&gt;advanceTimeBy(30, SECONDS)&lt;/code&gt; to trigger a poll on the remote service.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;It&amp;#8217;s very easy to write a test that ensures the subscriber is sent a message returned by the remote service.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="highlight"&gt;&lt;code class="groovy language-groovy"&gt;def messageService = Stub(MessageService)
+def subscriber = Mock(Action1)
+@Shared scheduler = Schedulers.test()
+
+@Subject messagePoller = new MessagePoller(messageService,
+                                           subscriber,
+                                           scheduler)
+
+def "subscriber can receive a single message"() {
+  given: "the remote service will return a single message"
+  messageService.recentMessages(_) &amp;gt;&amp;gt; [message]
+
+  and: "polling has started"
+  messagePoller.start()
+
+  when: "the next poll is triggered"
+  scheduler.advanceTimeBy(30, SECONDS)
+
+  then: "the subscriber receives the message"
+  1 * subscriber.call(message)
+
+  where:
+  message = new Message("1", "Hi", "Cam", "Rob")
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;We stub the response from the remote service, start polling, fake the interval ocurring and then assert that our subscriber mock receives the message. There&amp;#8217;s no thread synchronization and the test runs almost instantaneously.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;We can just as easily test that messages are streamed consistently from multiple calls to the remote service.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="highlight"&gt;&lt;code class="groovy language-groovy"&gt;def "subscriber can receive multiple messages from multiple polls"() {
+  given:
+  messageService.recentMessages(_) &amp;gt;&amp;gt;
+      [message1, message2] &amp;gt;&amp;gt;
+      [message3]
+
+  and:
+  messagePoller.start()
+
+  when:
+  scheduler.advanceTimeBy(60, SECONDS)
+
+  then:
+  1 * subscriber.call(message1)
+  1 * subscriber.call(message2)
+  1 * subscriber.call(message3)
+
+  where:
+  message1 = new Message("1", "Hi", "Cam", "Rob")
+  message2 = new Message("2", "Bye", "Cam", "Rob")
+  message3 = new Message("3", "Hi", "Clay", "Rob")
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Here we trigger two polls by advancing the time further and ensuring that the subscriber recieves all the messages.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;The test sets up two sequential return values for the &lt;code&gt;messageService&lt;/code&gt; stub using Spock&amp;#8217;s chaining syntax. The first time &lt;code&gt;messageServices.recentMessages&lt;/code&gt; gets called it will respond with &lt;code&gt;[message2, message2]&lt;/code&gt; and the second time it will respond with &lt;code&gt;[message3]&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Using the same technique we can also test that exceptions do not stop the polling mechanism.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="highlight"&gt;&lt;code class="groovy language-groovy"&gt;def "polling continues after an error from the message service"() {
+  given:
+  messageService.recentMessages(_) &amp;gt;&amp;gt;
+      [message1] &amp;gt;&amp;gt;
+      { throw MockHttpException.newInternalError(null) } &amp;gt;&amp;gt;
+      [message2]
+
+  and:
+  messagePoller.start()
+
+  when:
+  scheduler.advanceTimeBy(90, SECONDS)
+
+  then:
+  2 * subscriber.call(_)
+
+  where:
+  message1 = new Message("1", "Hi", "Tomas", "Rob")
+  message2 = new Message("2", "Bye", "Tomas", "Rob")
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Here we poll the remote service three times. Using Spock&amp;#8217;s stub chaining we&amp;#8217;ve set up 3 responses, the second of which will throw an exception. We then assert that both messages arrive because the exception was not allowed to kill the stream.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;It&amp;#8217;s similarly straightforward to test other aspects of the polling mechanism; message filtering by recipient, de-duplication and so on.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="sidebarblock"&gt;
+&lt;div class="content"&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;I have published a small &lt;a href="https://github.com/robfletcher/rx-message-poll"&gt;GitHub project&lt;/a&gt; containing this example and its tests..&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;</content>
+  </entry>
   <entry>
     <title>Simple background polling with RxJava</title>
     <link rel="alternate" href="http://blog.freeside.co/2015/01/29/simple-background-polling-with-rxjava/"/>
@@ -523,64 +675,6 @@ import static org.hamcrest.Matchers.containsInAnyOrder&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
-&lt;/div&gt;</content>
-  </entry>
-  <entry>
-    <title>Closures and field visibility</title>
-    <link rel="alternate" href="http://blog.freeside.co/2014/07/21/closures-and-field-visibility/"/>
-    <id>http://blog.freeside.co/2014/07/21/closures-and-field-visibility/</id>
-    <published>2014-07-21T11:34:00+01:00</published>
-    <updated>2014-07-21T14:34:25+01:00</updated>
-    <author>
-      <name>Rob Fletcher</name>
-    </author>
-    <content type="html">&lt;div class="paragraph"&gt;
-&lt;p&gt;I find Groovy Closures can sometimes behave in ways that, once I think about it, make perfect sense but initially seem surprising. One example of this is the fact that closures &lt;em&gt;declared in a parent class&lt;/em&gt; cannot “see” private fields of that class when run in the context of a child class.&lt;/p&gt;
-&lt;/div&gt;
-
-&lt;div class="paragraph"&gt;
-&lt;p&gt;Take a look at this code:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="listingblock"&gt;
-&lt;div class="content"&gt;
-&lt;pre class="highlight"&gt;&lt;code class="groovy language-groovy"&gt;class Multiplier {
-
-  private int multiplier
-
-  Multiplier(int multiplier) {
-    this.multiplier = multiplier
-  }
-
-  List multiply(List values) {
-    values.collect {
-      it * multiplier
-    }
-  }
-}
-
-assert new Multiplier(3).multiply([1, 2, 3]) == [3, 6, 9]&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;The class has a private field &lt;code&gt;multiplier&lt;/code&gt; that gets referenced in a closure in one of the class methods. This works fine. However, what happens if we extend that class?&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="listingblock"&gt;
-&lt;div class="content"&gt;
-&lt;pre class="highlight"&gt;&lt;code class="groovy language-groovy"&gt;class Doubler extends Multiplier {
-  Doubler() { super(2) }
-}
-
-assert new Doubler().multiply([1, 2, 3]) == [2, 4, 6]&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;This code results in &lt;code&gt;MissingPropertyException: No such property: multiplier for class: Doubler&lt;/code&gt;!&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;A closure gets compiled as an anonymous inner class and when run will attempt to resolve unknown property references against its &lt;em&gt;owner&lt;/em&gt; – in this case the object that contains it. Because the &lt;code&gt;multiplier&lt;/code&gt; field is not visible from the &lt;code&gt;Doubler&lt;/code&gt; class the reference doesn&amp;#8217;t work. If &lt;code&gt;multiplier&lt;/code&gt; is declared &lt;code&gt;protected&lt;/code&gt; the code works just fine.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;This is definitely worth bearing in mind if you are building library code designed to be extended by other people.&lt;/p&gt;
 &lt;/div&gt;</content>
   </entry>
 </feed>

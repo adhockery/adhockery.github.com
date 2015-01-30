@@ -29,6 +29,24 @@
       <main>
           <article>
     <header>
+      <time datetime="2015-01-30T10:15:00">Jan 30 2015</time>
+      <h2><a href="/2015/01/30/testing-the-rxjava-poller/">Testing the RxJava poller</a></h2>
+    </header>
+    <div class="paragraph">
+<p>Yesterday I posted about <a href="http://blog.freeside.co/2015/01/29/simple-background-polling-with-rxjava/">an implementation of a simple remote service polling mechanism</a> using <a href="https://github.com/ReactiveX/RxJava">RxJava</a>. One of the things I particularly liked when applying this pattern at work was how straightforward it was to unit test.</p>
+</div>
+<div class="paragraph">
+<p>Often when dealing with asynchronous processing unit testing can be pretty painful. Typically you need to use a mechanism such as Java&#8217;s <code>CountDownLatch</code> or Spock&#8217;s <code>BlockingVariables</code> or <code>PollingConditions</code> to synchronize threads before making assertions. Allowing processing to run asynchronously, especially when testing scheduled activity can make tests very slow as well.</p>
+</div>
+<div class="paragraph">
+<p>Ideally tests the asynchronous nature of the code is abstracted and the timer can be faked out. This is exactly the approach that RxJava takes.</p>
+</div>
+
+    <a class="read-more" href="/2015/01/30/testing-the-rxjava-poller/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
       <time datetime="2015-01-29T11:34:00">Jan 29 2015</time>
       <h2><a href="/2015/01/29/simple-background-polling-with-rxjava/">Simple background polling with RxJava</a></h2>
     </header>
@@ -145,21 +163,6 @@
 </div>
 
     <a class="read-more" href="/2014/06/24/gradle-and-groovys-invoke-dynamic-support/">Read more…</a>
-  </article>
-  <hr>
-  <article>
-    <header>
-      <time datetime="2014-06-22T08:27:00">Jun 22 2014</time>
-      <h2><a href="/2014/06/22/static-analysis-and-strictness/">Static analysis and strictness</a></h2>
-    </header>
-    <div class="paragraph">
-<p>Let me be clear – static analysis tools like Checkstyle and Codenarc are useful tools. But…</p>
-</div>
-<div class="paragraph">
-<p>I don&#8217;t think you should have overly strict enforcement. There is a small class of static analysis rules that are unambiguous – you&#8217;re not using that <code>import</code>, that <code>if</code> block doesn&#8217;t have braces – but there is a large class of rules that exist in a grey area. Is that method really unused or is it invoked reflectively somewhere? Yes, generally we should declare constants for magic numbers but is it really necessary for the prime seed of a hash code method?</p>
-</div>
-
-    <a class="read-more" href="/2014/06/22/static-analysis-and-strictness/">Read more…</a>
   </article>
   <hr>
 

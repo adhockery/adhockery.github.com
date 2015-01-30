@@ -547,7 +547,7 @@ html {
   font-size: 18px;
   line-height: 1.5em; }
 
-/* line 35, /Users/rfletcher/Documents/adhockery/source/stylesheets/adhockery.scss */
+/* line 37, /Users/rfletcher/Documents/adhockery/source/stylesheets/adhockery.scss */
 body {
   -webkit-text-size-adjust: none; }
 
@@ -1183,6 +1183,13 @@ a.read-more {
   /* line 9, /Users/rfletcher/Documents/adhockery/source/stylesheets/_asciidoc.scss */
   .listingblock .title + .content pre {
     margin-top: 0; }
+
+/* line 14, /Users/rfletcher/Documents/adhockery/source/stylesheets/_asciidoc.scss */
+.sidebarblock {
+  font-size: 0.77778em;
+  line-height: 1.92857em;
+  border-left: 5px solid #a2a2a2;
+  padding-left: 1em; }
 
 /* line 1, /Users/rfletcher/Documents/adhockery/source/stylesheets/_disqus.scss */
 .disqus {

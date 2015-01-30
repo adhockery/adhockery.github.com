@@ -33,6 +33,18 @@
 
   <article>
     <header>
+      <time datetime="2012-10-28T14:36:00">Oct 28 2012</time>
+      <h2><a href="/2012/10/28/jerry-a-jquery-like-api-for-dom-parsing/">Jerry: a jQuery like API for DOM parsing</a></h2>
+    </header>
+    <div class="paragraph">
+<p>When unit testing things that produce HTML output (such as some Grails taglibs) there are some common pitfalls. Comparing large chunks of markup with an expected string is very brittle; whitespace and attribute ordering becomes significant. Often people end up using regular expressions or assertions like <code>assert output.contains('&lt;div id="foo"&gt;')</code>. Whilst it may be a bit more maintainable this doesn&#8217;t really test correct DOM structure which is often important and again, attribute order can be a problem.</p>
+</div>
+
+    <a class="read-more" href="/2012/10/28/jerry-a-jquery-like-api-for-dom-parsing/">Read more…</a>
+  </article>
+  <hr>
+  <article>
+    <header>
       <time datetime="2012-09-22T14:27:00">Sep 22 2012</time>
       <h2><a href="/2012/09/22/testing-angular-forms-with-casper/">Testing Angular forms with Casper</a></h2>
     </header>
@@ -162,21 +174,6 @@ applyTemplate('&lt;my:tag/&gt;') == 'the expected output'</code></pre>
 </div>
 
     <a class="read-more" href="/2011/02/06/running-geb-tests-from-your-ide/">Read more…</a>
-  </article>
-  <hr>
-  <article>
-    <header>
-      <time datetime="2010-11-30T13:47:00">Nov 30 2010</time>
-      <h2><a href="/2010/11/30/encapsulating-page-state-and-actions-in-geb/">Encapsulating page state and actions in Geb</a></h2>
-    </header>
-    <div class="paragraph">
-<p>Geb <em>Page</em> and <em>Module</em> classes are just regular Groovy classes. In addition to the <em>content</em> DSL you can declare methods just as you would in any other class. Those methods can use content properties directly. This is really useful for encapsulating state and actions in a reusable way.</p>
-</div>
-<div class="paragraph">
-<p>In this post I want to run through a couple of simple examples of re-usable <em>Module</em> classes that are enhanced with methods. Although the examples deal with <em>Module</em> classes everything here is equally applicable to <em>Page</em> classes.</p>
-</div>
-
-    <a class="read-more" href="/2010/11/30/encapsulating-page-state-and-actions-in-geb/">Read more…</a>
   </article>
   <hr>
 

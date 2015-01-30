@@ -78,9 +78,11 @@ def "subscriber can receive multiple messages from multiple polls"() {
   scheduler.advanceTimeBy(60, SECONDS)
 
   then:
-  1 * subscriber.call(message1)
-  1 * subscriber.call(message2)
-  1 * subscriber.call(message3)
+  with(subscriber) {
+    1 * call(message1)
+    1 * call(message2)
+    1 * call(message3)
+  }
 
   where:
   message1 = new Message("1", "Hi", "Cam", "Rob")

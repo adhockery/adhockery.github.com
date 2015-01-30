@@ -55,12 +55,8 @@
                      Scheduler scheduler) {</code></pre>
 </div>
 </div>
-<div class="sidebarblock">
-<div class="content">
 <div class="paragraph">
 <p>For the sake of brevity I&#8217;m actually omitting a couple of parameters here – we&#8217;d also want the polling interval and the message recipient to be parameters. For the examples in this post I&#8217;ll hardcode those.</p>
-</div>
-</div>
 </div>
 <div class="paragraph">
 <p>The test scheduler provides a method <code>advanceTimeBy(long, TimeUnit)</code> that fakes a delay without any time actually having to elapse. For our purposes this is ideal as we can use <code>advanceTimeBy(30, SECONDS)</code> to trigger a poll on the remote service.</p>
@@ -169,12 +165,8 @@ def "subscriber can receive a single message"() {
 <div class="paragraph">
 <p>It&#8217;s similarly straightforward to test other aspects of the polling mechanism; message filtering by recipient, de-duplication and so on.</p>
 </div>
-<div class="sidebarblock">
-<div class="content">
 <div class="paragraph">
-<p>I have published a small <a href="https://github.com/robfletcher/rx-message-poll">GitHub project</a> containing this example and its tests..</p>
-</div>
-</div>
+<p>For those that are interested in playing with this I have published a small <a href="https://github.com/robfletcher/rx-message-poll">GitHub project</a> containing this example and its tests.</p>
 </div>
     <footer>
       <ul class="tag-list">

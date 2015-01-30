@@ -13,7 +13,7 @@
     <link rel="alternate" href="http://blog.freeside.co/2015/01/30/testing-the-rxjava-poller/"/>
     <id>http://blog.freeside.co/2015/01/30/testing-the-rxjava-poller/</id>
     <published>2015-01-30T10:15:00+00:00</published>
-    <updated>2015-01-30T10:21:29+00:00</updated>
+    <updated>2015-01-30T12:59:42+00:00</updated>
     <author>
       <name>Rob Fletcher</name>
     </author>
@@ -40,12 +40,8 @@
                      Scheduler scheduler) {&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 &lt;/div&gt;
-&lt;div class="sidebarblock"&gt;
-&lt;div class="content"&gt;
 &lt;div class="paragraph"&gt;
 &lt;p&gt;For the sake of brevity I&amp;#8217;m actually omitting a couple of parameters here – we&amp;#8217;d also want the polling interval and the message recipient to be parameters. For the examples in this post I&amp;#8217;ll hardcode those.&lt;/p&gt;
-&lt;/div&gt;
-&lt;/div&gt;
 &lt;/div&gt;
 &lt;div class="paragraph"&gt;
 &lt;p&gt;The test scheduler provides a method &lt;code&gt;advanceTimeBy(long, TimeUnit)&lt;/code&gt; that fakes a delay without any time actually having to elapse. For our purposes this is ideal as we can use &lt;code&gt;advanceTimeBy(30, SECONDS)&lt;/code&gt; to trigger a poll on the remote service.&lt;/p&gt;
@@ -154,12 +150,8 @@ def "subscriber can receive a single message"() {
 &lt;div class="paragraph"&gt;
 &lt;p&gt;It&amp;#8217;s similarly straightforward to test other aspects of the polling mechanism; message filtering by recipient, de-duplication and so on.&lt;/p&gt;
 &lt;/div&gt;
-&lt;div class="sidebarblock"&gt;
-&lt;div class="content"&gt;
 &lt;div class="paragraph"&gt;
-&lt;p&gt;I have published a small &lt;a href="https://github.com/robfletcher/rx-message-poll"&gt;GitHub project&lt;/a&gt; containing this example and its tests..&lt;/p&gt;
-&lt;/div&gt;
-&lt;/div&gt;
+&lt;p&gt;For those that are interested in playing with this I have published a small &lt;a href="https://github.com/robfletcher/rx-message-poll"&gt;GitHub project&lt;/a&gt; containing this example and its tests.&lt;/p&gt;
 &lt;/div&gt;</content>
   </entry>
   <entry>

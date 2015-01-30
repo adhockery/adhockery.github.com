@@ -132,7 +132,7 @@ def "subscriber can receive a single message"() {
 <p>Here we trigger two polls by advancing the time further and ensuring that the subscriber recieves all the messages.</p>
 </div>
 <div class="paragraph">
-<p>The test sets up two sequential return values for the <code>messageService</code> stub using Spock&#8217;s chaining syntax. The first time <code>messageServices.recentMessages</code> gets called it will respond with <code>[message2, message2]</code> and the second time it will respond with <code>[message3]</code>.</p>
+<p>The test sets up two sequential return values for the <code>messageService</code> stub using Spock&#8217;s chaining syntax. The first time <code>messageServices.recentMessages</code> gets called it will respond with <code>[message1, message2]</code> and the second time it will respond with <code>[message3]</code>.</p>
 </div>
 <div class="paragraph">
 <p>Using the same technique we can also test that exceptions do not stop the polling mechanism.</p>

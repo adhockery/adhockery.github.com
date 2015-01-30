@@ -13,7 +13,7 @@
     <link rel="alternate" href="http://blog.freeside.co/2015/01/30/testing-the-rxjava-poller/"/>
     <id>http://blog.freeside.co/2015/01/30/testing-the-rxjava-poller/</id>
     <published>2015-01-30T10:15:00+00:00</published>
-    <updated>2015-01-30T10:15:45+00:00</updated>
+    <updated>2015-01-30T10:17:46+00:00</updated>
     <author>
       <name>Rob Fletcher</name>
     </author>
@@ -117,7 +117,7 @@ def "subscriber can receive a single message"() {
 &lt;p&gt;Here we trigger two polls by advancing the time further and ensuring that the subscriber recieves all the messages.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="paragraph"&gt;
-&lt;p&gt;The test sets up two sequential return values for the &lt;code&gt;messageService&lt;/code&gt; stub using Spock&amp;#8217;s chaining syntax. The first time &lt;code&gt;messageServices.recentMessages&lt;/code&gt; gets called it will respond with &lt;code&gt;[message2, message2]&lt;/code&gt; and the second time it will respond with &lt;code&gt;[message3]&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;The test sets up two sequential return values for the &lt;code&gt;messageService&lt;/code&gt; stub using Spock&amp;#8217;s chaining syntax. The first time &lt;code&gt;messageServices.recentMessages&lt;/code&gt; gets called it will respond with &lt;code&gt;[message1, message2]&lt;/code&gt; and the second time it will respond with &lt;code&gt;[message3]&lt;/code&gt;.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="paragraph"&gt;
 &lt;p&gt;Using the same technique we can also test that exceptions do not stop the polling mechanism.&lt;/p&gt;

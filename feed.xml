@@ -13,7 +13,7 @@
     <link rel="alternate" href="http://blog.freeside.co/2015/01/30/testing-the-rxjava-poller/"/>
     <id>http://blog.freeside.co/2015/01/30/testing-the-rxjava-poller/</id>
     <published>2015-01-30T10:15:00+00:00</published>
-    <updated>2015-01-30T10:17:46+00:00</updated>
+    <updated>2015-01-30T10:21:29+00:00</updated>
     <author>
       <name>Rob Fletcher</name>
     </author>
@@ -102,9 +102,11 @@ def "subscriber can receive a single message"() {
   scheduler.advanceTimeBy(60, SECONDS)
 
   then:
-  1 * subscriber.call(message1)
-  1 * subscriber.call(message2)
-  1 * subscriber.call(message3)
+  with(subscriber) {
+    1 * call(message1)
+    1 * call(message2)
+    1 * call(message3)
+  }
 
   where:
   message1 = new Message("1", "Hi", "Cam", "Rob")

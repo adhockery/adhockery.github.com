@@ -91,7 +91,7 @@ def "subscriber can receive multiple messages from multiple polls"() {
 
 Here we trigger two polls by advancing the time further and ensuring that the subscriber recieves all the messages.
 
-The test sets up two sequential return values for the `messageService` stub using Spock's chaining syntax. The first time `messageServices.recentMessages` gets called it will respond with `[message2, message2]` and the second time it will respond with `[message3]`.
+The test sets up two sequential return values for the `messageService` stub using Spock's chaining syntax. The first time `messageServices.recentMessages` gets called it will respond with `[message1, message2]` and the second time it will respond with `[message3]`.
 
 Using the same technique we can also test that exceptions do not stop the polling mechanism.
 

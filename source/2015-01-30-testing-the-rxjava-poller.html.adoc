@@ -23,9 +23,7 @@ public MessagePoller(MessageService messageService,
                      Scheduler scheduler) {
 ----
 
-****
 For the sake of brevity I'm actually omitting a couple of parameters here – we'd also want the polling interval and the message recipient to be parameters. For the examples in this post I'll hardcode those.
-****
 
 The test scheduler provides a method `advanceTimeBy(long, TimeUnit)` that fakes a delay without any time actually having to elapse. For our purposes this is ideal as we can use `advanceTimeBy(30, SECONDS)` to trigger a poll on the remote service.
 
@@ -125,6 +123,4 @@ Here we poll the remote service three times. Using Spock's stub chaining we've s
 
 It's similarly straightforward to test other aspects of the polling mechanism; message filtering by recipient, de-duplication and so on.
 
-****
-I have published a small https://github.com/robfletcher/rx-message-poll[GitHub project] containing this example and its tests..
-****
+For those that are interested in playing with this I have published a small https://github.com/robfletcher/rx-message-poll[GitHub project] containing this example and its tests.

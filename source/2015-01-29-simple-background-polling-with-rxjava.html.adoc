@@ -46,7 +46,7 @@ Now we have an `Observable<List<Message>>`. So far so good. However, that `map` 
 [source,java]
 ----
 Observable.interval(30, TimeUnit.SECONDS, Schedulers.io())
-          .map((tick) -> messageService.getRecentMessages())
+          .map(tick -> messageService.getRecentMessages())
 ----
 
 For this example we'll consume the messages by just subscribing and logging what we get.
@@ -54,8 +54,8 @@ For this example we'll consume the messages by just subscribing and logging what
 [source,java]
 ----
 Observable.interval(30, TimeUnit.SECONDS, Schedulers.io())
-          .map((tick) -> messageService.getRecentMessages())
-          .subscribe((messages) -> {
+          .map(tick -> messageService.getRecentMessages())
+          .subscribe(messages -> {
             // the subscriber is called with List<Message> every time
             // the remote service is polled
             for (Message message : messages) {
@@ -69,9 +69,9 @@ Of course the call to the remote service may fail – the service may be down o
 [source,java]
 ----
 Observable.interval(30, TimeUnit.SECONDS, Schedulers.io())
-          .map((tick) -> messageService.getRecentMessages())
+          .map(tick -> messageService.getRecentMessages())
           .retry()
-          .subscribe((messages) -> {
+          .subscribe(messages -> {
             for (Message message : messages) {
               log.info(message.toString())
             }
@@ -85,12 +85,12 @@ That said, we probably want to know the remote service is giving us trouble so l
 [source,java]
 ----
 Observable.interval(30, TimeUnit.SECONDS, Schedulers.io())
-          .map((tick) -> messageService.getRecentMessages())
+          .map(tick -> messageService.getRecentMessages())
           // The error handler is called with any exception raised upstream
-          .doOnError((err) -> log.error("Error retrieving messages", err))
+          .doOnError(err -> log.error("Error retrieving messages", err))
           // Errors do not propagate past retry so they must be handled before
           .retry()
-          .subscribe((messages) -> {
+          .subscribe(messages -> {
             for (Message message : messages) {
               log.info(message.toString())
             }
@@ -102,17 +102,17 @@ Now the next thing we need to do is filter out any messages not intended for us.
 [source,java]
 ----
 Observable.interval(30, TimeUnit.SECONDS, Schedulers.io())
-          .map((tick) -> messageService.getRecentMessages())
-          .doOnError((err) -> log.error("Error retrieving messages", err))
+          .map(tick -> messageService.getRecentMessages())
+          .doOnError(err -> log.error("Error retrieving messages", err))
           .retry()
-          .map((messages) ->
+          .map(messages ->
             // a 2nd map operation is called with the List<Message> emitted upstream
             messages.stream()
                     // filter to a sub-list containing only "our" messages
-                    .filter((message) -> message.isFor(recipient))
+                    .filter(message -> message.isFor(recipient))
                     // turn sub-list stream back into a List<Message>
                     .collect(Collectors.toList()))
-          .subscribe((messages) -> {
+          .subscribe(messages -> {
             for (Message message : messages) {
               log.info(message.toString())
             }
@@ -124,14 +124,14 @@ At this point everything is working but notice that we're always dealing with `L
 [source,java]
 ----
 Observable.interval(30, TimeUnit.SECONDS, Schedulers.io())
-          .map((tick) -> messageService.getRecentMessages())
-          .doOnError((err) -> log.error("Error retrieving messages", err))
+          .map(tick -> messageService.getRecentMessages())
+          .doOnError(err -> log.error("Error retrieving messages", err))
           .retry()
           // turns each List<Message> into an Observable<Message> that flatMap
           // will join into a single stream
           .flatMap(Observable::from)
-          .filter((message) -> message.isFor(recipient))
-          .subscribe((message) -> log.info(message.toString()))
+          .filter(message -> message.isFor(recipient))
+          .subscribe(message -> log.info(message.toString()))
 ----
 
 The `flatMap` method allows you to produce a new `Observable` for each value emitted from upstream and coalesceses them into a single downstream `Observable`.
@@ -143,14 +143,14 @@ One last thing is that perhaps our remote service will give us some duplicate me
 [source,java]
 ----
 Observable.interval(30, TimeUnit.SECONDS, Schedulers.io())
-          .map((tick) -> messageService.getRecentMessages())
-          .doOnError((err) -> log.error("Error retrieving messages", err))
+          .map(tick -> messageService.getRecentMessages())
+          .doOnError(err -> log.error("Error retrieving messages", err))
           .retry()
           .flatMap(Observable::from)
           // filter out any previously seen messages
           .distinct()
-          .filter((message) -> message.isFor(recipient))
-          .subscribe((message) -> log.info(message.toString()))
+          .filter(message -> message.isFor(recipient))
+          .subscribe(message -> log.info(message.toString()))
 ----
 
 Obviously using `distinct` assumes that our `Message` objects are unique and implement `hashCode` properly.

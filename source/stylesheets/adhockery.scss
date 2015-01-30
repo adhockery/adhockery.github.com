@@ -26,6 +26,8 @@ $muted-text-color: lighten($black, 50%);
 $border-color: transparentize($muted-text-color, 0.2);
 $example-background: transparentize(#f2f2f2, 0.2);
 
+$small-font-size: 14px;
+
 @import "compass";
 @import "normalize";
 @import "grid";

@@ -4,16 +4,132 @@
   <id>http://blog.freeside.co/</id>
   <link href="http://blog.freeside.co/"/>
   <link href="http://blog.freeside.co/feed.xml" rel="self"/>
-  <updated>2015-01-30T10:15:00+00:00</updated>
+  <updated>2015-06-27T10:16:00-07:00</updated>
   <author>
     <name>Rob Fletcher</name>
   </author>
   <entry>
+    <title>Kotlin</title>
+    <link rel="alternate" href="http://blog.freeside.co/2015/06/27/kotlin/"/>
+    <id>http://blog.freeside.co/2015/06/27/kotlin/</id>
+    <published>2015-06-27T10:16:00-07:00</published>
+    <updated>2015-06-27T11:51:46-07:00</updated>
+    <author>
+      <name>Rob Fletcher</name>
+    </author>
+    <content type="html">&lt;div class="paragraph"&gt;
+&lt;p&gt;Peter Ledbrook wrote an interesting post &lt;a href="http://blog.cacoethes.co.uk/software/exploring-kotlin"&gt;Exploring Kotlin&lt;/a&gt; about his initial experiences with Kotlin.
+Since I&amp;#8217;ve been getting quite into Kotlin recently I thought I&amp;#8217;d follow that up with some of my own observations as well as responding to some of the questions he raised.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;The most compelling feature of Kotlin for me is the way it handles &lt;code&gt;null&lt;/code&gt; and nullable types.
+You may be familiar with the debate around the use of &lt;code&gt;Optional&amp;lt;?&amp;gt;&lt;/code&gt; in Java 8.
+Some people argue that it&amp;#8217;s too little too late to add option types to the language now.
+We have however many thousand libraries liberally returning and accepting &lt;code&gt;null&lt;/code&gt; so we still need to do &lt;code&gt;null&lt;/code&gt; checking anyway.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Option types are familiar to most of us from Scala and Guava.
+One of the things that most disappointed me about Scala is that it doesn&amp;#8217;t enforce null-safety at compile time.
+Instead it&amp;#8217;s just frowned upon to use &lt;code&gt;null&lt;/code&gt; which is fine until you want to use one of those Java libraries I mentioned earlier.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Kotlin is designed for interoperability with Java.
+It&amp;#8217;s a pragmatic language that expects you to want to use all those Java APIs you&amp;#8217;ve spent years getting familiar with.
+To that end it has an incredibly smart solution to the &lt;code&gt;null&lt;/code&gt; versus option type debate.
+Simply, nullable references in Kotlin &lt;em&gt;behave like option types&lt;/em&gt;.
+Kotlin&amp;#8217;s &lt;code&gt;String?&lt;/code&gt; is very very like &lt;code&gt;Optional&amp;lt;String&amp;gt;&lt;/code&gt; in Java 8 or &lt;code&gt;Option[String]&lt;/code&gt; in Scala.
+Kotlin just provides first-class syntactic support for using its nullable / option types.
+For example &lt;code&gt;maybeString?.toString()&lt;/code&gt; in Kotlin is equivalent to &lt;code&gt;maybeString.map(String::toString)&lt;/code&gt; in  Java 8 or &lt;code&gt;maybeString.map(_.toString())&lt;/code&gt; in Scala.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Because Java doesn&amp;#8217;t have such type safety return types from methods on Java classes are considered nullable (most of the time – more on this later).
+So a Java method &lt;code&gt;public String toUpperCase(String s)&lt;/code&gt; is seen by Kotlin code as &lt;code&gt;fun toUpperCase(s: String?): String?&lt;/code&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;The Kotlin compiler enforces null safety.
+That means you can&amp;#8217;t, for example, call &lt;code&gt;it.toString()&lt;/code&gt; if &lt;code&gt;it&lt;/code&gt; might be &lt;code&gt;null&lt;/code&gt;.
+First you must ensure it isn&amp;#8217;t &lt;code&gt;null&lt;/code&gt; by either using an explicit check:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="highlight"&gt;&lt;code class="kotlin language-kotlin"&gt;if (it != null) {
+  it.toString()
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Kotlin&amp;#8217;s type inference comes into play here and allows you to call &lt;code&gt;toString&lt;/code&gt; inside the conditional statement because it &lt;em&gt;knows&lt;/em&gt; &lt;code&gt;it&lt;/code&gt; cannot be &lt;code&gt;null&lt;/code&gt; inside that context.
+The compiler has inferred that the type of &lt;code&gt;it&lt;/code&gt; within that block is &lt;code&gt;Object&lt;/code&gt; and not &lt;code&gt;Object?&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;You can also use the Groovy style &lt;em&gt;Elvis&lt;/em&gt; operator – &lt;code&gt;it?.method()&lt;/code&gt;.
+The type of such an expression is the nullable form of &lt;code&gt;method&lt;/code&gt;'s return type so in order to use the result for anything you&amp;#8217;ll have to ensure that it in turn is not &lt;code&gt;null&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Type inferences also means that a non-nullable reference can always be assigned to a reference that is a nullable form of the same type.
+So given a variable of type &lt;code&gt;String&lt;/code&gt;:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="highlight"&gt;&lt;code class="kotlin language-kotlin"&gt;val s = "o hai I'm a String and definitely not null"&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;We can assign it to a &lt;code&gt;String?&lt;/code&gt; variable:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="highlight"&gt;&lt;code class="kotlin language-kotlin"&gt;var maybeString: String?
+maybeString = s&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;We can also pass it directly to methods accepting &lt;code&gt;String?&lt;/code&gt;:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="highlight"&gt;&lt;code class="kotlin language-kotlin"&gt;fun myMethod(maybeString: String?)
+
+myMethod(s)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;In Java 8 or Scala we&amp;#8217;d have to wrap the value with &lt;code&gt;Optional.of(s)&lt;/code&gt; or &lt;code&gt;Some(s)&lt;/code&gt; in order to do the equivalent.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;As Peter points out in his post using Java libraries inevitably means handling nullable types.
+However Kotlin has another trick up its sleeve with the &lt;a href="https://github.com/JetBrains/kannotator"&gt;Kannotator&lt;/a&gt; tool.
+Kannotator infers nullability of parameters and return types in an API by analyzing the byte code, looking for &lt;code&gt;@NotNull&lt;/code&gt; annotations, and so on.
+The output of Kannotator is an ugly directory full of XML files but luckily you can completely ignore that – it&amp;#8217;s purely for the benefit of the Kotlin compiler and your IDE.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Kotlin also allows for extension functions meaning you can decorate existing types with new functions very easily &lt;em&gt;and with the full benefit of static compilation&lt;/em&gt;.
+Extension functions do away with the need for ugly &lt;code&gt;*Utils&lt;/code&gt; type classes and allow for Groovy-like extensions of the Java standard library.
+Interestingly you can even create extension functions for nullable types and null itself.
+This capability would help solve Peter&amp;#8217;s complaint about having to do a two part null / emtpy check on &lt;code&gt;String?&lt;/code&gt;.
+How about:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="highlight"&gt;&lt;code class="kotlin language-kotlin"&gt;fun String?.isEmpty() : boolean = this?.isEmpty()&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Java 8 style methods references were &lt;a href="http://blog.jetbrains.com/kotlin/2015/04/upcoming-change-function-types-reform/"&gt;a recent addition to Kotlin&lt;/a&gt; that I haven&amp;#8217;t had much chance to play with yet.
+I&amp;#8217;m not sure exactly what problems Peter had with them.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;I&amp;#8217;ve been really impressed with Kotlin.
+It feels like a mix of the pragmatism of Groovy with the static compilation and type safety of Scala (in fact I like Kotlin&amp;#8217;s approach to the &lt;code&gt;null&lt;/code&gt; / option problem much more than Scala&amp;#8217;s).
+Scala&amp;#8217;s pattern matching is – for me – the stand out feature that Kotlin doesn&amp;#8217;t (yet?) compete with.&lt;/p&gt;
+&lt;/div&gt;</content>
+  </entry>
+  <entry>
     <title>Testing the RxJava poller</title>
     <link rel="alternate" href="http://blog.freeside.co/2015/01/30/testing-the-rxjava-poller/"/>
     <id>http://blog.freeside.co/2015/01/30/testing-the-rxjava-poller/</id>
-    <published>2015-01-30T10:15:00+00:00</published>
-    <updated>2015-01-30T12:59:42+00:00</updated>
+    <published>2015-01-30T02:15:00-08:00</published>
+    <updated>2015-01-30T04:59:42-08:00</updated>
     <author>
       <name>Rob Fletcher</name>
     </author>
@@ -158,8 +274,8 @@ def "subscriber can receive a single message"() {
     <title>Simple background polling with RxJava</title>
     <link rel="alternate" href="http://blog.freeside.co/2015/01/29/simple-background-polling-with-rxjava/"/>
     <id>http://blog.freeside.co/2015/01/29/simple-background-polling-with-rxjava/</id>
-    <published>2015-01-29T11:34:00+00:00</published>
-    <updated>2015-01-29T15:48:41+00:00</updated>
+    <published>2015-01-29T03:34:00-08:00</published>
+    <updated>2015-01-29T07:48:41-08:00</updated>
     <author>
       <name>Rob Fletcher</name>
     </author>
@@ -338,8 +454,8 @@ public interface Message {
     <title>Fixing current time for tests with Java 8's date/time API</title>
     <link rel="alternate" href="http://blog.freeside.co/2015/01/15/fixing-current-time-for-tests-with-java-8-s-date-time-api/"/>
     <id>http://blog.freeside.co/2015/01/15/fixing-current-time-for-tests-with-java-8-s-date-time-api/</id>
-    <published>2015-01-15T14:19:00+00:00</published>
-    <updated>2015-01-15T14:33:35+00:00</updated>
+    <published>2015-01-15T06:19:00-08:00</published>
+    <updated>2015-01-15T06:33:35-08:00</updated>
     <author>
       <name>Rob Fletcher</name>
     </author>
@@ -391,8 +507,8 @@ cleanup: DateTimeUtils.setCurrentMillisSystem()&lt;/code&gt;&lt;/pre&gt;
     <title>How can test it if I don't know what I'm building yet?</title>
     <link rel="alternate" href="http://blog.freeside.co/2014/09/24/how-can-i-test-it-if-i-dont-know-what-im-building-yet/"/>
     <id>http://blog.freeside.co/2014/09/24/how-can-i-test-it-if-i-dont-know-what-im-building-yet/</id>
-    <published>2014-09-24T10:26:00+01:00</published>
-    <updated>2014-09-24T14:46:44+01:00</updated>
+    <published>2014-09-24T02:26:00-07:00</published>
+    <updated>2014-09-24T06:46:44-07:00</updated>
     <author>
       <name>Rob Fletcher</name>
     </author>
@@ -435,8 +551,8 @@ cleanup: DateTimeUtils.setCurrentMillisSystem()&lt;/code&gt;&lt;/pre&gt;
     <title>Multiple interface mocks with Spock</title>
     <link rel="alternate" href="http://blog.freeside.co/2014/08/11/multiple-interface-mocks-with-spock/"/>
     <id>http://blog.freeside.co/2014/08/11/multiple-interface-mocks-with-spock/</id>
-    <published>2014-08-11T11:46:00+01:00</published>
-    <updated>2014-08-11T17:03:10+01:00</updated>
+    <published>2014-08-11T03:46:00-07:00</published>
+    <updated>2014-08-11T09:03:10-07:00</updated>
     <author>
       <name>Rob Fletcher</name>
     </author>
@@ -552,123 +668,6 @@ def x = Mock(CloseableWritable)&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 &lt;div class="paragraph"&gt;
 &lt;p&gt;In retrospect this solution is the most obvious thing in the world but it took me a little while to remember that an interface can extend more than one other interface. Since we never actually need to implement &lt;code&gt;CloseableWritable&lt;/code&gt; with anything other than a mock it makes sense to encapsulate it inside the specification class.&lt;/p&gt;
-&lt;/div&gt;</content>
-  </entry>
-  <entry>
-    <title>Spock and Hamcrest</title>
-    <link rel="alternate" href="http://blog.freeside.co/2014/08/07/spock-and-hamcrest/"/>
-    <id>http://blog.freeside.co/2014/08/07/spock-and-hamcrest/</id>
-    <published>2014-08-07T11:23:00+01:00</published>
-    <updated>2014-08-11T14:40:56+01:00</updated>
-    <author>
-      <name>Rob Fletcher</name>
-    </author>
-    <content type="html">&lt;div class="paragraph"&gt;
-&lt;p&gt;Groovy&amp;#8217;s &lt;em&gt;power assert&lt;/em&gt; and Hamcrest matchers both solve a similar problem – getting decent diagnostic information from an assertion failure. When writing JUnit or Spock tests in Groovy it&amp;#8217;s typical to not use Hamcrest matchers as the &lt;em&gt;power assert&lt;/em&gt; is so much simpler and just as effective. It&amp;#8217;s worth bearing in mind, though that Hamcrest is also for helping clearly express the intent of an assertion. Spock provides support for Hamcrest matchers and I recently ran into a situation where I think it was the right thing to use.&lt;/p&gt;
-&lt;/div&gt;
-
-&lt;div class="paragraph"&gt;
-&lt;p&gt;If we&amp;#8217;re testing a method that returns a &lt;code&gt;Collection&lt;/code&gt; that may contain duplicate entries but whose order is either non-deterministic or irrelevant to the test what is the best way to make an assertion about the content of the collection?&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;Imagine we&amp;#8217;re testing this interface:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="listingblock"&gt;
-&lt;div class="content"&gt;
-&lt;pre class="highlight"&gt;&lt;code class="groovy language-groovy"&gt;interface Api {
-  List&amp;lt;String&amp;gt; getThings()
-}&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;The return value here is &lt;code&gt;List&lt;/code&gt; but it could be a &lt;em&gt;bag&lt;/em&gt; or some other collection type. It &lt;strong&gt;cannot&lt;/strong&gt; be &lt;code&gt;Set&lt;/code&gt; as the method may return a collection containing elements with a cardinality greater than 1.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;Naïvely we might test it like this:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="listingblock"&gt;
-&lt;div class="content"&gt;
-&lt;pre class="highlight"&gt;&lt;code class="groovy language-groovy"&gt;expect:
-api.things == expected
-
-where:
-expected = ["a", "a", "b"]&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;If the order of the elements is non-deterministic this will sometimes pass and sometimes fail. No good.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;Next we might try converting the result and the expectation to a &lt;code&gt;Set&lt;/code&gt; so that the comparison does not take order into account:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="listingblock"&gt;
-&lt;div class="content"&gt;
-&lt;pre class="highlight"&gt;&lt;code class="groovy language-groovy"&gt;expect:
-api.things as Set == expected as Set&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;This will pass, but it can mask an error in the implementation because it&amp;#8217;s not testing the cardinality of the elements. If &lt;code&gt;getThings()&lt;/code&gt; returns &lt;code&gt;["a", "b"]&lt;/code&gt; or &lt;code&gt;["a", "a", "a", "a", "b"]&lt;/code&gt; the test will still pass which is almost certainly not what we intend.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;Another route is to enforce an artificial ordering for the purposes of testing:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="listingblock"&gt;
-&lt;div class="content"&gt;
-&lt;pre class="highlight"&gt;&lt;code class="groovy language-groovy"&gt;expect:
-api.things.sort() == expected&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;This works so long as the element type is &lt;code&gt;Comparable&lt;/code&gt; but I don&amp;#8217;t find it very clear. As a reader of this code it might not be obvious why the sort is being done. The assertion is correct but at the cost of some clarity.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;I &lt;a href="https://twitter.com/rfletcherEW/status/490051366807961600"&gt;tweeted about this&lt;/a&gt; and got the following suggestion:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="listingblock"&gt;
-&lt;div class="content"&gt;
-&lt;pre class="highlight"&gt;&lt;code class="groovy language-groovy"&gt;expect:
-def actual = api.things
-actual.containsAll(expected) &amp;amp;&amp;amp; actual.size() == expected.size()&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;This appears thorough but also masks an error. The assertion will pass if the the actual result is &lt;code&gt;["a", "a", "b"]&lt;/code&gt; or &lt;code&gt;["a", "b", "b"]&lt;/code&gt;. It&amp;#8217;s checking the size of the list but not the cardinality of individual elements.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;&lt;a href="https://twitter.com/RobElliot266/status/490058541500469248"&gt;Rob Elliot pointed out&lt;/a&gt; that there&amp;#8217;s a Hamcrest matcher for exactly this condition. Using that, I think yields the best result for clarity and correctness:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="listingblock"&gt;
-&lt;div class="content"&gt;
-&lt;pre class="highlight"&gt;&lt;code class="groovy language-groovy"&gt;expect:
-that api.things, containsInAnyOrder(*expected)&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;One of the huge advantages of Spock and Groovy&amp;#8217;s power assert are in the expressiveness of test code but I think using Hamcrest in this case provides a more readable solution.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="sect1"&gt;
-&lt;h2 id="_implementation"&gt;Implementation&lt;/h2&gt;
-&lt;div class="sectionbody"&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;To get this to work you need to import the &lt;em&gt;hamcrest-all&lt;/em&gt; library that contains a lot more matchers than the &lt;em&gt;hamcrest-core&lt;/em&gt; library that Spock pulls in by default.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="listingblock"&gt;
-&lt;div class="title"&gt;build.gradle&lt;/div&gt;
-&lt;div class="content"&gt;
-&lt;pre class="highlight"&gt;&lt;code class="groovy language-groovy"&gt;testCompile "org.hamcrest:hamcrest-all:1.3"&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;Then you can static import Spock&amp;#8217;s &lt;code&gt;that&lt;/code&gt; method and the matcher itself:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="listingblock"&gt;
-&lt;div class="content"&gt;
-&lt;pre class="highlight"&gt;&lt;code class="groovy language-groovy"&gt;import static spock.util.matcher.HamcrestSupport.that
-import static org.hamcrest.Matchers.containsInAnyOrder&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
 &lt;/div&gt;</content>
   </entry>
 </feed>

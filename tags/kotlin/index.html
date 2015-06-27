@@ -27,7 +27,11 @@
 
     <div class="container">
       <main>
-          <article>
+        <header>
+  <h1>Articles tagged <em>‘kotlin’</em></h1>
+</header>
+
+  <article>
     <header>
       <time datetime="2015-06-27T18:16:00">Jun 27 2015</time>
       <h2><a href="/2015/06/27/kotlin/">Kotlin</a></h2>
@@ -141,137 +145,11 @@ Scala&#8217;s pattern matching is – for me – the stand out feature that Ko
     <a class="read-more" href="/2015/06/27/kotlin/">Read more…</a>
   </article>
   <hr>
-  <article>
-    <header>
-      <time datetime="2015-01-30T10:15:00">Jan 30 2015</time>
-      <h2><a href="/2015/01/30/testing-the-rxjava-poller/">Testing the RxJava poller</a></h2>
-    </header>
-    <div class="paragraph">
-<p>Yesterday I posted about <a href="http://blog.freeside.co/2015/01/29/simple-background-polling-with-rxjava/">an implementation of a simple remote service polling mechanism</a> using <a href="https://github.com/ReactiveX/RxJava">RxJava</a>. One of the things I particularly liked when applying this pattern at work was how straightforward it was to unit test.</p>
-</div>
-<div class="paragraph">
-<p>Often when dealing with asynchronous processing unit testing can be pretty painful. Typically you need to use a mechanism such as Java&#8217;s <code>CountDownLatch</code> or Spock&#8217;s <code>BlockingVariables</code> or <code>PollingConditions</code> to synchronize threads before making assertions. Allowing processing to run asynchronously, especially when testing scheduled activity can make tests very slow as well.</p>
-</div>
-<div class="paragraph">
-<p>Ideally tests the asynchronous nature of the code is abstracted and the timer can be faked out. This is exactly the approach that RxJava takes.</p>
-</div>
-
-    <a class="read-more" href="/2015/01/30/testing-the-rxjava-poller/">Read more…</a>
-  </article>
-  <hr>
-  <article>
-    <header>
-      <time datetime="2015-01-29T11:34:00">Jan 29 2015</time>
-      <h2><a href="/2015/01/29/simple-background-polling-with-rxjava/">Simple background polling with RxJava</a></h2>
-    </header>
-    <div class="paragraph">
-<p>I&#8217;ve done odd bits of playing around with RxJava before but never dived into it very deeply. Today I wanted to re-implement an unreliable background polling operation and <a href="https://twitter.com/tomaslin">Tomás Lin</a> suggested I look at using <a href="https://github.com/ReactiveX/RxJava">RxJava</a>. This may be an obvious implementation to some but I had to do a bit of experimentation (and searching Stack Overflow) to come up with it.</p>
-</div>
-<div class="paragraph">
-<p>Imagine we&#8217;re polling a web-service regularly. The service returns a JSON array of independent items (think events since last poll, Tweets with a particular hashtag or something similar). We want to do some processing (filtering, parsing to a type) on each item and then pass them off to a handler.</p>
-</div>
-
-    <a class="read-more" href="/2015/01/29/simple-background-polling-with-rxjava/">Read more…</a>
-  </article>
-  <hr>
-  <article>
-    <header>
-      <time datetime="2015-01-15T14:19:00">Jan 15 2015</time>
-      <h2><a href="/2015/01/15/fixing-current-time-for-tests-with-java-8-s-date-time-api/">Fixing current time for tests with Java 8's date/time API</a></h2>
-    </header>
-    <div class="paragraph">
-<p>For years I&#8217;ve used the Joda Time library to provide a nicer alternative to the horrible mutable <code>java.util.Date</code> class and the terrifying abyss of <code>java.util.Calendar</code>. One thing, as a fanatical tester, that really appealed to me was the existence of the <code>DateTimeUtils</code> class. All the Joda Time types use <code>DateTimeUtils</code> as a source of the current instant and it exposes methods that allow tests to fix or offset the value that&#8217;s returned. That can rule out some irritating flakiness in tests and enable testing of time zone / daylight savings bugs, timeout logic and so on while retaining the encapsulation of timestamp generation in production code.</p>
-</div>
-<div class="paragraph">
-<p>Of course, when you look at <code>DateTimeUtils</code> with purist eyes it&#8217;s a horrible hack. A static singleton encapsulating global mutable state! I guess that was the attitude of those responsible for JSR-352 that created the new <code>java.time</code> package which is largely based on Joda Time. One of the things that <em>wasn&#8217;t</em> carried over from Joda Time is the <code>DateTimeUtils</code> class. Instead factory methods such as <code>Instant.now()</code> use a <code>Clock</code> object – by default <code>Clock.systemUTC()</code>.</p>
-</div>
-
-    <a class="read-more" href="/2015/01/15/fixing-current-time-for-tests-with-java-8-s-date-time-api/">Read more…</a>
-  </article>
-  <hr>
-  <article>
-    <header>
-      <time datetime="2014-09-24T10:26:00">Sep 24 2014</time>
-      <h2><a href="/2014/09/24/how-can-i-test-it-if-i-dont-know-what-im-building-yet/">How can test it if I don't know what I'm building yet?</a></h2>
-    </header>
-    <div class="paragraph">
-<p>One objection to the practice of TDD I&#8217;ve heard from several different people is along the lines of <em>“I don&#8217;t know exactly what I&#8217;m building at the outset, the code is experimental, so how can I write tests for it?”</em></p>
-</div>
-<div class="paragraph">
-<p>Frequently it is the case that you have an idea but don&#8217;t know the mechanics of how you&#8217;re going to implement it. I find this particularly when I&#8217;m writing code that extends a third-party library. You don&#8217;t know exactly where the API hooks you&#8217;ll need to use are, your understanding of the API is fuzzy and you expect to learn it as you go. So how do you test-drive in that situation?</p>
-</div>
-
-    <a class="read-more" href="/2014/09/24/how-can-i-test-it-if-i-dont-know-what-im-building-yet/">Read more…</a>
-  </article>
-  <hr>
-  <article>
-    <header>
-      <time datetime="2014-08-11T11:46:00">Aug 11 2014</time>
-      <h2><a href="/2014/08/11/multiple-interface-mocks-with-spock/">Multiple interface mocks with Spock</a></h2>
-    </header>
-    <div class="paragraph">
-<p>Spock&#8217;s <code>Mock</code> factory method (as well as factories for the other types of test double; <code>Stub</code> &amp; <code>Spy</code>) accepts a single interface representing the type you need a test double for. But what should you do if you need a test double that implements multiple interfaces?</p>
-</div>
-
-    <a class="read-more" href="/2014/08/11/multiple-interface-mocks-with-spock/">Read more…</a>
-  </article>
-  <hr>
-  <article>
-    <header>
-      <time datetime="2014-08-07T11:23:00">Aug  7 2014</time>
-      <h2><a href="/2014/08/07/spock-and-hamcrest/">Spock and Hamcrest</a></h2>
-    </header>
-    <div class="paragraph">
-<p>Groovy&#8217;s <em>power assert</em> and Hamcrest matchers both solve a similar problem – getting decent diagnostic information from an assertion failure. When writing JUnit or Spock tests in Groovy it&#8217;s typical to not use Hamcrest matchers as the <em>power assert</em> is so much simpler and just as effective. It&#8217;s worth bearing in mind, though that Hamcrest is also for helping clearly express the intent of an assertion. Spock provides support for Hamcrest matchers and I recently ran into a situation where I think it was the right thing to use.</p>
-</div>
-
-    <a class="read-more" href="/2014/08/07/spock-and-hamcrest/">Read more…</a>
-  </article>
-  <hr>
-  <article>
-    <header>
-      <time datetime="2014-07-21T11:34:00">Jul 21 2014</time>
-      <h2><a href="/2014/07/21/closures-and-field-visibility/">Closures and field visibility</a></h2>
-    </header>
-    <div class="paragraph">
-<p>I find Groovy Closures can sometimes behave in ways that, once I think about it, make perfect sense but initially seem surprising. One example of this is the fact that closures <em>declared in a parent class</em> cannot “see” private fields of that class when run in the context of a child class.</p>
-</div>
-
-    <a class="read-more" href="/2014/07/21/closures-and-field-visibility/">Read more…</a>
-  </article>
-  <hr>
-  <article>
-    <header>
-      <time datetime="2014-07-08T07:11:00">Jul  8 2014</time>
-      <h2><a href="/2014/07/08/compilestatic-and-polymorphic-method-dispatch/">@CompileStatic and polymorphic method dispatch</a></h2>
-    </header>
-    <div class="paragraph">
-<p>I&#8217;m a big fan of Groovy&#8217;s <code>@CompileStatic</code> feature – so much so that I&#8217;ve updated the <em>Groovy class</em> template in IntelliJ IDEA to use it by default. I should stress I don&#8217;t do this because I believe non-statically compiled Groovy to be slow – it isn&#8217;t.</p>
-</div>
-<div class="paragraph">
-<p>Recently <a href="https://twitter.com/pledbrook/status/475986668840050688">Peter Ledbrook reminded me of one drawback</a> which is that method dispatch is statically bound when using <code>@CompileStatic</code> like it is in Java. This means that the behavior of calling polymorphic methods can change when argument types are not known at compile time.</p>
-</div>
-
-    <a class="read-more" href="/2014/07/08/compilestatic-and-polymorphic-method-dispatch/">Read more…</a>
-  </article>
-  <hr>
-  <article>
-    <header>
-      <time datetime="2014-06-24T15:46:00">Jun 24 2014</time>
-      <h2><a href="/2014/06/24/enabling-groovys-invokedynamic-support-in-gradle/">Enabling Groovy’s “invokedynamic” support in Gradle</a></h2>
-    </header>
-    <div class="paragraph">
-<p>I posted <a href="/post/89759686171/gradle-and-groovys-invoke-dynamic-support">previously</a> about configuring a Gradle project to ensure that only the <em>indy</em> version of Groovy (that is the variant that supports Java 7&#8217;s <em>invokedynamic</em> bytecode instruction) is included in the dependency graph. However, just including that version of the Groovy jar is <strong>not</strong> enough to make your Groovy code compile in such a way that it uses <em>invokedynamic</em>.</p>
-</div>
-
-    <a class="read-more" href="/2014/06/24/enabling-groovys-invokedynamic-support-in-gradle/">Read more…</a>
-  </article>
-  <hr>
 
   <nav class="pagination">
       <a rel="prev" disabled>Previous</a>
-    <span class="current">1 of 11</span>
-      <a rel="next" href="/page/2/">Next</a>
+    <span class="current">1 of 1</span>
+      <a rel="next" disabled>Next</a>
   </nav>
 
       </main>

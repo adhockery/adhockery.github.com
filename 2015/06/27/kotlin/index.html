@@ -78,7 +78,7 @@ First you must ensure it isn&#8217;t <code>null</code> by either using an explic
 The compiler has inferred that the type of <code>it</code> within that block is <code>Object</code> and not <code>Object?</code>.</p>
 </div>
 <div class="paragraph">
-<p>You can also use the Groovy style <em>Elvis</em> operator – <code>it?.method()</code>.
+<p>You can also use the Groovy style null safe dereference operator – <code>it?.method()</code>.
 The type of such an expression is the nullable form of <code>method</code>'s return type so in order to use the result for anything you&#8217;ll have to ensure that it in turn is not <code>null</code>.</p>
 </div>
 <div class="paragraph">

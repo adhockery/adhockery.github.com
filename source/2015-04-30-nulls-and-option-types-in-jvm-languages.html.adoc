@@ -1,0 +1,21 @@
+---
+title: Nulls and option types in JVM languages
+date: 2015-04-30 00:06 BST
+tags:
+published: false
+---
+
+Since Java 8 introduced the `java.util.Optional` class there's been much debate about how and whether to use it.
+
+Scala approaches the issue by allowing `null` but discouraging the use of it.
+Idiomatic Scala doesn't use `null` but rather the `Option` monad.
+However, there's no implicit conversion between `null` and `None` when dealing with Java APIs so either you avoid the use of Java libraries or you have the same problems as you do in Java 8.
+
+Kotlin on the other hand takes a very pragmatic approach.
+`null` exists but _behaves_ like an option type.
+Types must be declared as nullable so a method that declares it returns `String` can not return `null` but a method that returns `String?` can.
+Nullable types must be handled safely or the compiler will raise an error.
+A nullable value is `"smart cast"` to non-null within any conditional statement that tests it.
+
+In order to avoid very convoluted `null`-handling when dealing with Java APIs Kotlin's _KAnnotator_ tool can infer nullability of return types and parameters.
+I've been pleasantly surprised how well KAnnotator works.

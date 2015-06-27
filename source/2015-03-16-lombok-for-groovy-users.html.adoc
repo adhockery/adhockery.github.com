@@ -1,0 +1,82 @@
+---
+title: Lombok for Groovy users
+date: 2015-03-16 20:38 GMT
+tags: groovy, lombok, java
+published: false
+---
+
+I'd heard of the http://projectlombok.org/features/index.html[Lombok] library for Java but never used it before – partly because I found Eclipse-centric nature of the documentation off-putting.
+Recently I gave it a try for the first time and have fallen hard for its charms.
+Combined with the new syntax in Java 8 I've found it's got me excited about writing Java code for the first time in years.
+It provides many similar features to some of the annotations in the `groovy.transform` package but for plain Java code.
+
+READMORE
+
+The documentation on the Lombok site seems to imply it only works in Eclipse and needs special installation but that's not actually the case.
+With the https://github.com/mplushnikov/lombok-intellij-plugin[IntelliJ IDEA plugin] Lombok works pretty seamlessly in my IDE.
+The one issue I've found is that Lombok's `@Singular` annotation isn't supported by the IDEA plugin yet.
+
+Some of the feature highlights:
+
+## `val`
+
+I'm rather incredulous that this works but it essentially gives Java the Scala `val` keyword.
+This solves one of my irritations with using Java – the repetition of type information on the left and right of an assignment.
+
+[source,java]
+----
+val name = "Rob"
+name = null // won't compile as name is final
+----
+
+Type inference in the IDE works.
+
+## `@Value`
+
+Used to declare a value class. This transforms a declaration like:
+
+[source,java]
+----
+@Value
+public class Person {
+  String name;
+  MonthDay birthday;
+}
+----
+
+Making the properties `private final`, generating getters, a constructor, `equals`, `hashCode` and `toString` implementations.
+If there are declared implementations of any of those methods they take precedence.
+
+This is very similar to Groovy's `@Canonical` transformation.
+
+## `@Builder`
+
+Generates a builder for a class. This is great for more complex `@Value`-annotated classes.
+
+[source,java]
+----
+Person.builder()
+      .name("Rob")
+      .birthday(MonthDay.of(11, 29))
+      .build()
+----
+
+Groovy has an equivalent to this but it doesn't generate the builder in a way that's discoverable by tooling.
+Lombok's does so IDE code completion works.
+
+## `@Wither`
+
+Not the best name but a very useful annotation when you have property defaults.
+This generates a `withX` method for each property that returns a new instance of your class with a single property changed.
+
+[source,java]
+----
+Person p2 = p1.withName("Rob")
+assert p1 != p2
+----
+
+## `@Slf4j` (and equivalents)
+
+Generates a `private final Logger log` field.
+Groovy has an even more powerful equivalent that actually generates conditional checks around each logging statement to avoid unnecessary argument construction.
+This saves some boilerplate and the frequent copy 'n paste error of having the wrong class used to generate the logger name.

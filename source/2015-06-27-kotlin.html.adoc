@@ -1,0 +1,97 @@
+---
+title: Kotlin
+date: 2015-06-27 18:16 BST
+tags: kotlin
+---
+
+Peter Ledbrook wrote an interesting post http://blog.cacoethes.co.uk/software/exploring-kotlin[Exploring Kotlin] about his initial experiences with Kotlin.
+Since I've been getting quite into Kotlin recently I thought I'd follow that up with some of my own observations as well as responding to some of the questions he raised.
+
+READMORE
+
+The most compelling feature of Kotlin for me is the way it handles `null` and nullable types.
+You may be familiar with the debate around the use of `Optional<?>` in Java 8.
+Some people argue that it's too little too late to add option types to the language now.
+We have however many thousand libraries liberally returning and accepting `null` so we still need to do `null` checking anyway.
+
+Option types are familiar to most of us from Scala and Guava.
+One of the things that most disappointed me about Scala is that it doesn't enforce null-safety at compile time.
+Instead it's just frowned upon to use `null` which is fine until you want to use one of those Java libraries I mentioned earlier.
+
+Kotlin is designed for interoperability with Java.
+It's a pragmatic language that expects you to want to use all those Java APIs you've spent years getting familiar with.
+To that end it has an incredibly smart solution to the `null` versus option type debate.
+Simply, nullable references in Kotlin _behave like option types_.
+Kotlin's `String?` is very very like `Optional<String>` in Java 8 or `Option[String]` in Scala.
+Kotlin just provides first-class syntactic support for using its nullable / option types.
+For example `maybeString?.toString()` in Kotlin is equivalent to `maybeString.map(String::toString)` in  Java 8 or `maybeString.map(_.toString())` in Scala.
+
+Because Java doesn't have such type safety return types from methods on Java classes are considered nullable (most of the time – more on this later).
+So a Java method `public String toUpperCase(String s)` is seen by Kotlin code as `fun toUpperCase(s: String?): String?`
+
+The Kotlin compiler enforces null safety.
+That means you can't, for example, call `it.method()` if `it` might be `null`.
+First you must ensure it isn't `null` by either using an explicit check:
+
+[source,kotlin]
+----
+if (it != null) {
+  it.method()
+}
+----
+
+Kotlin's type inference comes into play here and allows you to call `it.method()` inside the conditional statement because it _knows_ `it` cannot be `null` inside that context.
+The compiler has inferred that the type of `it` within that block is `Object` and not `Object?`.
+
+You can also use the Groovy style null safe dereference operator – `it?.method()`.
+The type of such an expression is the nullable form of `method`'s return type so in order to use the result for anything you'll have to ensure that it in turn is not `null`.
+
+Type inferences also means that a non-nullable reference can always be assigned to a reference that is a nullable form of the same type.
+So given a variable of type `String`:
+
+[source,kotlin]
+----
+val s = "o hai I'm a String and definitely not null"
+----
+
+We can assign it to a `String?` variable:
+
+[source,kotlin]
+----
+var maybeString: String?
+maybeString = s
+----
+
+We can also pass it directly to methods accepting `String?`:
+
+[source,kotlin]
+----
+fun myMethod(maybeString: String?)
+
+myMethod(s)
+----
+
+In Java 8 or Scala we'd have to wrap the value with `Optional.of(s)` or `Some(s)` in order to do the equivalent.
+
+As Peter points out in his post using Java libraries inevitably means handling nullable types.
+However Kotlin has another trick up its sleeve with the https://github.com/JetBrains/kannotator[Kannotator] tool.
+Kannotator infers nullability of parameters and return types in an API by analyzing the byte code, looking for `@NotNull` annotations, and so on.
+The output of Kannotator is an ugly directory full of XML files but luckily you can completely ignore that – it's purely for the benefit of the Kotlin compiler and your IDE.
+
+Kotlin also allows for extension functions meaning you can decorate existing types with new functions very easily _and with the full benefit of static compilation_.
+Extension functions do away with the need for ugly `*Utils` type classes and allow for Groovy-like extensions of the Java standard library.
+Interestingly you can even create extension functions for nullable types and null itself.
+This capability would help solve Peter's complaint about having to do a two part null / emtpy check on `String?`.
+How about:
+
+[source,kotlin]
+----
+fun String?.isEmpty() : boolean = this?.isEmpty()
+----
+
+Java 8 style methods references were http://blog.jetbrains.com/kotlin/2015/04/upcoming-change-function-types-reform/[a recent addition to Kotlin] that I haven't had much chance to play with yet.
+I'm not sure exactly what problems Peter had with them.
+
+I've been really impressed with Kotlin.
+It feels like a mix of the pragmatism of Groovy with the static compilation and type safety of Scala (in fact I like Kotlin's approach to the `null` / option problem much more than Scala's).
+Scala's pattern matching is – for me – the stand out feature that Kotlin doesn't (yet?) compete with.

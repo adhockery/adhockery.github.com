@@ -1,0 +1,20 @@
+---
+title: Spock gotcha combining with and old
+date: 2015-01-22 12:39 GMT
+tags: spock, testing
+published: false
+---
+
+Spock's `old` method is one of my favorite features but today I ran into a limitation.
+
+Spock also has a `with` method that makes the argument the delegate of a closure. This means you can avoid some boilerplate doing repeated assertions on the same target. For example:
+
+[source,groovy]
+----
+expect:
+with(aCollection) {
+  size() > 0
+  contains("foo")
+  every { it != null }
+}
+----

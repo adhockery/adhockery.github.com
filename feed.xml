@@ -13,7 +13,7 @@
     <link rel="alternate" href="http://blog.freeside.co/2015/06/27/kotlin/"/>
     <id>http://blog.freeside.co/2015/06/27/kotlin/</id>
     <published>2015-06-27T10:16:00-07:00</published>
-    <updated>2015-06-27T11:52:49-07:00</updated>
+    <updated>2015-06-27T11:54:03-07:00</updated>
     <author>
       <name>Rob Fletcher</name>
     </author>
@@ -48,18 +48,18 @@ So a Java method &lt;code&gt;public String toUpperCase(String s)&lt;/code&gt; is
 &lt;/div&gt;
 &lt;div class="paragraph"&gt;
 &lt;p&gt;The Kotlin compiler enforces null safety.
-That means you can&amp;#8217;t, for example, call &lt;code&gt;it.toString()&lt;/code&gt; if &lt;code&gt;it&lt;/code&gt; might be &lt;code&gt;null&lt;/code&gt;.
+That means you can&amp;#8217;t, for example, call &lt;code&gt;it.method()&lt;/code&gt; if &lt;code&gt;it&lt;/code&gt; might be &lt;code&gt;null&lt;/code&gt;.
 First you must ensure it isn&amp;#8217;t &lt;code&gt;null&lt;/code&gt; by either using an explicit check:&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="listingblock"&gt;
 &lt;div class="content"&gt;
 &lt;pre class="highlight"&gt;&lt;code class="kotlin language-kotlin"&gt;if (it != null) {
-  it.toString()
+  it.method()
 }&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class="paragraph"&gt;
-&lt;p&gt;Kotlin&amp;#8217;s type inference comes into play here and allows you to call &lt;code&gt;toString&lt;/code&gt; inside the conditional statement because it &lt;em&gt;knows&lt;/em&gt; &lt;code&gt;it&lt;/code&gt; cannot be &lt;code&gt;null&lt;/code&gt; inside that context.
+&lt;p&gt;Kotlin&amp;#8217;s type inference comes into play here and allows you to call &lt;code&gt;it.method()&lt;/code&gt; inside the conditional statement because it &lt;em&gt;knows&lt;/em&gt; &lt;code&gt;it&lt;/code&gt; cannot be &lt;code&gt;null&lt;/code&gt; inside that context.
 The compiler has inferred that the type of &lt;code&gt;it&lt;/code&gt; within that block is &lt;code&gt;Object&lt;/code&gt; and not &lt;code&gt;Object?&lt;/code&gt;.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="paragraph"&gt;

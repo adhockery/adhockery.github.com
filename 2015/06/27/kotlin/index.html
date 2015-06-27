@@ -63,18 +63,18 @@ So a Java method <code>public String toUpperCase(String s)</code> is seen by Kot
 </div>
 <div class="paragraph">
 <p>The Kotlin compiler enforces null safety.
-That means you can&#8217;t, for example, call <code>it.toString()</code> if <code>it</code> might be <code>null</code>.
+That means you can&#8217;t, for example, call <code>it.method()</code> if <code>it</code> might be <code>null</code>.
 First you must ensure it isn&#8217;t <code>null</code> by either using an explicit check:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="kotlin language-kotlin">if (it != null) {
-  it.toString()
+  it.method()
 }</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Kotlin&#8217;s type inference comes into play here and allows you to call <code>toString</code> inside the conditional statement because it <em>knows</em> <code>it</code> cannot be <code>null</code> inside that context.
+<p>Kotlin&#8217;s type inference comes into play here and allows you to call <code>it.method()</code> inside the conditional statement because it <em>knows</em> <code>it</code> cannot be <code>null</code> inside that context.
 The compiler has inferred that the type of <code>it</code> within that block is <code>Object</code> and not <code>Object?</code>.</p>
 </div>
 <div class="paragraph">

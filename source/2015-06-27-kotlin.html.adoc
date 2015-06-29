@@ -46,7 +46,7 @@ The compiler has inferred that the type of `it` within that block is `Object` an
 You can also use the Groovy style null safe dereference operator – `it?.method()`.
 The type of such an expression is the nullable form of `method`'s return type so in order to use the result for anything you'll have to ensure that it in turn is not `null`.
 
-Type inferences also means that a non-nullable reference can always be assigned to a reference that is a nullable form of the same type.
+Type inference also means that a non-nullable reference can always be assigned to a reference that is a nullable form of the same type.
 So given a variable of type `String`:
 
 [source,kotlin]
@@ -81,7 +81,7 @@ The output of Kannotator is an ugly directory full of XML files but luckily you 
 Kotlin also allows for extension functions meaning you can decorate existing types with new functions very easily _and with the full benefit of static compilation_.
 Extension functions do away with the need for ugly `*Utils` type classes and allow for Groovy-like extensions of the Java standard library.
 Interestingly you can even create extension functions for nullable types and null itself.
-This capability would help solve Peter's complaint about having to do a two part null / emtpy check on `String?`.
+This capability would help solve Peter's complaint about having to do a two part null / empty check on `String?`.
 How about:
 
 [source,kotlin]

@@ -144,3 +144,6 @@ DEPENDENCIES
   middleman-disqus
   middleman-google-analytics
   normalize-scss
+
+BUNDLED WITH
+   1.10.3

@@ -13,7 +13,7 @@
     <link rel="alternate" href="http://blog.freeside.co/2015/06/27/kotlin/"/>
     <id>http://blog.freeside.co/2015/06/27/kotlin/</id>
     <published>2015-06-27T10:16:00-07:00</published>
-    <updated>2015-06-27T16:19:13-07:00</updated>
+    <updated>2015-06-29T10:21:18-07:00</updated>
     <author>
       <name>Rob Fletcher</name>
     </author>
@@ -67,7 +67,7 @@ The compiler has inferred that the type of &lt;code&gt;it&lt;/code&gt; within th
 The type of such an expression is the nullable form of &lt;code&gt;method&lt;/code&gt;'s return type so in order to use the result for anything you&amp;#8217;ll have to ensure that it in turn is not &lt;code&gt;null&lt;/code&gt;.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="paragraph"&gt;
-&lt;p&gt;Type inferences also means that a non-nullable reference can always be assigned to a reference that is a nullable form of the same type.
+&lt;p&gt;Type inference also means that a non-nullable reference can always be assigned to a reference that is a nullable form of the same type.
 So given a variable of type &lt;code&gt;String&lt;/code&gt;:&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="listingblock"&gt;
@@ -107,7 +107,7 @@ The output of Kannotator is an ugly directory full of XML files but luckily you 
 &lt;p&gt;Kotlin also allows for extension functions meaning you can decorate existing types with new functions very easily &lt;em&gt;and with the full benefit of static compilation&lt;/em&gt;.
 Extension functions do away with the need for ugly &lt;code&gt;*Utils&lt;/code&gt; type classes and allow for Groovy-like extensions of the Java standard library.
 Interestingly you can even create extension functions for nullable types and null itself.
-This capability would help solve Peter&amp;#8217;s complaint about having to do a two part null / emtpy check on &lt;code&gt;String?&lt;/code&gt;.
+This capability would help solve Peter&amp;#8217;s complaint about having to do a two part null / empty check on &lt;code&gt;String?&lt;/code&gt;.
 How about:&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="listingblock"&gt;

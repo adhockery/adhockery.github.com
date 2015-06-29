@@ -82,7 +82,7 @@ The compiler has inferred that the type of <code>it</code> within that block is 
 The type of such an expression is the nullable form of <code>method</code>'s return type so in order to use the result for anything you&#8217;ll have to ensure that it in turn is not <code>null</code>.</p>
 </div>
 <div class="paragraph">
-<p>Type inferences also means that a non-nullable reference can always be assigned to a reference that is a nullable form of the same type.
+<p>Type inference also means that a non-nullable reference can always be assigned to a reference that is a nullable form of the same type.
 So given a variable of type <code>String</code>:</p>
 </div>
 <div class="listingblock">
@@ -122,7 +122,7 @@ The output of Kannotator is an ugly directory full of XML files but luckily you 
 <p>Kotlin also allows for extension functions meaning you can decorate existing types with new functions very easily <em>and with the full benefit of static compilation</em>.
 Extension functions do away with the need for ugly <code>*Utils</code> type classes and allow for Groovy-like extensions of the Java standard library.
 Interestingly you can even create extension functions for nullable types and null itself.
-This capability would help solve Peter&#8217;s complaint about having to do a two part null / emtpy check on <code>String?</code>.
+This capability would help solve Peter&#8217;s complaint about having to do a two part null / empty check on <code>String?</code>.
 How about:</p>
 </div>
 <div class="listingblock">

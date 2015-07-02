@@ -114,9 +114,9 @@ myMethod(s)</code></pre>
 </div>
 <div class="paragraph">
 <p>As Peter points out in his post using Java libraries inevitably means handling nullable types.
-However Kotlin has another trick up its sleeve with the <a href="https://github.com/JetBrains/kannotator">Kannotator</a> tool.
+However Kotlin has another trick up its sleeve with the <a href="https://github.com/JetBrains/kannotator">KAnnotator</a> tool.
 Kannotator infers nullability of parameters and return types in an API by analyzing the byte code, looking for <code>@NotNull</code> annotations, and so on.
-The output of Kannotator is an ugly directory full of XML files but luckily you can completely ignore that – it&#8217;s purely for the benefit of the Kotlin compiler and your IDE.</p>
+The output of KAnnotator is an ugly directory full of XML files but luckily you can completely ignore that – it&#8217;s purely for the benefit of the Kotlin compiler and your IDE.</p>
 </div>
 <div class="paragraph">
 <p>Kotlin also allows for extension functions meaning you can decorate existing types with new functions very easily <em>and with the full benefit of static compilation</em>.

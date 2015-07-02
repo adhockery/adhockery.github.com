@@ -13,7 +13,7 @@
     <link rel="alternate" href="http://blog.freeside.co/2015/06/27/kotlin/"/>
     <id>http://blog.freeside.co/2015/06/27/kotlin/</id>
     <published>2015-06-27T10:16:00-07:00</published>
-    <updated>2015-06-29T10:21:18-07:00</updated>
+    <updated>2015-07-02T09:23:15-07:00</updated>
     <author>
       <name>Rob Fletcher</name>
     </author>
@@ -99,9 +99,9 @@ myMethod(s)&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 &lt;div class="paragraph"&gt;
 &lt;p&gt;As Peter points out in his post using Java libraries inevitably means handling nullable types.
-However Kotlin has another trick up its sleeve with the &lt;a href="https://github.com/JetBrains/kannotator"&gt;Kannotator&lt;/a&gt; tool.
+However Kotlin has another trick up its sleeve with the &lt;a href="https://github.com/JetBrains/kannotator"&gt;KAnnotator&lt;/a&gt; tool.
 Kannotator infers nullability of parameters and return types in an API by analyzing the byte code, looking for &lt;code&gt;@NotNull&lt;/code&gt; annotations, and so on.
-The output of Kannotator is an ugly directory full of XML files but luckily you can completely ignore that – it&amp;#8217;s purely for the benefit of the Kotlin compiler and your IDE.&lt;/p&gt;
+The output of KAnnotator is an ugly directory full of XML files but luckily you can completely ignore that – it&amp;#8217;s purely for the benefit of the Kotlin compiler and your IDE.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="paragraph"&gt;
 &lt;p&gt;Kotlin also allows for extension functions meaning you can decorate existing types with new functions very easily &lt;em&gt;and with the full benefit of static compilation&lt;/em&gt;.

@@ -74,9 +74,9 @@ myMethod(s)
 In Java 8 or Scala we'd have to wrap the value with `Optional.of(s)` or `Some(s)` in order to do the equivalent.
 
 As Peter points out in his post using Java libraries inevitably means handling nullable types.
-However Kotlin has another trick up its sleeve with the https://github.com/JetBrains/kannotator[Kannotator] tool.
+However Kotlin has another trick up its sleeve with the https://github.com/JetBrains/kannotator[KAnnotator] tool.
 Kannotator infers nullability of parameters and return types in an API by analyzing the byte code, looking for `@NotNull` annotations, and so on.
-The output of Kannotator is an ugly directory full of XML files but luckily you can completely ignore that – it's purely for the benefit of the Kotlin compiler and your IDE.
+The output of KAnnotator is an ugly directory full of XML files but luckily you can completely ignore that – it's purely for the benefit of the Kotlin compiler and your IDE.
 
 Kotlin also allows for extension functions meaning you can decorate existing types with new functions very easily _and with the full benefit of static compilation_.
 Extension functions do away with the need for ugly `*Utils` type classes and allow for Groovy-like extensions of the Java standard library.
